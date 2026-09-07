@@ -1,7 +1,8 @@
 # Mthread + Eva C0 capability record
 
-Status: **C0 accepted on 2026-09-07; C1 and kernel concurrency support remain
-open**.
+Status: **C0 accepted on 2026-09-07; C1 was subsequently accepted for evidence
+infrastructure; kernel concurrency support remains open**. See the
+[C1 record](CONCURRENCY-C1-20260907.md).
 
 This milestone establishes what the project's locked Frama-C provider actually
 does on small, project-owned concurrent models. It does not establish that Linux
@@ -27,7 +28,7 @@ the Linux Kernel Memory Model are soundly modeled.
 The runner refuses an existing output path. It retains version/help inventory,
 argv, stdout, stderr, Frama-C report CSV, parsed results, and SHA-256 identities
 locally. The compact accepted result is
-[results/concurrency-c0-20260907-04/SUMMARY.md](../results/concurrency-c0-20260907-04/SUMMARY.md).
+[results/concurrency-c0-20260907-05/SUMMARY.md](../results/concurrency-c0-20260907-05/SUMMARY.md).
 
 ## Empirically established behavior
 
@@ -94,13 +95,12 @@ All nine expected classes pass: valid property, invalid property, unknown
 property, protected access, possible unprotected race, automatic interrupt
 registration, lock-initialization gap, unsupported primitive, and tool exit.
 Focused concurrency runner/parser tests pass; the combined project run is
-[899 passing tests](../results/tests-rv32-concurrency-20260907.log), with 20
+[905 passing tests](../results/tests-rv32-concurrency-20260907.log), with 20
 pre-existing conditional skips.
 
 This meets C0 because the actual provider and its limitations are now pinned,
 exercised, and distinguished in evidence. It awards no Linux concurrency target.
-C1 must add explicit result/model identities and stale-evidence gates, property
-scope, ownership/interference/context fields, and a rule that unsupported or
-changed synchronization dependencies prevent acceptance. Only then can C2
-attempt a narrowly reviewed kernel mutex/interrupt pilot; weak memory and RCU
-remain separate C3/C4 work.
+The subsequent C1 milestone adds the required identities, stale-evidence gates
+and scope fields without upgrading these calibrations. C2 may now attempt a
+narrowly reviewed kernel mutex/interrupt pilot; weak memory and RCU remain
+separate C3/C4 work.

@@ -1,9 +1,10 @@
 # Concurrency verification workstream
 
 Requested: 2026-09-07, after the current bounded kernel-source review.
-Status: C0 capability calibration accepted on 2026-09-07; C1-C4 remain open and
-no concurrent-kernel target is accepted. See the
-[C0 evidence record](CONCURRENCY-C0-20260907.md).
+Status: C0 capability calibration and C1 evidence/scope infrastructure accepted
+on 2026-09-07; C2-C4 remain open and no concurrent-kernel target is accepted.
+See the [C0 evidence record](CONCURRENCY-C0-20260907.md) and
+[C1 evidence record](CONCURRENCY-C1-20260907.md).
 Parent goal: [execute PLAN.md](../PLAN.md). This work does not replace the
 remaining sequential-suite, architecture or coverage requirements.
 
@@ -47,7 +48,7 @@ feature is absent, record the evidence and implement or integrate a suitable
 backend; do not relabel a sequential run as concurrency verification.
 
 C0 decision: accepted for capability characterization only. The pinned
-[nine-case result](../results/concurrency-c0-20260907-04/SUMMARY.md) matches every
+[nine-case result](../results/concurrency-c0-20260907-05/SUMMARY.md) matches every
 expected result class. `pthread_join()` completion, automatically registered
 handler lock initialization, unsupported pthread operations, weak-memory
 atomics/barriers, Linux synchronization and RCU remain explicit gaps. C1 is the
@@ -55,17 +56,17 @@ next acceptance gate.
 
 ## C1 — Integrate explicit concurrency models and evidence gates
 
-- [ ] Extend target and result schemas with threading-model identity,
+- [x] Extend target and result schemas with threading-model identity,
   synchronization model, memory-order assumptions, shared-object ownership,
   external interference, interrupt/preemption context and property scope.
-- [ ] Represent synchronization with justified behavior, never empty lock,
+- [x] Represent synchronization with justified behavior, never empty lock,
   barrier or RCU stubs used to claim concurrent correctness. Any abstraction
   must include all behaviors relevant to the stated property, with a reviewed
   argument explaining why it is conservative.
-- [ ] Add runner support, retained command/input evidence, regression checks
+- [x] Add runner support, retained command/input evidence, regression checks
   and stale-result invalidation. Changed threading models invalidate dependent
   concurrent results without retroactively upgrading sequential evidence.
-- [ ] Give support dimensions separate statuses: sequential, mutex-protected
+- [x] Give support dimensions separate statuses: sequential, mutex-protected
   concurrency, interrupts, weak-memory atomics, RCU and lock-free algorithms.
   Unknown required dimensions prevent acceptance of that target/property.
 
@@ -73,6 +74,14 @@ Acceptance: missing or changed model dependencies are detected; unsupported
 primitives cannot disappear silently; each accepted result names its exact
 concurrent property and assumptions. Data-race freedom is not automatically
 functional correctness, deadlock freedom, termination or lifetime safety.
+
+C1 decision: accepted for infrastructure only. The current
+[C1 audit](../results/concurrency-c1-20260907/SUMMARY.md) re-parses all nine C0
+cases with current dependencies and explicit scope metadata. A
+[stale-model control](../results/concurrency-c1-stale-control-20260907/SUMMARY.md)
+rejects exactly the pthread-dependent cases after their recorded model identity
+changes. All nine records remain calibrations, all verification flags are false,
+and the kernel-concurrency acceptance count is zero. C2 is the next gate.
 
 ## C2 — Validate limited Linux synchronization and interrupt integration
 
@@ -134,8 +143,8 @@ its required model or validation evidence.
 
 ## Execution order and reporting
 
-The bounded static review and C0 capability calibration are complete. Continue
-with C1; later concurrent model work need not wait for every architecture port
+The bounded static review plus C0 and C1 are complete. Continue with C2; later
+concurrent model work need not wait for every architecture port
 or all sequential proofs.
 No system installation, running-kernel modification or new backend execution is
 authorized merely by this planning document.

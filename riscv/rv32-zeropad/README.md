@@ -77,7 +77,7 @@ no `sudo` command was used.
 - Strict `scripts/checkpatch.pl`: 0 errors, 0 warnings, 0 checks.
 - Clean indexed apply checks against both recorded mainline and linux-next.
 - `git send-email --dry-run`: `Result: OK`; no email was transmitted.
-- All [899 project unit tests](../../results/tests-rv32-concurrency-20260907.log)
+- All [905 project unit tests](../../results/tests-rv32-concurrency-20260907.log)
   pass, with 20 pre-existing conditional skips.
 
 Run the read-only audit of the retained local evidence with:

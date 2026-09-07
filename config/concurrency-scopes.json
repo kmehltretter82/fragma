@@ -1,0 +1,204 @@
+{
+  "schema_version": 1,
+  "kind": "concurrency-property-scope-registry",
+  "targets": [
+    {
+      "id": "isolated",
+      "c0_case_id": "isolated",
+      "model_id": "framac-33-mthread-eva-c0",
+      "source": "concurrency/fixtures/isolated.c",
+      "evidence_kind": "calibration",
+      "kernel_scope": false,
+      "property_scope": {
+        "kind": "worker_local_functional",
+        "claim": "Worker-local arithmetic reaches exactly seven.",
+        "exclusions": ["Worker completion", "join semantics", "kernel callers"]
+      },
+      "model_dependency_groups": ["core", "pthreads"],
+      "required_dimensions": ["sequential"],
+      "required_primitives": ["pthread_create"],
+      "synchronization_model": "none",
+      "synchronization_argument": "The asserted object is worker-local and has no shared accesses.",
+      "memory_order_assumptions": ["Mthread abstract interleaving only; no weak-memory claim"],
+      "context": {"ordinary_threads": true, "interrupt_handlers": false, "preemption": "not modeled"},
+      "shared_objects": [],
+      "external_interference": "No interference is relevant to the worker-local assertion."
+    },
+    {
+      "id": "mutex",
+      "c0_case_id": "mutex",
+      "model_id": "framac-33-mthread-eva-c0",
+      "source": "concurrency/fixtures/mutex.c",
+      "evidence_kind": "calibration",
+      "kernel_scope": false,
+      "property_scope": {
+        "kind": "abstract_mutex_critical_section",
+        "claim": "Each critical section observes its own just-written shared value while the abstract mutex is held.",
+        "exclusions": ["Linux lock semantics", "deadlock freedom", "worker completion"]
+      },
+      "model_dependency_groups": ["core", "pthreads"],
+      "required_dimensions": ["sequential", "mutex_protected_concurrency"],
+      "required_primitives": ["pthread_create", "mthread_abstract_mutex"],
+      "synchronization_model": "mthread_abstract_mutex",
+      "synchronization_argument": "All accesses to shared_value are checked after successful acquisition of the same abstract mutex.",
+      "memory_order_assumptions": ["Abstract mutual exclusion; no acquire/release or architecture-order claim"],
+      "context": {"ordinary_threads": true, "interrupt_handlers": false, "preemption": "not modeled"},
+      "shared_objects": [{"name": "shared_value", "ownership": "shared under shared_mutex", "external_interference": "main and worker writes"}],
+      "external_interference": "Mthread injects main/worker writes but excludes them inside matching protected sections."
+    },
+    {
+      "id": "interference",
+      "c0_case_id": "interference",
+      "model_id": "framac-33-mthread-eva-c0",
+      "source": "concurrency/fixtures/interference.c",
+      "evidence_kind": "calibration",
+      "kernel_scope": false,
+      "property_scope": {
+        "kind": "unprotected_interference_and_race",
+        "claim": "Observed values stay in the written range and the unprotected read/write race remains visible.",
+        "exclusions": ["C data-race execution semantics", "race freedom", "exact scheduling"]
+      },
+      "model_dependency_groups": ["core", "pthreads"],
+      "required_dimensions": ["sequential"],
+      "required_primitives": ["pthread_create"],
+      "synchronization_model": "none",
+      "synchronization_argument": "Absence of synchronization is deliberate and must produce an unprotected diagnostic.",
+      "memory_order_assumptions": ["Mthread value interference only; the real C data race is not assigned defined behavior"],
+      "context": {"ordinary_threads": true, "interrupt_handlers": false, "preemption": "not modeled"},
+      "shared_objects": [{"name": "shared_value", "ownership": "deliberately unprotected shared", "external_interference": "main and worker read/write"}],
+      "external_interference": "Both constant writes are injected to both abstract threads."
+    },
+    {
+      "id": "join",
+      "c0_case_id": "join",
+      "model_id": "framac-33-mthread-eva-c0",
+      "source": "concurrency/fixtures/join.c",
+      "evidence_kind": "calibration",
+      "kernel_scope": false,
+      "property_scope": {
+        "kind": "unsupported_completion_semantics",
+        "claim": "The desired post-join completion property remains unknown.",
+        "exclusions": ["Real pthread_join completion", "lifetime transfer", "happens-before"]
+      },
+      "model_dependency_groups": ["core", "pthreads"],
+      "required_dimensions": ["sequential"],
+      "required_primitives": ["pthread_create", "pthread_join"],
+      "synchronization_model": "unsupported_join",
+      "synchronization_argument": "No completion claim is accepted because the bundled join stub does not wait.",
+      "memory_order_assumptions": ["No join happens-before edge"],
+      "context": {"ordinary_threads": true, "interrupt_handlers": false, "preemption": "not modeled"},
+      "shared_objects": [{"name": "join_completed", "ownership": "worker writes, main reads", "external_interference": "unprotected worker write"}],
+      "external_interference": "The worker write is visible as possible interference but not guaranteed completion."
+    },
+    {
+      "id": "false_assertion",
+      "c0_case_id": "false_assertion",
+      "model_id": "framac-33-mthread-eva-c0",
+      "source": "concurrency/fixtures/false_assertion.c",
+      "evidence_kind": "calibration",
+      "kernel_scope": false,
+      "property_scope": {
+        "kind": "deliberate_false_property",
+        "claim": "The deliberately false worker-local equality is classified invalid.",
+        "exclusions": ["Kernel defect", "shared-state reasoning"]
+      },
+      "model_dependency_groups": ["core", "pthreads"],
+      "required_dimensions": ["sequential"],
+      "required_primitives": ["pthread_create"],
+      "synchronization_model": "none",
+      "synchronization_argument": "The assertion is worker-local; synchronization is irrelevant.",
+      "memory_order_assumptions": ["No shared-memory ordering claim"],
+      "context": {"ordinary_threads": true, "interrupt_handlers": false, "preemption": "not modeled"},
+      "shared_objects": [],
+      "external_interference": "None relevant to the asserted local value."
+    },
+    {
+      "id": "interrupt_unprotected",
+      "c0_case_id": "interrupt_unprotected",
+      "model_id": "framac-33-mthread-eva-c0",
+      "source": "concurrency/fixtures/interrupt_unprotected.c",
+      "evidence_kind": "calibration",
+      "kernel_scope": false,
+      "property_scope": {
+        "kind": "automatic_interrupt_interference",
+        "claim": "The handler is discovered, its value interference is bounded, and the unprotected access is reported.",
+        "exclusions": ["Linux IRQ masking", "interrupt nesting", "hardware ordering"]
+      },
+      "model_dependency_groups": ["core", "interrupts"],
+      "required_dimensions": ["sequential", "interrupts"],
+      "required_primitives": ["interrupt_registration"],
+      "synchronization_model": "none",
+      "synchronization_argument": "The access is deliberately unprotected and must remain diagnosed.",
+      "memory_order_assumptions": ["Abstract handler interleaving only"],
+      "context": {"ordinary_threads": false, "interrupt_handlers": true, "preemption": "not modeled"},
+      "shared_objects": [{"name": "interrupt_value", "ownership": "main reads, handler writes", "external_interference": "automatic handler write"}],
+      "external_interference": "The registered handler's write is injected from its initial-state entry point."
+    },
+    {
+      "id": "interrupt_exclusion_synthetic",
+      "c0_case_id": "interrupt_exclusion_synthetic",
+      "model_id": "framac-33-mthread-eva-c0",
+      "source": "concurrency/fixtures/interrupt_exclusion_synthetic.c",
+      "evidence_kind": "calibration",
+      "kernel_scope": false,
+      "property_scope": {
+        "kind": "synthetic_interrupt_like_exclusion",
+        "claim": "A thread created after abstract-lock initialization has protected critical-section assertions.",
+        "exclusions": ["Automatic interrupt registration", "Linux IRQ disable", "preemption semantics"]
+      },
+      "model_dependency_groups": ["core", "pthreads"],
+      "required_dimensions": ["sequential", "mutex_protected_concurrency"],
+      "required_primitives": ["pthread_create", "mthread_abstract_mutex"],
+      "synchronization_model": "mthread_abstract_mutex",
+      "synchronization_argument": "The synthetic worker is created only after the same abstract mutex identifier is initialized.",
+      "memory_order_assumptions": ["Abstract mutual exclusion only"],
+      "context": {"ordinary_threads": true, "interrupt_handlers": false, "preemption": "not modeled"},
+      "shared_objects": [{"name": "interrupt_value", "ownership": "shared under interrupt-lock", "external_interference": "main and synthetic worker writes"}],
+      "external_interference": "Writes are injected but reported protected by the matching abstract mutex."
+    },
+    {
+      "id": "interrupt_registered_exclusion_gap",
+      "c0_case_id": "interrupt_registered_exclusion_gap",
+      "model_id": "framac-33-mthread-eva-c0",
+      "source": "concurrency/fixtures/interrupt_exclusion.c",
+      "evidence_kind": "calibration",
+      "kernel_scope": false,
+      "property_scope": {
+        "kind": "automatic_handler_lock_initialization_gap",
+        "claim": "The automatic handler's unavailable lock initialization remains visible as unknown assertions and an unprotected lock-lifecycle access.",
+        "exclusions": ["Successful Linux interrupt exclusion", "initialized handler state", "nested interrupts"]
+      },
+      "model_dependency_groups": ["core", "interrupts"],
+      "required_dimensions": ["sequential", "mutex_protected_concurrency", "interrupts"],
+      "required_primitives": ["mthread_abstract_mutex", "interrupt_registration"],
+      "synchronization_model": "mthread_abstract_mutex_with_initial_state_gap",
+      "synchronization_argument": "Protected data writes are recorded, but the lock identifier itself may be uninitialized in the independently started handler; no exclusion claim is accepted.",
+      "memory_order_assumptions": ["Abstract handler interleaving; no Linux initialization or IRQ-order edge"],
+      "context": {"ordinary_threads": false, "interrupt_handlers": true, "preemption": "not modeled"},
+      "shared_objects": [{"name": "interrupt_lock", "ownership": "initialized by main, read by handler", "external_interference": "handler may start from pre-initialization state"}, {"name": "interrupt_value", "ownership": "intended abstract-lock protection", "external_interference": "main and handler writes"}],
+      "external_interference": "Handler analysis starts from initial main state and exposes the initialization gap."
+    },
+    {
+      "id": "unsupported_pthread",
+      "c0_case_id": "unsupported_pthread",
+      "model_id": "framac-33-mthread-eva-c0",
+      "source": "concurrency/fixtures/unsupported_pthread.c",
+      "evidence_kind": "calibration",
+      "kernel_scope": false,
+      "property_scope": {
+        "kind": "unsupported_primitive_rejection",
+        "claim": "Use of pthread_barrier_wait is rejected with the pinned probably-unsound diagnostic.",
+        "exclusions": ["Barrier synchronization", "successful program analysis", "ordering guarantees"]
+      },
+      "model_dependency_groups": ["core", "pthreads"],
+      "required_dimensions": ["sequential"],
+      "required_primitives": ["pthread_barrier_wait"],
+      "synchronization_model": "unsupported_barrier",
+      "synchronization_argument": "Rejection is required; an empty or silently ignored barrier model is forbidden.",
+      "memory_order_assumptions": ["No barrier ordering is modeled"],
+      "context": {"ordinary_threads": true, "interrupt_handlers": false, "preemption": "not modeled"},
+      "shared_objects": [],
+      "external_interference": "Analysis aborts before a concurrent property is accepted."
+    }
+  ]
+}

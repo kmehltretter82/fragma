@@ -31,8 +31,10 @@ is strict-checkpatch clean, applies to mainline and linux-next, has RV32/RV64
 build controls, and passed a mail dry-run. It is send-ready, not sent.
 The [Mthread + Eva C0 record](docs/CONCURRENCY-C0-20260907.md) pins nine
 capability controls and their valid, invalid, unknown, race and unsupported
-outcomes. This completes capability characterization only; Linux concurrency,
-weak memory and RCU remain unsupported.
+outcomes. The [C1 evidence gate](docs/CONCURRENCY-C1-20260907.md) adds explicit
+model, property, context, ownership and freshness identities, including a
+dependency-specific stale control. All nine remain calibrations and zero kernel
+concurrency targets are accepted; C2, weak memory and RCU remain open.
 The [renewed s390x pilot](s390/L2-RENEWAL-20260907.md) establishes scoped L2 support
 for seven C helpers. The [freshly renewed common24 baselines](common/L2-CLANG-RENEWAL-20260907.md)
 cover four helpers on ARM32, PowerPC32, m68k, ARM64, RISC-V64, SH, Alpha,
@@ -47,7 +49,7 @@ The results and reproduction notes below describe the original experiments;
 they are not the acceptance baseline for the new runner and checked profiles.
 
 The new entry point is `python3 -m fragma` (`list`, `preflight`, `snapshot`,
-`prepare`, `run`, `compare`, `coverage`, `concurrency-c0`,
+`prepare`, `run`, `compare`, `coverage`, `concurrency-c0`, `concurrency-c1`,
 `rv32-zeropad-audit`). See [toolchain setup](docs/toolchain.md) and
 [architecture profiles](profiles/README.md). Verification never installs
 packages. No `sudo` installation is needed on the current machine for the

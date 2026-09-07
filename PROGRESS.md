@@ -15,14 +15,18 @@ RV32/RV64 build controls, strict checkpatch, maintainers and mail dry-run. It ha
 not been emailed or acknowledged upstream. No `sudo` or package installation was
 used.
 
-The requested concurrency continuation has also completed C0 capability
-characterization. The [nine-case Mthread + Eva record](docs/CONCURRENCY-C0-20260907.md)
-passes its valid, invalid, unknown, protected, race, interrupt and unsupported
-controls with the exact Frama-C 33 provider pinned. It explicitly exposes the
-join-completion and automatic-handler initialization gaps and supplies no Linux
-weak-memory, RCU or kernel-lock acceptance. C1 is next. Further Hexagon work
-remains parked; these additions do not change architecture/profile acceptance.
-All [899 project tests](results/tests-rv32-concurrency-20260907.log) pass in the
+The concurrency continuation has completed C0 capability characterization and
+C1 evidence/scope infrastructure. The
+[nine-case Mthread + Eva record](docs/CONCURRENCY-C0-20260907.md) passes its
+valid, invalid, unknown, protected, race, interrupt and unsupported controls.
+The [C1 audit](docs/CONCURRENCY-C1-20260907.md) re-parses all raw outcomes, binds
+model/property/context/ownership identities and exposes six separate support
+dimensions. Its current 82 checks pass; nine calibrations are current, while
+all verification flags and the kernel acceptance count remain zero. A targeted
+stale-model control rejects the seven pthread-dependent cases while preserving
+the two unaffected builtins-only cases. C2 is next. Further Hexagon work remains
+parked; these additions do not change architecture/profile acceptance.
+All [905 project tests](results/tests-rv32-concurrency-20260907.log) pass in the
 post-change tree, with 20 pre-existing conditional skips.
 
 The [audited private VLA/arithmetic successor](build/framac-alignment-provider-20260907/CANDIDATE-VLA-ARITHMETIC-20260907.md)
@@ -297,7 +301,7 @@ a proof of the whole kernel or automatic verification of every caller.
 | RISC-V encoders | Current source/model/proof gates for seven helpers and five project witnesses: 119 ordinary goals, 119 dependencies and 47 postconditions. | Helper-specific calibration, kernel callers and a documented encoder L2 scope. |
 | ARM64 scalar extraction | Current runtime-safety gates for two cpuid helpers: six ordinary goals and ten selected dependencies with genuine-header checks. | Add functional contracts/calibration and verify kernel callers. |
 | Kernel bug review | RV32 `load_unaligned_zeropad()` wrong result dynamically reproduced in QEMU; identical-config A/B passes after a two-line fix; send-ready patch and exact evidence audit. | Human submission decision, then upstream review/revision; broaden review without treating alarms as bugs. |
-| Concurrency | Frama-C 33 Mthread+Eva C0 accepted across nine capability/negative controls; join, automatic-handler initialization, unsupported primitives and weak-memory limits remain explicit. | Implement C1 model/result schemas and invalidation, then a narrowly justified C2 Linux pilot; C3/C4 weak memory and RCU remain open. |
+| Concurrency | Frama-C 33 Mthread+Eva C0 and C1 accepted for nine capability calibrations plus explicit model/scope/freshness gates; a dependency-specific stale control fails as required; zero kernel targets are accepted. | Implement a narrowly justified C2 Linux synchronization/interrupt pilot; C3/C4 weak memory and RCU remain open. |
 
 The registry's 24 distinct kernel functions reach the plan's initial numerical
 range, not its proof/coverage acceptance. The current report has 18 functions
@@ -547,16 +551,16 @@ No blanket system-package command is required for continuing the current work.
 ## Next acceptance milestones
 
 The bounded review and RV32 A/B handoff are complete. Immediate choices are
-human review/submission of that patch and the already requested C1 concurrency
-integration. The remaining milestones are still open backlog; Hexagon stays
+human review/submission of that patch and the already requested C2 concurrency
+pilot. The remaining milestones are still open backlog; Hexagon stays
 parked unless its workstream is resumed explicitly.
 
 1. Review the RV32 submission handoff and, only on explicit authorization, send
    it to the recorded RISC-V maintainers/lists. Treat “send-ready”, “sent”, and
    “maintainer accepted” as separate states.
-2. Implement C1 from the [concurrency plan](docs/CONCURRENCY-PLAN.md): bind model,
-   context, ownership, interference and property-scope identities into target
-   results, fail unsupported semantics, and invalidate stale concurrent evidence.
+2. Implement C2 from the [concurrency plan](docs/CONCURRENCY-PLAN.md): choose a
+   small configured Linux API/caller scope, derive and review conservative
+   synchronization/interrupt models, and retain positive and negative controls.
 3. Renew and resolve the six legacy nonpasses beyond the 25 current accepted
    targets across the 31 registered targets, and
    extend inventory/source gates to remaining examples.

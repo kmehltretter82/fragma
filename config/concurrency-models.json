@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "models": [
+    {
+      "id": "framac-33-mthread-eva-c0",
+      "provider_version": "33.0 (Arsenic)",
+      "provider_binary_sha256": "815c916df2361e7af5a18125c97b37665e4eed91e76daa185d571706563e7ef2",
+      "execution_model": "Eva analyzes discovered abstract entry points separately and Mthread iterates shared-write interference to a fixpoint. This is an interleaving abstraction, not the Linux Kernel Memory Model.",
+      "file_groups": {
+        "core": [
+          "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread.h",
+          "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread.c",
+          "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_main.ml",
+          "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_lib.ml",
+          "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_thread.ml",
+          "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_analysis_hooks.ml",
+          "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_analysis_fixpoint.ml",
+          "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_mutexes.ml"
+        ],
+        "pthreads": [
+          "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_pthread.c"
+        ],
+        "interrupts": [
+          "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_interrupts.h",
+          "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_interrupts.c"
+        ]
+      },
+      "dimensions": {
+        "sequential": {
+          "status": "calibrated",
+          "scope": "Eva value properties inside the project-owned entry points, with Mthread enabled and the recorded options.",
+          "evidence_cases": ["isolated", "false_assertion"],
+          "limitations": ["No arbitrary C or kernel-call acceptance follows from these controls."]
+        },
+        "mutex_protected_concurrency": {
+          "status": "calibrated",
+          "scope": "Mthread abstract mutex ownership and interference in project-owned pthread fixtures.",
+          "evidence_cases": ["mutex", "interrupt_exclusion_synthetic"],
+          "limitations": ["The abstract mutex is not yet connected to any configured Linux lock implementation."]
+        },
+        "interrupts": {
+          "status": "partial",
+          "scope": "Automatic handler discovery and shared-write interference from the initial main state.",
+          "evidence_cases": ["interrupt_unprotected", "interrupt_registered_exclusion_gap"],
+          "limitations": ["Main-time lock initialization is unavailable to the automatic handler start state; nesting, IRQ classes and Linux masking are not modeled."]
+        },
+        "weak_memory_atomics": {
+          "status": "unsupported",
+          "scope": "No accepted C11 or Linux weak-memory atomic/barrier semantics.",
+          "evidence_cases": [],
+          "limitations": ["Ordinary interleaving must not be presented as an LKMM or architecture memory-order proof."]
+        },
+        "rcu": {
+          "status": "unsupported",
+          "scope": "No accepted RCU publication, grace-period or reclamation semantics.",
+          "evidence_cases": [],
+          "limitations": ["No-op grace periods or assumed immortal objects are forbidden for acceptance."]
+        },
+        "lock_free_algorithms": {
+          "status": "unsupported",
+          "scope": "No accepted lock-free functional, lifetime or progress reasoning.",
+          "evidence_cases": [],
+          "limitations": ["Mthread's mutex-oriented race analysis is insufficient for lock-free algorithms."]
+        }
+      },
+      "primitive_models": {
+        "pthread_create": {
+          "status": "calibrated",
+          "semantics": "Creates and starts a discovered Mthread abstract entry point through the bundled pthread model.",
+          "conservative_argument": "Sufficient only for the recorded project fixtures' entry-point discovery controls.",
+          "limitations": ["Scheduling, termination and object lifetime are not thereby proved."],
+          "empty_stub_allowed": false
+        },
+        "mthread_abstract_mutex": {
+          "status": "calibrated",
+          "semantics": "Records abstract ownership and excludes conflicting critical-section interference under the same Mthread mutex identifier.",
+          "conservative_argument": "Sufficient only for assertions made while the calibrated abstract mutex is held in project-owned fixtures.",
+          "limitations": ["Not a model of Linux mutex, spinlock, IRQ-disable or preemption semantics."],
+          "empty_stub_allowed": false
+        },
+        "pthread_join": {
+          "status": "unsupported",
+          "semantics": "The bundled stub returns a nondeterministic status and does not wait for or synchronize with the target thread.",
+          "conservative_argument": "No completion or lifetime claim is accepted from this stub.",
+          "limitations": ["Successful return does not import worker completion."],
+          "empty_stub_allowed": false
+        },
+        "interrupt_registration": {
+          "status": "partial",
+          "semantics": "Registers a named handler as an abstract concurrent entry point from the initial main state.",
+          "conservative_argument": "Useful for exposing potential initial-state interference only.",
+          "limitations": ["Later initialization, nesting, interrupt classes and Linux masking semantics are absent."],
+          "empty_stub_allowed": false
+        },
+        "pthread_barrier_wait": {
+          "status": "unsupported",
+          "semantics": "No Mthread implementation is supplied; the plugin aborts with an explicit probably-unsound diagnostic.",
+          "conservative_argument": "The only accepted result is detection and rejection of the unsupported primitive.",
+          "limitations": ["No barrier ordering or rendezvous property is modeled."],
+          "empty_stub_allowed": false
+        }
+      }
+    }
+  ]
+}
