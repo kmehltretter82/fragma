@@ -1,17 +1,21 @@
 # C3 System V IPC refcount lifetime pilot — 2026-09-07
 
-Status: accepted for one narrow production lifetime decision; C3 remains
-incomplete.
+Status: accepted for one narrow production lifetime decision with configured
+x86-64, arm64, riscv64 and s390x implementation mappings; C3 remains incomplete.
 
 The current standalone evidence is
-[`results/concurrency-c3-ipc-refcount-20260907-02`](../results/concurrency-c3-ipc-refcount-20260907-02/SUMMARY.md).
-It passes all 157 gates and accepts one source-linked kernel property. It found
-no new Linux defect: the selected IPC code uses the refcount API correctly.
+[`results/concurrency-c3-ipc-refcount-20260907-03`](../results/concurrency-c3-ipc-refcount-20260907-03/SUMMARY.md).
+It passes all 396 gates, accepts one source-linked kernel property, and accepts
+four implementation mappings for that same property. It found no new Linux
+defect: the selected IPC code uses the refcount API correctly.
 
 The preceding `-01` run passed the same model, source, build and outcome gates.
 Run `-02` renews the receipt after changing the property wording from a generic
 “report” to the precise observable actions: schedule destruction and return a
-successful get. No semantic claim changed.
+successful get. Run `-03` retains that property and A/B outcome while adding
+arm64, riscv64 and s390x source, compiler, object, symbol and disassembly gates.
+It also uses target `objdump --disassemble=<function>` independently for each
+function, so RISC-V local labels cannot truncate the inspected function body.
 
 ## Accepted property
 
@@ -77,26 +81,26 @@ The source gate pins and rechecks:
 - the full `refcount_dec_and_test()` chain through release fetch-sub, exact
   1-to-0 test and acquire-after-control operation;
 - the kernel refcount ordering documentation;
-- the instrumented atomic API, generic fallback, x86 atomic/cmpxchg macros and
-  LKMM RMW atomicity axiom;
-- the System V IPC Kconfig/Makefile selection and an actual configured object.
+- the instrumented atomic API, generic fallback, LKMM RMW atomicity axiom, and
+  x86-64, arm64, RISC-V and s390 atomic/cmpxchg/barrier implementation files;
+- the System V IPC Kconfig/Makefile selection and actual configured objects.
 
-A dedicated `x86_64_defconfig` build has `CONFIG_SMP=y`, `CONFIG_SYSVIPC=y`,
-`CONFIG_TREE_RCU=y`, `CONFIG_PREEMPT_RCU=y`, GCC 15.2.0 and KCSAN disabled. It
-compiles the real `ipc/util.o`, not a project wrapper. The exact ELF64 x86-64
-object has SHA-256
-`00b7dfa8b08c8d76546e13cc8adb5e5102480225c444902ea46aa6c993525d6d`.
-Its two global function symbols are pinned, and selected disassembly shows:
+Four dedicated SMP builds compile the real `ipc/util.o`, not a project wrapper.
+All use GCC 15.2.0 and GNU binutils 2.46 already present on the machine.
 
-- `ipc_rcu_getref()`: zero test followed by `lock cmpxchg` and its success
-  result; and
-- `ipc_rcu_putref()`: `lock xadd`, comparison with one, and the `call_rcu`
-  relocation on the successful final-put branch.
+| Profile | ELF | Config SHA-256 | Object SHA-256 | Checked lowering |
+| --- | --- | --- | --- | --- |
+| x86-64 | 64-bit LE, machine 62 | `c1d909f833602f5d8fb7fba52322c1f411c44fe4e41a44b52ac5d897e3f3033e` | `00b7dfa8b08c8d76546e13cc8adb5e5102480225c444902ea46aa6c993525d6d` | get `lock cmpxchg`; put `lock xadd` |
+| arm64 | 64-bit LE, machine 183 | `d28c867e07d4ade1ce14ea23b0b45707fde9459c526d492e0cdec042bcbf0219` | `1bda4df1720f4a58034f1163ee31ff19d36dea2307435c75e7c6518e4688a7d9` | get LSE `cas` and LL/SC `ldxr`/`stxr`; put LSE `ldaddl` and LL/SC `ldxr`/`stlxr`, then `dmb ishld` |
+| riscv64 | 64-bit LE, machine 243 | `fe92d0e05bc9be603ec62108f63b02ac7fbf2e20f08789903525fdea8f58f19b` | `54b28e7a322a688cd1a196b153a037c92db1f317dbdb50c4268856f41944c92d` | get Zacas `amocas.w` and `lr.w`/`sc.w`; put release fence, `amoadd.w`, then successful-path read fence |
+| s390x | 64-bit BE, machine 22 | `a7676e53663ef8a496f2da61cd36b0ef67e62420d3fa50d233aa146cef155d01` | `b92d6cb9350e9b4fefa88b75b7a69a83ad7d7231106813e89d8e6f8b704346d3` | get `cs`; put `laa` |
 
-The final kernel configuration hash is
-`c1d909f833602f5d8fb7fba52322c1f411c44fe4e41a44b52ac5d897e3f3033e`.
-Raw commands, stdout/stderr, model results, source/model facts, identities and
-artifact hashes are retained in the local evidence directory.
+Every profile pins both global function symbols and the `call_rcu` relocation.
+The arm64 and RISC-V objects contain runtime-selected alternative atomic paths;
+the gate requires both visible paths rather than pretending the object contains
+only one. The builds run sequentially so their make jobservers and output trees
+cannot interfere. Raw commands, stdout/stderr, model results, source/model facts,
+identities and artifact hashes are retained in the local evidence directory.
 
 ## Boundaries and next work
 
@@ -106,12 +110,16 @@ initial counts, a third update, saturation/overflow/underflow, warning paths,
 whole-IPC or whole-RCU correctness, whole-kernel race freedom, or any progress,
 fairness, retry-bound, lock-free or wait-free guarantee.
 
-The implementation mapping is x86-64 only. The architecture-independent
-refcount contract and LKMM result do not activate another architecture without
-its source/macro/compiler/object evidence. C3 still needs any separately
-justified progress property, implementation mappings beyond x86-64 and broader
-lockless protocol coverage. C4 remains responsible for explicit RCU grace
-period and reclamation reasoning.
+The implementation mapping is limited to x86-64, arm64, riscv64 and s390x. The
+architecture-independent refcount contract and LKMM result do not activate any
+other architecture without its source/macro/compiler/object evidence. C3 still
+needs any separately justified progress property, mappings for the remaining
+Linux architectures and broader lockless protocol coverage. C4 remains
+responsible for explicit RCU grace-period and reclamation reasoning.
+
+The post-expansion project regression run passes
+[983 tests](../results/tests-concurrency-c3-multiarch-refcount-20260907.log),
+with 20 pre-existing conditional skips.
 
 Reproduce with:
 

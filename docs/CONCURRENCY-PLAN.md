@@ -9,8 +9,9 @@ SMP x86-64 release/acquire property. A second four-case pilot adds one
 source-linked module-statistics atomicity property plus an independent atomic
 return-ordering calibration on SMP x86-64. A third source pilot adds one bounded
 System V IPC final-put/get-unless-zero lifetime property and an unsafe
-zero-resurrection control on SMP x86-64. Progress, broader lockless lifetime,
-other architecture mappings and C4 remain open.
+zero-resurrection control. Its implementation map covers configured SMP
+x86-64, arm64, riscv64 and s390x builds. Progress, broader lockless lifetime,
+remaining architecture mappings and C4 remain open.
 See the [C0 evidence record](CONCURRENCY-C0-20260907.md) and
 [C1 evidence record](CONCURRENCY-C1-20260907.md), followed by the
 [C2 mutex pilot](CONCURRENCY-C2-20260907.md) and
@@ -158,9 +159,12 @@ see the [IRQ scope record](CONCURRENCY-C2-IRQ-20260907.md).
   its ordering rules. The module-statistics pilot checks `atomic_inc()` against
   a lost-update control, separately distinguishes ordered and relaxed
   increment-return operations, and pins the configured x86 `lock incl` lowering.
-- [ ] Extend implementation evidence beyond the first configured SMP x86-64
-  mapping. ABI matching alone is insufficient; each activated architecture
-  needs source/macro/compiler evidence appropriate to its claimed property.
+- [x] Extend implementation evidence beyond the first configured SMP x86-64
+  mapping. The refcount pilot now also pins arm64, riscv64 and s390x
+  source/macro/compiler/object/symbol/disassembly evidence, including both
+  emitted alternative atomic paths on arm64 and RISC-V. ABI matching alone is
+  never used to activate a profile; remaining architectures still require the
+  same evidence before acceptance.
 - [x] Add one lifetime-sensitive lockless functional property with an explicit
   unsafe control. The IPC pilot checks the initially-one final-put versus
   get-unless-zero decision, assumes the source-required caller stabilization,
@@ -187,14 +191,16 @@ accepts one production no-lost-update property for two selected concurrent
 `failed_load_modules` increments. Its split once-access control permits the lost
 update, while a separate ordered/relaxed return-value pair calibrates ordering.
 The subsequent
-[157-check IPC refcount pilot](../results/concurrency-c3-ipc-refcount-20260907-02/SUMMARY.md)
+[396-check IPC refcount pilot](../results/concurrency-c3-ipc-refcount-20260907-03/SUMMARY.md)
 accepts one lifetime-sensitive functional property: under the contract's
 caller-locking prerequisite and from the sole reference, `ipc_rcu_putref()`
 cannot schedule RCU destruction while concurrent `ipc_rcu_getref()` succeeds.
 An unsafe unconditional-increment control exposes the zero-resurrection
-outcome. All three source pilots verify correct selected code; none found a new
-defect or completes C3. Progress, broader lockless lifetime behavior and other
-architecture mappings remain open.
+outcome. Its real `ipc/util.o` implementation map passes for configured SMP
+x86-64, arm64, riscv64 and big-endian s390x profiles. All three source pilots
+verify correct selected code; none found a new defect or completes C3.
+Progress, broader lockless lifetime behavior and mappings for remaining
+architectures remain open.
 
 ## C4 — Extend to RCU and maintain honest combined coverage
 
@@ -220,9 +226,10 @@ its required model or validation evidence.
 ## Execution order and reporting
 
 The bounded static review and limited C0-C2 pilot are complete. Continue C3
-from its accepted LKMM baseline, release/acquire, atomic/RMW and IPC refcount
-lifetime pilots: separately justified progress and additional architecture
-mappings come next, followed by C4 RCU/lifetime/combined coverage.
+from its accepted LKMM baseline, release/acquire, atomic/RMW and multiarchitecture
+IPC refcount lifetime pilots: separately justified progress, broader lockless
+protocols and remaining architecture mappings come next, followed by C4
+RCU/lifetime/combined coverage.
 Broader interrupt and functional-protocol extensions remain visible backlog and
 need not wait for every architecture port or all sequential proofs.
 No system installation, running-kernel modification or new backend execution is

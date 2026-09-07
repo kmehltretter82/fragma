@@ -1,6 +1,6 @@
 {
-  "schema_version": 1,
-  "id": "linux-ipc-refcount-lifetime-x86_64-c3",
+  "schema_version": 2,
+  "id": "linux-ipc-refcount-lifetime-multiarch-c3",
   "kernel": {
     "revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
     "git_tree": "054b6818c409ab20ae89b1031a1a7c358f673d87",
@@ -19,6 +19,18 @@
       "build/sources/linux-b9b3e33b70b71/include/linux/atomic/atomic-arch-fallback.h": "df526d6b93b043fb2a25296d82b0c4e4187ef8ddeb4d6789897989f7ad7ed6d0",
       "build/sources/linux-b9b3e33b70b71/arch/x86/include/asm/atomic.h": "1ba1e1ef1403c9be2f00494c1ba22cff87044d442ef90a5da18a863877e88b18",
       "build/sources/linux-b9b3e33b70b71/arch/x86/include/asm/cmpxchg.h": "70dc12e5c2f1bf7b3ff0fcc4f7bf908a9d2a79786ef86d8b3ba71c3e04d3ec9c",
+      "build/sources/linux-b9b3e33b70b71/arch/arm64/include/asm/atomic.h": "88bbe47c1a12633922aa30762c3beb46175520ae0d36bbd0bf0877dd82268904",
+      "build/sources/linux-b9b3e33b70b71/arch/arm64/include/asm/atomic_ll_sc.h": "12c0b4606f2247319ac82ef25c5127225fd4f80079591e33962882d1d33c59e8",
+      "build/sources/linux-b9b3e33b70b71/arch/arm64/include/asm/atomic_lse.h": "a31e91facc36f8cadf7e0bbcbd2a8302d9e75a5d2536602aa3e8b461cde1b1e1",
+      "build/sources/linux-b9b3e33b70b71/arch/arm64/include/asm/cmpxchg.h": "d8ee30b9da0ddf4339f8b9f22d33945e2af36e4e28da4c9df0442267b88a45c4",
+      "build/sources/linux-b9b3e33b70b71/arch/arm64/include/asm/lse.h": "13a2a66a622ebcd4406bffad86c0f3df9e6dad488b91ec6501edcb490d31c6db",
+      "build/sources/linux-b9b3e33b70b71/arch/riscv/include/asm/atomic.h": "1dd07f26feaa310edbec0fa719de81b16742528484a6c6256fcbcb7c318c0206",
+      "build/sources/linux-b9b3e33b70b71/arch/riscv/include/asm/cmpxchg.h": "e531073ca1500c8a761f833c79f55a2ceb6e87521b3218885c5255552e4da45d",
+      "build/sources/linux-b9b3e33b70b71/arch/riscv/include/asm/barrier.h": "93e01e1043ce6a4d5bfa5396fd566319316b2ba846aa28ac85c5dafae7552753",
+      "build/sources/linux-b9b3e33b70b71/arch/s390/include/asm/atomic.h": "30cf3e533e063f68d138893580698845033d172f46c42d26a9b4b6c584d2383b",
+      "build/sources/linux-b9b3e33b70b71/arch/s390/include/asm/atomic_ops.h": "60253e41689c785bd151b53ab1f7c1a2f82213af23392a985e0d361e8fb4e1d7",
+      "build/sources/linux-b9b3e33b70b71/arch/s390/include/asm/cmpxchg.h": "2ba71db92fff82e39830c36a7068921f0029bdd9b2db907eb39d94ac01f9f4da",
+      "build/sources/linux-b9b3e33b70b71/arch/s390/include/asm/barrier.h": "fc147b7409686eb35f3c5e018badceadf74b63bbd173be8efff52ba2706dd733",
       "build/sources/linux-b9b3e33b70b71/include/asm-generic/barrier.h": "72ccf9fddb2f4f34161641eb4af082b6d01a2b256ad0bf80770858aecbdcf410",
       "build/sources/linux-b9b3e33b70b71/tools/memory-model/linux-kernel.def": "a04911d85fd86f5dbcf8ed436c7a2570fcc615f768c0c19b0a101f6212d2504c",
       "build/sources/linux-b9b3e33b70b71/tools/memory-model/linux-kernel.cat": "250207709250d308e0a0a6f391c4eda0bbf4876cbc55eccbfbcd495676a179be"
@@ -29,9 +41,11 @@
     "id": "linux-lkmm-herd7-c3-calibration",
     "required_capability": "c3_capability_baseline_complete"
   },
-  "profile": {
+  "profiles": [
+  {
     "id": "x86_64-ipc-refcount-c3",
     "arch": "x86_64",
+    "cross_compile": null,
     "jobs": 8,
     "build_directory": "build/kernel/x86_64-ipc-refcount-c3",
     "config": "build/kernel/x86_64-ipc-refcount-c3/.config",
@@ -118,6 +132,291 @@
       }
     }
   },
+  {
+    "id": "arm64-ipc-refcount-c3",
+    "arch": "arm64",
+    "cross_compile": "/usr/bin/aarch64-linux-gnu-",
+    "jobs": 8,
+    "build_directory": "build/kernel/arm64-ipc-refcount-c3",
+    "config": "build/kernel/arm64-ipc-refcount-c3/.config",
+    "config_sha256": "d28c867e07d4ade1ce14ea23b0b45707fde9459c526d492e0cdec042bcbf0219",
+    "configuration": {
+      "base_recipe": "defconfig",
+      "finalize_recipe": "olddefconfig"
+    },
+    "required_config": {
+      "CONFIG_64BIT": "y",
+      "CONFIG_ARM64": "y",
+      "CONFIG_SMP": "y",
+      "CONFIG_SYSVIPC": "y",
+      "CONFIG_TREE_RCU": "y",
+      "CONFIG_PREEMPT_RCU": "y",
+      "CONFIG_RCU_EXPERT": "n",
+      "CONFIG_KCSAN": "absent",
+      "CONFIG_CC_IS_GCC": "y"
+    },
+    "make": {
+      "binary": "/usr/bin/make",
+      "realpath": "/usr/bin/make",
+      "sha256": "27c9f6d806aee15882b01c2c61848f7aa75caa14bc7b6f608ba422f9e46a7d49",
+      "version_line": "GNU Make 4.4.1"
+    },
+    "compiler": {
+      "binary": "/usr/bin/aarch64-linux-gnu-gcc",
+      "realpath": "/usr/bin/aarch64-linux-gnu-gcc-15",
+      "sha256": "50d0961827e521a7c06d7794d4b15282559a117d365a149aaca5726917ab1603",
+      "version_line": "aarch64-linux-gnu-gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+      "target": "aarch64-linux-gnu"
+    },
+    "objdump": {
+      "binary": "/usr/bin/aarch64-linux-gnu-objdump",
+      "realpath": "/usr/bin/aarch64-linux-gnu-objdump",
+      "sha256": "f169f3bd85dd3c44f640cdb0980cae98ca0bd585e755e909bdc146e019c0fe33",
+      "version_line": "GNU objdump (GNU Binutils for Ubuntu) 2.46"
+    },
+    "configured_compile": {
+      "target": "ipc/util.o",
+      "object": "build/kernel/arm64-ipc-refcount-c3/ipc/util.o",
+      "command_file": "build/kernel/arm64-ipc-refcount-c3/ipc/.util.o.cmd",
+      "object_sha256": "1bda4df1720f4a58034f1163ee31ff19d36dea2307435c75e7c6518e4688a7d9",
+      "command_sha256": "66a066114bd657c4c1b0f0bf186e4b74c2dab497bc5d67b924e73d7fe8b44dcb",
+      "elf_class": 2,
+      "elf_data": 1,
+      "elf_machine": 183,
+      "required_command_tokens": [
+        "/usr/bin/aarch64-linux-gnu-gcc",
+        "-D__KERNEL__",
+        "-mlittle-endian",
+        "-std=gnu11",
+        "-mgeneral-regs-only",
+        "-mabi=lp64",
+        "-Wa,-march=armv8.5-a",
+        "-O2",
+        "-fno-allow-store-data-races",
+        "ipc/util.o",
+        "ipc/util.c"
+      ],
+      "functions": {
+        "ipc_rcu_getref": {
+          "section": ".text",
+          "value": "0000000000000e60",
+          "size": 144,
+          "disassembly_order": [
+            "<ipc_rcu_getref>:",
+            "cbz\tw2",
+            "cas\tw3, w1, [x4]",
+            "ldxr\tw3, [x4]",
+            "stxr\tw5, w1, [x4]",
+            "R_AARCH64_CALL26\trefcount_warn_saturate"
+          ]
+        },
+        "ipc_rcu_putref": {
+          "section": ".text",
+          "value": "0000000000000ef0",
+          "size": 140,
+          "disassembly_order": [
+            "<ipc_rcu_putref>:",
+            "ldaddl\tw2, w2, [x4]",
+            "ldxr\tw2, [x7]",
+            "stlxr\tw6, w5, [x7]",
+            "dmb\tishld",
+            "R_AARCH64_CALL26\tcall_rcu"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": "riscv64-ipc-refcount-c3",
+    "arch": "riscv",
+    "cross_compile": "/usr/bin/riscv64-linux-gnu-",
+    "jobs": 8,
+    "build_directory": "build/kernel/riscv64-ipc-refcount-c3",
+    "config": "build/kernel/riscv64-ipc-refcount-c3/.config",
+    "config_sha256": "fe92d0e05bc9be603ec62108f63b02ac7fbf2e20f08789903525fdea8f58f19b",
+    "configuration": {
+      "base_recipe": "defconfig",
+      "finalize_recipe": "olddefconfig"
+    },
+    "required_config": {
+      "CONFIG_64BIT": "y",
+      "CONFIG_RISCV": "y",
+      "CONFIG_ARCH_RV64I": "y",
+      "CONFIG_SMP": "y",
+      "CONFIG_SYSVIPC": "y",
+      "CONFIG_TREE_RCU": "y",
+      "CONFIG_PREEMPT_RCU": "absent",
+      "CONFIG_RCU_EXPERT": "n",
+      "CONFIG_KCSAN": "absent",
+      "CONFIG_CC_IS_GCC": "y"
+    },
+    "make": {
+      "binary": "/usr/bin/make",
+      "realpath": "/usr/bin/make",
+      "sha256": "27c9f6d806aee15882b01c2c61848f7aa75caa14bc7b6f608ba422f9e46a7d49",
+      "version_line": "GNU Make 4.4.1"
+    },
+    "compiler": {
+      "binary": "/usr/bin/riscv64-linux-gnu-gcc",
+      "realpath": "/usr/bin/riscv64-linux-gnu-gcc-15",
+      "sha256": "fdcd0a16c510b9a7328b7bfba0e02c49b85d12364faac3a02ed1da304a2ea6be",
+      "version_line": "riscv64-linux-gnu-gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+      "target": "riscv64-linux-gnu"
+    },
+    "objdump": {
+      "binary": "/usr/bin/riscv64-linux-gnu-objdump",
+      "realpath": "/usr/bin/riscv64-linux-gnu-objdump",
+      "sha256": "25655c4bc10524d230b8f607d0c9e7901c685f908776955f0df823c520b80bab",
+      "version_line": "GNU objdump (GNU Binutils for Ubuntu) 2.46"
+    },
+    "configured_compile": {
+      "target": "ipc/util.o",
+      "object": "build/kernel/riscv64-ipc-refcount-c3/ipc/util.o",
+      "command_file": "build/kernel/riscv64-ipc-refcount-c3/ipc/.util.o.cmd",
+      "object_sha256": "54b28e7a322a688cd1a196b153a037c92db1f317dbdb50c4268856f41944c92d",
+      "command_sha256": "cb82c7f498ee31dd1dff6cb20df9f9eb6b4f6101f7ec95583be4c19d262206bf",
+      "elf_class": 2,
+      "elf_data": 1,
+      "elf_machine": 243,
+      "required_command_tokens": [
+        "/usr/bin/riscv64-linux-gnu-gcc",
+        "-D__KERNEL__",
+        "-std=gnu11",
+        "-mabi=lp64",
+        "-march=rv64imac_zicsr_zifencei_zacas_zabha",
+        "-mno-save-restore",
+        "-mstrict-align",
+        "-O2",
+        "-fno-allow-store-data-races",
+        "ipc/util.o",
+        "ipc/util.c"
+      ],
+      "functions": {
+        "ipc_rcu_getref": {
+          "section": ".text",
+          "value": "0000000000000dc8",
+          "size": 100,
+          "disassembly_order": [
+            "<ipc_rcu_getref>:",
+            "beqz\ta5",
+            "lr.w\ta4,(a0)",
+            "sc.w\ta2,a3,(a0)",
+            "amocas.w\ta4,a3,(a0)",
+            "R_RISCV_CALL_PLT\trefcount_warn_saturate"
+          ]
+        },
+        "ipc_rcu_putref": {
+          "section": ".text",
+          "value": "0000000000000e2c",
+          "size": 88,
+          "disassembly_order": [
+            "<ipc_rcu_putref>:",
+            "fence\trw,w",
+            "amoadd.w\ta5,a5,(a4)",
+            "beq\ta5,a4",
+            "fence\tr,r",
+            "R_RISCV_CALL_PLT\tcall_rcu"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": "s390x-ipc-refcount-c3",
+    "arch": "s390",
+    "cross_compile": "/usr/bin/s390x-linux-gnu-",
+    "jobs": 8,
+    "build_directory": "build/kernel/s390x-ipc-refcount-c3",
+    "config": "build/kernel/s390x-ipc-refcount-c3/.config",
+    "config_sha256": "a7676e53663ef8a496f2da61cd36b0ef67e62420d3fa50d233aa146cef155d01",
+    "configuration": {
+      "base_recipe": "defconfig",
+      "finalize_recipe": "olddefconfig"
+    },
+    "required_config": {
+      "CONFIG_64BIT": "y",
+      "CONFIG_S390": "y",
+      "CONFIG_CPU_BIG_ENDIAN": "y",
+      "CONFIG_MARCH_Z13": "y",
+      "CONFIG_SMP": "y",
+      "CONFIG_SYSVIPC": "y",
+      "CONFIG_TREE_RCU": "y",
+      "CONFIG_PREEMPT_RCU": "absent",
+      "CONFIG_RCU_EXPERT": "n",
+      "CONFIG_KCSAN": "n",
+      "CONFIG_CC_IS_GCC": "y"
+    },
+    "make": {
+      "binary": "/usr/bin/make",
+      "realpath": "/usr/bin/make",
+      "sha256": "27c9f6d806aee15882b01c2c61848f7aa75caa14bc7b6f608ba422f9e46a7d49",
+      "version_line": "GNU Make 4.4.1"
+    },
+    "compiler": {
+      "binary": "/usr/bin/s390x-linux-gnu-gcc",
+      "realpath": "/usr/bin/s390x-linux-gnu-gcc-15",
+      "sha256": "7460813207bc4c0520dcf8181fca5abf25ff07eae515d57f56388446ce409b6d",
+      "version_line": "s390x-linux-gnu-gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+      "target": "s390x-linux-gnu"
+    },
+    "objdump": {
+      "binary": "/usr/bin/s390x-linux-gnu-objdump",
+      "realpath": "/usr/bin/s390x-linux-gnu-objdump",
+      "sha256": "ff27ef648bd53f49f9cb1422dda7670876bdca1938c1227b76a0e6eb2ce58277",
+      "version_line": "GNU objdump (GNU Binutils for Ubuntu) 2.46"
+    },
+    "configured_compile": {
+      "target": "ipc/util.o",
+      "object": "build/kernel/s390x-ipc-refcount-c3/ipc/util.o",
+      "command_file": "build/kernel/s390x-ipc-refcount-c3/ipc/.util.o.cmd",
+      "object_sha256": "b92d6cb9350e9b4fefa88b75b7a69a83ad7d7231106813e89d8e6f8b704346d3",
+      "command_sha256": "09f9d4daba6f85ed3cb8fae50f277cc3b237e9a999c6a1590f52d7fa58ef1433",
+      "elf_class": 2,
+      "elf_data": 2,
+      "elf_machine": 22,
+      "required_command_tokens": [
+        "/usr/bin/s390x-linux-gnu-gcc",
+        "-D__KERNEL__",
+        "-m64",
+        "-std=gnu11",
+        "-mpacked-stack",
+        "-mbackchain",
+        "-msoft-float",
+        "-march=z13",
+        "-mtune=z13",
+        "-O2",
+        "-fno-allow-store-data-races",
+        "ipc/util.o",
+        "ipc/util.c"
+      ],
+      "functions": {
+        "ipc_rcu_getref": {
+          "section": ".text",
+          "value": "0000000000000f10",
+          "size": 136,
+          "disassembly_order": [
+            "<ipc_rcu_getref>:",
+            "cije\t%r1,0",
+            "cs\t%r1,%r2,0(%r3)",
+            "R_390_PLT32DBL\trefcount_warn_saturate"
+          ]
+        },
+        "ipc_rcu_putref": {
+          "section": ".text",
+          "value": "0000000000000fa0",
+          "size": 64,
+          "disassembly_order": [
+            "<ipc_rcu_putref>:",
+            "laa\t%r0,%r4,80(%r1)",
+            "cije\t%r0,1",
+            "R_390_PLT32DBL\tcall_rcu",
+            "R_390_PLT32DBL\trefcount_warn_saturate"
+          ]
+        }
+      }
+    }
+  }
+  ],
   "property": {
     "kind": "kernel_refcount_final_put_vs_get_unless_zero",
     "claim": "For a locking-stabilized System V IPC object whose refcount starts at one, one selected ipc_rcu_putref() and one concurrent selected ipc_rcu_getref() cannot both schedule last-reference RCU destruction and return a successful reference acquisition.",
@@ -133,7 +432,7 @@
     "stability_argument": "The pinned IPC contract requires caller locking; the property assumes that prerequisite keeps ptr and its refcount storage valid for both selected operations.",
     "lifetime_argument": "The final decrement schedules RCU destruction only when refcount_dec_and_test() observes the 1-to-0 transition; refcount_inc_not_zero() cannot acquire a reference from zero.",
     "model_argument": "With initial value one and exactly one competing get, the refcount get loop can succeed only in its first compare/exchange from 1 to 2; a failed compare means the sole decrement already installed zero, so the single relaxed cmpxchg is behaviorally exact for this outcome.",
-    "implementation_argument": "The pinned LKMM treats the selected updates as indivisible RMWs, and the configured x86-64 object lowers the get to lock cmpxchg and the put to lock xadd before its call_rcu branch.",
+    "implementation_argument": "The pinned LKMM treats the selected updates as indivisible RMWs. Configured x86-64, arm64, riscv64 and s390x objects preserve that implementation shape through their native atomic compare/exchange and fetch-sub paths before the final-put call_rcu branch; emitted alternatives are checked rather than collapsed.",
     "exclusions": [
       "The caller-locking and pointer-stability prerequisite is assumed, not proved; an attempt through already reclaimed storage is outside the property.",
       "The initial refcount is exactly one, there is one selected get and one selected put, and no third refcount update is modeled.",
@@ -141,7 +440,7 @@
       "Saturation, overflow, underflow, warning paths and values outside zero, one and two are excluded.",
       "The acquire-after-control-dependency orders later destruction work but cannot change the selected same-refcount mutual-success outcome, so cross-object ordering is not claimed.",
       "The unsafe resurrection case is a detecting control and is permanently ineligible as verification evidence.",
-      "No architecture implementation other than the configured SMP x86-64 profile is accepted by this source-linked pilot.",
+      "No architecture implementation other than the configured SMP x86-64, arm64, riscv64 and s390x profiles is accepted by this source-linked pilot; every other architecture remains outside the claim.",
       "No progress, fairness, retry bound, lock-freedom, wait-freedom, whole-IPC correctness, whole-RCU correctness or whole-kernel race-freedom property is claimed."
     ]
   },

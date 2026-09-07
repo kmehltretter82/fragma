@@ -21,6 +21,93 @@ _CASE_IDS = {
 }
 
 
+_PROFILE_SPECS = {
+    "x86_64-ipc-refcount-c3": {
+        "arch": "x86_64",
+        "cross_compile": None,
+        "base_recipe": "x86_64_defconfig",
+        "compiler": "/usr/bin/gcc",
+        "compiler_target": "x86_64-linux-gnu",
+        "objdump": "/usr/bin/objdump",
+        "elf": [2, 1, 62],
+        "required_config": {
+            "CONFIG_64BIT": "y",
+            "CONFIG_X86_64": "y",
+            "CONFIG_SMP": "y",
+            "CONFIG_SYSVIPC": "y",
+            "CONFIG_TREE_RCU": "y",
+            "CONFIG_PREEMPT_RCU": "y",
+            "CONFIG_RCU_EXPERT": "n",
+            "CONFIG_KCSAN": "n",
+            "CONFIG_CC_IS_GCC": "y",
+        },
+    },
+    "arm64-ipc-refcount-c3": {
+        "arch": "arm64",
+        "cross_compile": "/usr/bin/aarch64-linux-gnu-",
+        "base_recipe": "defconfig",
+        "compiler": "/usr/bin/aarch64-linux-gnu-gcc",
+        "compiler_target": "aarch64-linux-gnu",
+        "objdump": "/usr/bin/aarch64-linux-gnu-objdump",
+        "elf": [2, 1, 183],
+        "required_config": {
+            "CONFIG_64BIT": "y",
+            "CONFIG_ARM64": "y",
+            "CONFIG_SMP": "y",
+            "CONFIG_SYSVIPC": "y",
+            "CONFIG_TREE_RCU": "y",
+            "CONFIG_PREEMPT_RCU": "y",
+            "CONFIG_RCU_EXPERT": "n",
+            "CONFIG_KCSAN": "absent",
+            "CONFIG_CC_IS_GCC": "y",
+        },
+    },
+    "riscv64-ipc-refcount-c3": {
+        "arch": "riscv",
+        "cross_compile": "/usr/bin/riscv64-linux-gnu-",
+        "base_recipe": "defconfig",
+        "compiler": "/usr/bin/riscv64-linux-gnu-gcc",
+        "compiler_target": "riscv64-linux-gnu",
+        "objdump": "/usr/bin/riscv64-linux-gnu-objdump",
+        "elf": [2, 1, 243],
+        "required_config": {
+            "CONFIG_64BIT": "y",
+            "CONFIG_RISCV": "y",
+            "CONFIG_ARCH_RV64I": "y",
+            "CONFIG_SMP": "y",
+            "CONFIG_SYSVIPC": "y",
+            "CONFIG_TREE_RCU": "y",
+            "CONFIG_PREEMPT_RCU": "absent",
+            "CONFIG_RCU_EXPERT": "n",
+            "CONFIG_KCSAN": "absent",
+            "CONFIG_CC_IS_GCC": "y",
+        },
+    },
+    "s390x-ipc-refcount-c3": {
+        "arch": "s390",
+        "cross_compile": "/usr/bin/s390x-linux-gnu-",
+        "base_recipe": "defconfig",
+        "compiler": "/usr/bin/s390x-linux-gnu-gcc",
+        "compiler_target": "s390x-linux-gnu",
+        "objdump": "/usr/bin/s390x-linux-gnu-objdump",
+        "elf": [2, 2, 22],
+        "required_config": {
+            "CONFIG_64BIT": "y",
+            "CONFIG_S390": "y",
+            "CONFIG_CPU_BIG_ENDIAN": "y",
+            "CONFIG_MARCH_Z13": "y",
+            "CONFIG_SMP": "y",
+            "CONFIG_SYSVIPC": "y",
+            "CONFIG_TREE_RCU": "y",
+            "CONFIG_PREEMPT_RCU": "absent",
+            "CONFIG_RCU_EXPERT": "n",
+            "CONFIG_KCSAN": "n",
+            "CONFIG_CC_IS_GCC": "y",
+        },
+    },
+}
+
+
 def _strict_json(path: Path) -> Any:
     try:
         return concurrency_c3_lkmm._strict_json(path)
@@ -128,6 +215,142 @@ def _validate_expected(expected: Any, case_id: str) -> None:
     _digest(expected["hash"], f"{case_id} herd hash", 32)
 
 
+def _validate_profile(root: Path, profile: Any, expected_id: str) -> None:
+    if not isinstance(profile, dict) or set(profile) != {
+        "id", "arch", "cross_compile", "jobs", "build_directory", "config",
+        "config_sha256", "configuration", "required_config", "make",
+        "compiler", "objdump", "configured_compile",
+    }:
+        raise ConcurrencyC3IpcRefcountError("IPC build profile is not exact")
+    spec = _PROFILE_SPECS[expected_id]
+    if (
+        profile["id"] != expected_id
+        or profile["arch"] != spec["arch"]
+        or profile["cross_compile"] != spec["cross_compile"]
+        or type(profile["jobs"]) is not int
+        or not 1 <= profile["jobs"] <= 256
+    ):
+        raise ConcurrencyC3IpcRefcountError(
+            f"unexpected IPC build profile {expected_id}"
+        )
+    expected_build = f"build/kernel/{expected_id}"
+    build_directory = _declared_path(
+        root, profile["build_directory"], f"{expected_id} build directory"
+    )
+    if profile["build_directory"] != expected_build:
+        raise ConcurrencyC3IpcRefcountError(
+            f"unexpected build directory for {expected_id}"
+        )
+    config_path = _declared_path(root, profile["config"], f"{expected_id} config")
+    if profile["config"] != f"{expected_build}/.config":
+        raise ConcurrencyC3IpcRefcountError(
+            f"unexpected config path for {expected_id}"
+        )
+    try:
+        config_path.resolve().relative_to(build_directory.resolve())
+    except ValueError as exc:
+        raise ConcurrencyC3IpcRefcountError(
+            f"kernel config is outside {expected_id} build directory"
+        ) from exc
+    _digest(profile["config_sha256"], f"{expected_id} config identity")
+    if profile["configuration"] != {
+        "base_recipe": spec["base_recipe"],
+        "finalize_recipe": "olddefconfig",
+    }:
+        raise ConcurrencyC3IpcRefcountError(
+            f"unexpected IPC config recipe for {expected_id}"
+        )
+    if profile["required_config"] != spec["required_config"]:
+        raise ConcurrencyC3IpcRefcountError(
+            f"IPC config requirements are not exact for {expected_id}"
+        )
+    for tool_name in ("make", "compiler", "objdump"):
+        _validate_tool(profile[tool_name], f"{expected_id} {tool_name}",
+                       target=tool_name == "compiler")
+    if (
+        profile["make"]["binary"] != "/usr/bin/make"
+        or profile["compiler"]["binary"] != spec["compiler"]
+        or profile["compiler"]["target"] != spec["compiler_target"]
+        or profile["objdump"]["binary"] != spec["objdump"]
+    ):
+        raise ConcurrencyC3IpcRefcountError(
+            f"unexpected tool mapping for {expected_id}"
+        )
+
+    compile_record = profile["configured_compile"]
+    if not isinstance(compile_record, dict) or set(compile_record) != {
+        "target", "object", "command_file", "object_sha256", "command_sha256",
+        "elf_class", "elf_data", "elf_machine", "required_command_tokens",
+        "functions",
+    }:
+        raise ConcurrencyC3IpcRefcountError(
+            f"configured IPC compile is not exact for {expected_id}"
+        )
+    if compile_record["target"] != "ipc/util.o":
+        raise ConcurrencyC3IpcRefcountError("unexpected IPC object target")
+    expected_paths = {
+        "object": f"{expected_build}/ipc/util.o",
+        "command_file": f"{expected_build}/ipc/.util.o.cmd",
+    }
+    for key, expected_path in expected_paths.items():
+        if compile_record[key] != expected_path:
+            raise ConcurrencyC3IpcRefcountError(
+                f"unexpected configured {key} for {expected_id}"
+            )
+        path = _declared_path(root, compile_record[key], f"configured {key}")
+        try:
+            path.resolve().relative_to(build_directory.resolve())
+        except ValueError as exc:
+            raise ConcurrencyC3IpcRefcountError(
+                f"configured {key} is outside {expected_id} build"
+            ) from exc
+    _digest(compile_record["object_sha256"], f"{expected_id} object identity")
+    _digest(compile_record["command_sha256"], f"{expected_id} command identity")
+    actual_elf = [
+        compile_record[key] for key in ("elf_class", "elf_data", "elf_machine")
+    ]
+    if actual_elf != spec["elf"]:
+        raise ConcurrencyC3IpcRefcountError(
+            f"configured object has the wrong ELF identity for {expected_id}"
+        )
+    tokens = _strings(
+        compile_record["required_command_tokens"],
+        f"{expected_id} compile command tokens",
+    )
+    for required in (spec["compiler"], "-D__KERNEL__", "ipc/util.o", "ipc/util.c"):
+        if required not in tokens:
+            raise ConcurrencyC3IpcRefcountError(
+                f"{expected_id} compile command omits {required}"
+            )
+    functions = compile_record["functions"]
+    if not isinstance(functions, dict) or set(functions) != {
+        "ipc_rcu_getref", "ipc_rcu_putref",
+    }:
+        raise ConcurrencyC3IpcRefcountError(
+            f"configured function inventory is not exact for {expected_id}"
+        )
+    for name, function in functions.items():
+        if (
+            not isinstance(function, dict)
+            or set(function) != {"section", "value", "size", "disassembly_order"}
+            or function["section"] != ".text"
+            or not re.fullmatch(r"[0-9a-f]{16}", function["value"])
+            or type(function["size"]) is not int
+            or function["size"] < 1
+        ):
+            raise ConcurrencyC3IpcRefcountError(
+                f"invalid configured function {name} for {expected_id}"
+            )
+        order = _strings(
+            function["disassembly_order"],
+            f"{expected_id} {name} disassembly order",
+        )
+        if order[0] != f"<{name}>:":
+            raise ConcurrencyC3IpcRefcountError(
+                f"{expected_id} {name} disassembly does not start at the function"
+            )
+
+
 def load_manifest(root: Path) -> dict[str, Any]:
     """Load and aggressively validate the sole IPC lifetime pilot."""
     root = root.resolve()
@@ -135,11 +358,11 @@ def load_manifest(root: Path) -> dict[str, Any]:
     if (
         not isinstance(manifest, dict)
         or set(manifest) != {
-            "schema_version", "id", "kernel", "baseline", "profile",
+            "schema_version", "id", "kernel", "baseline", "profiles",
             "property", "model",
         }
-        or manifest["schema_version"] != 1
-        or manifest["id"] != "linux-ipc-refcount-lifetime-x86_64-c3"
+        or manifest["schema_version"] != 2
+        or manifest["id"] != "linux-ipc-refcount-lifetime-multiarch-c3"
     ):
         raise ConcurrencyC3IpcRefcountError("unsupported IPC refcount C3 schema")
 
@@ -160,7 +383,7 @@ def load_manifest(root: Path) -> dict[str, Any]:
             "source receipt is outside kernel source"
         ) from exc
     identities = kernel["source_identities"]
-    if not isinstance(identities, dict) or len(identities) != 15:
+    if not isinstance(identities, dict) or len(identities) != 27:
         raise ConcurrencyC3IpcRefcountError(
             "IPC refcount source identity set is not exact"
         )
@@ -180,90 +403,19 @@ def load_manifest(root: Path) -> dict[str, Any]:
     ):
         raise ConcurrencyC3IpcRefcountError("IPC pilot names the wrong baseline")
 
-    profile = manifest["profile"]
-    if not isinstance(profile, dict) or set(profile) != {
-        "id", "arch", "jobs", "build_directory", "config", "config_sha256",
-        "configuration", "required_config", "make", "compiler", "objdump",
-        "configured_compile",
-    }:
-        raise ConcurrencyC3IpcRefcountError("IPC build profile is not exact")
+    profiles = manifest["profiles"]
+    expected_ids = list(_PROFILE_SPECS)
     if (
-        profile["id"] != "x86_64-ipc-refcount-c3"
-        or profile["arch"] != "x86_64"
-        or type(profile["jobs"]) is not int
-        or not 1 <= profile["jobs"] <= 256
+        not isinstance(profiles, list)
+        or len(profiles) != len(expected_ids)
+        or [profile.get("id") if isinstance(profile, dict) else None
+            for profile in profiles] != expected_ids
     ):
-        raise ConcurrencyC3IpcRefcountError("unexpected IPC build profile")
-    build_directory = _declared_path(root, profile["build_directory"], "build directory")
-    config_path = _declared_path(root, profile["config"], "kernel config")
-    try:
-        config_path.resolve().relative_to(build_directory.resolve())
-    except ValueError as exc:
         raise ConcurrencyC3IpcRefcountError(
-            "kernel config is outside build directory"
-        ) from exc
-    _digest(profile["config_sha256"], "kernel config identity")
-    configuration = profile["configuration"]
-    if (
-        not isinstance(configuration, dict)
-        or configuration != {
-            "base_recipe": "x86_64_defconfig",
-            "finalize_recipe": "olddefconfig",
-        }
-    ):
-        raise ConcurrencyC3IpcRefcountError("unexpected IPC config recipe")
-    required_config = profile["required_config"]
-    if not isinstance(required_config, dict) or set(required_config) != {
-        "CONFIG_64BIT", "CONFIG_X86_64", "CONFIG_SMP", "CONFIG_SYSVIPC",
-        "CONFIG_TREE_RCU", "CONFIG_PREEMPT_RCU", "CONFIG_RCU_EXPERT",
-        "CONFIG_KCSAN", "CONFIG_CC_IS_GCC",
-    }:
-        raise ConcurrencyC3IpcRefcountError("IPC config requirements are not exact")
-    if any(value not in {"y", "n", "m", "absent"} for value in required_config.values()):
-        raise ConcurrencyC3IpcRefcountError("invalid IPC config value")
-    for tool_name in ("make", "compiler", "objdump"):
-        _validate_tool(profile[tool_name], tool_name, target=tool_name == "compiler")
-
-    compile_record = profile["configured_compile"]
-    if not isinstance(compile_record, dict) or set(compile_record) != {
-        "target", "object", "command_file", "object_sha256", "command_sha256",
-        "elf_class", "elf_data", "elf_machine", "required_command_tokens",
-        "functions",
-    }:
-        raise ConcurrencyC3IpcRefcountError("configured IPC compile is not exact")
-    if compile_record["target"] != "ipc/util.o":
-        raise ConcurrencyC3IpcRefcountError("unexpected IPC object target")
-    for key in ("object", "command_file"):
-        path = _declared_path(root, compile_record[key], f"configured {key}")
-        try:
-            path.resolve().relative_to(build_directory.resolve())
-        except ValueError as exc:
-            raise ConcurrencyC3IpcRefcountError(
-                f"configured {key} is outside build"
-            ) from exc
-    _digest(compile_record["object_sha256"], "configured object identity")
-    _digest(compile_record["command_sha256"], "configured command identity")
-    if [compile_record[key] for key in ("elf_class", "elf_data", "elf_machine")] != [2, 1, 62]:
-        raise ConcurrencyC3IpcRefcountError(
-            "configured object must be ELF64 little-endian x86-64"
+            "IPC architecture profile inventory is not exact"
         )
-    _strings(compile_record["required_command_tokens"], "compile command tokens")
-    functions = compile_record["functions"]
-    if not isinstance(functions, dict) or set(functions) != {
-        "ipc_rcu_getref", "ipc_rcu_putref",
-    }:
-        raise ConcurrencyC3IpcRefcountError("configured function inventory is not exact")
-    for name, function in functions.items():
-        if (
-            not isinstance(function, dict)
-            or set(function) != {"section", "value", "size", "disassembly_order"}
-            or function["section"] != ".text"
-            or not re.fullmatch(r"[0-9a-f]{16}", function["value"])
-            or type(function["size"]) is not int
-            or function["size"] < 1
-        ):
-            raise ConcurrencyC3IpcRefcountError(f"invalid configured function {name}")
-        _strings(function["disassembly_order"], f"{name} disassembly order")
+    for profile, expected_id in zip(profiles, expected_ids, strict=True):
+        _validate_profile(root, profile, expected_id)
 
     prop = manifest["property"]
     if not isinstance(prop, dict) or set(prop) != {
@@ -520,6 +672,34 @@ def _semantic_checks(
     ).read_text()
     x86_atomic = (source_root / "arch/x86/include/asm/atomic.h").read_text()
     x86_cmpxchg = (source_root / "arch/x86/include/asm/cmpxchg.h").read_text()
+    arm64_atomic = (source_root / "arch/arm64/include/asm/atomic.h").read_text()
+    arm64_ll_sc = (
+        source_root / "arch/arm64/include/asm/atomic_ll_sc.h"
+    ).read_text()
+    arm64_lse_atomic = (
+        source_root / "arch/arm64/include/asm/atomic_lse.h"
+    ).read_text()
+    arm64_cmpxchg = (
+        source_root / "arch/arm64/include/asm/cmpxchg.h"
+    ).read_text()
+    arm64_lse = (source_root / "arch/arm64/include/asm/lse.h").read_text()
+    riscv_atomic = (source_root / "arch/riscv/include/asm/atomic.h").read_text()
+    riscv_cmpxchg = (
+        source_root / "arch/riscv/include/asm/cmpxchg.h"
+    ).read_text()
+    riscv_barrier = (
+        source_root / "arch/riscv/include/asm/barrier.h"
+    ).read_text()
+    s390_atomic = (source_root / "arch/s390/include/asm/atomic.h").read_text()
+    s390_atomic_ops = (
+        source_root / "arch/s390/include/asm/atomic_ops.h"
+    ).read_text()
+    s390_cmpxchg = (
+        source_root / "arch/s390/include/asm/cmpxchg.h"
+    ).read_text()
+    s390_barrier = (
+        source_root / "arch/s390/include/asm/barrier.h"
+    ).read_text()
     barrier = (source_root / "include/asm-generic/barrier.h").read_text()
     model_def = (source_root / "tools/memory-model/linux-kernel.def").read_text()
     model_cat = (source_root / "tools/memory-model/linux-kernel.cat").read_text()
@@ -568,6 +748,89 @@ def _semantic_checks(
         _check("x86 xadd uses LOCK_PREFIX", True,
                "#define xadd(ptr, inc)\t\t__xadd((ptr), (inc), LOCK_PREFIX)"
                in x86_cmpxchg),
+        _check("arm64 atomic wrapper selects LSE or LL/SC", True,
+               _ordered(arm64_lse, [
+                   "#define __lse_ll_sc_body(op, ...)",
+                   "alternative_has_cap_likely(ARM64_HAS_LSE_ATOMICS)",
+                   "__lse_##op(__VA_ARGS__)",
+                   "__ll_sc_##op(__VA_ARGS__)",
+               ])),
+        _check("arm64 fetch-sub routes through alternative body", True,
+               _ordered(arm64_atomic, [
+                   "#define ATOMIC_FETCH_OP(name, op)",
+                   "return __lse_ll_sc_body(op##name, i, v);",
+                   "ATOMIC_FETCH_OPS(atomic_fetch_sub)",
+                   "#define arch_atomic_fetch_sub_release",
+               ])),
+        _check("arm64 LL/SC release fetch uses exclusive RMW", True,
+               _ordered(arm64_ll_sc, [
+                   "#define ATOMIC_FETCH_OP(name, mb, acq, rel, cl, op, asm_op, constraint)",
+                   '"1:\tld" #acq "xr',
+                   '"\tst" #rel "xr',
+                   "ATOMIC_FETCH_OP (_release",
+               ])),
+        _check("arm64 LSE release fetch-sub uses LDADD path", True,
+               _ordered(arm64_lse_atomic, [
+                   "ATOMIC_FETCH_OPS(add, ldadd)",
+                   "__lse_atomic_fetch_sub##name",
+                   "return __lse_atomic_fetch_add##name(-i, v);",
+                   "ATOMIC_FETCH_OP_SUB(_release)",
+               ])),
+        _check("arm64 compare/exchange wrapper selects alternatives", True,
+               "return __lse_ll_sc_body(_cmpxchg_case_##name##sz"
+               in arm64_cmpxchg),
+        _check("arm64 LL/SC compare/exchange is exclusive", True,
+               _ordered(arm64_ll_sc, [
+                   "__ll_sc__cmpxchg_case_##name##sz",
+                   '"1:\tld" #acq "xr" #sfx',
+                   '"\tst" #rel "xr" #sfx',
+               ])),
+        _check("arm64 LSE compare/exchange uses CAS", True,
+               _ordered(arm64_lse_atomic, [
+                   "__lse__cmpxchg_case_##name##sz",
+                   '"\tcas" #mb #sfx',
+               ])),
+        _check("RISC-V fetch-sub maps to AMO add of negative operand", True,
+               _ordered(riscv_atomic, [
+                   "#define ATOMIC_FETCH_OP(op, asm_op, I, asm_type, c_type, prefix)",
+                   '"\tamo" #asm_op "." #asm_type',
+                   "ATOMIC_OPS(sub, add, +, -i)",
+                   "#define arch_atomic_fetch_sub",
+               ])),
+        _check("RISC-V compare/exchange has Zacas and LR/SC alternatives", True,
+               _ordered(riscv_cmpxchg, [
+                   "#define __arch_cmpxchg(lr_sfx, sc_sfx, cas_sfx",
+                   "IS_ENABLED(CONFIG_RISCV_ISA_ZACAS)",
+                   '"\tamocas" cas_sfx',
+                   '"0:\tlr" lr_sfx',
+                   '"\tsc" sc_sfx',
+               ])),
+        _check("RISC-V relaxed compare/exchange adds no ordering suffix", True,
+               _ordered(riscv_cmpxchg, [
+                   "#define arch_cmpxchg_relaxed(ptr, o, n)",
+                   'SC_SFX(""), CAS_SFX("")',
+               ])),
+        _check("RISC-V acquire-after-control maps to read fence", True,
+               "#define __smp_rmb()\tRISCV_FENCE(r, r)" in riscv_barrier),
+        _check("s390 fetch-sub maps to barrier fetch-add", True,
+               _ordered(s390_atomic, [
+                   "static __always_inline int arch_atomic_fetch_add",
+                   "return __atomic_add_barrier(i, &v->counter);",
+                   "#define arch_atomic_fetch_sub(_i, _v)",
+               ])),
+        _check("s390 atomic add primitive uses LAA", True,
+               '__ATOMIC_OPS(__atomic_add, int, "laa")' in s390_atomic_ops),
+        _check("s390 try-CAS maps to CS primitive", True,
+               _ordered(s390_atomic, [
+                   "static __always_inline bool arch_atomic_try_cmpxchg",
+                   "return arch_try_cmpxchg(&v->counter, old, new);",
+               ]) and _ordered(s390_cmpxchg, [
+                   "#define arch_try_cmpxchg(ptr, oldp, new)",
+                   '"\tcs\t%[__old],%[__new],%[__ptr]"',
+               ])),
+        _check("s390 acquire-after-control is a compiler barrier", True,
+               "#define __smp_rmb()\t__rmb()" in s390_barrier and
+               "#define __rmb()\t\tbarrier()" in s390_barrier),
         _check("generic acquire-after-control is explicit", True,
                "#define smp_acquire__after_ctrl_dep()\t\tsmp_rmb()" in barrier),
         _check("LKMM defines release fetch-sub", True,
@@ -611,7 +874,242 @@ def _semantic_checks(
         "positive_decrement_count": positive.count("atomic_fetch_sub_release(1, refs)"),
         "positive_get_count": positive.count("atomic_cmpxchg_relaxed(refs, 1, 2)"),
         "negative_resurrection_count": negative.count("atomic_fetch_inc_relaxed(refs)"),
+        "architecture_source_mappings": list(_PROFILE_SPECS),
     }
+
+
+def _run_profile(
+    root: Path,
+    kernel: dict[str, Any],
+    profile: dict[str, Any],
+    output: Path,
+    timeout: int,
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    """Build and inspect one architecture profile without sharing make state."""
+    profile_id = profile["id"]
+    output.mkdir()
+    tools_output = output / "tools"
+    build_output = output / "build"
+    tools_output.mkdir()
+    build_output.mkdir()
+    checks: list[dict[str, Any]] = []
+
+    def profile_check(name: str, expected: Any, actual: Any) -> dict[str, Any]:
+        return _check(f"{profile_id}: {name}", expected, actual)
+
+    tool_inventory: dict[str, dict[str, Any]] = {}
+    tool_commands = {
+        "make-version": [profile["make"]["binary"], "--version"],
+        "compiler-version": [profile["compiler"]["binary"], "--version"],
+        "compiler-target": [profile["compiler"]["binary"], "-dumpmachine"],
+        "objdump-version": [profile["objdump"]["binary"], "--version"],
+    }
+    for name, argv in tool_commands.items():
+        directory = tools_output / name
+        directory.mkdir()
+        process = concurrency_c3_lkmm._run(argv, root, timeout)
+        concurrency_c3_lkmm._write_process(directory, argv, root, process)
+        tool_inventory[name] = process
+        checks.extend([
+            profile_check(f"{name} timed out", False, process["timed_out"]),
+            profile_check(f"{name} exit", 0, process["returncode"]),
+        ])
+    for tool_name in ("make", "compiler", "objdump"):
+        tool = profile[tool_name]
+        binary = Path(tool["binary"])
+        checks.extend([
+            profile_check(
+                f"{tool_name} realpath", tool["realpath"], str(binary.resolve())
+            ),
+            profile_check(f"{tool_name} identity", tool["sha256"], _sha256(binary)),
+        ])
+
+    def first_line(name: str) -> str | None:
+        lines = tool_inventory[name]["stdout"].splitlines()
+        return lines[0] if lines else None
+
+    checks.extend([
+        profile_check(
+            "make version line", profile["make"]["version_line"],
+            first_line("make-version"),
+        ),
+        profile_check(
+            "compiler version line", profile["compiler"]["version_line"],
+            first_line("compiler-version"),
+        ),
+        profile_check(
+            "compiler target", profile["compiler"]["target"],
+            tool_inventory["compiler-target"]["stdout"].strip(),
+        ),
+        profile_check(
+            "objdump version line", profile["objdump"]["version_line"],
+            first_line("objdump-version"),
+        ),
+    ])
+
+    source_root = root / kernel["source_root"]
+    build_directory = _declared_path(
+        root, profile["build_directory"], f"{profile_id} build directory"
+    )
+    if build_directory.is_symlink():
+        raise ConcurrencyC3IpcRefcountError(
+            f"{profile_id} build directory must not be a symlink"
+        )
+    build_directory.mkdir(parents=True, exist_ok=True)
+    common_make = [
+        profile["make"]["binary"], "-C", str(source_root),
+        f"O={build_directory}", f"ARCH={profile['arch']}",
+    ]
+    if profile["cross_compile"] is not None:
+        common_make.append(f"CROSS_COMPILE={profile['cross_compile']}")
+    common_make.append(f"CC={profile['compiler']['binary']}")
+    configuration = profile["configuration"]
+    build_steps = [
+        ("base-config", [*common_make, configuration["base_recipe"]]),
+        ("finalize-config", [*common_make, configuration["finalize_recipe"]]),
+    ]
+    for name, argv in build_steps:
+        directory = build_output / name
+        directory.mkdir()
+        process = concurrency_c3_lkmm._run(argv, root, timeout)
+        concurrency_c3_lkmm._write_process(directory, argv, root, process)
+        checks.extend([
+            profile_check(f"{name} timed out", False, process["timed_out"]),
+            profile_check(f"{name} exit", 0, process["returncode"]),
+        ])
+
+    config_path = _declared_path(root, profile["config"], f"{profile_id} config")
+    config_exists = config_path.is_file() and not config_path.is_symlink()
+    config_hash = _sha256(config_path) if config_exists else None
+    checks.extend([
+        profile_check("configured profile produced config", True, config_exists),
+        profile_check("configured config identity", profile["config_sha256"],
+                      config_hash),
+    ])
+    config_values = concurrency_c2.parse_kconfig(
+        config_path.read_text() if config_exists else ""
+    )
+    for name, expected in profile["required_config"].items():
+        checks.append(profile_check(
+            f"kernel config: {name}", expected, config_values.get(name, "absent")
+        ))
+
+    compile_record = profile["configured_compile"]
+    object_directory = build_output / "object"
+    object_directory.mkdir()
+    object_argv = [*common_make, f"-j{profile['jobs']}", compile_record["target"]]
+    object_process = concurrency_c3_lkmm._run(object_argv, root, timeout)
+    concurrency_c3_lkmm._write_process(
+        object_directory, object_argv, root, object_process
+    )
+    checks.extend([
+        profile_check("configured object build timed out", False,
+                      object_process["timed_out"]),
+        profile_check("configured object build exit", 0,
+                      object_process["returncode"]),
+    ])
+    object_path = _declared_path(
+        root, compile_record["object"], f"{profile_id} configured object"
+    )
+    object_exists = object_path.is_file() and not object_path.is_symlink()
+    checks.append(profile_check("configured object exists", True, object_exists))
+    elf = concurrency_c3_trace._elf_identity(object_path) if object_exists else {
+        "elf": False, "class": None, "data": None, "machine": None,
+    }
+    checks.extend([
+        profile_check("configured object is ELF", True, elf["elf"]),
+        profile_check("configured object class", compile_record["elf_class"],
+                      elf["class"]),
+        profile_check("configured object byte order", compile_record["elf_data"],
+                      elf["data"]),
+        profile_check("configured object machine", compile_record["elf_machine"],
+                      elf["machine"]),
+        profile_check("configured object identity",
+                      compile_record["object_sha256"], elf.get("sha256")),
+    ])
+    command_path = _declared_path(
+        root, compile_record["command_file"], f"{profile_id} compile command"
+    )
+    command_exists = command_path.is_file() and not command_path.is_symlink()
+    command_text = command_path.read_text() if command_exists else ""
+    checks.extend([
+        profile_check("configured command exists", True, command_exists),
+        profile_check(
+            "configured command identity", compile_record["command_sha256"],
+            _sha256(command_path) if command_exists else None,
+        ),
+    ])
+    for token in compile_record["required_command_tokens"]:
+        checks.append(profile_check(
+            f"configured command token: {token}", True, token in command_text
+        ))
+
+    disassembly_directory = output / "disassembly"
+    symbols_directory = output / "symbols"
+    disassembly_directory.mkdir()
+    symbols_directory.mkdir()
+    selected_disassembly: dict[str, str] = {}
+    for name, function in compile_record["functions"].items():
+        directory = disassembly_directory / name
+        directory.mkdir()
+        argv = [
+            profile["objdump"]["binary"], "-dr", "--no-show-raw-insn",
+            f"--disassemble={name}", str(object_path),
+        ]
+        process = concurrency_c3_lkmm._run(argv, root, timeout)
+        concurrency_c3_lkmm._write_process(directory, argv, root, process)
+        block = process["stdout"]
+        selected_disassembly[name] = block
+        checks.extend([
+            profile_check(f"{name} disassembly timed out", False,
+                          process["timed_out"]),
+            profile_check(f"{name} disassembly exit", 0, process["returncode"]),
+            profile_check(f"{name} disassembly stderr empty", "",
+                          process["stderr"]),
+            profile_check(f"{name} unique disassembly header", 1,
+                          block.count(f"<{name}>:")),
+            profile_check(f"{name} instruction order", True,
+                          _ordered(block, function["disassembly_order"])),
+        ])
+    symbols_argv = [profile["objdump"]["binary"], "-t", str(object_path)]
+    symbols_process = concurrency_c3_lkmm._run(symbols_argv, root, timeout)
+    concurrency_c3_lkmm._write_process(
+        symbols_directory, symbols_argv, root, symbols_process
+    )
+    checks.extend([
+        profile_check("symbol inventory timed out", False,
+                      symbols_process["timed_out"]),
+        profile_check("symbol inventory exit", 0, symbols_process["returncode"]),
+        profile_check("symbol inventory stderr empty", "",
+                      symbols_process["stderr"]),
+    ])
+    expected_symbols = {
+        name: {key: function[key] for key in ("section", "value", "size")}
+        for name, function in compile_record["functions"].items()
+    }
+    observed_symbols = _function_symbols(
+        symbols_process["stdout"], set(compile_record["functions"])
+    )
+    checks.append(profile_check(
+        "configured function symbols", expected_symbols, observed_symbols
+    ))
+    _json(output / "selected-disassembly.json", {
+        "functions": selected_disassembly,
+        "symbols": observed_symbols,
+    })
+    result = {
+        "id": profile_id,
+        "arch": profile["arch"],
+        "cross_compile": profile["cross_compile"],
+        "configured_object": elf,
+        "configured_config_sha256": config_hash,
+        "configured_functions": observed_symbols,
+        "disassembly_mode": "target-objdump-per-function",
+        "checks": checks,
+        "accepted": all(item["passed"] for item in checks),
+    }
+    _json(output / "profile-result.json", result)
+    return checks, result
 
 
 def render_summary(result: dict[str, Any]) -> str:
@@ -622,11 +1120,24 @@ def render_summary(result: dict[str, Any]) -> str:
         f"Overall source-linked gate: **{'PASS' if result['accepted'] else 'FAIL'}**",
         "",
         f"Accepted kernel lifetime properties: **{result['kernel_verification_count']}**",
+        f"Checked architecture mappings: **{result['architecture_mapping_count']}**",
         f"LKMM functional cases: **{len(result['cases'])}**",
+        "",
+        "| Architecture profile | Kernel ARCH | Object | Gate |",
+        "|---|---|---|---|",
+    ]
+    for profile in result["profiles"]:
+        elf = profile["configured_object"]
+        lines.append(
+            f"| `{profile['id']}` | `{profile['arch']}` | "
+            f"ELF{(elf.get('class') or 0) * 32}, machine {elf.get('machine')} | "
+            f"{'PASS' if profile['accepted'] else 'FAIL'} |"
+        )
+    lines.extend([
         "",
         "| Case | Role | Outcome | Witnesses +/− | Distinct states | Gate |",
         "|---|---|---|---:|---:|---|",
-    ]
+    ])
     for case in result["cases"]:
         parsed = case["parsed"] or {}
         lines.append(
@@ -646,11 +1157,13 @@ def render_summary(result: dict[str, Any]) -> str:
         "resurrect zero and reports `Sometimes` (1/1).",
         "",
         "The gate pins the IPC helper and locking contract, refcount implementation,",
-        "LKMM RMW axiom, configured x86-64 object, both function symbols, and its",
-        "`lock cmpxchg`/`lock xadd` lowering. The caller-locking prerequisite is an",
-        "assumption. Callback execution and RCU grace periods are not modeled.",
+        "LKMM RMW axiom, and configured x86-64, arm64, riscv64, and s390x",
+        "objects. Each mapping pins both function symbols and target disassembly,",
+        "including alternative atomic paths where the architecture emits them.",
+        "The caller-locking prerequisite is assumed. Callback execution and RCU",
+        "grace periods are not modeled.",
         "",
-        "No allocator reuse, arbitrary refcount population, progress, other",
+        "No allocator reuse, arbitrary refcount population, progress, unlisted",
         "architecture, whole-IPC, whole-RCU, or whole-kernel property is accepted.",
         "No runtime kernel was used; nothing was installed and no privileged",
         "operation was performed.",
@@ -675,15 +1188,12 @@ def run_c3_ipc_refcount(
             "IPC refcount C3 timeout must be a positive integer"
         )
     output.mkdir(parents=True, exist_ok=False)
-    build_output = output / "build"
+    profiles_output = output / "profiles"
     cases_output = output / "cases"
-    build_output.mkdir()
+    profiles_output.mkdir()
     cases_output.mkdir()
 
     kernel = manifest["kernel"]
-    profile = manifest["profile"]
-    configuration = profile["configuration"]
-    compile_record = profile["configured_compile"]
     model = manifest["model"]
     checks: list[dict[str, Any]] = []
 
@@ -712,166 +1222,15 @@ def run_c3_ipc_refcount(
     ])
     semantic_checks, source_model_evidence = _semantic_checks(root, manifest)
     checks.extend(semantic_checks)
-
-    tool_inventory: dict[str, dict[str, Any]] = {}
-    tool_commands = {
-        "make_version": [profile["make"]["binary"], "--version"],
-        "compiler_version": [profile["compiler"]["binary"], "--version"],
-        "compiler_target": [profile["compiler"]["binary"], "-dumpmachine"],
-        "objdump_version": [profile["objdump"]["binary"], "--version"],
-    }
-    for name, argv in tool_commands.items():
-        directory = build_output / name
-        directory.mkdir()
-        process = concurrency_c3_lkmm._run(argv, root, timeout)
-        concurrency_c3_lkmm._write_process(directory, argv, root, process)
-        tool_inventory[name] = process
-        checks.extend([
-            _check(f"{name} timed out", False, process["timed_out"]),
-            _check(f"{name} exit", 0, process["returncode"]),
-        ])
-    for tool_name in ("make", "compiler", "objdump"):
-        tool = profile[tool_name]
-        binary = Path(tool["binary"])
-        checks.extend([
-            _check(f"{tool_name} realpath", tool["realpath"], str(binary.resolve())),
-            _check(f"{tool_name} identity", tool["sha256"], _sha256(binary)),
-        ])
-    checks.extend([
-        _check("make version line", profile["make"]["version_line"],
-               tool_inventory["make_version"]["stdout"].splitlines()[0]),
-        _check("compiler version line", profile["compiler"]["version_line"],
-               tool_inventory["compiler_version"]["stdout"].splitlines()[0]),
-        _check("compiler target", profile["compiler"]["target"],
-               tool_inventory["compiler_target"]["stdout"].strip()),
-        _check("objdump version line", profile["objdump"]["version_line"],
-               tool_inventory["objdump_version"]["stdout"].splitlines()[0]),
-    ])
-
-    source_root = root / kernel["source_root"]
-    build_directory = _declared_path(root, profile["build_directory"], "build directory")
-    if build_directory.is_symlink():
-        raise ConcurrencyC3IpcRefcountError("IPC build directory must not be a symlink")
-    build_directory.mkdir(parents=True, exist_ok=True)
-    common_make = [
-        profile["make"]["binary"], "-C", str(source_root),
-        f"O={build_directory}", f"ARCH={profile['arch']}",
-        f"CC={profile['compiler']['binary']}",
-    ]
-    build_steps = [
-        ("base_config", [*common_make, configuration["base_recipe"]]),
-        ("finalize_config", [*common_make, configuration["finalize_recipe"]]),
-    ]
-    for name, argv in build_steps:
-        directory = build_output / name
-        directory.mkdir()
-        process = concurrency_c3_lkmm._run(argv, root, timeout)
-        concurrency_c3_lkmm._write_process(directory, argv, root, process)
-        checks.extend([
-            _check(f"{name} timed out", False, process["timed_out"]),
-            _check(f"{name} exit", 0, process["returncode"]),
-        ])
-
-    config_path = _declared_path(root, profile["config"], "kernel config")
-    config_exists = config_path.is_file() and not config_path.is_symlink()
-    checks.append(_check("configured profile produced config", True, config_exists))
-    config_hash = _sha256(config_path) if config_exists else None
-    checks.append(_check("configured config identity", profile["config_sha256"], config_hash))
-    config_values = concurrency_c2.parse_kconfig(config_path.read_text() if config_exists else "")
-    for name, expected in profile["required_config"].items():
-        checks.append(_check(
-            f"kernel config: {name}", expected, config_values.get(name, "absent")
-        ))
-
-    object_directory = build_output / "object"
-    object_directory.mkdir()
-    object_argv = [*common_make, f"-j{profile['jobs']}", compile_record["target"]]
-    object_process = concurrency_c3_lkmm._run(object_argv, root, timeout)
-    concurrency_c3_lkmm._write_process(object_directory, object_argv, root, object_process)
-    checks.extend([
-        _check("configured object build timed out", False, object_process["timed_out"]),
-        _check("configured object build exit", 0, object_process["returncode"]),
-    ])
-    object_path = _declared_path(root, compile_record["object"], "configured object")
-    object_exists = object_path.is_file() and not object_path.is_symlink()
-    checks.append(_check("configured object exists", True, object_exists))
-    elf = concurrency_c3_trace._elf_identity(object_path) if object_exists else {
-        "elf": False, "class": None, "data": None, "machine": None,
-    }
-    checks.extend([
-        _check("configured object is ELF", True, elf["elf"]),
-        _check("configured object class", compile_record["elf_class"], elf["class"]),
-        _check("configured object byte order", compile_record["elf_data"], elf["data"]),
-        _check("configured object machine", compile_record["elf_machine"], elf["machine"]),
-        _check("configured object identity", compile_record["object_sha256"],
-               elf.get("sha256")),
-    ])
-    command_path = _declared_path(root, compile_record["command_file"], "compile command")
-    command_exists = command_path.is_file() and not command_path.is_symlink()
-    command_text = command_path.read_text() if command_exists else ""
-    checks.extend([
-        _check("configured command exists", True, command_exists),
-        _check("configured command identity", compile_record["command_sha256"],
-               _sha256(command_path) if command_exists else None),
-    ])
-    for token in compile_record["required_command_tokens"]:
-        checks.append(_check(
-            f"configured command token: {token}", True, token in command_text
-        ))
-
-    disassembly_directory = build_output / "disassembly"
-    symbols_directory = build_output / "symbols"
-    disassembly_directory.mkdir()
-    symbols_directory.mkdir()
-    disassembly_argv = [
-        profile["objdump"]["binary"], "-dr", "--no-show-raw-insn", str(object_path)
-    ]
-    symbols_argv = [profile["objdump"]["binary"], "-t", str(object_path)]
-    disassembly_process = concurrency_c3_lkmm._run(disassembly_argv, root, timeout)
-    symbols_process = concurrency_c3_lkmm._run(symbols_argv, root, timeout)
-    concurrency_c3_lkmm._write_process(
-        disassembly_directory, disassembly_argv, root, disassembly_process
-    )
-    concurrency_c3_lkmm._write_process(
-        symbols_directory, symbols_argv, root, symbols_process
-    )
-    checks.extend([
-        _check("disassembly timed out", False, disassembly_process["timed_out"]),
-        _check("disassembly exit", 0, disassembly_process["returncode"]),
-        _check("disassembly stderr empty", "", disassembly_process["stderr"]),
-        _check("symbol inventory timed out", False, symbols_process["timed_out"]),
-        _check("symbol inventory exit", 0, symbols_process["returncode"]),
-        _check("symbol inventory stderr empty", "", symbols_process["stderr"]),
-    ])
-    selected_disassembly: dict[str, str] = {}
-    disassembly_errors: dict[str, str] = {}
-    for name, function in compile_record["functions"].items():
-        try:
-            block = concurrency_c3_trace._function_block(
-                disassembly_process["stdout"], name
-            )
-        except concurrency_c3_trace.ConcurrencyC3TraceError as exc:
-            block = ""
-            disassembly_errors[name] = str(exc)
-        selected_disassembly[name] = block
-        checks.extend([
-            _check(f"{name} disassembly parser error", None,
-                   disassembly_errors.get(name)),
-            _check(f"{name} instruction order", True,
-                   _ordered(block, function["disassembly_order"])),
-        ])
-    expected_symbols = {
-        name: {key: function[key] for key in ("section", "value", "size")}
-        for name, function in compile_record["functions"].items()
-    }
-    observed_symbols = _function_symbols(
-        symbols_process["stdout"], set(compile_record["functions"])
-    )
-    checks.append(_check("configured function symbols", expected_symbols, observed_symbols))
-    _json(build_output / "selected-disassembly.json", {
-        "functions": selected_disassembly,
-        "symbols": observed_symbols,
-    })
+    profile_results: list[dict[str, Any]] = []
+    # Deliberately sequential: each kernel invocation owns its make jobserver and
+    # architecture output directory, so no cross-profile FIFO/state is shared.
+    for profile in manifest["profiles"]:
+        profile_checks, profile_result = _run_profile(
+            root, kernel, profile, profiles_output / profile["id"], timeout
+        )
+        checks.extend(profile_checks)
+        profile_results.append(profile_result)
 
     baseline_manifest = concurrency_c3_lkmm.load_manifest(root)
     baseline_provider = baseline_manifest["provider"]
@@ -977,13 +1336,14 @@ def run_c3_ipc_refcount(
         }
         for name in identity_names
     }
-    for name in ("make", "compiler", "objdump"):
-        binary = Path(profile[name]["binary"])
-        identities[str(binary)] = {
-            "sha256": _sha256(binary),
-            "size": binary.stat().st_size,
-            "realpath": str(binary.resolve()),
-        }
+    for profile in manifest["profiles"]:
+        for name in ("make", "compiler", "objdump"):
+            binary = Path(profile[name]["binary"])
+            identities[str(binary)] = {
+                "sha256": _sha256(binary),
+                "size": binary.stat().st_size,
+                "realpath": str(binary.resolve()),
+            }
     identities[str(herd_binary)] = {
         "sha256": _sha256(herd_binary),
         "size": herd_binary.stat().st_size,
@@ -993,18 +1353,25 @@ def run_c3_ipc_refcount(
     _json(output / "input-identities.json", identities)
     _json(output / "source-model-evidence.json", source_model_evidence)
     result = {
-        "schema_version": 1,
-        "kind": "ipc-refcount-c3-lifetime-functional-pilot",
+        "schema_version": 2,
+        "kind": "ipc-refcount-c3-lifetime-functional-multiarch-pilot",
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "target": manifest["id"],
         "kernel_revision": kernel["revision"],
         "kernel_tree": kernel["git_tree"],
-        "kernel_profile": profile["id"],
+        "kernel_profiles": [profile["id"] for profile in manifest["profiles"]],
         "property": manifest["property"],
         "model_abstraction": model["abstraction"],
         "source_model_evidence": source_model_evidence,
-        "configured_object": elf,
-        "configured_config_sha256": config_hash,
+        "profiles": profile_results,
+        "configured_objects": {
+            profile["id"]: profile["configured_object"]
+            for profile in profile_results
+        },
+        "configured_config_sha256": {
+            profile["id"]: profile["configured_config_sha256"]
+            for profile in profile_results
+        },
         "cases": case_results,
         "pair_checks": pair_checks,
         "checks": checks,
@@ -1015,13 +1382,17 @@ def run_c3_ipc_refcount(
             "output": baseline_result["output"],
         },
         "accepted": accepted,
+        "architecture_mapping_count": sum(
+            profile["accepted"] for profile in profile_results
+        ),
         "kernel_verification_count": 1 if accepted else 0,
         "detecting_control_count": 1 if accepted else 0,
         "c3_lifetime_functional_pilot_complete": accepted,
+        "c3_selected_architecture_mappings_complete": accepted,
         "c3_stage_complete": False,
         "remaining_c3": [
             "Any separately justified progress property",
-            "Refcount and other C3 implementation mappings beyond x86-64",
+            "Implementation mappings for Linux architectures beyond x86-64, arm64, riscv64, and s390x",
             "Broader lock-free functional protocol coverage",
         ],
         "call_rcu_modeled": False,

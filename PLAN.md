@@ -22,10 +22,10 @@ ordering property on configured SMP x86-64. It also has a four-case atomic/RMW
 extension and one source-linked module-statistics no-lost-update property on a
 separate configured SMP x86-64 build. A further System V IPC refcount pilot
 accepts one bounded lifetime-sensitive functional property for final-put versus
-get-unless-zero, with an unsafe zero-resurrection control and another configured
-SMP x86-64 object. Progress, broader lockless lifetime behavior, other
-architecture mappings, C4 and broader interrupt/functional semantics remain
-open. See the
+get-unless-zero, with an unsafe zero-resurrection control and configured SMP
+x86-64, arm64, riscv64 and s390x object mappings. Progress, broader lockless
+lifetime behavior, remaining architecture mappings, C4 and broader
+interrupt/functional semantics remain open. See the
 [C0 record](docs/CONCURRENCY-C0-20260907.md),
 [C1 record](docs/CONCURRENCY-C1-20260907.md),
 [C2 mutex record](docs/CONCURRENCY-C2-20260907.md),
@@ -305,14 +305,15 @@ awards only mutex protection of selected `DO_ONCE_SLEEPABLE` accesses on a
 pinned UP profile and spinlock protection of selected OMAP HDQ process/hard-IRQ
 accesses on a pinned SMP ARM profile, each with required negatives. It preserves
 the remote handler's unlocked status read outside the accepted claim. C3 adds
-four baseline LKMM calibrations plus narrowly source-linked trace publication
+four baseline LKMM calibrations plus narrowly source-linked trace publication,
 module-statistics atomicity, and IPC final-put/get-unless-zero lifetime
-properties on SMP x86-64. The atomic pilot also adds an independent return-
+properties. The IPC property has checked SMP x86-64, arm64, riscv64 and s390x
+implementation mappings. The atomic pilot also adds an independent return-
 ordering A/B calibration; the IPC pilot's caller-locking prerequisite remains
 an assumption and it does not model RCU callbacks. These do not imply general
 weak-memory, atomic or lifetime support. Follow the remaining
 [C3-C4](docs/CONCURRENCY-PLAN.md) for progress, broader lockless lifetime,
-architecture and RCU validation without waiting for
+remaining architecture and RCU validation without waiting for
 all-architecture completion.
 Inline assembly, MMIO and whole-subsystem verification still require additional
 models.
@@ -328,7 +329,7 @@ Unsupported features must be visible in coverage reports.
 | A0–A3. Architecture support | P1 for s390; P2 for later waves | 0–2; alongside 3–4 | Common port interface, s390 first, then every architecture in the pinned tree |
 | 3. Stronger specifications | P1 | 1 and 2 | Functional contracts and reusable proof components |
 | 4. Curated coverage expansion | P1 | 2 and 3 | A measured collection of 20–50 distinct functions |
-| C0–C4. Concurrency support | P1 active; C0-C2 limited pilots accepted; C3 LKMM release/acquire, atomic/RMW and IPC refcount lifetime pilots accepted in narrow scopes | 1–2 for acceptance; independent of all-architecture completion | Continue progress, broader lockless lifetime and architecture mappings, then explicit RCU capabilities |
+| C0–C4. Concurrency support | P1 active; C0-C2 limited pilots accepted; C3 LKMM release/acquire and atomic/RMW pilots plus a four-architecture IPC refcount lifetime map accepted in narrow scopes | 1–2 for acceptance; independent of all-architecture completion | Continue progress, broader lockless lifetime and remaining architecture mappings, then explicit RCU capabilities |
 | 5. Maintenance and performance | P2 | 2; use 4 for measurement | Incremental checks and a documented update workflow |
 
 Runner scaffolding and dependency pinning can start during phase 0. Accept a

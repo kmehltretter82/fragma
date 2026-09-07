@@ -32,17 +32,57 @@ class ConcurrencyC3IpcRefcountTests(unittest.TestCase):
         self.assertEqual(negative["expected"]["observation"], "Sometimes")
         self.assertGreater(negative["expected"]["positive"], 0)
 
-    def test_configuration_is_explicit_and_no_install_step_exists(self):
-        profile = concurrency_c3_ipc_refcount.load_manifest(ROOT)["profile"]
-        self.assertEqual(profile["arch"], "x86_64")
+    def test_configurations_are_explicit_and_no_install_step_exists(self):
+        profiles = concurrency_c3_ipc_refcount.load_manifest(ROOT)["profiles"]
         self.assertEqual(
-            profile["configuration"],
-            {"base_recipe": "x86_64_defconfig", "finalize_recipe": "olddefconfig"},
+            [profile["id"] for profile in profiles],
+            [
+                "x86_64-ipc-refcount-c3",
+                "arm64-ipc-refcount-c3",
+                "riscv64-ipc-refcount-c3",
+                "s390x-ipc-refcount-c3",
+            ],
         )
-        self.assertEqual(profile["required_config"]["CONFIG_SYSVIPC"], "y")
-        serialized = repr(profile).lower()
+        self.assertEqual(
+            [profile["arch"] for profile in profiles],
+            ["x86_64", "arm64", "riscv", "s390"],
+        )
+        self.assertEqual(profiles[0]["configuration"]["base_recipe"],
+                         "x86_64_defconfig")
+        self.assertTrue(all(
+            profile["configuration"]["finalize_recipe"] == "olddefconfig"
+            for profile in profiles
+        ))
+        self.assertTrue(all(
+            profile["required_config"]["CONFIG_SYSVIPC"] == "y"
+            for profile in profiles
+        ))
+        self.assertIsNone(profiles[0]["cross_compile"])
+        self.assertTrue(all(
+            profile["cross_compile"].startswith("/usr/bin/")
+            for profile in profiles[1:]
+        ))
+        serialized = repr(profiles).lower()
         self.assertNotIn("sudo", serialized)
         self.assertNotIn("install", serialized)
+
+    def test_each_profile_pins_native_atomic_disassembly(self):
+        profiles = concurrency_c3_ipc_refcount.load_manifest(ROOT)["profiles"]
+        tokens = {
+            profile["id"]: " ".join(
+                token
+                for function in profile["configured_compile"]["functions"].values()
+                for token in function["disassembly_order"]
+            )
+            for profile in profiles
+        }
+        self.assertIn("lock cmpxchg", tokens["x86_64-ipc-refcount-c3"])
+        self.assertIn("cas\t", tokens["arm64-ipc-refcount-c3"])
+        self.assertIn("ldxr\t", tokens["arm64-ipc-refcount-c3"])
+        self.assertIn("amocas.w\t", tokens["riscv64-ipc-refcount-c3"])
+        self.assertIn("lr.w\t", tokens["riscv64-ipc-refcount-c3"])
+        self.assertIn("laa\t", tokens["s390x-ipc-refcount-c3"])
+        self.assertIn("cs\t", tokens["s390x-ipc-refcount-c3"])
 
     def test_declared_source_and_model_hashes_are_current(self):
         manifest = concurrency_c3_ipc_refcount.load_manifest(ROOT)
@@ -162,13 +202,28 @@ class ConcurrencyC3IpcRefcountTests(unittest.TestCase):
     def test_build_directory_escape_is_rejected(self):
         manifest = concurrency_c3_ipc_refcount.load_manifest(ROOT)
         changed = deepcopy(manifest)
-        changed["profile"]["build_directory"] = "../outside"
+        changed["profiles"][0]["build_directory"] = "../outside"
         with mock.patch.object(
             concurrency_c3_ipc_refcount, "_strict_json", return_value=changed
         ):
             with self.assertRaisesRegex(
                 concurrency_c3_ipc_refcount.ConcurrencyC3IpcRefcountError,
                 "project-relative",
+            ):
+                concurrency_c3_ipc_refcount.load_manifest(ROOT)
+
+    def test_profile_inventory_reordering_is_rejected(self):
+        manifest = concurrency_c3_ipc_refcount.load_manifest(ROOT)
+        changed = deepcopy(manifest)
+        changed["profiles"][1], changed["profiles"][2] = (
+            changed["profiles"][2], changed["profiles"][1]
+        )
+        with mock.patch.object(
+            concurrency_c3_ipc_refcount, "_strict_json", return_value=changed
+        ):
+            with self.assertRaisesRegex(
+                concurrency_c3_ipc_refcount.ConcurrencyC3IpcRefcountError,
+                "profile inventory",
             ):
                 concurrency_c3_ipc_refcount.load_manifest(ROOT)
 

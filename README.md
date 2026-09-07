@@ -55,12 +55,14 @@ concurrent `atomic_inc()` operations on `failed_load_modules` cannot collapse to
 one. Its split once-access control permits the lost update, and an independent
 pair distinguishes fully ordered from relaxed increment-return operations. The
 [System V IPC refcount pilot](docs/CONCURRENCY-C3-REFCOUNT-20260907.md) then
-passes 157/157 gates and accepts one lifetime-sensitive functional property:
+passes 396/396 gates and accepts one lifetime-sensitive functional property:
 from the sole reference, `ipc_rcu_putref()` cannot schedule destruction while a
 concurrent, locking-stabilized `ipc_rcu_getref()` also succeeds. Its unsafe
 unconditional-increment control exposes a zero-refcount resurrection witness.
+Real `ipc/util.o` source/compiler/symbol/disassembly mappings pass for x86-64,
+arm64, riscv64 and big-endian s390x, including emitted alternative atomic paths.
 These checks confirm bounded production weak-memory/atomic reasoning, not a new
-defect or general concurrency support. Progress, other architecture mappings,
+defect or general concurrency support. Progress, remaining architecture mappings,
 broader lockless protocols, IRQ/NMI classes and explicit RCU grace-period
 reasoning remain open.
 The [renewed s390x pilot](s390/L2-RENEWAL-20260907.md) establishes scoped L2 support
