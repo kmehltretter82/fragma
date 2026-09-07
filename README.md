@@ -33,8 +33,13 @@ The [Mthread + Eva C0 record](docs/CONCURRENCY-C0-20260907.md) pins nine
 capability controls and their valid, invalid, unknown, race and unsupported
 outcomes. The [C1 evidence gate](docs/CONCURRENCY-C1-20260907.md) adds explicit
 model, property, context, ownership and freshness identities, including a
-dependency-specific stale control. All nine remain calibrations and zero kernel
-concurrency targets are accepted; C2, weak memory and RCU remain open.
+dependency-specific stale control. The first
+[C2 Linux mutex pilot](docs/CONCURRENCY-C2-20260907.md) now accepts one narrow
+kernel property: the shared `done` accesses in token-identical
+`DO_ONCE_SLEEPABLE` helper bodies are protected for paired process-context
+callers on the pinned UP x86_64 profile. Its lock-elided A/B control exposes the
+same accesses as unprotected. IRQ/NMI/SMP, functional exactly-once behavior,
+weak memory and RCU remain open.
 The [renewed s390x pilot](s390/L2-RENEWAL-20260907.md) establishes scoped L2 support
 for seven C helpers. The [freshly renewed common24 baselines](common/L2-CLANG-RENEWAL-20260907.md)
 cover four helpers on ARM32, PowerPC32, m68k, ARM64, RISC-V64, SH, Alpha,
@@ -50,7 +55,7 @@ they are not the acceptance baseline for the new runner and checked profiles.
 
 The new entry point is `python3 -m fragma` (`list`, `preflight`, `snapshot`,
 `prepare`, `run`, `compare`, `coverage`, `concurrency-c0`, `concurrency-c1`,
-`rv32-zeropad-audit`). See [toolchain setup](docs/toolchain.md) and
+`concurrency-c2`, `rv32-zeropad-audit`). See [toolchain setup](docs/toolchain.md) and
 [architecture profiles](profiles/README.md). Verification never installs
 packages. No `sudo` installation is needed on the current machine for the
 ten configured architecture profiles, including s390x and UML x86-64.

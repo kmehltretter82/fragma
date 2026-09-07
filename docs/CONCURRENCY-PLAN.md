@@ -1,10 +1,12 @@
 # Concurrency verification workstream
 
 Requested: 2026-09-07, after the current bounded kernel-source review.
-Status: C0 capability calibration and C1 evidence/scope infrastructure accepted
-on 2026-09-07; C2-C4 remain open and no concurrent-kernel target is accepted.
+Status: C0 capability calibration, C1 evidence/scope infrastructure and one
+narrow C2 UP/process-context mutex-protection property accepted on 2026-09-07.
+C2 interrupt/SMP and functional work plus C3-C4 remain open.
 See the [C0 evidence record](CONCURRENCY-C0-20260907.md) and
-[C1 evidence record](CONCURRENCY-C1-20260907.md).
+[C1 evidence record](CONCURRENCY-C1-20260907.md), followed by the
+[C2 mutex pilot](CONCURRENCY-C2-20260907.md).
 Parent goal: [execute PLAN.md](../PLAN.md). This work does not replace the
 remaining sequential-suite, architecture or coverage requirements.
 
@@ -48,7 +50,7 @@ feature is absent, record the evidence and implement or integrate a suitable
 backend; do not relabel a sequential run as concurrency verification.
 
 C0 decision: accepted for capability characterization only. The pinned
-[nine-case result](../results/concurrency-c0-20260907-05/SUMMARY.md) matches every
+[nine-case result](../results/concurrency-c0-20260907-06/SUMMARY.md) matches every
 expected result class. `pthread_join()` completion, automatically registered
 handler lock initialization, unsupported pthread operations, weak-memory
 atomics/barriers, Linux synchronization and RCU remain explicit gaps. C1 is the
@@ -76,31 +78,42 @@ concurrent property and assumptions. Data-race freedom is not automatically
 functional correctness, deadlock freedom, termination or lifetime safety.
 
 C1 decision: accepted for infrastructure only. The current
-[C1 audit](../results/concurrency-c1-20260907/SUMMARY.md) re-parses all nine C0
+[C1 audit](../results/concurrency-c1-20260907-02/SUMMARY.md) re-parses all nine C0
 cases with current dependencies and explicit scope metadata. A
-[stale-model control](../results/concurrency-c1-stale-control-20260907/SUMMARY.md)
+[stale-model control](../results/concurrency-c1-stale-control-20260907-02/SUMMARY.md)
 rejects exactly the pthread-dependent cases after their recorded model identity
 changes. All nine records remain calibrations, all verification flags are false,
 and the kernel-concurrency acceptance count is zero. C2 is the next gate.
 
 ## C2 — Validate limited Linux synchronization and interrupt integration
 
-- [ ] Select a small, documented kernel API scope after C0, preserving source
+- [x] Select a small, documented kernel API scope after C0, preserving source
   provenance, build configuration and real caller contracts. State excluded
   call paths rather than treating them as verified.
-- [ ] Model the selected mutex/spinlock operations, ownership and scheduling
+- [x] Model the selected mutex/spinlock operations, ownership and scheduling
   effects against their actual configured implementations. Distinguish local
   interrupt exclusion, preemption exclusion and inter-CPU mutual exclusion.
-- [ ] Check shared accesses and object lifetime across the selected callers and
+- [x] Check shared accesses and object lifetime across the selected callers and
   callees; a local helper proof cannot establish its caller's synchronization.
 - [ ] Validate interrupt-handler interference separately, including the limits
   of modeled interrupt classes and nesting. Publish unsupported contexts.
-- [ ] Compare the model with independent source review and benign calibration
+- [x] Compare the model with independent source review and benign calibration
   models. Preserve remaining alarms and assumptions in the accepted scope.
 
 Acceptance: at least one precisely scoped kernel concurrency case has reviewed
 primitive models, checked callers, calibrated analysis and reproducible evidence.
 This is a pilot milestone, not whole-subsystem or all-kernel support.
+
+C2 mutex-slice decision: the
+[current 63-check A/B pilot](../results/concurrency-c2-20260907-05/SUMMARY.md)
+accepts one kernel property: shared `done` accesses in token-identical
+`__do_once_sleepable_start()`/`done()` bodies are protected by the same mutex
+for two correctly paired process-context callers under the pinned
+`CONFIG_SMP=n`, preemptible x86_64 profile. The lock-elided negative exposes the
+accesses as unprotected and downgrades the selected branch invariant. Functional
+exactly-once behavior, static keys, real subsystem callbacks, IRQ/NMI and SMP are
+not accepted. Keep C2 open until a separate spinlock/IRQ-interference pilot is
+validated; see the [scope record](CONCURRENCY-C2-20260907.md).
 
 ## C3 — Add weak-memory, atomics and lock-free reasoning
 
@@ -143,7 +156,8 @@ its required model or validation evidence.
 
 ## Execution order and reporting
 
-The bounded static review plus C0 and C1 are complete. Continue with C2; later
+The bounded static review, C0/C1 and the first C2 mutex slice are complete.
+Continue C2 with the separate interrupt/spinlock slice; later
 concurrent model work need not wait for every architecture port
 or all sequential proofs.
 No system installation, running-kernel modification or new backend execution is

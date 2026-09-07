@@ -14,9 +14,12 @@ implementation remains parked, and its private diagnostics did not produce this
 kernel finding or add accepted proofs/profiles.
 
 The next user-requested workstream is concurrency support. C0 capability
-characterization and C1 evidence/scope infrastructure are now accepted; C2-C4
-remain open. See the [C0 record](docs/CONCURRENCY-C0-20260907.md),
-[C1 record](docs/CONCURRENCY-C1-20260907.md), and
+characterization and C1 evidence/scope infrastructure are accepted. One narrow
+C2 UP/process-context Linux mutex-protection property is also accepted; the C2
+interrupt/SMP slice and C3-C4 remain open. See the
+[C0 record](docs/CONCURRENCY-C0-20260907.md),
+[C1 record](docs/CONCURRENCY-C1-20260907.md),
+[C2 mutex record](docs/CONCURRENCY-C2-20260907.md), and
 [staged concurrency plan](docs/CONCURRENCY-PLAN.md). Existing sequential proofs
 do not gain concurrent guarantees.
 
@@ -281,12 +284,15 @@ earlier proof's source identity.
   as distinct profile inputs. Distinguish kernel data layouts from compatibility
   userspace layouts handled by particular functions.
 
-Linux concurrency and RCU remain unsupported by the accepted kernel suite. C0
-now pins the provider's limited Mthread+Eva capabilities and gaps; C1 binds
-their scope and invalidates stale evidence without awarding a concurrent kernel
-target. Follow the remaining [C2-C4](docs/CONCURRENCY-PLAN.md) for kernel integration
-and weak-memory/RCU validation without waiting for all-architecture completion. Inline assembly,
-MMIO and whole-subsystem verification still require additional models.
+General Linux concurrency and RCU remain unsupported by the accepted kernel
+suite. C0 pins the provider's limited Mthread+Eva capabilities and gaps; C1
+binds their scope and invalidates stale evidence. The first C2 pilot awards only
+mutex protection of the `DO_ONCE_SLEEPABLE` shared `done` accesses on a pinned
+UP/process-context profile, with a required lock-elided negative. Follow the
+remaining [C2-C4](docs/CONCURRENCY-PLAN.md) for IRQ/SMP integration and
+weak-memory/RCU validation without waiting for all-architecture completion.
+Inline assembly, MMIO and whole-subsystem verification still require additional
+models.
 Unsupported features must be visible in coverage reports.
 
 ## Sequence
@@ -299,7 +305,7 @@ Unsupported features must be visible in coverage reports.
 | A0–A3. Architecture support | P1 for s390; P2 for later waves | 0–2; alongside 3–4 | Common port interface, s390 first, then every architecture in the pinned tree |
 | 3. Stronger specifications | P1 | 1 and 2 | Functional contracts and reusable proof components |
 | 4. Curated coverage expansion | P1 | 2 and 3 | A measured collection of 20–50 distinct functions |
-| C0–C4. Concurrency support | P1 active; C0-C1 accepted, C2 next | 1–2 for acceptance; independent of all-architecture completion | Reviewed thread/interrupt models, scoped kernel integration, then explicit weak-memory and RCU capabilities |
+| C0–C4. Concurrency support | P1 active; C0-C1 and one C2 UP mutex property accepted; C2 IRQ/SMP next | 1–2 for acceptance; independent of all-architecture completion | Reviewed thread/interrupt models, scoped kernel integration, then explicit weak-memory and RCU capabilities |
 | 5. Maintenance and performance | P2 | 2; use 4 for measurement | Incremental checks and a documented update workflow |
 
 Runner scaffolding and dependency pinning can start during phase 0. Accept a

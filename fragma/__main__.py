@@ -5,8 +5,8 @@ import json
 import os
 from pathlib import Path
 
-from . import (build, concurrency, concurrency_evidence, profiles, rv32_zeropad,
-               sources, suite, toolchain)
+from . import (build, concurrency, concurrency_c2, concurrency_evidence, profiles,
+               rv32_zeropad, sources, suite, toolchain)
 
 
 def replay_roots(values, project):
@@ -42,6 +42,14 @@ def main(argv=None):
                     help="completed local C0 evidence directory")
     c1.add_argument("--output", type=Path,
                     help="new compact C1 evidence directory; never overwritten")
+    c2 = sub.add_parser(
+        "concurrency-c2",
+        help="run the source-bound Linux DO_ONCE_SLEEPABLE mutex A/B pilot",
+    )
+    c2.add_argument("--output", type=Path,
+                    help="new C2 evidence directory; existing paths are never overwritten")
+    c2.add_argument("--timeout", type=int, default=120,
+                    help="wall-clock limit in seconds for each build/provider invocation")
     rv32 = sub.add_parser(
         "rv32-zeropad-audit",
         help="audit the retained RV32 load_unaligned_zeropad A/B evidence",
@@ -91,6 +99,11 @@ def main(argv=None):
         if args.command == "concurrency-c1":
             output = args.output or concurrency_evidence.default_output(root)
             result = concurrency_evidence.audit_c1(root, args.c0_result, output)
+            print(f"{'passed' if result['accepted'] else 'failed'}: {output}")
+            return 0 if result["accepted"] else 1
+        if args.command == "concurrency-c2":
+            output = args.output or concurrency_c2.default_output(root)
+            result = concurrency_c2.run_c2(root, output, args.timeout)
             print(f"{'passed' if result['accepted'] else 'failed'}: {output}")
             return 0 if result["accepted"] else 1
         if args.command == "rv32-zeropad-audit":

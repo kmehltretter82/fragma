@@ -15,18 +15,25 @@ RV32/RV64 build controls, strict checkpatch, maintainers and mail dry-run. It ha
 not been emailed or acknowledged upstream. No `sudo` or package installation was
 used.
 
-The concurrency continuation has completed C0 capability characterization and
-C1 evidence/scope infrastructure. The
+The concurrency continuation has completed C0 capability characterization,
+C1 evidence/scope infrastructure and the first narrow C2 Linux mutex slice. The
 [nine-case Mthread + Eva record](docs/CONCURRENCY-C0-20260907.md) passes its
 valid, invalid, unknown, protected, race, interrupt and unsupported controls.
 The [C1 audit](docs/CONCURRENCY-C1-20260907.md) re-parses all raw outcomes, binds
 model/property/context/ownership identities and exposes six separate support
 dimensions. Its current 82 checks pass; nine calibrations are current, while
-all verification flags and the kernel acceptance count remain zero. A targeted
-stale-model control rejects the seven pthread-dependent cases while preserving
-the two unaffected builtins-only cases. C2 is next. Further Hexagon work remains
-parked; these additions do not change architecture/profile acceptance.
-All [905 project tests](results/tests-rv32-concurrency-20260907.log) pass in the
+all C1 verification flags and its kernel acceptance count remain zero. A
+targeted stale-model control rejects the seven pthread-dependent cases while
+preserving the two unaffected builtins-only cases. The
+[C2 `DO_ONCE_SLEEPABLE` A/B pilot](docs/CONCURRENCY-C2-20260907.md) passes 63/63
+checks and accepts one separate kernel property: mutex protection of the shared
+`done` accesses for paired process-context callers on the pinned UP x86_64
+profile. The lock-elided control exposes the same accesses as unprotected.
+Functional exactly-once behavior, IRQ/NMI/SMP, weak memory and RCU remain open;
+C2 continues with a spinlock/IRQ pilot. Further Hexagon work remains parked;
+these additions do not change architecture/profile or the main 25-target suite
+acceptance counts.
+All [914 project tests](results/tests-concurrency-c2-20260907.log) pass in the
 post-change tree, with 20 pre-existing conditional skips.
 
 The [audited private VLA/arithmetic successor](build/framac-alignment-provider-20260907/CANDIDATE-VLA-ARITHMETIC-20260907.md)
@@ -301,7 +308,7 @@ a proof of the whole kernel or automatic verification of every caller.
 | RISC-V encoders | Current source/model/proof gates for seven helpers and five project witnesses: 119 ordinary goals, 119 dependencies and 47 postconditions. | Helper-specific calibration, kernel callers and a documented encoder L2 scope. |
 | ARM64 scalar extraction | Current runtime-safety gates for two cpuid helpers: six ordinary goals and ten selected dependencies with genuine-header checks. | Add functional contracts/calibration and verify kernel callers. |
 | Kernel bug review | RV32 `load_unaligned_zeropad()` wrong result dynamically reproduced in QEMU; identical-config A/B passes after a two-line fix; send-ready patch and exact evidence audit. | Human submission decision, then upstream review/revision; broaden review without treating alarms as bugs. |
-| Concurrency | Frama-C 33 Mthread+Eva C0 and C1 accepted for nine capability calibrations plus explicit model/scope/freshness gates; a dependency-specific stale control fails as required; zero kernel targets are accepted. | Implement a narrowly justified C2 Linux synchronization/interrupt pilot; C3/C4 weak memory and RCU remain open. |
+| Concurrency | Frama-C 33 Mthread+Eva C0/C1 infrastructure accepted; the 63-check C2 A/B pilot accepts one UP/process-context `DO_ONCE_SLEEPABLE` mutex-protection property and rejects its lock-elided control. | Continue C2 with a separate spinlock/IRQ-interference pilot and any later SMP extension; functional once semantics, C3 weak memory and C4 RCU remain open. |
 
 The registry's 24 distinct kernel functions reach the plan's initial numerical
 range, not its proof/coverage acceptance. The current report has 18 functions
@@ -550,17 +557,19 @@ No blanket system-package command is required for continuing the current work.
 
 ## Next acceptance milestones
 
-The bounded review and RV32 A/B handoff are complete. Immediate choices are
-human review/submission of that patch and the already requested C2 concurrency
-pilot. The remaining milestones are still open backlog; Hexagon stays
+The bounded review and RV32 A/B handoff are complete. The first C2 mutex pilot
+is accepted at its narrow property boundary. Immediate choices are human
+review/submission of the patch and the remaining C2 interrupt slice. The later
+milestones are still open backlog; Hexagon stays
 parked unless its workstream is resumed explicitly.
 
 1. Review the RV32 submission handoff and, only on explicit authorization, send
    it to the recorded RISC-V maintainers/lists. Treat “send-ready”, “sent”, and
    “maintainer accepted” as separate states.
-2. Implement C2 from the [concurrency plan](docs/CONCURRENCY-PLAN.md): choose a
-   small configured Linux API/caller scope, derive and review conservative
-   synchronization/interrupt models, and retain positive and negative controls.
+2. Continue C2 from the [concurrency plan](docs/CONCURRENCY-PLAN.md): select a
+   small configured Linux spinlock/IRQ caller scope, distinguish local interrupt
+   masking from preemption and inter-CPU exclusion, and retain handler
+   interference positives and negatives. Do not inherit the UP mutex result.
 3. Renew and resolve the six legacy nonpasses beyond the 25 current accepted
    targets across the 31 registered targets, and
    extend inventory/source gates to remaining examples.
