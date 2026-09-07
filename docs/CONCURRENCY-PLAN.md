@@ -5,14 +5,17 @@ Status: C0 capability calibration, C1 evidence/scope infrastructure and two
 narrow C2 properties accepted on 2026-09-07: the UP/process-context mutex slice
 and the ARM SMP process/hard-IRQ spinlock slice. The limited C2 pilot milestone
 is complete. C3 now has a pinned four-case LKMM baseline and one source-linked
-SMP x86-64 release/acquire property; atomic/RMW, lock-free lifetime/progress,
-other architecture mappings and C4 remain open.
+SMP x86-64 release/acquire property. A second four-case pilot adds one
+source-linked module-statistics atomicity property plus an independent atomic
+return-ordering calibration on SMP x86-64. Lock-free lifetime/progress, other
+architecture mappings and C4 remain open.
 See the [C0 evidence record](CONCURRENCY-C0-20260907.md) and
 [C1 evidence record](CONCURRENCY-C1-20260907.md), followed by the
 [C2 mutex pilot](CONCURRENCY-C2-20260907.md) and
 [C2 IRQ pilot](CONCURRENCY-C2-IRQ-20260907.md). The C3 evidence is split into
 the [LKMM capability baseline](CONCURRENCY-C3-LKMM-20260907.md) and the
-[trace tgid-map source pilot](CONCURRENCY-C3-TRACE-20260907.md).
+[trace tgid-map source pilot](CONCURRENCY-C3-TRACE-20260907.md), followed by the
+[module-statistics atomic/RMW pilot](CONCURRENCY-C3-ATOMIC-20260907.md).
 Parent goal: [execute PLAN.md](../PLAN.md). This work does not replace the
 remaining sequential-suite, architecture or coverage requirements.
 
@@ -56,7 +59,7 @@ feature is absent, record the evidence and implement or integrate a suitable
 backend; do not relabel a sequential run as concurrency verification.
 
 C0 decision: accepted for capability characterization only. The pinned
-[nine-case result](../results/concurrency-c0-20260907-07/SUMMARY.md) matches every
+[nine-case result](../results/concurrency-c0-20260907-08/SUMMARY.md) matches every
 expected result class. `pthread_join()` completion, automatically registered
 handler lock initialization, unsupported pthread operations, weak-memory
 atomics/barriers, Linux synchronization and RCU remain explicit gaps. C1 is the
@@ -84,9 +87,9 @@ concurrent property and assumptions. Data-race freedom is not automatically
 functional correctness, deadlock freedom, termination or lifetime safety.
 
 C1 decision: accepted for infrastructure only. The current
-[C1 audit](../results/concurrency-c1-20260907-03/SUMMARY.md) re-parses all nine C0
+[C1 audit](../results/concurrency-c1-20260907-04/SUMMARY.md) re-parses all nine C0
 cases with current dependencies and explicit scope metadata. A
-[stale-model control](../results/concurrency-c1-stale-control-20260907-03/SUMMARY.md)
+[stale-model control](../results/concurrency-c1-stale-control-20260907-05/SUMMARY.md)
 rejects exactly the pthread-dependent cases after their recorded model identity
 changes. All nine records remain calibrations, all verification flags are false,
 and the kernel-concurrency acceptance count is zero. C2 is the next gate.
@@ -111,7 +114,7 @@ primitive models, checked callers, calibrated analysis and reproducible evidence
 This is a pilot milestone, not whole-subsystem or all-kernel support.
 
 C2 mutex-slice decision: the
-[current 63-check A/B pilot](../results/concurrency-c2-20260907-06/SUMMARY.md)
+[current 63-check A/B pilot](../results/concurrency-c2-20260907-07/SUMMARY.md)
 accepts one kernel property: shared `done` accesses in token-identical
 `__do_once_sleepable_start()`/`done()` bodies are protected by the same mutex
 for two correctly paired process-context callers under the pinned
@@ -121,7 +124,7 @@ exactly-once behavior, static keys, real subsystem callbacks, IRQ/NMI and SMP ar
 not accepted; see the [scope record](CONCURRENCY-C2-20260907.md).
 
 C2 IRQ-slice decision: the
-[current 125-check four-way A/B pilot](../results/concurrency-c2-irq-20260907-02/SUMMARY.md)
+[current 125-check four-way A/B pilot](../results/concurrency-c2-irq-20260907-03/SUMMARY.md)
 accepts one further kernel property. Selected accesses in token-identical
 `hdq_reset_irqstatus()` and the locked update in `hdq_isr()` carry the same
 `hdq-spinlock` under a pinned SMP ARM OMAP profile. The same-CPU case separately
@@ -147,9 +150,11 @@ see the [IRQ scope record](CONCURRENCY-C2-IRQ-20260907.md).
   source and required compiler/architecture evidence. The trace tgid-map pilot
   binds exact statements, caller/lifetime facts, x86 macro definitions and a
   configured SMP x86-64 object to a detecting release/acquire A/B pair.
-- [ ] Add independent atomic read-modify-write calibration and at least one
+- [x] Add independent atomic read-modify-write calibration and at least one
   source-linked atomic/RMW property. Parsing an atomic builtin does not establish
-  its ordering rules.
+  its ordering rules. The module-statistics pilot checks `atomic_inc()` against
+  a lost-update control, separately distinguishes ordered and relaxed
+  increment-return operations, and pins the configured x86 `lock incl` lowering.
 - [ ] Extend implementation evidence beyond the first configured SMP x86-64
   mapping. ABI matching alone is insufficient; each activated architecture
   needs source/macro/compiler evidence appropriate to its claimed property.
@@ -162,16 +167,21 @@ calibrations, explicit source-to-model links and retained results. Unmodeled
 ordering, progress or architecture guarantees remain outstanding requirements.
 
 C3 partial decision: the
-[92-check capability baseline](../results/concurrency-c3-lkmm-20260907-03/SUMMARY.md)
+[92-check capability baseline](../results/concurrency-c3-lkmm-20260907-04/SUMMARY.md)
 accepts four semantic calibrations and zero production properties. The separate
-[135-check trace pilot](../results/concurrency-c3-trace-20260907-02/SUMMARY.md)
+[135-check trace pilot](../results/concurrency-c3-trace-20260907-03/SUMMARY.md)
 accepts one production ordering property: after `trace_find_tgid_ptr()` observes
 the `tgid_map` pointer published by a successful `trace_alloc_tgid_map()` release,
 its guarded max read cannot see the old zero on the configured SMP x86-64
 profile. Removing release/acquire makes the outcome `Sometimes` and exposes
-`Flag data-race`. This confirms usable bounded bug-search infrastructure, not a
-new defect or completed C3 stage. Atomic/RMW, lifetime-sensitive lock-free
-behavior, progress and other architecture mappings remain open.
+`Flag data-race`. The subsequent
+[162-check atomic/RMW pilot](../results/concurrency-c3-module-stats-20260907-03/SUMMARY.md)
+accepts one production no-lost-update property for two selected concurrent
+`failed_load_modules` increments. Its split once-access control permits the lost
+update, while a separate ordered/relaxed return-value pair calibrates ordering.
+Both source pilots verify correct selected code; neither found a new defect or
+completes C3. Lifetime-sensitive lock-free behavior, progress and other
+architecture mappings remain open.
 
 ## C4 — Extend to RCU and maintain honest combined coverage
 
@@ -197,9 +207,9 @@ its required model or validation evidence.
 ## Execution order and reporting
 
 The bounded static review and limited C0-C2 pilot are complete. Continue C3
-from its accepted LKMM baseline and first source-linked release/acquire pilot:
-atomic/RMW semantics, a lifetime-sensitive lock-free case and additional
-architecture mappings come next, followed by C4 RCU/lifetime/combined coverage.
+from its accepted LKMM baseline, release/acquire pilot and atomic/RMW pilot:
+a lifetime-sensitive lock-free case and additional architecture mappings come
+next, followed by C4 RCU/lifetime/combined coverage.
 Broader interrupt and functional-protocol extensions remain visible backlog and
 need not wait for every architecture port or all sequential proofs.
 No system installation, running-kernel modification or new backend execution is

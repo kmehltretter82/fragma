@@ -18,15 +18,18 @@ characterization, C1 evidence/scope infrastructure and the limited C2 pilot.
 C2 contains two narrow access-protection properties: an UP/process-context
 Linux mutex slice and an SMP ARM process/hard-IRQ spinlock slice. C3 now has an
 accepted four-case LKMM capability baseline and one source-linked release/acquire
-ordering property on configured SMP x86-64. Atomic/RMW, lifetime-sensitive
-lock-free behavior, progress, other architecture mappings, C4 and broader
-interrupt/functional semantics remain open. See the
+ordering property on configured SMP x86-64. It also has a four-case atomic/RMW
+extension and one source-linked module-statistics no-lost-update property on a
+separate configured SMP x86-64 build. Lifetime-sensitive lock-free behavior,
+progress, other architecture mappings, C4 and broader interrupt/functional
+semantics remain open. See the
 [C0 record](docs/CONCURRENCY-C0-20260907.md),
 [C1 record](docs/CONCURRENCY-C1-20260907.md),
 [C2 mutex record](docs/CONCURRENCY-C2-20260907.md),
 [C2 IRQ record](docs/CONCURRENCY-C2-IRQ-20260907.md),
 [C3 LKMM record](docs/CONCURRENCY-C3-LKMM-20260907.md),
-[C3 trace record](docs/CONCURRENCY-C3-TRACE-20260907.md), and
+[C3 trace record](docs/CONCURRENCY-C3-TRACE-20260907.md),
+[C3 atomic record](docs/CONCURRENCY-C3-ATOMIC-20260907.md), and
 [staged concurrency plan](docs/CONCURRENCY-PLAN.md). Existing sequential proofs
 do not gain concurrent guarantees.
 
@@ -298,10 +301,12 @@ awards only mutex protection of selected `DO_ONCE_SLEEPABLE` accesses on a
 pinned UP profile and spinlock protection of selected OMAP HDQ process/hard-IRQ
 accesses on a pinned SMP ARM profile, each with required negatives. It preserves
 the remote handler's unlocked status read outside the accepted claim. C3 adds
-four LKMM calibrations and one narrowly source-linked trace publication property
-on SMP x86-64; this does not imply general weak-memory support. Follow the
-remaining [C3-C4](docs/CONCURRENCY-PLAN.md) for atomic/RMW, lock-free lifetime,
-progress, broader architecture and RCU validation without waiting for
+four baseline LKMM calibrations plus narrowly source-linked trace publication
+and module-statistics atomicity properties on SMP x86-64. The latter also adds
+an independent atomic return-ordering A/B calibration; this does not imply
+general weak-memory or atomic support. Follow the remaining
+[C3-C4](docs/CONCURRENCY-PLAN.md) for lock-free lifetime, progress, broader
+architecture and RCU validation without waiting for
 all-architecture completion.
 Inline assembly, MMIO and whole-subsystem verification still require additional
 models.
@@ -317,7 +322,7 @@ Unsupported features must be visible in coverage reports.
 | A0–A3. Architecture support | P1 for s390; P2 for later waves | 0–2; alongside 3–4 | Common port interface, s390 first, then every architecture in the pinned tree |
 | 3. Stronger specifications | P1 | 1 and 2 | Functional contracts and reusable proof components |
 | 4. Curated coverage expansion | P1 | 2 and 3 | A measured collection of 20–50 distinct functions |
-| C0–C4. Concurrency support | P1 active; C0-C2 limited pilots accepted; C3 LKMM/release-acquire pilot accepted in narrow scope | 1–2 for acceptance; independent of all-architecture completion | Continue atomic/RMW, lock-free lifetime/progress and architecture mappings, then explicit RCU capabilities |
+| C0–C4. Concurrency support | P1 active; C0-C2 limited pilots accepted; C3 LKMM release/acquire and atomic/RMW pilots accepted in narrow scopes | 1–2 for acceptance; independent of all-architecture completion | Continue lock-free lifetime/progress and architecture mappings, then explicit RCU capabilities |
 | 5. Maintenance and performance | P2 | 2; use 4 for measurement | Incremental checks and a documented update workflow |
 
 Runner scaffolding and dependency pinning can start during phase 0. Accept a

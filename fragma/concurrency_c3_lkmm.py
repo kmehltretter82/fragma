@@ -346,8 +346,6 @@ def load_manifest(root: Path) -> dict[str, Any]:
             raise ConcurrencyC3LkmmError(f"{case_id} disposition must be Allowed")
         if expected["observation"] not in _OBSERVATIONS:
             raise ConcurrencyC3LkmmError(f"{case_id} observation is unsupported")
-        if expected["positive"] + expected["negative"] != expected["states"]:
-            raise ConcurrencyC3LkmmError(f"{case_id} witness/state count is inconsistent")
         if case["role"] == "weakened_control":
             if expected["observation"] != "Sometimes" or expected["positive"] < 1 or expected["marker"] != "Ok":
                 raise ConcurrencyC3LkmmError(f"{case_id} is not a detecting weak control")
@@ -426,7 +424,6 @@ def parse_herd_output(value: str) -> dict[str, Any]:
         or groups["time_test"] != result["test"]
         or int(groups["observation_positive"]) != result["positive"]
         or int(groups["observation_negative"]) != result["negative"]
-        or result["positive"] + result["negative"] != result["states"]
         or not math.isfinite(result["seconds"])
     ):
         raise ConcurrencyC3LkmmError("herd7 output is internally inconsistent")

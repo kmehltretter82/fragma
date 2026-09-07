@@ -1,0 +1,1897 @@
+{
+  "accepted": false,
+  "c0_input_identities": {
+    "concurrency/fixtures/false_assertion.c": {
+      "sha256": "a41c29c601d227ab598c24c66e8f5d0634a7da6fbdd8b5f605a78ed62afc0469",
+      "size": 568
+    },
+    "concurrency/fixtures/interference.c": {
+      "sha256": "5e47db61e5430b96715328bdd1c1b227d81a5d582109e0adbea91d7573fa1ddb",
+      "size": 878
+    },
+    "concurrency/fixtures/interrupt_exclusion.c": {
+      "sha256": "92035416a716bd9ed3c8bb258e5b7ac99f5b6c44e21a608ef1eb1935569cac84",
+      "size": 998
+    },
+    "concurrency/fixtures/interrupt_exclusion_synthetic.c": {
+      "sha256": "99056bb0f264f03ea53d35c1ba762293e26e7520ca9d0141902c76bcd329d589",
+      "size": 1128
+    },
+    "concurrency/fixtures/interrupt_unprotected.c": {
+      "sha256": "c770c5d262542d1255cc3a84628e661467799cbe0e7a8d3f1a6f0fc1377b8e37",
+      "size": 521
+    },
+    "concurrency/fixtures/isolated.c": {
+      "sha256": "96bd37112c0079c8121efa7db43eb8886339be3c827ae3e0a5059549938364ff",
+      "size": 512
+    },
+    "concurrency/fixtures/join.c": {
+      "sha256": "034bfb8dc1cc47a4e6a786be0c7339d07d4589be0a3a2d25bb097ab062e32806",
+      "size": 777
+    },
+    "concurrency/fixtures/mutex.c": {
+      "sha256": "466b740b057151e1d19c98b3180ee9e2d75a6bf7e9534120f9ac06fd9237f633",
+      "size": 1001
+    },
+    "concurrency/fixtures/unsupported_pthread.c": {
+      "sha256": "63801c7b8afb5e0b5075214ab66f074c6b972190ca91097c0bd25c877fd6620e",
+      "size": 403
+    },
+    "config/concurrency-c0.json": {
+      "sha256": "125ca11849bcdb688d3452560e21666fa59ca48e7435b7a10c3ee3e6395f93c8",
+      "size": 7342
+    },
+    "fragma/__main__.py": {
+      "sha256": "10acdfcccb1c81be3555187eb851d8332e21cf797cedee525775fbd02b87c621",
+      "size": 13084
+    },
+    "fragma/concurrency.py": {
+      "sha256": "5cde045e5c58eb111759acb7feb94940c4d55b5f19e62fa4f278695fa6a3fd2a",
+      "size": 17293
+    },
+    "tests/test_concurrency.py": {
+      "sha256": "77ef933bac9172cca6903643c0b4321e06d49209b84a0fa7836a0fffe296f025",
+      "size": 4506
+    },
+    "toolchain/lock.json": {
+      "sha256": "0d3557b20e4a0ed16e6a4fe8622aa3ecd1572b9b30d490c7c69b4be82d7f47cb",
+      "size": 61074
+    },
+    "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_analysis_fixpoint.ml": {
+      "sha256": "3006aca5d6879a1aeaa3ff5af62fa643251aa81a1f48f707565d88ae84f743b4",
+      "size": 14674
+    },
+    "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_analysis_hooks.ml": {
+      "sha256": "276a2dc69a72881fd05029087cf785555d79618af7b87b57b7ddee742ffe9149",
+      "size": 34987
+    },
+    "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_lib.ml": {
+      "sha256": "585f86b6dc1597953228bf6f285bff3adacbcc6dacca2495a79c30a54b11595a",
+      "size": 3835
+    },
+    "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_main.ml": {
+      "sha256": "e5b00b819cdf56cc5f01285160b0fc72d70d8f676c1214432254de853449ff79",
+      "size": 6181
+    },
+    "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_mutexes.ml": {
+      "sha256": "ce144b7f99e6b00f1b7eba4842985445c17fd0b24d5875c2302f12a5f287d7c8",
+      "size": 6654
+    },
+    "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_thread.ml": {
+      "sha256": "2738f976a10f210458f0582b7d5222e848f49bebca0c057b70dbbde2fb2322d3",
+      "size": 13184
+    },
+    "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread.c": {
+      "sha256": "be21be9f394bd94bd6d6255ed803ce71dfdebb8f481ce7c31ca7d5f5c366db3e",
+      "size": 855
+    },
+    "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread.h": {
+      "sha256": "362a97492be137b7205bd6a7fa77497f291da18eb1a382d0ffc31d805e464948",
+      "size": 2905
+    },
+    "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_interrupts.c": {
+      "sha256": "7c39f147cea35a5fba6957173405c942e0f3b1b69ed247ae30636f1d17cfda7a",
+      "size": 1420
+    },
+    "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_interrupts.h": {
+      "sha256": "7ae33c342f032814634a94569d7981f10f7b23e47d57ee9d4964178cf5fc90f3",
+      "size": 921
+    },
+    "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_pthread.c": {
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "size": 3881
+    }
+  },
+  "c0_input_identity_digest": "a497a2fa8fd77b70fd2cdd6e16cd816c343f54be9bbb00c9e38dc8f76c2b4cf3",
+  "c0_output": "/home/karl/linux-work/fragma/results/concurrency-c0-20260907-08",
+  "c0_raw_artifact_identities": {
+    "cases/false_assertion/command.json": {
+      "sha256": "cd53401806f486161a96a180f08dbf689360e2225b4ae28bc43c2bd75bb5c1c1",
+      "size": 852
+    },
+    "cases/false_assertion/report.csv": {
+      "sha256": "d264c35ae0e9640921cb7ed83270d23d0a2d056cfe3e9bbdeaa7c4575b88944e",
+      "size": 3865
+    },
+    "cases/false_assertion/result.json": {
+      "sha256": "c235731afc24ecf9b3a7fb8f8bf0f4a96bef1c5ea214978221e6bff93cfc61ab",
+      "size": 1807
+    },
+    "cases/false_assertion/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "cases/false_assertion/stdout.txt": {
+      "sha256": "35b751b6f64a97b9ae9c5ad68a57c5ee49cb1621d02773015e94e0d66803c3b2",
+      "size": 11199
+    },
+    "cases/interference/command.json": {
+      "sha256": "6ae12e8f06fa94c29793820cdbf98d085b06b7bc4ff4c5a4a4ebc548adb6f58f",
+      "size": 846
+    },
+    "cases/interference/report.csv": {
+      "sha256": "8cd7f1cd6548e6d0146b6c493ce35bebc95022fb6b8c9ac1cfc13c32e6f2e035",
+      "size": 3940
+    },
+    "cases/interference/result.json": {
+      "sha256": "f565c856c82388136a369c516960151fa4944ef40ee531e522257e8b73275a10",
+      "size": 2297
+    },
+    "cases/interference/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "cases/interference/stdout.txt": {
+      "sha256": "584152827f9052a7f9df4be836aa461bf6c417a4b5f5f584e411c3606e87f1c3",
+      "size": 21563
+    },
+    "cases/interrupt_exclusion_synthetic/command.json": {
+      "sha256": "4dbcc3102c8490fb7328229e6b25422a9aa29d37f24cc91454e81a119eb2596a",
+      "size": 880
+    },
+    "cases/interrupt_exclusion_synthetic/report.csv": {
+      "sha256": "6a8b88de661e8055fc9acfe3bef44b71c7f502bf1ffa1bccb248fb4dc6cf5134",
+      "size": 3986
+    },
+    "cases/interrupt_exclusion_synthetic/result.json": {
+      "sha256": "a461c14d7de1c5bc348c57f4461bf7d49ed49e554404a41988846ac270fe8fbb",
+      "size": 2623
+    },
+    "cases/interrupt_exclusion_synthetic/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "cases/interrupt_exclusion_synthetic/stdout.txt": {
+      "sha256": "3e4ca4588a6f6685bbe98815815d834bb64f7a798193444cf26b44e4a960ed66",
+      "size": 18660
+    },
+    "cases/interrupt_registered_exclusion_gap/command.json": {
+      "sha256": "b5a8fae79e5911f5a8490f465abaf6322313667b74e8d03050d7b1bc78eab361",
+      "size": 936
+    },
+    "cases/interrupt_registered_exclusion_gap/report.csv": {
+      "sha256": "3c246335f93b6d54a07ada56e667594661bb87129a1aea2fca53481221118c04",
+      "size": 3972
+    },
+    "cases/interrupt_registered_exclusion_gap/result.json": {
+      "sha256": "9826094f8767e167026d4cb9ebf909bfbfa832450790edb1460af7d8fb4fe19c",
+      "size": 3240
+    },
+    "cases/interrupt_registered_exclusion_gap/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "cases/interrupt_registered_exclusion_gap/stdout.txt": {
+      "sha256": "3d4e85dd4a9b76f1272265b264d8dc85542a66dcd4d05ba81c31da87f4d7b94a",
+      "size": 24303
+    },
+    "cases/interrupt_unprotected/command.json": {
+      "sha256": "4bd6d6640836ed833dcc808207f18855bca43876882449e9068aa373de376031",
+      "size": 918
+    },
+    "cases/interrupt_unprotected/report.csv": {
+      "sha256": "ad3e3f902e66eb37d2629bd533c4f5be28bb4df06201b4dc79605323a7c5d16c",
+      "size": 154
+    },
+    "cases/interrupt_unprotected/result.json": {
+      "sha256": "dc11bf8ec851acdba47bd5641e40b4dd8d03057474ad6995b02bdb00fe4aba0f",
+      "size": 2199
+    },
+    "cases/interrupt_unprotected/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "cases/interrupt_unprotected/stdout.txt": {
+      "sha256": "12fecb1ea6edb561399b3077b141d2bb3024f208f425bb2e3e9b934a9a371edb",
+      "size": 9358
+    },
+    "cases/isolated/command.json": {
+      "sha256": "9fe99f6adae795abb615b1815b0be3b33f3bc033b40f6ec1d7d50ec29c4cb369",
+      "size": 838
+    },
+    "cases/isolated/report.csv": {
+      "sha256": "0603f1a9d169fd34a9ae739cc17cd0a23b23e1b6782de9c5c18f142b7065dc09",
+      "size": 3841
+    },
+    "cases/isolated/result.json": {
+      "sha256": "9464b2d10915cc665f2b07a874b1848b61025b72fba45f1bdc0debcb8f0b6b83",
+      "size": 1808
+    },
+    "cases/isolated/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "cases/isolated/stdout.txt": {
+      "sha256": "5691b714b830fae6dead3d64ea2900f5176b3d496e852f224bcfa251f724ac18",
+      "size": 10900
+    },
+    "cases/join/command.json": {
+      "sha256": "e6d08607885d9d8b62b5da038b7b104258ace42ebdce5beaf92706e75e64b499",
+      "size": 830
+    },
+    "cases/join/report.csv": {
+      "sha256": "036d5b25a4fbca75c78fc2215d97750423f36a7c55804abe7e35acb0610c73ef",
+      "size": 3840
+    },
+    "cases/join/result.json": {
+      "sha256": "86b138ffba30be563d14fa0c6840753b951225305fa1054df2e0e8119fa2ead8",
+      "size": 1965
+    },
+    "cases/join/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "cases/join/stdout.txt": {
+      "sha256": "9d79145909f16711ff140e706f31cf7d6717d4cb7af4b18f2def91ac17bc9077",
+      "size": 16774
+    },
+    "cases/mutex/command.json": {
+      "sha256": "a63876e191035991946d0779ac350efecec31d2f5de8f67314088355a6a8e03e",
+      "size": 832
+    },
+    "cases/mutex/report.csv": {
+      "sha256": "27b65fd9236f1c85e5b1423607f119e62e6e603d298eaa53c210b54ea591bbf0",
+      "size": 3922
+    },
+    "cases/mutex/result.json": {
+      "sha256": "53aa1188f9a9a1a0b66ae5c15b8d5cd01f1c1c00c96dd9c4aa34db07eaaffae8",
+      "size": 2402
+    },
+    "cases/mutex/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "cases/mutex/stdout.txt": {
+      "sha256": "126b1f9fbfed29d90285865fd70a182558bda8e4a7ebc7771523372acb617a5b",
+      "size": 18118
+    },
+    "cases/unsupported_pthread/command.json": {
+      "sha256": "02c76119bc5a3c0e28f690b506a72cf111e1b22975135354853b03d162a33c8f",
+      "size": 860
+    },
+    "cases/unsupported_pthread/result.json": {
+      "sha256": "1777375135bf092dc42ff00071adf5fcb37ddf7cdd5d3a6acd9ca3b5d5c1e21c",
+      "size": 1783
+    },
+    "cases/unsupported_pthread/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "cases/unsupported_pthread/stdout.txt": {
+      "sha256": "a0d5601fc1396348e7bb8d58741fa68e439fd419abba1467ed16c54d46392fe5",
+      "size": 1529
+    },
+    "input-identities.json": {
+      "sha256": "c94f0edd6e509e75a36d888df7d7623e0029442791f350d9d409aaec2f3cf779",
+      "size": 4315
+    },
+    "manifest.json": {
+      "sha256": "199c474eaf3c3e11e58987d16970ec5d9e79974f25632dea2a942ac8da9f7cee",
+      "size": 7894
+    },
+    "summary.json": {
+      "sha256": "4cd673211f44ccf8e8eed3dabdd66247f9e6352fcb2bacf5198b26abf4810f94",
+      "size": 24981
+    }
+  },
+  "c0_stale_inputs": [
+    "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_pthread.c"
+  ],
+  "c1_input_identities": {
+    "config/concurrency-models.json": {
+      "sha256": "3c3420c44e985f23994c419a079deede24b78513270491795c1bcc9a8f82a26f",
+      "size": 6268
+    },
+    "config/concurrency-scopes.json": {
+      "sha256": "3ab9da7eaf16dda7b4b9b6b2f65a198dfea6b475d1dadb638d4f547f75692a0a",
+      "size": 11938
+    },
+    "fragma/concurrency_evidence.py": {
+      "sha256": "150fa86294c68006492f42218e8e0ce542c41a9284b0aec53d228bbc5377de47",
+      "size": 28930
+    },
+    "tests/test_concurrency_evidence.py": {
+      "sha256": "a08b9180d0fb16199f2a2b0fb24eaa80751528dd74d9c670847753a10520f4fd",
+      "size": 3653
+    }
+  },
+  "checks": [
+    {
+      "actual": true,
+      "expected": true,
+      "name": "C0 manifest is current",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "C0 summary accepted",
+      "passed": true
+    },
+    {
+      "actual": "/home/karl/linux-work/fragma/results/concurrency-c0-20260907-08",
+      "expected": "/home/karl/linux-work/fragma/results/concurrency-c0-20260907-08",
+      "name": "C0 output identity",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "C0 inventory checks",
+      "passed": true
+    },
+    {
+      "actual": [
+        "false_assertion",
+        "interference",
+        "interrupt_exclusion_synthetic",
+        "interrupt_registered_exclusion_gap",
+        "interrupt_unprotected",
+        "isolated",
+        "join",
+        "mutex",
+        "unsupported_pthread"
+      ],
+      "expected": [
+        "false_assertion",
+        "interference",
+        "interrupt_exclusion_synthetic",
+        "interrupt_registered_exclusion_gap",
+        "interrupt_unprotected",
+        "isolated",
+        "join",
+        "mutex",
+        "unsupported_pthread"
+      ],
+      "name": "C0 case inventory",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "C0 case identities unique",
+      "passed": true
+    },
+    {
+      "actual": [
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_pthread.c"
+      ],
+      "expected": [],
+      "name": "C0 input freshness",
+      "passed": false
+    },
+    {
+      "actual": "33.0 (Arsenic)",
+      "expected": "33.0 (Arsenic)",
+      "name": "C0 provider version",
+      "passed": true
+    },
+    {
+      "actual": "815c916df2361e7af5a18125c97b37665e4eed91e76daa185d571706563e7ef2",
+      "expected": "815c916df2361e7af5a18125c97b37665e4eed91e76daa185d571706563e7ef2",
+      "name": "C0 provider recorded digest",
+      "passed": true
+    },
+    {
+      "actual": "815c916df2361e7af5a18125c97b37665e4eed91e76daa185d571706563e7ef2",
+      "expected": "815c916df2361e7af5a18125c97b37665e4eed91e76daa185d571706563e7ef2",
+      "name": "C0 provider current digest",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "isolated retained case",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "isolated parsed report",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "isolated parsed diagnostics",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "isolated recomputed checks",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "isolated terminal pass",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "isolated command argv",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "isolated command cwd",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "isolated command environment",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "mutex retained case",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "mutex parsed report",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "mutex parsed diagnostics",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "mutex recomputed checks",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "mutex terminal pass",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "mutex command argv",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "mutex command cwd",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "mutex command environment",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interference retained case",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interference parsed report",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interference parsed diagnostics",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interference recomputed checks",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interference terminal pass",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interference command argv",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interference command cwd",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interference command environment",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "join retained case",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "join parsed report",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "join parsed diagnostics",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "join recomputed checks",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "join terminal pass",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "join command argv",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "join command cwd",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "join command environment",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "false_assertion retained case",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "false_assertion parsed report",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "false_assertion parsed diagnostics",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "false_assertion recomputed checks",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "false_assertion terminal pass",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "false_assertion command argv",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "false_assertion command cwd",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "false_assertion command environment",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interrupt_unprotected retained case",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interrupt_unprotected parsed report",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interrupt_unprotected parsed diagnostics",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interrupt_unprotected recomputed checks",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interrupt_unprotected terminal pass",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interrupt_unprotected command argv",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interrupt_unprotected command cwd",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interrupt_unprotected command environment",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interrupt_exclusion_synthetic retained case",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interrupt_exclusion_synthetic parsed report",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interrupt_exclusion_synthetic parsed diagnostics",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interrupt_exclusion_synthetic recomputed checks",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interrupt_exclusion_synthetic terminal pass",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interrupt_exclusion_synthetic command argv",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interrupt_exclusion_synthetic command cwd",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interrupt_exclusion_synthetic command environment",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interrupt_registered_exclusion_gap retained case",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interrupt_registered_exclusion_gap parsed report",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interrupt_registered_exclusion_gap parsed diagnostics",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interrupt_registered_exclusion_gap recomputed checks",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interrupt_registered_exclusion_gap terminal pass",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interrupt_registered_exclusion_gap command argv",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interrupt_registered_exclusion_gap command cwd",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "interrupt_registered_exclusion_gap command environment",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "unsupported_pthread retained case",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "unsupported_pthread parsed report",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "unsupported_pthread parsed diagnostics",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "unsupported_pthread recomputed checks",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "unsupported_pthread terminal pass",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "unsupported_pthread command argv",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "unsupported_pthread command cwd",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "unsupported_pthread command environment",
+      "passed": true
+    }
+  ],
+  "generated_at": "2026-09-07T11:44:09.487986+00:00",
+  "kernel_verification_count": 0,
+  "kind": "concurrency-c1-evidence-scope-gate",
+  "model_id": "framac-33-mthread-eva-c0",
+  "primitive_models": {
+    "interrupt_registration": {
+      "conservative_argument": "Useful for exposing potential initial-state interference only.",
+      "empty_stub_allowed": false,
+      "limitations": [
+        "Later initialization, nesting, interrupt classes and Linux masking semantics are absent."
+      ],
+      "semantics": "Registers a named handler as an abstract concurrent entry point from the initial main state.",
+      "status": "partial"
+    },
+    "mthread_abstract_mutex": {
+      "conservative_argument": "Sufficient only for assertions made while the calibrated abstract mutex is held in project-owned fixtures.",
+      "empty_stub_allowed": false,
+      "limitations": [
+        "Not a model of Linux mutex, spinlock, IRQ-disable or preemption semantics."
+      ],
+      "semantics": "Records abstract ownership and excludes conflicting critical-section interference under the same Mthread mutex identifier.",
+      "status": "calibrated"
+    },
+    "pthread_barrier_wait": {
+      "conservative_argument": "The only accepted result is detection and rejection of the unsupported primitive.",
+      "empty_stub_allowed": false,
+      "limitations": [
+        "No barrier ordering or rendezvous property is modeled."
+      ],
+      "semantics": "No Mthread implementation is supplied; the plugin aborts with an explicit probably-unsound diagnostic.",
+      "status": "unsupported"
+    },
+    "pthread_create": {
+      "conservative_argument": "Sufficient only for the recorded project fixtures' entry-point discovery controls.",
+      "empty_stub_allowed": false,
+      "limitations": [
+        "Scheduling, termination and object lifetime are not thereby proved."
+      ],
+      "semantics": "Creates and starts a discovered Mthread abstract entry point through the bundled pthread model.",
+      "status": "calibrated"
+    },
+    "pthread_join": {
+      "conservative_argument": "No completion or lifetime claim is accepted from this stub.",
+      "empty_stub_allowed": false,
+      "limitations": [
+        "Successful return does not import worker completion."
+      ],
+      "semantics": "The bundled stub returns a nondeterministic status and does not wait for or synchronize with the target thread.",
+      "status": "unsupported"
+    }
+  },
+  "schema_version": 1,
+  "sequential_results_upgraded": false,
+  "support_dimensions": {
+    "interrupts": {
+      "evidence_cases": [
+        "interrupt_unprotected",
+        "interrupt_registered_exclusion_gap"
+      ],
+      "limitations": [
+        "Main-time lock initialization is unavailable to the automatic handler start state; nesting, IRQ classes and Linux masking are not modeled."
+      ],
+      "scope": "Automatic handler discovery and shared-write interference from the initial main state.",
+      "status": "partial"
+    },
+    "lock_free_algorithms": {
+      "evidence_cases": [],
+      "limitations": [
+        "Mthread's mutex-oriented race analysis is insufficient for lock-free algorithms."
+      ],
+      "scope": "No accepted lock-free functional, lifetime or progress reasoning.",
+      "status": "unsupported"
+    },
+    "mutex_protected_concurrency": {
+      "evidence_cases": [
+        "mutex",
+        "interrupt_exclusion_synthetic"
+      ],
+      "limitations": [
+        "The abstract mutex is not yet connected to any configured Linux lock implementation."
+      ],
+      "scope": "Mthread abstract mutex ownership and interference in project-owned pthread fixtures.",
+      "status": "calibrated"
+    },
+    "rcu": {
+      "evidence_cases": [],
+      "limitations": [
+        "No-op grace periods or assumed immortal objects are forbidden for acceptance."
+      ],
+      "scope": "No accepted RCU publication, grace-period or reclamation semantics.",
+      "status": "unsupported"
+    },
+    "sequential": {
+      "evidence_cases": [
+        "isolated",
+        "false_assertion"
+      ],
+      "limitations": [
+        "No arbitrary C or kernel-call acceptance follows from these controls."
+      ],
+      "scope": "Eva value properties inside the project-owned entry points, with Mthread enabled and the recorded options.",
+      "status": "calibrated"
+    },
+    "weak_memory_atomics": {
+      "evidence_cases": [],
+      "limitations": [
+        "Ordinary interleaving must not be presented as an LKMM or architecture memory-order proof."
+      ],
+      "scope": "No accepted C11 or Linux weak-memory atomic/barrier semantics.",
+      "status": "unsupported"
+    }
+  },
+  "targets": [
+    {
+      "blocking_support": [
+        {
+          "kind": "dimension",
+          "name": "sequential",
+          "status": "calibrated"
+        },
+        {
+          "kind": "primitive",
+          "name": "pthread_create",
+          "status": "calibrated"
+        }
+      ],
+      "calibration_accepted": false,
+      "context": {
+        "interrupt_handlers": false,
+        "ordinary_threads": true,
+        "preemption": "not modeled"
+      },
+      "dependency_digest": "57640b8e906b225a49345cdc60f8f1979dfd99e675e585a8162153165befe97a",
+      "dependency_paths": [
+        "concurrency/fixtures/isolated.c",
+        "config/concurrency-c0.json",
+        "fragma/__main__.py",
+        "fragma/concurrency.py",
+        "toolchain/lock.json",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_analysis_fixpoint.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_analysis_hooks.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_lib.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_main.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_mutexes.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_thread.ml",
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread.c",
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread.h",
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_pthread.c"
+      ],
+      "evidence_accepted": false,
+      "evidence_kind": "calibration",
+      "external_interference": "No interference is relevant to the worker-local assertion.",
+      "id": "isolated",
+      "kernel_scope": false,
+      "memory_order_assumptions": [
+        "Mthread abstract interleaving only; no weak-memory claim"
+      ],
+      "model_id": "framac-33-mthread-eva-c0",
+      "observed": {
+        "assertions": {
+          "isolated_arithmetic": "valid"
+        },
+        "considered_valid_assumptions": 32,
+        "diagnostics": {
+          "analysis_stopped": false,
+          "eva_alarm_count": 0,
+          "fixpoint_reached": true,
+          "iterations": 1,
+          "races": {
+            "read_write": {
+              "reported": false,
+              "unprotected": false
+            },
+            "write_write": {
+              "reported": false,
+              "unprotected": false
+            }
+          },
+          "unsupported": false,
+          "user_error": false
+        },
+        "outcome_kind": "valid_calibration",
+        "returncode": 0
+      },
+      "property_scope": {
+        "claim": "Worker-local arithmetic reaches exactly seven.",
+        "exclusions": [
+          "Worker completion",
+          "join semantics",
+          "kernel callers"
+        ],
+        "kind": "worker_local_functional"
+      },
+      "required_dimensions": [
+        "sequential"
+      ],
+      "required_primitives": [
+        "pthread_create"
+      ],
+      "shared_objects": [],
+      "source": "concurrency/fixtures/isolated.c",
+      "stale_dependencies": [
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_pthread.c"
+      ],
+      "synchronization_argument": "The asserted object is worker-local and has no shared accesses.",
+      "synchronization_model": "none",
+      "verification_accepted": false
+    },
+    {
+      "blocking_support": [
+        {
+          "kind": "dimension",
+          "name": "sequential",
+          "status": "calibrated"
+        },
+        {
+          "kind": "dimension",
+          "name": "mutex_protected_concurrency",
+          "status": "calibrated"
+        },
+        {
+          "kind": "primitive",
+          "name": "pthread_create",
+          "status": "calibrated"
+        },
+        {
+          "kind": "primitive",
+          "name": "mthread_abstract_mutex",
+          "status": "calibrated"
+        }
+      ],
+      "calibration_accepted": false,
+      "context": {
+        "interrupt_handlers": false,
+        "ordinary_threads": true,
+        "preemption": "not modeled"
+      },
+      "dependency_digest": "6e0e93344b3af824b736a2a247fb3d595c32c9f367ddc8fa26b6c1afb33b07e6",
+      "dependency_paths": [
+        "concurrency/fixtures/mutex.c",
+        "config/concurrency-c0.json",
+        "fragma/__main__.py",
+        "fragma/concurrency.py",
+        "toolchain/lock.json",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_analysis_fixpoint.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_analysis_hooks.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_lib.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_main.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_mutexes.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_thread.ml",
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread.c",
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread.h",
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_pthread.c"
+      ],
+      "evidence_accepted": false,
+      "evidence_kind": "calibration",
+      "external_interference": "Mthread injects main/worker writes but excludes them inside matching protected sections.",
+      "id": "mutex",
+      "kernel_scope": false,
+      "memory_order_assumptions": [
+        "Abstract mutual exclusion; no acquire/release or architecture-order claim"
+      ],
+      "model_id": "framac-33-mthread-eva-c0",
+      "observed": {
+        "assertions": {
+          "mutex_main_owned": "valid",
+          "mutex_worker_owned": "valid"
+        },
+        "considered_valid_assumptions": 32,
+        "diagnostics": {
+          "analysis_stopped": false,
+          "eva_alarm_count": 0,
+          "fixpoint_reached": true,
+          "iterations": 3,
+          "races": {
+            "read_write": {
+              "reported": false,
+              "unprotected": false
+            },
+            "write_write": {
+              "reported": true,
+              "unprotected": false
+            }
+          },
+          "unsupported": false,
+          "user_error": false
+        },
+        "outcome_kind": "valid_calibration",
+        "returncode": 0
+      },
+      "property_scope": {
+        "claim": "Each critical section observes its own just-written shared value while the abstract mutex is held.",
+        "exclusions": [
+          "Linux lock semantics",
+          "deadlock freedom",
+          "worker completion"
+        ],
+        "kind": "abstract_mutex_critical_section"
+      },
+      "required_dimensions": [
+        "sequential",
+        "mutex_protected_concurrency"
+      ],
+      "required_primitives": [
+        "pthread_create",
+        "mthread_abstract_mutex"
+      ],
+      "shared_objects": [
+        {
+          "external_interference": "main and worker writes",
+          "name": "shared_value",
+          "ownership": "shared under shared_mutex"
+        }
+      ],
+      "source": "concurrency/fixtures/mutex.c",
+      "stale_dependencies": [
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_pthread.c"
+      ],
+      "synchronization_argument": "All accesses to shared_value are checked after successful acquisition of the same abstract mutex.",
+      "synchronization_model": "mthread_abstract_mutex",
+      "verification_accepted": false
+    },
+    {
+      "blocking_support": [
+        {
+          "kind": "dimension",
+          "name": "sequential",
+          "status": "calibrated"
+        },
+        {
+          "kind": "primitive",
+          "name": "pthread_create",
+          "status": "calibrated"
+        }
+      ],
+      "calibration_accepted": false,
+      "context": {
+        "interrupt_handlers": false,
+        "ordinary_threads": true,
+        "preemption": "not modeled"
+      },
+      "dependency_digest": "ffa6e7a824cd5a7e13dde1f7fe0aba36670f0db382658efd6afaa7163c19367d",
+      "dependency_paths": [
+        "concurrency/fixtures/interference.c",
+        "config/concurrency-c0.json",
+        "fragma/__main__.py",
+        "fragma/concurrency.py",
+        "toolchain/lock.json",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_analysis_fixpoint.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_analysis_hooks.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_lib.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_main.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_mutexes.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_thread.ml",
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread.c",
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread.h",
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_pthread.c"
+      ],
+      "evidence_accepted": false,
+      "evidence_kind": "calibration",
+      "external_interference": "Both constant writes are injected to both abstract threads.",
+      "id": "interference",
+      "kernel_scope": false,
+      "memory_order_assumptions": [
+        "Mthread value interference only; the real C data race is not assigned defined behavior"
+      ],
+      "model_id": "framac-33-mthread-eva-c0",
+      "observed": {
+        "assertions": {
+          "interference_main_range": "valid",
+          "interference_worker_range": "valid"
+        },
+        "considered_valid_assumptions": 32,
+        "diagnostics": {
+          "analysis_stopped": false,
+          "eva_alarm_count": 0,
+          "fixpoint_reached": true,
+          "iterations": 4,
+          "races": {
+            "read_write": {
+              "reported": true,
+              "unprotected": true
+            },
+            "write_write": {
+              "reported": false,
+              "unprotected": false
+            }
+          },
+          "unsupported": false,
+          "user_error": false
+        },
+        "outcome_kind": "possible_race",
+        "returncode": 0
+      },
+      "property_scope": {
+        "claim": "Observed values stay in the written range and the unprotected read/write race remains visible.",
+        "exclusions": [
+          "C data-race execution semantics",
+          "race freedom",
+          "exact scheduling"
+        ],
+        "kind": "unprotected_interference_and_race"
+      },
+      "required_dimensions": [
+        "sequential"
+      ],
+      "required_primitives": [
+        "pthread_create"
+      ],
+      "shared_objects": [
+        {
+          "external_interference": "main and worker read/write",
+          "name": "shared_value",
+          "ownership": "deliberately unprotected shared"
+        }
+      ],
+      "source": "concurrency/fixtures/interference.c",
+      "stale_dependencies": [
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_pthread.c"
+      ],
+      "synchronization_argument": "Absence of synchronization is deliberate and must produce an unprotected diagnostic.",
+      "synchronization_model": "none",
+      "verification_accepted": false
+    },
+    {
+      "blocking_support": [
+        {
+          "kind": "dimension",
+          "name": "sequential",
+          "status": "calibrated"
+        },
+        {
+          "kind": "primitive",
+          "name": "pthread_create",
+          "status": "calibrated"
+        },
+        {
+          "kind": "primitive",
+          "name": "pthread_join",
+          "status": "unsupported"
+        }
+      ],
+      "calibration_accepted": false,
+      "context": {
+        "interrupt_handlers": false,
+        "ordinary_threads": true,
+        "preemption": "not modeled"
+      },
+      "dependency_digest": "a67cee219616b4e7d5d800a1d09a6705c3db7f61bda7e46d4cf0b7ad4329af5c",
+      "dependency_paths": [
+        "concurrency/fixtures/join.c",
+        "config/concurrency-c0.json",
+        "fragma/__main__.py",
+        "fragma/concurrency.py",
+        "toolchain/lock.json",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_analysis_fixpoint.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_analysis_hooks.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_lib.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_main.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_mutexes.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_thread.ml",
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread.c",
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread.h",
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_pthread.c"
+      ],
+      "evidence_accepted": false,
+      "evidence_kind": "calibration",
+      "external_interference": "The worker write is visible as possible interference but not guaranteed completion.",
+      "id": "join",
+      "kernel_scope": false,
+      "memory_order_assumptions": [
+        "No join happens-before edge"
+      ],
+      "model_id": "framac-33-mthread-eva-c0",
+      "observed": {
+        "assertions": {
+          "join_completion_model_gap": "unknown"
+        },
+        "considered_valid_assumptions": 32,
+        "diagnostics": {
+          "analysis_stopped": false,
+          "eva_alarm_count": 2,
+          "fixpoint_reached": true,
+          "iterations": 3,
+          "races": {
+            "read_write": {
+              "reported": true,
+              "unprotected": true
+            },
+            "write_write": {
+              "reported": false,
+              "unprotected": false
+            }
+          },
+          "unsupported": false,
+          "user_error": false
+        },
+        "outcome_kind": "model_gap",
+        "returncode": 0
+      },
+      "property_scope": {
+        "claim": "The desired post-join completion property remains unknown.",
+        "exclusions": [
+          "Real pthread_join completion",
+          "lifetime transfer",
+          "happens-before"
+        ],
+        "kind": "unsupported_completion_semantics"
+      },
+      "required_dimensions": [
+        "sequential"
+      ],
+      "required_primitives": [
+        "pthread_create",
+        "pthread_join"
+      ],
+      "shared_objects": [
+        {
+          "external_interference": "unprotected worker write",
+          "name": "join_completed",
+          "ownership": "worker writes, main reads"
+        }
+      ],
+      "source": "concurrency/fixtures/join.c",
+      "stale_dependencies": [
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_pthread.c"
+      ],
+      "synchronization_argument": "No completion claim is accepted because the bundled join stub does not wait.",
+      "synchronization_model": "unsupported_join",
+      "verification_accepted": false
+    },
+    {
+      "blocking_support": [
+        {
+          "kind": "dimension",
+          "name": "sequential",
+          "status": "calibrated"
+        },
+        {
+          "kind": "primitive",
+          "name": "pthread_create",
+          "status": "calibrated"
+        }
+      ],
+      "calibration_accepted": false,
+      "context": {
+        "interrupt_handlers": false,
+        "ordinary_threads": true,
+        "preemption": "not modeled"
+      },
+      "dependency_digest": "e901be406be03db2451c10b449fd5c08af4a0ffa8c989f5e040bf90210b8b463",
+      "dependency_paths": [
+        "concurrency/fixtures/false_assertion.c",
+        "config/concurrency-c0.json",
+        "fragma/__main__.py",
+        "fragma/concurrency.py",
+        "toolchain/lock.json",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_analysis_fixpoint.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_analysis_hooks.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_lib.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_main.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_mutexes.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_thread.ml",
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread.c",
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread.h",
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_pthread.c"
+      ],
+      "evidence_accepted": false,
+      "evidence_kind": "calibration",
+      "external_interference": "None relevant to the asserted local value.",
+      "id": "false_assertion",
+      "kernel_scope": false,
+      "memory_order_assumptions": [
+        "No shared-memory ordering claim"
+      ],
+      "model_id": "framac-33-mthread-eva-c0",
+      "observed": {
+        "assertions": {
+          "deliberate_false": "invalid"
+        },
+        "considered_valid_assumptions": 32,
+        "diagnostics": {
+          "analysis_stopped": false,
+          "eva_alarm_count": 1,
+          "fixpoint_reached": true,
+          "iterations": 1,
+          "races": {
+            "read_write": {
+              "reported": false,
+              "unprotected": false
+            },
+            "write_write": {
+              "reported": false,
+              "unprotected": false
+            }
+          },
+          "unsupported": false,
+          "user_error": false
+        },
+        "outcome_kind": "false_property",
+        "returncode": 0
+      },
+      "property_scope": {
+        "claim": "The deliberately false worker-local equality is classified invalid.",
+        "exclusions": [
+          "Kernel defect",
+          "shared-state reasoning"
+        ],
+        "kind": "deliberate_false_property"
+      },
+      "required_dimensions": [
+        "sequential"
+      ],
+      "required_primitives": [
+        "pthread_create"
+      ],
+      "shared_objects": [],
+      "source": "concurrency/fixtures/false_assertion.c",
+      "stale_dependencies": [
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_pthread.c"
+      ],
+      "synchronization_argument": "The assertion is worker-local; synchronization is irrelevant.",
+      "synchronization_model": "none",
+      "verification_accepted": false
+    },
+    {
+      "blocking_support": [
+        {
+          "kind": "dimension",
+          "name": "sequential",
+          "status": "calibrated"
+        },
+        {
+          "kind": "dimension",
+          "name": "interrupts",
+          "status": "partial"
+        },
+        {
+          "kind": "primitive",
+          "name": "interrupt_registration",
+          "status": "partial"
+        }
+      ],
+      "calibration_accepted": true,
+      "context": {
+        "interrupt_handlers": true,
+        "ordinary_threads": false,
+        "preemption": "not modeled"
+      },
+      "dependency_digest": "eb88fa73f2ac548c2c64a2d30e77b1171eb3b9e196f52000be8f2e82ec7179af",
+      "dependency_paths": [
+        "concurrency/fixtures/interrupt_unprotected.c",
+        "config/concurrency-c0.json",
+        "fragma/__main__.py",
+        "fragma/concurrency.py",
+        "toolchain/lock.json",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_analysis_fixpoint.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_analysis_hooks.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_lib.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_main.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_mutexes.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_thread.ml",
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread.c",
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread.h",
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_interrupts.c",
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_interrupts.h"
+      ],
+      "evidence_accepted": true,
+      "evidence_kind": "calibration",
+      "external_interference": "The registered handler's write is injected from its initial-state entry point.",
+      "id": "interrupt_unprotected",
+      "kernel_scope": false,
+      "memory_order_assumptions": [
+        "Abstract handler interleaving only"
+      ],
+      "model_id": "framac-33-mthread-eva-c0",
+      "observed": {
+        "assertions": {
+          "interrupt_range": "valid"
+        },
+        "considered_valid_assumptions": 0,
+        "diagnostics": {
+          "analysis_stopped": false,
+          "eva_alarm_count": 0,
+          "fixpoint_reached": true,
+          "iterations": 3,
+          "races": {
+            "read_write": {
+              "reported": true,
+              "unprotected": true
+            },
+            "write_write": {
+              "reported": false,
+              "unprotected": false
+            }
+          },
+          "unsupported": false,
+          "user_error": false
+        },
+        "outcome_kind": "possible_race",
+        "returncode": 0
+      },
+      "property_scope": {
+        "claim": "The handler is discovered, its value interference is bounded, and the unprotected access is reported.",
+        "exclusions": [
+          "Linux IRQ masking",
+          "interrupt nesting",
+          "hardware ordering"
+        ],
+        "kind": "automatic_interrupt_interference"
+      },
+      "required_dimensions": [
+        "sequential",
+        "interrupts"
+      ],
+      "required_primitives": [
+        "interrupt_registration"
+      ],
+      "shared_objects": [
+        {
+          "external_interference": "automatic handler write",
+          "name": "interrupt_value",
+          "ownership": "main reads, handler writes"
+        }
+      ],
+      "source": "concurrency/fixtures/interrupt_unprotected.c",
+      "stale_dependencies": [],
+      "synchronization_argument": "The access is deliberately unprotected and must remain diagnosed.",
+      "synchronization_model": "none",
+      "verification_accepted": false
+    },
+    {
+      "blocking_support": [
+        {
+          "kind": "dimension",
+          "name": "sequential",
+          "status": "calibrated"
+        },
+        {
+          "kind": "dimension",
+          "name": "mutex_protected_concurrency",
+          "status": "calibrated"
+        },
+        {
+          "kind": "primitive",
+          "name": "pthread_create",
+          "status": "calibrated"
+        },
+        {
+          "kind": "primitive",
+          "name": "mthread_abstract_mutex",
+          "status": "calibrated"
+        }
+      ],
+      "calibration_accepted": false,
+      "context": {
+        "interrupt_handlers": false,
+        "ordinary_threads": true,
+        "preemption": "not modeled"
+      },
+      "dependency_digest": "9afa2f56e026adf2cefc1e0293e021e77822a57b6aa71bd49022f326a1af0c96",
+      "dependency_paths": [
+        "concurrency/fixtures/interrupt_exclusion_synthetic.c",
+        "config/concurrency-c0.json",
+        "fragma/__main__.py",
+        "fragma/concurrency.py",
+        "toolchain/lock.json",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_analysis_fixpoint.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_analysis_hooks.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_lib.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_main.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_mutexes.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_thread.ml",
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread.c",
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread.h",
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_pthread.c"
+      ],
+      "evidence_accepted": false,
+      "evidence_kind": "calibration",
+      "external_interference": "Writes are injected but reported protected by the matching abstract mutex.",
+      "id": "interrupt_exclusion_synthetic",
+      "kernel_scope": false,
+      "memory_order_assumptions": [
+        "Abstract mutual exclusion only"
+      ],
+      "model_id": "framac-33-mthread-eva-c0",
+      "observed": {
+        "assertions": {
+          "synthetic_interrupt_main_owned": "valid",
+          "synthetic_interrupt_worker_owned": "valid"
+        },
+        "considered_valid_assumptions": 32,
+        "diagnostics": {
+          "analysis_stopped": false,
+          "eva_alarm_count": 0,
+          "fixpoint_reached": true,
+          "iterations": 3,
+          "races": {
+            "read_write": {
+              "reported": false,
+              "unprotected": false
+            },
+            "write_write": {
+              "reported": true,
+              "unprotected": false
+            }
+          },
+          "unsupported": false,
+          "user_error": false
+        },
+        "outcome_kind": "valid_synthetic_exclusion",
+        "returncode": 0
+      },
+      "property_scope": {
+        "claim": "A thread created after abstract-lock initialization has protected critical-section assertions.",
+        "exclusions": [
+          "Automatic interrupt registration",
+          "Linux IRQ disable",
+          "preemption semantics"
+        ],
+        "kind": "synthetic_interrupt_like_exclusion"
+      },
+      "required_dimensions": [
+        "sequential",
+        "mutex_protected_concurrency"
+      ],
+      "required_primitives": [
+        "pthread_create",
+        "mthread_abstract_mutex"
+      ],
+      "shared_objects": [
+        {
+          "external_interference": "main and synthetic worker writes",
+          "name": "interrupt_value",
+          "ownership": "shared under interrupt-lock"
+        }
+      ],
+      "source": "concurrency/fixtures/interrupt_exclusion_synthetic.c",
+      "stale_dependencies": [
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_pthread.c"
+      ],
+      "synchronization_argument": "The synthetic worker is created only after the same abstract mutex identifier is initialized.",
+      "synchronization_model": "mthread_abstract_mutex",
+      "verification_accepted": false
+    },
+    {
+      "blocking_support": [
+        {
+          "kind": "dimension",
+          "name": "sequential",
+          "status": "calibrated"
+        },
+        {
+          "kind": "dimension",
+          "name": "mutex_protected_concurrency",
+          "status": "calibrated"
+        },
+        {
+          "kind": "dimension",
+          "name": "interrupts",
+          "status": "partial"
+        },
+        {
+          "kind": "primitive",
+          "name": "mthread_abstract_mutex",
+          "status": "calibrated"
+        },
+        {
+          "kind": "primitive",
+          "name": "interrupt_registration",
+          "status": "partial"
+        }
+      ],
+      "calibration_accepted": true,
+      "context": {
+        "interrupt_handlers": true,
+        "ordinary_threads": false,
+        "preemption": "not modeled"
+      },
+      "dependency_digest": "9d7484535aa5319245db05d7ac4146f73fd659c9fc4985a5498f428cd8023b26",
+      "dependency_paths": [
+        "concurrency/fixtures/interrupt_exclusion.c",
+        "config/concurrency-c0.json",
+        "fragma/__main__.py",
+        "fragma/concurrency.py",
+        "toolchain/lock.json",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_analysis_fixpoint.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_analysis_hooks.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_lib.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_main.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_mutexes.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_thread.ml",
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread.c",
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread.h",
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_interrupts.c",
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_interrupts.h"
+      ],
+      "evidence_accepted": true,
+      "evidence_kind": "calibration",
+      "external_interference": "Handler analysis starts from initial main state and exposes the initialization gap.",
+      "id": "interrupt_registered_exclusion_gap",
+      "kernel_scope": false,
+      "memory_order_assumptions": [
+        "Abstract handler interleaving; no Linux initialization or IRQ-order edge"
+      ],
+      "model_id": "framac-33-mthread-eva-c0",
+      "observed": {
+        "assertions": {
+          "interrupt_handler_owned": "unknown",
+          "interrupt_main_owned": "unknown"
+        },
+        "considered_valid_assumptions": 32,
+        "diagnostics": {
+          "analysis_stopped": false,
+          "eva_alarm_count": 2,
+          "fixpoint_reached": true,
+          "iterations": 4,
+          "races": {
+            "read_write": {
+              "reported": true,
+              "unprotected": true
+            },
+            "write_write": {
+              "reported": true,
+              "unprotected": false
+            }
+          },
+          "unsupported": false,
+          "user_error": false
+        },
+        "outcome_kind": "model_gap",
+        "returncode": 0
+      },
+      "property_scope": {
+        "claim": "The automatic handler's unavailable lock initialization remains visible as unknown assertions and an unprotected lock-lifecycle access.",
+        "exclusions": [
+          "Successful Linux interrupt exclusion",
+          "initialized handler state",
+          "nested interrupts"
+        ],
+        "kind": "automatic_handler_lock_initialization_gap"
+      },
+      "required_dimensions": [
+        "sequential",
+        "mutex_protected_concurrency",
+        "interrupts"
+      ],
+      "required_primitives": [
+        "mthread_abstract_mutex",
+        "interrupt_registration"
+      ],
+      "shared_objects": [
+        {
+          "external_interference": "handler may start from pre-initialization state",
+          "name": "interrupt_lock",
+          "ownership": "initialized by main, read by handler"
+        },
+        {
+          "external_interference": "main and handler writes",
+          "name": "interrupt_value",
+          "ownership": "intended abstract-lock protection"
+        }
+      ],
+      "source": "concurrency/fixtures/interrupt_exclusion.c",
+      "stale_dependencies": [],
+      "synchronization_argument": "Protected data writes are recorded, but the lock identifier itself may be uninitialized in the independently started handler; no exclusion claim is accepted.",
+      "synchronization_model": "mthread_abstract_mutex_with_initial_state_gap",
+      "verification_accepted": false
+    },
+    {
+      "blocking_support": [
+        {
+          "kind": "dimension",
+          "name": "sequential",
+          "status": "calibrated"
+        },
+        {
+          "kind": "primitive",
+          "name": "pthread_barrier_wait",
+          "status": "unsupported"
+        }
+      ],
+      "calibration_accepted": false,
+      "context": {
+        "interrupt_handlers": false,
+        "ordinary_threads": true,
+        "preemption": "not modeled"
+      },
+      "dependency_digest": "0a02301dcce1f906e8c74fd9e677277213a7d8461dad88a065aa4e5db8f417c2",
+      "dependency_paths": [
+        "concurrency/fixtures/unsupported_pthread.c",
+        "config/concurrency-c0.json",
+        "fragma/__main__.py",
+        "fragma/concurrency.py",
+        "toolchain/lock.json",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_analysis_fixpoint.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_analysis_hooks.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_lib.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_main.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_mutexes.ml",
+        "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_thread.ml",
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread.c",
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread.h",
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_pthread.c"
+      ],
+      "evidence_accepted": false,
+      "evidence_kind": "calibration",
+      "external_interference": "Analysis aborts before a concurrent property is accepted.",
+      "id": "unsupported_pthread",
+      "kernel_scope": false,
+      "memory_order_assumptions": [
+        "No barrier ordering is modeled"
+      ],
+      "model_id": "framac-33-mthread-eva-c0",
+      "observed": {
+        "assertions": {},
+        "considered_valid_assumptions": 0,
+        "diagnostics": {
+          "analysis_stopped": false,
+          "eva_alarm_count": 0,
+          "fixpoint_reached": true,
+          "iterations": 0,
+          "races": {
+            "read_write": {
+              "reported": false,
+              "unprotected": false
+            },
+            "write_write": {
+              "reported": false,
+              "unprotected": false
+            }
+          },
+          "unsupported": true,
+          "user_error": true
+        },
+        "outcome_kind": "unsupported",
+        "returncode": 1
+      },
+      "property_scope": {
+        "claim": "Use of pthread_barrier_wait is rejected with the pinned probably-unsound diagnostic.",
+        "exclusions": [
+          "Barrier synchronization",
+          "successful program analysis",
+          "ordering guarantees"
+        ],
+        "kind": "unsupported_primitive_rejection"
+      },
+      "required_dimensions": [
+        "sequential"
+      ],
+      "required_primitives": [
+        "pthread_barrier_wait"
+      ],
+      "shared_objects": [],
+      "source": "concurrency/fixtures/unsupported_pthread.c",
+      "stale_dependencies": [
+        "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_pthread.c"
+      ],
+      "synchronization_argument": "Rejection is required; an empty or silently ignored barrier model is forbidden.",
+      "synchronization_model": "unsupported_barrier",
+      "verification_accepted": false
+    }
+  ]
+}

@@ -86,6 +86,13 @@ class ConcurrencyC3LkmmTests(unittest.TestCase):
         parsed = concurrency_c3_lkmm.parse_herd_output(rendered_output(case))
         self.assertEqual(parsed["flags"], ["data-race"])
 
+    def test_parser_distinguishes_execution_witnesses_from_distinct_states(self):
+        case = deepcopy(concurrency_c3_lkmm.load_manifest(ROOT)["cases"][0])
+        case["expected"].update(states=1, positive=0, negative=2)
+        parsed = concurrency_c3_lkmm.parse_herd_output(rendered_output(case))
+        self.assertEqual(parsed["states"], 1)
+        self.assertEqual(parsed["positive"] + parsed["negative"], 2)
+
     def test_parser_rejects_truncation_extra_text_and_count_contradictions(self):
         case = concurrency_c3_lkmm.load_manifest(ROOT)["cases"][0]
         valid = rendered_output(case)

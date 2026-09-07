@@ -46,13 +46,30 @@ production acceptance count remains zero. The separate
 configured SMP x86-64 profile. Its release/acquire case forbids a stale max
 value without an LKMM flag; its once-access negative permits one bad witness
 and reports `data-race`. This verifies correct selected code, not a new defect.
-Atomic/RMW, lifetime-sensitive lock-free behavior, progress and other
-architecture mappings keep C3 incomplete. Further Hexagon work remains parked;
-these additions do not change architecture/profile or the main 25-target suite
-acceptance counts.
-All [955 project tests](results/tests-concurrency-c3-trace-20260907.log) pass in
-the post-C3 tree, with 20 pre-existing conditional skips. This adds 27 focused
-C3 tests to the prior 928-test result.
+The subsequent
+[module-statistics atomic/RMW pilot](docs/CONCURRENCY-C3-ATOMIC-20260907.md)
+passes 162/162 checks and accepts one bounded no-lost-update property: two
+selected concurrent `failed_load_modules` increments cannot finish at one. Its
+split once-access control permits the lost update; a separate pair distinguishes
+fully ordered and relaxed increment-return operations. This also verifies
+correct selected code rather than finding a defect. Lifetime-sensitive lock-free
+behavior, progress and other architecture mappings keep C3 incomplete. Further
+Hexagon work remains parked; these additions do not change architecture/profile
+or the main 25-target suite acceptance counts.
+
+The CLI/parser change was followed by current-input renewal of the C0 result,
+C1 audit and dependency-specific stale control, both C2 pilots, the C3 LKMM
+baseline and the trace pilot. Their respective current directories end in
+`c0-...-08`, `c1-...-04`, `c1-stale-control-...-05`, `c2-...-07`,
+`c2-irq-...-03`, `c3-lkmm-...-04` and `c3-trace-...-03`; every positive gate
+passes, and the stale control rejects exactly seven pthread-dependent cases
+while preserving the two builtins-only cases. A direct readback finds no input
+identity drift in the six positive receipts or the current
+`c3-module-stats-...-03` atomic pilot.
+
+All [968 project tests](results/tests-concurrency-c3-atomic-20260907.log) pass in
+the post-atomic tree, with 20 pre-existing conditional skips. This adds 13
+focused C3 tests to the prior 955-test result.
 
 The [audited private VLA/arithmetic successor](build/framac-alignment-provider-20260907/CANDIDATE-VLA-ARITHMETIC-20260907.md)
 now retains candidate 5 and candidate 4's preceding regression separately.
@@ -326,7 +343,7 @@ a proof of the whole kernel or automatic verification of every caller.
 | RISC-V encoders | Current source/model/proof gates for seven helpers and five project witnesses: 119 ordinary goals, 119 dependencies and 47 postconditions. | Helper-specific calibration, kernel callers and a documented encoder L2 scope. |
 | ARM64 scalar extraction | Current runtime-safety gates for two cpuid helpers: six ordinary goals and ten selected dependencies with genuine-header checks. | Add functional contracts/calibration and verify kernel callers. |
 | Kernel bug review | RV32 `load_unaligned_zeropad()` wrong result dynamically reproduced in QEMU; identical-config A/B passes after a two-line fix; send-ready patch and exact evidence audit. | Human submission decision, then upstream review/revision; broaden review without treating alarms as bugs. |
-| Concurrency | C0/C1 infrastructure, limited C2 mutex/IRQ pilots, a 92-check LKMM baseline and a 135-check source-linked release/acquire pilot are accepted. Three narrow kernel concurrency properties now exist: two access-protection claims and trace tgid-map publication ordering on SMP x86-64. | C3 atomic/RMW, lifetime-sensitive lock-free behavior, progress and other architecture mappings; then C4 RCU. Broader IRQ classes, functional protocols and the preserved unlocked HDQ accesses remain open. |
+| Concurrency | C0/C1 infrastructure, limited C2 mutex/IRQ pilots, a 92-check LKMM baseline, a 135-check release/acquire pilot and a 162-check atomic/RMW pilot are accepted. Four narrow kernel concurrency properties now exist: two access-protection claims, trace tgid-map publication ordering, and module-statistics no-lost-update atomicity on SMP x86-64. | C3 lifetime-sensitive lock-free behavior, progress and other architecture mappings; then C4 RCU. Broader IRQ classes, functional protocols and the preserved unlocked HDQ accesses remain open. |
 
 The registry's 24 distinct kernel functions reach the plan's initial numerical
 range, not its proof/coverage acceptance. The current report has 18 functions
@@ -578,10 +595,11 @@ No blanket system-package command is required for continuing the current work.
 
 ## Next acceptance milestones
 
-The bounded review, RV32 A/B handoff, limited C2 pilot, C3 LKMM baseline and
-first source-linked release/acquire pilot are complete at their narrow
-boundaries. Immediate choices are human review/submission of the patch and C3
-atomic/RMW plus lifetime-sensitive lock-free evaluation. Broader architecture
+The bounded review, RV32 A/B handoff, limited C2 pilot, C3 LKMM baseline,
+source-linked release/acquire pilot and source-linked atomic/RMW pilot are
+complete at their narrow boundaries. Immediate choices are human
+review/submission of the patch and C3 lifetime-sensitive lock-free evaluation.
+Broader architecture
 mappings, interrupt classes and functional protocols remain explicit extensions
 rather than inherited claims. The later
 milestones are still open backlog; Hexagon stays
@@ -590,12 +608,12 @@ parked unless its workstream is resumed explicitly.
 1. Review the RV32 submission handoff and, only on explicit authorization, send
    it to the recorded RISC-V maintainers/lists. Treat “send-ready”, “sent”, and
    “maintainer accepted” as separate states.
-2. Continue with C3 from the [concurrency plan](docs/CONCURRENCY-PLAN.md): add
-   independent atomic/RMW calibrations and a source-linked atomic property, then
-   a lifetime-sensitive lock-free functional case and any separately justified
-   progress claim. Extend the accepted implementation mapping beyond the first
-   configured SMP x86-64 case. Do not treat Mthread interleavings as weak-memory
-   evidence and do not install tools automatically.
+2. Continue with C3 from the [concurrency plan](docs/CONCURRENCY-PLAN.md): add a
+   lifetime-sensitive lock-free functional case and any separately justified
+   progress claim. Extend the accepted release/acquire and atomic/RMW
+   implementation mappings beyond the configured SMP x86-64 cases. Do not treat
+   Mthread interleavings as weak-memory evidence and do not install tools
+   automatically.
 3. Renew and resolve the six legacy nonpasses beyond the 25 current accepted
    targets across the 31 registered targets, and
    extend inventory/source gates to remaining examples.

@@ -1,0 +1,28 @@
+C Fragma-atomic-return-relaxed-sb
+
+(*
+ * Required weakened control. The RMWs remain indivisible, but their ordering
+ * is relaxed, so the store-buffering outcome is not forbidden.
+ *)
+
+{}
+
+P0(atomic_t *x, atomic_t *y)
+{
+	int r0;
+	int r1;
+
+	r1 = atomic_inc_return_relaxed(x);
+	r0 = atomic_read(y);
+}
+
+P1(atomic_t *x, atomic_t *y)
+{
+	int r0;
+	int r1;
+
+	r1 = atomic_inc_return_relaxed(y);
+	r0 = atomic_read(x);
+}
+
+exists (0:r0=0 /\ 1:r0=0)

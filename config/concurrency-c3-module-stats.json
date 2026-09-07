@@ -1,0 +1,276 @@
+{
+  "schema_version": 1,
+  "id": "linux-module-stats-atomic-rmw-x86_64-c3",
+  "kernel": {
+    "revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+    "git_tree": "054b6818c409ab20ae89b1031a1a7c358f673d87",
+    "source_root": "build/sources/linux-b9b3e33b70b71",
+    "source_receipt": "build/sources/linux-b9b3e33b70b71/.fragma-source.json",
+    "source_identities": {
+      "build/sources/linux-b9b3e33b70b71/.fragma-source.json": "93cffd1d937e730bf3010bfc904db8ce5c8ebc8df6e8d610032dda667c2950bd",
+      "build/sources/linux-b9b3e33b70b71/kernel/module/stats.c": "b0146c28a07c45f7b2976b358b9979dbfc33d8086cd55be1e1804b5b732263ec",
+      "build/sources/linux-b9b3e33b70b71/kernel/module/main.c": "40e0ae1d3c9f7d96b84b9dc179362434ba018cd617105d94a90299649d503c2f",
+      "build/sources/linux-b9b3e33b70b71/kernel/module/internal.h": "d65224deeb9a8755f0363703913db037580cef1926749f08f315d695f14aa533",
+      "build/sources/linux-b9b3e33b70b71/kernel/module/Kconfig": "51ea83a92492d699d3c7ba8673668446fc6d7f85e227850875eef6aa0913481c",
+      "build/sources/linux-b9b3e33b70b71/kernel/module/Makefile": "3c6166fab71f512aa26afa03e85ca255d2c708bcd98f1ea535fde32535cec420",
+      "build/sources/linux-b9b3e33b70b71/Documentation/atomic_t.txt": "717673f723f57ea07ca03d919e2a21e8fc2ce8c8808d3a1c6a9c36ae79885fe0",
+      "build/sources/linux-b9b3e33b70b71/include/linux/atomic/atomic-instrumented.h": "6fd766b72f7a633593d83e559998112ce49355273a55f79c0a6187d688b48f22",
+      "build/sources/linux-b9b3e33b70b71/include/linux/atomic/atomic-arch-fallback.h": "df526d6b93b043fb2a25296d82b0c4e4187ef8ddeb4d6789897989f7ad7ed6d0",
+      "build/sources/linux-b9b3e33b70b71/arch/x86/include/asm/atomic.h": "1ba1e1ef1403c9be2f00494c1ba22cff87044d442ef90a5da18a863877e88b18",
+      "build/sources/linux-b9b3e33b70b71/tools/memory-model/linux-kernel.def": "a04911d85fd86f5dbcf8ed436c7a2570fcc615f768c0c19b0a101f6212d2504c",
+      "build/sources/linux-b9b3e33b70b71/tools/memory-model/linux-kernel.cat": "250207709250d308e0a0a6f391c4eda0bbf4876cbc55eccbfbcd495676a179be"
+    }
+  },
+  "baseline": {
+    "manifest": "config/concurrency-c3-lkmm.json",
+    "id": "linux-lkmm-herd7-c3-calibration",
+    "required_capability": "c3_capability_baseline_complete"
+  },
+  "profile": {
+    "id": "x86_64-module-stats-c3",
+    "arch": "x86_64",
+    "jobs": 8,
+    "build_directory": "build/kernel/x86_64-module-stats-c3",
+    "config": "build/kernel/x86_64-module-stats-c3/.config",
+    "config_sha256": "c3153142bfe223bfa819e84f75aa0fe7e7fbbee64494a56877742c1d0e701a86",
+    "configuration": {
+      "base_recipe": "x86_64_defconfig",
+      "config_tool": "build/sources/linux-b9b3e33b70b71/scripts/config",
+      "config_tool_sha256": "a05f1a7669fd88820761bbeb1c3f321cc4c48e65624f9ae39572f58c264f1e85",
+      "enable": [
+        "DEBUG_FS",
+        "MODULE_DEBUG",
+        "MODULE_STATS"
+      ],
+      "finalize_recipe": "olddefconfig"
+    },
+    "required_config": {
+      "CONFIG_64BIT": "y",
+      "CONFIG_X86_64": "y",
+      "CONFIG_SMP": "y",
+      "CONFIG_MODULES": "y",
+      "CONFIG_DEBUG_FS": "y",
+      "CONFIG_MODULE_DEBUG": "y",
+      "CONFIG_MODULE_STATS": "y",
+      "CONFIG_KCSAN": "n",
+      "CONFIG_CC_IS_GCC": "y"
+    },
+    "make": {
+      "binary": "/usr/bin/make",
+      "realpath": "/usr/bin/make",
+      "sha256": "27c9f6d806aee15882b01c2c61848f7aa75caa14bc7b6f608ba422f9e46a7d49",
+      "version_line": "GNU Make 4.4.1"
+    },
+    "compiler": {
+      "binary": "/usr/bin/gcc",
+      "realpath": "/usr/bin/x86_64-linux-gnu-gcc-15",
+      "sha256": "b5f1b773a7c733738352000c92a077dc5852a1a2fc6d836b1e411be1e9ec5f88",
+      "version_line": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+      "target": "x86_64-linux-gnu"
+    },
+    "objdump": {
+      "binary": "/usr/bin/objdump",
+      "realpath": "/usr/bin/x86_64-linux-gnu-objdump",
+      "sha256": "44f07f8da860b15bd4dec909f229dec536595fb170a616fe3ab29c7b21c9736f",
+      "version_line": "GNU objdump (GNU Binutils for Ubuntu) 2.46"
+    },
+    "configured_compile": {
+      "target": "kernel/module/stats.o",
+      "object": "build/kernel/x86_64-module-stats-c3/kernel/module/stats.o",
+      "command_file": "build/kernel/x86_64-module-stats-c3/kernel/module/.stats.o.cmd",
+      "object_sha256": "e472812193fd94f57f7ec01ac2c9d3e5912fda29db80eed4214c165e07c690c2",
+      "command_sha256": "d358122116dc976361cc5e42242f6895b4f53a39de1a0506e8ecad05f8ba3970",
+      "elf_class": 2,
+      "elf_data": 1,
+      "elf_machine": 62,
+      "required_command_tokens": [
+        "/usr/bin/gcc",
+        "-D__KERNEL__",
+        "-std=gnu11",
+        "-m64",
+        "-march=x86-64",
+        "-O2",
+        "-fno-allow-store-data-races",
+        "kernel/module/stats.o",
+        "kernel/module/stats.c"
+      ],
+      "function_disassembly_order": [
+        "<mod_stat_bump_invalid>:",
+        "lock add %rax",
+        ".bss+0x34",
+        "lock incl",
+        ".bss+0x2c"
+      ],
+      "local_symbols": {
+        "failed_load_modules": {
+          "section": ".bss",
+          "value": "0000000000000030",
+          "size": 4
+        },
+        "invalid_mod_bytes": {
+          "section": ".bss",
+          "value": "0000000000000038",
+          "size": 8
+        }
+      }
+    }
+  },
+  "property": {
+    "kind": "kernel_atomic_rmw_no_lost_update",
+    "claim": "On the configured SMP x86-64 profile, starting from zero and in the absence of any other update, two completed concurrent executions of the failed_load_modules atomic_inc() contribute exactly two; the final value one is impossible.",
+    "source_file": "build/sources/linux-b9b3e33b70b71/kernel/module/stats.c",
+    "source_function": "mod_stat_bump_invalid",
+    "caller_file": "build/sources/linux-b9b3e33b70b71/kernel/module/main.c",
+    "caller_function": "load_module",
+    "counter": "failed_load_modules",
+    "source_update": "atomic_inc(&failed_load_modules);",
+    "model_update": "atomic_inc(counter);",
+    "concurrency_argument": "The pinned source documents module-load races and exposes init_module/finit_module entry points; mod_stat_bump_invalid() is reached after per-list module_mutex critical sections, and failed_load_modules is a kernel-wide incremental statistic.",
+    "lifetime_argument": "failed_load_modules is a translation-unit-local static atomic_t with zero initialization and no reset, decrement, alternative write, or deallocation in the pinned translation unit.",
+    "implementation_argument": "The kernel atomic_t contract makes RMW operations SMP atomic; the pinned LKMM model treats atomic_inc as one RMW, and the configured x86-64 object lowers the selected increment to lock incl against the counter's local .bss location.",
+    "exclusions": [
+      "The claim assumes initial value zero, exactly two selected increments, and no concurrent third update; it is a no-lost-update property, not a claim about an arbitrary debugfs snapshot.",
+      "The model omits invalid_mod_bytes, allocation, error-path functionality, module lifetime, and whole module-loader behavior.",
+      "The no-return atomic_inc operation is relaxed with respect to other locations; no cross-object ordering is claimed.",
+      "Counter wraparound is defined by the kernel contract but excluded from this two-increment zero-origin property.",
+      "No architecture implementation other than the configured SMP x86-64 profile is accepted by this source-linked pilot.",
+      "No progress, fairness, lock-freedom, wait-freedom, runtime reachability frequency, or whole-kernel race-freedom property is claimed."
+    ]
+  },
+  "model": {
+    "atomicity_condition": "exists ([counter]=1)",
+    "ordering_condition": "exists (0:r0=0 /\\ 1:r0=0)",
+    "abstraction": {
+      "counter": "The static zero-initialized failed_load_modules atomic_t is represented by counter, initially zero.",
+      "threads": "Each of the two model threads represents one completed mod_stat_bump_invalid() execution and retains only its failed_load_modules update.",
+      "bad_atomicity_outcome": "Final counter value one means one of two increments was lost.",
+      "omitted": "The independent invalid_mod_bytes update and all module cleanup operations cannot change the selected counter's RMW atomicity."
+    },
+    "pairs": [
+      {
+        "id": "module_stats_atomicity",
+        "positive": "atomic_inc_positive",
+        "negative": "split_once_negative",
+        "expected_transition": "Sometimes->Never",
+        "source_linked": true
+      },
+      {
+        "id": "return_ordering_calibration",
+        "positive": "atomic_return_mb_positive",
+        "negative": "atomic_return_relaxed_negative",
+        "expected_transition": "Sometimes->Never",
+        "source_linked": false
+      }
+    ],
+    "cases": [
+      {
+        "id": "atomic_inc_positive",
+        "path": "concurrency/c3/atomic_inc_atomicity.litmus",
+        "sha256": "0c2845c55fb19b9b3f02ec8c30ce46dbdececbdf35df1f61b22323c542b1e6d9",
+        "role": "verification_candidate",
+        "verification_candidate": true,
+        "control_for": null,
+        "required_operations": [
+          "atomic_inc"
+        ],
+        "forbidden_operations": [
+          "READ_ONCE",
+          "WRITE_ONCE"
+        ],
+        "expected": {
+          "test": "Fragma-atomic-inc-atomicity",
+          "disposition": "Allowed",
+          "states": 1,
+          "marker": "No",
+          "positive": 0,
+          "negative": 2,
+          "flags": [],
+          "condition": "exists ([counter]=1)",
+          "observation": "Never",
+          "hash": "e43f7f95af51d68535ee1191d7f241e8"
+        }
+      },
+      {
+        "id": "split_once_negative",
+        "path": "concurrency/c3/once_inc_lost_update.litmus",
+        "sha256": "f16cb5968131322e11b9395ca04b46e5b474e7d619c36663ce6ac72c90d19eb2",
+        "role": "required_weakened_control",
+        "verification_candidate": false,
+        "control_for": "atomic_inc_positive",
+        "required_operations": [
+          "READ_ONCE",
+          "WRITE_ONCE"
+        ],
+        "forbidden_operations": [
+          "atomic_inc"
+        ],
+        "expected": {
+          "test": "Fragma-once-inc-lost-update",
+          "disposition": "Allowed",
+          "states": 2,
+          "marker": "Ok",
+          "positive": 2,
+          "negative": 2,
+          "flags": [],
+          "condition": "exists ([counter]=1)",
+          "observation": "Sometimes",
+          "hash": "342ca35490db477a6d31eac3866cc67c"
+        }
+      },
+      {
+        "id": "atomic_return_mb_positive",
+        "path": "concurrency/c3/atomic_return_mb_sb.litmus",
+        "sha256": "745ba4144ade8786eaf02d44231d6f29499736363c6a4a578b36b6680082e1c0",
+        "role": "ordered_calibration",
+        "verification_candidate": false,
+        "control_for": null,
+        "required_operations": [
+          "atomic_inc_return",
+          "atomic_read"
+        ],
+        "forbidden_operations": [
+          "atomic_inc_return_relaxed"
+        ],
+        "expected": {
+          "test": "Fragma-atomic-return-mb-sb",
+          "disposition": "Allowed",
+          "states": 3,
+          "marker": "No",
+          "positive": 0,
+          "negative": 3,
+          "flags": [],
+          "condition": "exists (0:r0=0 /\\ 1:r0=0)",
+          "observation": "Never",
+          "hash": "84893ff6428e97b0c9bc5874432ad1c0"
+        }
+      },
+      {
+        "id": "atomic_return_relaxed_negative",
+        "path": "concurrency/c3/atomic_return_relaxed_sb.litmus",
+        "sha256": "54705b270373cad66f8579a62720c2481e912bfc6d61934750ee78af85402d24",
+        "role": "weakened_calibration",
+        "verification_candidate": false,
+        "control_for": "atomic_return_mb_positive",
+        "required_operations": [
+          "atomic_inc_return_relaxed",
+          "atomic_read"
+        ],
+        "forbidden_operations": [
+          "atomic_inc_return"
+        ],
+        "expected": {
+          "test": "Fragma-atomic-return-relaxed-sb",
+          "disposition": "Allowed",
+          "states": 4,
+          "marker": "Ok",
+          "positive": 1,
+          "negative": 3,
+          "flags": [],
+          "condition": "exists (0:r0=0 /\\ 1:r0=0)",
+          "observation": "Sometimes",
+          "hash": "67620e2d188fb6175a82c36a8411a361"
+        }
+      }
+    ]
+  }
+}

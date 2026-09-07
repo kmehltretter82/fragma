@@ -83,7 +83,7 @@ is an empty synchronization stub.
 
 ## Four-way A/B evidence
 
-The current [125-check result](../results/concurrency-c2-irq-20260907-02/SUMMARY.md)
+The current [125-check result](../results/concurrency-c2-irq-20260907-03/SUMMARY.md)
 passes all source, compiler, config, object, provider, assertion, access-site and
 negative-control gates:
 
@@ -102,10 +102,10 @@ records instead. This precision limitation remains visible rather than being
 replaced by an assumed assertion.
 
 The result pins 35 direct input identities and 32 raw artifacts. The renewed
-[C0 result](../results/concurrency-c0-20260907-07/SUMMARY.md),
-[C1 audit](../results/concurrency-c1-20260907-03/SUMMARY.md),
-[C1 staleness control](../results/concurrency-c1-stale-control-20260907-03/SUMMARY.md)
-and [mutex C2 result](../results/concurrency-c2-20260907-06/SUMMARY.md) bind the
+[C0 result](../results/concurrency-c0-20260907-08/SUMMARY.md),
+[C1 audit](../results/concurrency-c1-20260907-04/SUMMARY.md),
+[C1 staleness control](../results/concurrency-c1-stale-control-20260907-05/SUMMARY.md)
+and [mutex C2 result](../results/concurrency-c2-20260907-07/SUMMARY.md) bind the
 current CLI identity. The full repository run passes
 [928 tests](../results/tests-concurrency-c2-irq-20260907.log), with 20 explicit
 environment/evidence-dependent skips.

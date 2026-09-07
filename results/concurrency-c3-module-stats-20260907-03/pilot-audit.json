@@ -1,0 +1,2138 @@
+{
+  "accepted": true,
+  "baseline": {
+    "accepted": true,
+    "checks": 92,
+    "output": "/home/karl/linux-work/fragma/results/concurrency-c3-module-stats-20260907-03/baseline"
+  },
+  "c3_atomic_rmw_pilot_complete": true,
+  "c3_stage_complete": false,
+  "cases": [
+    {
+      "checks": [
+        {
+          "actual": "0c2845c55fb19b9b3f02ec8c30ce46dbdececbdf35df1f61b22323c542b1e6d9",
+          "expected": "0c2845c55fb19b9b3f02ec8c30ce46dbdececbdf35df1f61b22323c542b1e6d9",
+          "name": "model identity",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "timed out",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "exit code",
+          "passed": true
+        },
+        {
+          "actual": "",
+          "expected": "",
+          "name": "stderr empty",
+          "passed": true
+        },
+        {
+          "actual": null,
+          "expected": null,
+          "name": "parse error",
+          "passed": true
+        },
+        {
+          "actual": {
+            "condition": "exists ([counter]=1)",
+            "disposition": "Allowed",
+            "flags": [],
+            "hash": "e43f7f95af51d68535ee1191d7f241e8",
+            "marker": "No",
+            "negative": 2,
+            "observation": "Never",
+            "positive": 0,
+            "states": 1,
+            "test": "Fragma-atomic-inc-atomicity"
+          },
+          "expected": {
+            "condition": "exists ([counter]=1)",
+            "disposition": "Allowed",
+            "flags": [],
+            "hash": "e43f7f95af51d68535ee1191d7f241e8",
+            "marker": "No",
+            "negative": 2,
+            "observation": "Never",
+            "positive": 0,
+            "states": 1,
+            "test": "Fragma-atomic-inc-atomicity"
+          },
+          "name": "semantic result",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "only named source case is verification candidate",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "required operation: atomic_inc",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "forbidden operation: READ_ONCE",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "forbidden operation: WRITE_ONCE",
+          "passed": true
+        }
+      ],
+      "control_for": null,
+      "id": "atomic_inc_positive",
+      "parse_error": null,
+      "parsed": {
+        "condition": "exists ([counter]=1)",
+        "disposition": "Allowed",
+        "flags": [],
+        "hash": "e43f7f95af51d68535ee1191d7f241e8",
+        "marker": "No",
+        "negative": 2,
+        "observation": "Never",
+        "positive": 0,
+        "seconds": 0.01,
+        "state_values": [
+          "[counter]=2;"
+        ],
+        "states": 1,
+        "test": "Fragma-atomic-inc-atomicity"
+      },
+      "passed": true,
+      "returncode": 0,
+      "role": "verification_candidate",
+      "timed_out": false,
+      "verification_candidate": true
+    },
+    {
+      "checks": [
+        {
+          "actual": "f16cb5968131322e11b9395ca04b46e5b474e7d619c36663ce6ac72c90d19eb2",
+          "expected": "f16cb5968131322e11b9395ca04b46e5b474e7d619c36663ce6ac72c90d19eb2",
+          "name": "model identity",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "timed out",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "exit code",
+          "passed": true
+        },
+        {
+          "actual": "",
+          "expected": "",
+          "name": "stderr empty",
+          "passed": true
+        },
+        {
+          "actual": null,
+          "expected": null,
+          "name": "parse error",
+          "passed": true
+        },
+        {
+          "actual": {
+            "condition": "exists ([counter]=1)",
+            "disposition": "Allowed",
+            "flags": [],
+            "hash": "342ca35490db477a6d31eac3866cc67c",
+            "marker": "Ok",
+            "negative": 2,
+            "observation": "Sometimes",
+            "positive": 2,
+            "states": 2,
+            "test": "Fragma-once-inc-lost-update"
+          },
+          "expected": {
+            "condition": "exists ([counter]=1)",
+            "disposition": "Allowed",
+            "flags": [],
+            "hash": "342ca35490db477a6d31eac3866cc67c",
+            "marker": "Ok",
+            "negative": 2,
+            "observation": "Sometimes",
+            "positive": 2,
+            "states": 2,
+            "test": "Fragma-once-inc-lost-update"
+          },
+          "name": "semantic result",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "only named source case is verification candidate",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "required operation: READ_ONCE",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "required operation: WRITE_ONCE",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "forbidden operation: atomic_inc",
+          "passed": true
+        }
+      ],
+      "control_for": "atomic_inc_positive",
+      "id": "split_once_negative",
+      "parse_error": null,
+      "parsed": {
+        "condition": "exists ([counter]=1)",
+        "disposition": "Allowed",
+        "flags": [],
+        "hash": "342ca35490db477a6d31eac3866cc67c",
+        "marker": "Ok",
+        "negative": 2,
+        "observation": "Sometimes",
+        "positive": 2,
+        "seconds": 0.01,
+        "state_values": [
+          "[counter]=1;",
+          "[counter]=2;"
+        ],
+        "states": 2,
+        "test": "Fragma-once-inc-lost-update"
+      },
+      "passed": true,
+      "returncode": 0,
+      "role": "required_weakened_control",
+      "timed_out": false,
+      "verification_candidate": false
+    },
+    {
+      "checks": [
+        {
+          "actual": "745ba4144ade8786eaf02d44231d6f29499736363c6a4a578b36b6680082e1c0",
+          "expected": "745ba4144ade8786eaf02d44231d6f29499736363c6a4a578b36b6680082e1c0",
+          "name": "model identity",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "timed out",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "exit code",
+          "passed": true
+        },
+        {
+          "actual": "",
+          "expected": "",
+          "name": "stderr empty",
+          "passed": true
+        },
+        {
+          "actual": null,
+          "expected": null,
+          "name": "parse error",
+          "passed": true
+        },
+        {
+          "actual": {
+            "condition": "exists (0:r0=0 /\\ 1:r0=0)",
+            "disposition": "Allowed",
+            "flags": [],
+            "hash": "84893ff6428e97b0c9bc5874432ad1c0",
+            "marker": "No",
+            "negative": 3,
+            "observation": "Never",
+            "positive": 0,
+            "states": 3,
+            "test": "Fragma-atomic-return-mb-sb"
+          },
+          "expected": {
+            "condition": "exists (0:r0=0 /\\ 1:r0=0)",
+            "disposition": "Allowed",
+            "flags": [],
+            "hash": "84893ff6428e97b0c9bc5874432ad1c0",
+            "marker": "No",
+            "negative": 3,
+            "observation": "Never",
+            "positive": 0,
+            "states": 3,
+            "test": "Fragma-atomic-return-mb-sb"
+          },
+          "name": "semantic result",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "only named source case is verification candidate",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "required operation: atomic_inc_return",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "required operation: atomic_read",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "forbidden operation: atomic_inc_return_relaxed",
+          "passed": true
+        }
+      ],
+      "control_for": null,
+      "id": "atomic_return_mb_positive",
+      "parse_error": null,
+      "parsed": {
+        "condition": "exists (0:r0=0 /\\ 1:r0=0)",
+        "disposition": "Allowed",
+        "flags": [],
+        "hash": "84893ff6428e97b0c9bc5874432ad1c0",
+        "marker": "No",
+        "negative": 3,
+        "observation": "Never",
+        "positive": 0,
+        "seconds": 0.01,
+        "state_values": [
+          "0:r0=0; 1:r0=1;",
+          "0:r0=1; 1:r0=0;",
+          "0:r0=1; 1:r0=1;"
+        ],
+        "states": 3,
+        "test": "Fragma-atomic-return-mb-sb"
+      },
+      "passed": true,
+      "returncode": 0,
+      "role": "ordered_calibration",
+      "timed_out": false,
+      "verification_candidate": false
+    },
+    {
+      "checks": [
+        {
+          "actual": "54705b270373cad66f8579a62720c2481e912bfc6d61934750ee78af85402d24",
+          "expected": "54705b270373cad66f8579a62720c2481e912bfc6d61934750ee78af85402d24",
+          "name": "model identity",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "timed out",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "exit code",
+          "passed": true
+        },
+        {
+          "actual": "",
+          "expected": "",
+          "name": "stderr empty",
+          "passed": true
+        },
+        {
+          "actual": null,
+          "expected": null,
+          "name": "parse error",
+          "passed": true
+        },
+        {
+          "actual": {
+            "condition": "exists (0:r0=0 /\\ 1:r0=0)",
+            "disposition": "Allowed",
+            "flags": [],
+            "hash": "67620e2d188fb6175a82c36a8411a361",
+            "marker": "Ok",
+            "negative": 3,
+            "observation": "Sometimes",
+            "positive": 1,
+            "states": 4,
+            "test": "Fragma-atomic-return-relaxed-sb"
+          },
+          "expected": {
+            "condition": "exists (0:r0=0 /\\ 1:r0=0)",
+            "disposition": "Allowed",
+            "flags": [],
+            "hash": "67620e2d188fb6175a82c36a8411a361",
+            "marker": "Ok",
+            "negative": 3,
+            "observation": "Sometimes",
+            "positive": 1,
+            "states": 4,
+            "test": "Fragma-atomic-return-relaxed-sb"
+          },
+          "name": "semantic result",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "only named source case is verification candidate",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "required operation: atomic_inc_return_relaxed",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "required operation: atomic_read",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "forbidden operation: atomic_inc_return",
+          "passed": true
+        }
+      ],
+      "control_for": "atomic_return_mb_positive",
+      "id": "atomic_return_relaxed_negative",
+      "parse_error": null,
+      "parsed": {
+        "condition": "exists (0:r0=0 /\\ 1:r0=0)",
+        "disposition": "Allowed",
+        "flags": [],
+        "hash": "67620e2d188fb6175a82c36a8411a361",
+        "marker": "Ok",
+        "negative": 3,
+        "observation": "Sometimes",
+        "positive": 1,
+        "seconds": 0.01,
+        "state_values": [
+          "0:r0=0; 1:r0=0;",
+          "0:r0=0; 1:r0=1;",
+          "0:r0=1; 1:r0=0;",
+          "0:r0=1; 1:r0=1;"
+        ],
+        "states": 4,
+        "test": "Fragma-atomic-return-relaxed-sb"
+      },
+      "passed": true,
+      "returncode": 0,
+      "role": "weakened_calibration",
+      "timed_out": false,
+      "verification_candidate": false
+    }
+  ],
+  "checks": [
+    {
+      "actual": "linux-lkmm-herd7-c3-calibration",
+      "expected": "linux-lkmm-herd7-c3-calibration",
+      "name": "baseline target",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "baseline capability accepted",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "baseline accepts no kernel property",
+      "passed": true
+    },
+    {
+      "actual": "93cffd1d937e730bf3010bfc904db8ce5c8ebc8df6e8d610032dda667c2950bd",
+      "expected": "93cffd1d937e730bf3010bfc904db8ce5c8ebc8df6e8d610032dda667c2950bd",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/.fragma-source.json",
+      "passed": true
+    },
+    {
+      "actual": "b0146c28a07c45f7b2976b358b9979dbfc33d8086cd55be1e1804b5b732263ec",
+      "expected": "b0146c28a07c45f7b2976b358b9979dbfc33d8086cd55be1e1804b5b732263ec",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/kernel/module/stats.c",
+      "passed": true
+    },
+    {
+      "actual": "40e0ae1d3c9f7d96b84b9dc179362434ba018cd617105d94a90299649d503c2f",
+      "expected": "40e0ae1d3c9f7d96b84b9dc179362434ba018cd617105d94a90299649d503c2f",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/kernel/module/main.c",
+      "passed": true
+    },
+    {
+      "actual": "d65224deeb9a8755f0363703913db037580cef1926749f08f315d695f14aa533",
+      "expected": "d65224deeb9a8755f0363703913db037580cef1926749f08f315d695f14aa533",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/kernel/module/internal.h",
+      "passed": true
+    },
+    {
+      "actual": "51ea83a92492d699d3c7ba8673668446fc6d7f85e227850875eef6aa0913481c",
+      "expected": "51ea83a92492d699d3c7ba8673668446fc6d7f85e227850875eef6aa0913481c",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/kernel/module/Kconfig",
+      "passed": true
+    },
+    {
+      "actual": "3c6166fab71f512aa26afa03e85ca255d2c708bcd98f1ea535fde32535cec420",
+      "expected": "3c6166fab71f512aa26afa03e85ca255d2c708bcd98f1ea535fde32535cec420",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/kernel/module/Makefile",
+      "passed": true
+    },
+    {
+      "actual": "717673f723f57ea07ca03d919e2a21e8fc2ce8c8808d3a1c6a9c36ae79885fe0",
+      "expected": "717673f723f57ea07ca03d919e2a21e8fc2ce8c8808d3a1c6a9c36ae79885fe0",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/Documentation/atomic_t.txt",
+      "passed": true
+    },
+    {
+      "actual": "6fd766b72f7a633593d83e559998112ce49355273a55f79c0a6187d688b48f22",
+      "expected": "6fd766b72f7a633593d83e559998112ce49355273a55f79c0a6187d688b48f22",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/include/linux/atomic/atomic-instrumented.h",
+      "passed": true
+    },
+    {
+      "actual": "df526d6b93b043fb2a25296d82b0c4e4187ef8ddeb4d6789897989f7ad7ed6d0",
+      "expected": "df526d6b93b043fb2a25296d82b0c4e4187ef8ddeb4d6789897989f7ad7ed6d0",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/include/linux/atomic/atomic-arch-fallback.h",
+      "passed": true
+    },
+    {
+      "actual": "1ba1e1ef1403c9be2f00494c1ba22cff87044d442ef90a5da18a863877e88b18",
+      "expected": "1ba1e1ef1403c9be2f00494c1ba22cff87044d442ef90a5da18a863877e88b18",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/arch/x86/include/asm/atomic.h",
+      "passed": true
+    },
+    {
+      "actual": "a04911d85fd86f5dbcf8ed436c7a2570fcc615f768c0c19b0a101f6212d2504c",
+      "expected": "a04911d85fd86f5dbcf8ed436c7a2570fcc615f768c0c19b0a101f6212d2504c",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/tools/memory-model/linux-kernel.def",
+      "passed": true
+    },
+    {
+      "actual": "250207709250d308e0a0a6f391c4eda0bbf4876cbc55eccbfbcd495676a179be",
+      "expected": "250207709250d308e0a0a6f391c4eda0bbf4876cbc55eccbfbcd495676a179be",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/tools/memory-model/linux-kernel.cat",
+      "passed": true
+    },
+    {
+      "actual": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+      "expected": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+      "name": "source receipt revision",
+      "passed": true
+    },
+    {
+      "actual": "054b6818c409ab20ae89b1031a1a7c358f673d87",
+      "expected": "054b6818c409ab20ae89b1031a1a7c358f673d87",
+      "name": "source receipt tree",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "source receipt requires content rechecks",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "source update is unique in selected function",
+      "passed": true
+    },
+    {
+      "actual": 2,
+      "expected": 2,
+      "name": "model has exactly two selected updates",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "static atomic counter declaration",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "counter has one atomic increment",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "counter has one atomic snapshot read",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "counter has one debugfs exposure",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "counter has no explicit initializer or direct assignment",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "counter has no reset/decrement/exchange",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "statistics explicitly require incremental counters",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "statistics explicitly document concurrent failure races",
+      "passed": true
+    },
+    {
+      "actual": [
+        {
+          "count": 1,
+          "path": "kernel/module/main.c"
+        },
+        {
+          "count": 1,
+          "path": "kernel/module/stats.c"
+        }
+      ],
+      "expected": [
+        {
+          "count": 1,
+          "path": "kernel/module/main.c"
+        },
+        {
+          "count": 1,
+          "path": "kernel/module/stats.c"
+        }
+      ],
+      "name": "definition/callsite inventory",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "selected caller invokes statistics update once",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "selected call is on allocated-module cleanup path",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "list insertion lock is released before returning",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "legacy init_module syscall can enter load_module",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "finit_module path can enter load_module",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "Kconfig makes module statistics explicit",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "Makefile selects statistics object",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "enabled header selects external implementation",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "atomic_t contract covers inter-CPU RMW",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "atomic_t contract forbids lost intermediate state",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "atomic_t contract classifies no-return ordering",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "instrumented atomic_inc routes to raw atomic_inc",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "raw atomic_inc routes to architecture operation",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "x86 atomic_inc uses locked increment",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "LKMM defines atomic_inc as one no-return RMW",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "LKMM enforces RMW atomicity",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "LKMM distinguishes full and relaxed return operations",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "make_version timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "make_version exit",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "compiler_version timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "compiler_version exit",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "compiler_target timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "compiler_target exit",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "objdump_version timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "objdump_version exit",
+      "passed": true
+    },
+    {
+      "actual": "/usr/bin/make",
+      "expected": "/usr/bin/make",
+      "name": "make realpath",
+      "passed": true
+    },
+    {
+      "actual": "27c9f6d806aee15882b01c2c61848f7aa75caa14bc7b6f608ba422f9e46a7d49",
+      "expected": "27c9f6d806aee15882b01c2c61848f7aa75caa14bc7b6f608ba422f9e46a7d49",
+      "name": "make identity",
+      "passed": true
+    },
+    {
+      "actual": "/usr/bin/x86_64-linux-gnu-gcc-15",
+      "expected": "/usr/bin/x86_64-linux-gnu-gcc-15",
+      "name": "compiler realpath",
+      "passed": true
+    },
+    {
+      "actual": "b5f1b773a7c733738352000c92a077dc5852a1a2fc6d836b1e411be1e9ec5f88",
+      "expected": "b5f1b773a7c733738352000c92a077dc5852a1a2fc6d836b1e411be1e9ec5f88",
+      "name": "compiler identity",
+      "passed": true
+    },
+    {
+      "actual": "/usr/bin/x86_64-linux-gnu-objdump",
+      "expected": "/usr/bin/x86_64-linux-gnu-objdump",
+      "name": "objdump realpath",
+      "passed": true
+    },
+    {
+      "actual": "44f07f8da860b15bd4dec909f229dec536595fb170a616fe3ab29c7b21c9736f",
+      "expected": "44f07f8da860b15bd4dec909f229dec536595fb170a616fe3ab29c7b21c9736f",
+      "name": "objdump identity",
+      "passed": true
+    },
+    {
+      "actual": "GNU Make 4.4.1",
+      "expected": "GNU Make 4.4.1",
+      "name": "make version line",
+      "passed": true
+    },
+    {
+      "actual": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+      "expected": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+      "name": "compiler version line",
+      "passed": true
+    },
+    {
+      "actual": "x86_64-linux-gnu",
+      "expected": "x86_64-linux-gnu",
+      "name": "compiler target",
+      "passed": true
+    },
+    {
+      "actual": "GNU objdump (GNU Binutils for Ubuntu) 2.46",
+      "expected": "GNU objdump (GNU Binutils for Ubuntu) 2.46",
+      "name": "objdump version line",
+      "passed": true
+    },
+    {
+      "actual": "a05f1a7669fd88820761bbeb1c3f321cc4c48e65624f9ae39572f58c264f1e85",
+      "expected": "a05f1a7669fd88820761bbeb1c3f321cc4c48e65624f9ae39572f58c264f1e85",
+      "name": "config tool identity",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "base_config timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "base_config exit",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "enable_config timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "enable_config exit",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "finalize_config timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "finalize_config exit",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured profile produced config",
+      "passed": true
+    },
+    {
+      "actual": "c3153142bfe223bfa819e84f75aa0fe7e7fbbee64494a56877742c1d0e701a86",
+      "expected": "c3153142bfe223bfa819e84f75aa0fe7e7fbbee64494a56877742c1d0e701a86",
+      "name": "configured config identity",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "kernel config: CONFIG_64BIT",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "kernel config: CONFIG_X86_64",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "kernel config: CONFIG_SMP",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "kernel config: CONFIG_MODULES",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "kernel config: CONFIG_DEBUG_FS",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "kernel config: CONFIG_MODULE_DEBUG",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "kernel config: CONFIG_MODULE_STATS",
+      "passed": true
+    },
+    {
+      "actual": "n",
+      "expected": "n",
+      "name": "kernel config: CONFIG_KCSAN",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "kernel config: CONFIG_CC_IS_GCC",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "configured object build timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "configured object build exit",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured object exists",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured object is ELF",
+      "passed": true
+    },
+    {
+      "actual": 2,
+      "expected": 2,
+      "name": "configured object class",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "configured object byte order",
+      "passed": true
+    },
+    {
+      "actual": 62,
+      "expected": 62,
+      "name": "configured object machine",
+      "passed": true
+    },
+    {
+      "actual": "e472812193fd94f57f7ec01ac2c9d3e5912fda29db80eed4214c165e07c690c2",
+      "expected": "e472812193fd94f57f7ec01ac2c9d3e5912fda29db80eed4214c165e07c690c2",
+      "name": "configured object identity",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command exists",
+      "passed": true
+    },
+    {
+      "actual": "d358122116dc976361cc5e42242f6895b4f53a39de1a0506e8ecad05f8ba3970",
+      "expected": "d358122116dc976361cc5e42242f6895b4f53a39de1a0506e8ecad05f8ba3970",
+      "name": "configured command identity",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: /usr/bin/gcc",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: -D__KERNEL__",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: -std=gnu11",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: -m64",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: -march=x86-64",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: -O2",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: -fno-allow-store-data-races",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: kernel/module/stats.o",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: kernel/module/stats.c",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "disassembly timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "disassembly exit",
+      "passed": true
+    },
+    {
+      "actual": "",
+      "expected": "",
+      "name": "disassembly stderr empty",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "symbol inventory timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "symbol inventory exit",
+      "passed": true
+    },
+    {
+      "actual": "",
+      "expected": "",
+      "name": "symbol inventory stderr empty",
+      "passed": true
+    },
+    {
+      "actual": null,
+      "expected": null,
+      "name": "disassembly parser error",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "atomic instruction/relocation order",
+      "passed": true
+    },
+    {
+      "actual": {
+        "failed_load_modules": {
+          "section": ".bss",
+          "size": 4,
+          "value": "0000000000000030"
+        },
+        "invalid_mod_bytes": {
+          "section": ".bss",
+          "size": 8,
+          "value": "0000000000000038"
+        }
+      },
+      "expected": {
+        "failed_load_modules": {
+          "section": ".bss",
+          "size": 4,
+          "value": "0000000000000030"
+        },
+        "invalid_mod_bytes": {
+          "section": ".bss",
+          "size": 8,
+          "value": "0000000000000038"
+        }
+      },
+      "name": "local atomic symbols",
+      "passed": true
+    },
+    {
+      "actual": "0c2845c55fb19b9b3f02ec8c30ce46dbdececbdf35df1f61b22323c542b1e6d9",
+      "expected": "0c2845c55fb19b9b3f02ec8c30ce46dbdececbdf35df1f61b22323c542b1e6d9",
+      "name": "model identity",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "exit code",
+      "passed": true
+    },
+    {
+      "actual": "",
+      "expected": "",
+      "name": "stderr empty",
+      "passed": true
+    },
+    {
+      "actual": null,
+      "expected": null,
+      "name": "parse error",
+      "passed": true
+    },
+    {
+      "actual": {
+        "condition": "exists ([counter]=1)",
+        "disposition": "Allowed",
+        "flags": [],
+        "hash": "e43f7f95af51d68535ee1191d7f241e8",
+        "marker": "No",
+        "negative": 2,
+        "observation": "Never",
+        "positive": 0,
+        "states": 1,
+        "test": "Fragma-atomic-inc-atomicity"
+      },
+      "expected": {
+        "condition": "exists ([counter]=1)",
+        "disposition": "Allowed",
+        "flags": [],
+        "hash": "e43f7f95af51d68535ee1191d7f241e8",
+        "marker": "No",
+        "negative": 2,
+        "observation": "Never",
+        "positive": 0,
+        "states": 1,
+        "test": "Fragma-atomic-inc-atomicity"
+      },
+      "name": "semantic result",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "only named source case is verification candidate",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "required operation: atomic_inc",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "forbidden operation: READ_ONCE",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "forbidden operation: WRITE_ONCE",
+      "passed": true
+    },
+    {
+      "actual": "f16cb5968131322e11b9395ca04b46e5b474e7d619c36663ce6ac72c90d19eb2",
+      "expected": "f16cb5968131322e11b9395ca04b46e5b474e7d619c36663ce6ac72c90d19eb2",
+      "name": "model identity",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "exit code",
+      "passed": true
+    },
+    {
+      "actual": "",
+      "expected": "",
+      "name": "stderr empty",
+      "passed": true
+    },
+    {
+      "actual": null,
+      "expected": null,
+      "name": "parse error",
+      "passed": true
+    },
+    {
+      "actual": {
+        "condition": "exists ([counter]=1)",
+        "disposition": "Allowed",
+        "flags": [],
+        "hash": "342ca35490db477a6d31eac3866cc67c",
+        "marker": "Ok",
+        "negative": 2,
+        "observation": "Sometimes",
+        "positive": 2,
+        "states": 2,
+        "test": "Fragma-once-inc-lost-update"
+      },
+      "expected": {
+        "condition": "exists ([counter]=1)",
+        "disposition": "Allowed",
+        "flags": [],
+        "hash": "342ca35490db477a6d31eac3866cc67c",
+        "marker": "Ok",
+        "negative": 2,
+        "observation": "Sometimes",
+        "positive": 2,
+        "states": 2,
+        "test": "Fragma-once-inc-lost-update"
+      },
+      "name": "semantic result",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "only named source case is verification candidate",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "required operation: READ_ONCE",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "required operation: WRITE_ONCE",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "forbidden operation: atomic_inc",
+      "passed": true
+    },
+    {
+      "actual": "745ba4144ade8786eaf02d44231d6f29499736363c6a4a578b36b6680082e1c0",
+      "expected": "745ba4144ade8786eaf02d44231d6f29499736363c6a4a578b36b6680082e1c0",
+      "name": "model identity",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "exit code",
+      "passed": true
+    },
+    {
+      "actual": "",
+      "expected": "",
+      "name": "stderr empty",
+      "passed": true
+    },
+    {
+      "actual": null,
+      "expected": null,
+      "name": "parse error",
+      "passed": true
+    },
+    {
+      "actual": {
+        "condition": "exists (0:r0=0 /\\ 1:r0=0)",
+        "disposition": "Allowed",
+        "flags": [],
+        "hash": "84893ff6428e97b0c9bc5874432ad1c0",
+        "marker": "No",
+        "negative": 3,
+        "observation": "Never",
+        "positive": 0,
+        "states": 3,
+        "test": "Fragma-atomic-return-mb-sb"
+      },
+      "expected": {
+        "condition": "exists (0:r0=0 /\\ 1:r0=0)",
+        "disposition": "Allowed",
+        "flags": [],
+        "hash": "84893ff6428e97b0c9bc5874432ad1c0",
+        "marker": "No",
+        "negative": 3,
+        "observation": "Never",
+        "positive": 0,
+        "states": 3,
+        "test": "Fragma-atomic-return-mb-sb"
+      },
+      "name": "semantic result",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "only named source case is verification candidate",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "required operation: atomic_inc_return",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "required operation: atomic_read",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "forbidden operation: atomic_inc_return_relaxed",
+      "passed": true
+    },
+    {
+      "actual": "54705b270373cad66f8579a62720c2481e912bfc6d61934750ee78af85402d24",
+      "expected": "54705b270373cad66f8579a62720c2481e912bfc6d61934750ee78af85402d24",
+      "name": "model identity",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "exit code",
+      "passed": true
+    },
+    {
+      "actual": "",
+      "expected": "",
+      "name": "stderr empty",
+      "passed": true
+    },
+    {
+      "actual": null,
+      "expected": null,
+      "name": "parse error",
+      "passed": true
+    },
+    {
+      "actual": {
+        "condition": "exists (0:r0=0 /\\ 1:r0=0)",
+        "disposition": "Allowed",
+        "flags": [],
+        "hash": "67620e2d188fb6175a82c36a8411a361",
+        "marker": "Ok",
+        "negative": 3,
+        "observation": "Sometimes",
+        "positive": 1,
+        "states": 4,
+        "test": "Fragma-atomic-return-relaxed-sb"
+      },
+      "expected": {
+        "condition": "exists (0:r0=0 /\\ 1:r0=0)",
+        "disposition": "Allowed",
+        "flags": [],
+        "hash": "67620e2d188fb6175a82c36a8411a361",
+        "marker": "Ok",
+        "negative": 3,
+        "observation": "Sometimes",
+        "positive": 1,
+        "states": 4,
+        "test": "Fragma-atomic-return-relaxed-sb"
+      },
+      "name": "semantic result",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "only named source case is verification candidate",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "required operation: atomic_inc_return_relaxed",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "required operation: atomic_read",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "forbidden operation: atomic_inc_return",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "module_stats_atomicity: both cases pass",
+      "passed": true
+    },
+    {
+      "actual": "Never",
+      "expected": "Never",
+      "name": "module_stats_atomicity: positive forbids bad result",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "module_stats_atomicity: positive has zero bad witnesses",
+      "passed": true
+    },
+    {
+      "actual": "Sometimes",
+      "expected": "Sometimes",
+      "name": "module_stats_atomicity: negative exposes bad result",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "module_stats_atomicity: negative has a bad witness",
+      "passed": true
+    },
+    {
+      "actual": "exists ([counter]=1)",
+      "expected": "exists ([counter]=1)",
+      "name": "module_stats_atomicity: condition is identical",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "return_ordering_calibration: both cases pass",
+      "passed": true
+    },
+    {
+      "actual": "Never",
+      "expected": "Never",
+      "name": "return_ordering_calibration: positive forbids bad result",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "return_ordering_calibration: positive has zero bad witnesses",
+      "passed": true
+    },
+    {
+      "actual": "Sometimes",
+      "expected": "Sometimes",
+      "name": "return_ordering_calibration: negative exposes bad result",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "return_ordering_calibration: negative has a bad witness",
+      "passed": true
+    },
+    {
+      "actual": "exists (0:r0=0 /\\ 1:r0=0)",
+      "expected": "exists (0:r0=0 /\\ 1:r0=0)",
+      "name": "return_ordering_calibration: condition is identical",
+      "passed": true
+    }
+  ],
+  "configured_config_sha256": "c3153142bfe223bfa819e84f75aa0fe7e7fbbee64494a56877742c1d0e701a86",
+  "configured_object": {
+    "class": 2,
+    "data": 1,
+    "elf": true,
+    "machine": 62,
+    "sha256": "e472812193fd94f57f7ec01ac2c9d3e5912fda29db80eed4214c165e07c690c2",
+    "size": 13936
+  },
+  "generated_at": "2026-09-07T11:58:06.070797+00:00",
+  "input_identities": {
+    "/usr/bin/gcc": {
+      "realpath": "/usr/bin/x86_64-linux-gnu-gcc-15",
+      "sha256": "b5f1b773a7c733738352000c92a077dc5852a1a2fc6d836b1e411be1e9ec5f88",
+      "size": 1305304
+    },
+    "/usr/bin/herd7": {
+      "realpath": "/usr/bin/herd7",
+      "sha256": "f398c4ba11ee87226e104efc77e64873cf775292e16b90e1e71015962969060b",
+      "size": 18087120
+    },
+    "/usr/bin/make": {
+      "realpath": "/usr/bin/make",
+      "sha256": "27c9f6d806aee15882b01c2c61848f7aa75caa14bc7b6f608ba422f9e46a7d49",
+      "size": 295120
+    },
+    "/usr/bin/objdump": {
+      "realpath": "/usr/bin/x86_64-linux-gnu-objdump",
+      "sha256": "44f07f8da860b15bd4dec909f229dec536595fb170a616fe3ab29c7b21c9736f",
+      "size": 415760
+    },
+    "build/sources/linux-b9b3e33b70b71/.fragma-source.json": {
+      "sha256": "93cffd1d937e730bf3010bfc904db8ce5c8ebc8df6e8d610032dda667c2950bd",
+      "size": 227
+    },
+    "build/sources/linux-b9b3e33b70b71/Documentation/atomic_t.txt": {
+      "sha256": "717673f723f57ea07ca03d919e2a21e8fc2ce8c8808d3a1c6a9c36ae79885fe0",
+      "size": 10220
+    },
+    "build/sources/linux-b9b3e33b70b71/arch/x86/include/asm/atomic.h": {
+      "sha256": "1ba1e1ef1403c9be2f00494c1ba22cff87044d442ef90a5da18a863877e88b18",
+      "size": 4514
+    },
+    "build/sources/linux-b9b3e33b70b71/include/linux/atomic/atomic-arch-fallback.h": {
+      "sha256": "df526d6b93b043fb2a25296d82b0c4e4187ef8ddeb4d6789897989f7ad7ed6d0",
+      "size": 129321
+    },
+    "build/sources/linux-b9b3e33b70b71/include/linux/atomic/atomic-instrumented.h": {
+      "sha256": "6fd766b72f7a633593d83e559998112ce49355273a55f79c0a6187d688b48f22",
+      "size": 138196
+    },
+    "build/sources/linux-b9b3e33b70b71/kernel/module/Kconfig": {
+      "sha256": "51ea83a92492d699d3c7ba8673668446fc6d7f85e227850875eef6aa0913481c",
+      "size": 16690
+    },
+    "build/sources/linux-b9b3e33b70b71/kernel/module/Makefile": {
+      "sha256": "3c6166fab71f512aa26afa03e85ca255d2c708bcd98f1ea535fde32535cec420",
+      "size": 834
+    },
+    "build/sources/linux-b9b3e33b70b71/kernel/module/internal.h": {
+      "sha256": "d65224deeb9a8755f0363703913db037580cef1926749f08f315d695f14aa533",
+      "size": 12749
+    },
+    "build/sources/linux-b9b3e33b70b71/kernel/module/main.c": {
+      "sha256": "40e0ae1d3c9f7d96b84b9dc179362434ba018cd617105d94a90299649d503c2f",
+      "size": 103862
+    },
+    "build/sources/linux-b9b3e33b70b71/kernel/module/stats.c": {
+      "sha256": "b0146c28a07c45f7b2976b358b9979dbfc33d8086cd55be1e1804b5b732263ec",
+      "size": 18197
+    },
+    "build/sources/linux-b9b3e33b70b71/scripts/config": {
+      "sha256": "a05f1a7669fd88820761bbeb1c3f321cc4c48e65624f9ae39572f58c264f1e85",
+      "size": 4899
+    },
+    "build/sources/linux-b9b3e33b70b71/tools/memory-model/linux-kernel.cat": {
+      "sha256": "250207709250d308e0a0a6f391c4eda0bbf4876cbc55eccbfbcd495676a179be",
+      "size": 8391
+    },
+    "build/sources/linux-b9b3e33b70b71/tools/memory-model/linux-kernel.def": {
+      "sha256": "a04911d85fd86f5dbcf8ed436c7a2570fcc615f768c0c19b0a101f6212d2504c",
+      "size": 6357
+    },
+    "concurrency/c3/atomic_inc_atomicity.litmus": {
+      "sha256": "0c2845c55fb19b9b3f02ec8c30ce46dbdececbdf35df1f61b22323c542b1e6d9",
+      "size": 254
+    },
+    "concurrency/c3/atomic_return_mb_sb.litmus": {
+      "sha256": "745ba4144ade8786eaf02d44231d6f29499736363c6a4a578b36b6680082e1c0",
+      "size": 416
+    },
+    "concurrency/c3/atomic_return_relaxed_sb.litmus": {
+      "sha256": "54705b270373cad66f8579a62720c2481e912bfc6d61934750ee78af85402d24",
+      "size": 437
+    },
+    "concurrency/c3/once_inc_lost_update.litmus": {
+      "sha256": "f16cb5968131322e11b9395ca04b46e5b474e7d619c36663ce6ac72c90d19eb2",
+      "size": 341
+    },
+    "config/concurrency-c3-lkmm.json": {
+      "sha256": "53fd6e82ef11744765f527befefed6be7d98ad28dcf1c74e288c3b0f4dd60e8e",
+      "size": 7795
+    },
+    "config/concurrency-c3-module-stats.json": {
+      "sha256": "c882a371b760d1e4cea3076b8804cb8ed6dcf5f7448bb5e4785dcadf1c89f383",
+      "size": 12223
+    },
+    "fragma/__main__.py": {
+      "sha256": "10acdfcccb1c81be3555187eb851d8332e21cf797cedee525775fbd02b87c621",
+      "size": 13084
+    },
+    "fragma/concurrency_c2.py": {
+      "sha256": "c837512a00bc9bce2f6950a7f95631a6c4024a81e199c59110e7b47c4a3cffe0",
+      "size": 36640
+    },
+    "fragma/concurrency_c2_irq.py": {
+      "sha256": "c59fb8ade3a74de810b268cbd0c5fdb850e27a912351e08727a142583e6b5b3d",
+      "size": 51550
+    },
+    "fragma/concurrency_c3_lkmm.py": {
+      "sha256": "a3de87b29f950ffe31b3edfd06c8f321c4178ad597b7613d8cd496e2df8b5ee0",
+      "size": 35177
+    },
+    "fragma/concurrency_c3_module_stats.py": {
+      "sha256": "e453451a3416107ab56d4170d4746fe3be19ad1b5d699c03de6271b633453f39",
+      "size": 50161
+    },
+    "fragma/concurrency_c3_trace.py": {
+      "sha256": "eb8600ec30a4242ade8e1e2b7987467238a963d9d19643f26545403ea62aad36",
+      "size": 46122
+    },
+    "tests/test_concurrency_c3_lkmm.py": {
+      "sha256": "4be91d9c52f84a42ecdb642b553c4a91d8beb8378660fa4b717da4c92accefe7",
+      "size": 10207
+    },
+    "tests/test_concurrency_c3_module_stats.py": {
+      "sha256": "b5268d0a278393e474c049e7198c7976d4a82e6839ae2d75bdde634ea7917abc",
+      "size": 8083
+    }
+  },
+  "kernel_profile": "x86_64-module-stats-c3",
+  "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+  "kernel_tree": "054b6818c409ab20ae89b1031a1a7c358f673d87",
+  "kernel_verification_count": 1,
+  "kind": "module-stats-c3-atomic-rmw-pilot",
+  "klitmus_or_runtime_used": false,
+  "model_abstraction": {
+    "bad_atomicity_outcome": "Final counter value one means one of two increments was lost.",
+    "counter": "The static zero-initialized failed_load_modules atomic_t is represented by counter, initially zero.",
+    "omitted": "The independent invalid_mod_bytes update and all module cleanup operations cannot change the selected counter's RMW atomicity.",
+    "threads": "Each of the two model threads represents one completed mod_stat_bump_invalid() execution and retains only its failed_load_modules update."
+  },
+  "output": "/home/karl/linux-work/fragma/results/concurrency-c3-module-stats-20260907-03",
+  "pair_checks": [
+    {
+      "actual": true,
+      "expected": true,
+      "name": "module_stats_atomicity: both cases pass",
+      "passed": true
+    },
+    {
+      "actual": "Never",
+      "expected": "Never",
+      "name": "module_stats_atomicity: positive forbids bad result",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "module_stats_atomicity: positive has zero bad witnesses",
+      "passed": true
+    },
+    {
+      "actual": "Sometimes",
+      "expected": "Sometimes",
+      "name": "module_stats_atomicity: negative exposes bad result",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "module_stats_atomicity: negative has a bad witness",
+      "passed": true
+    },
+    {
+      "actual": "exists ([counter]=1)",
+      "expected": "exists ([counter]=1)",
+      "name": "module_stats_atomicity: condition is identical",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "return_ordering_calibration: both cases pass",
+      "passed": true
+    },
+    {
+      "actual": "Never",
+      "expected": "Never",
+      "name": "return_ordering_calibration: positive forbids bad result",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "return_ordering_calibration: positive has zero bad witnesses",
+      "passed": true
+    },
+    {
+      "actual": "Sometimes",
+      "expected": "Sometimes",
+      "name": "return_ordering_calibration: negative exposes bad result",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "return_ordering_calibration: negative has a bad witness",
+      "passed": true
+    },
+    {
+      "actual": "exists (0:r0=0 /\\ 1:r0=0)",
+      "expected": "exists (0:r0=0 /\\ 1:r0=0)",
+      "name": "return_ordering_calibration: condition is identical",
+      "passed": true
+    }
+  ],
+  "property": {
+    "caller_file": "build/sources/linux-b9b3e33b70b71/kernel/module/main.c",
+    "caller_function": "load_module",
+    "claim": "On the configured SMP x86-64 profile, starting from zero and in the absence of any other update, two completed concurrent executions of the failed_load_modules atomic_inc() contribute exactly two; the final value one is impossible.",
+    "concurrency_argument": "The pinned source documents module-load races and exposes init_module/finit_module entry points; mod_stat_bump_invalid() is reached after per-list module_mutex critical sections, and failed_load_modules is a kernel-wide incremental statistic.",
+    "counter": "failed_load_modules",
+    "exclusions": [
+      "The claim assumes initial value zero, exactly two selected increments, and no concurrent third update; it is a no-lost-update property, not a claim about an arbitrary debugfs snapshot.",
+      "The model omits invalid_mod_bytes, allocation, error-path functionality, module lifetime, and whole module-loader behavior.",
+      "The no-return atomic_inc operation is relaxed with respect to other locations; no cross-object ordering is claimed.",
+      "Counter wraparound is defined by the kernel contract but excluded from this two-increment zero-origin property.",
+      "No architecture implementation other than the configured SMP x86-64 profile is accepted by this source-linked pilot.",
+      "No progress, fairness, lock-freedom, wait-freedom, runtime reachability frequency, or whole-kernel race-freedom property is claimed."
+    ],
+    "implementation_argument": "The kernel atomic_t contract makes RMW operations SMP atomic; the pinned LKMM model treats atomic_inc as one RMW, and the configured x86-64 object lowers the selected increment to lock incl against the counter's local .bss location.",
+    "kind": "kernel_atomic_rmw_no_lost_update",
+    "lifetime_argument": "failed_load_modules is a translation-unit-local static atomic_t with zero initialization and no reset, decrement, alternative write, or deallocation in the pinned translation unit.",
+    "model_update": "atomic_inc(counter);",
+    "source_file": "build/sources/linux-b9b3e33b70b71/kernel/module/stats.c",
+    "source_function": "mod_stat_bump_invalid",
+    "source_update": "atomic_inc(&failed_load_modules);"
+  },
+  "raw_artifacts": {
+    "baseline/cases/mp_once_once/command.json": {
+      "sha256": "3af36ca7a985a7b074114d31d47bc15b18715d9dad625785a5c5888a75287999",
+      "size": 431
+    },
+    "baseline/cases/mp_once_once/result.json": {
+      "sha256": "7c67f5ca5bb4ce07cb5a53f5079ef27e013b985a9905d8350e4257882b58d313",
+      "size": 2764
+    },
+    "baseline/cases/mp_once_once/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "baseline/cases/mp_once_once/stdout.txt": {
+      "sha256": "f69c2afa16b89f41a6dbdcd072701762fed87c57cd170c331eb0e5167e876ad1",
+      "size": 279
+    },
+    "baseline/cases/mp_release_acquire/command.json": {
+      "sha256": "274651f22fc8ea90f994735a85cc3278a17f0a9a3a2c50f1ee444bbd5b23d940",
+      "size": 447
+    },
+    "baseline/cases/mp_release_acquire/result.json": {
+      "sha256": "0bfa21c1d641750005afe88b42b30d54dfe3780c66bf67b09dfaa62d8e9eece9",
+      "size": 2794
+    },
+    "baseline/cases/mp_release_acquire/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "baseline/cases/mp_release_acquire/stdout.txt": {
+      "sha256": "3321c832dc867194bca2a2d9d9c3bf76ac1d420671d06f650a2a9fbd01fbbc33",
+      "size": 307
+    },
+    "baseline/cases/sb_full_barrier/command.json": {
+      "sha256": "cee9ca5930c6ee99c7d893f57d4396b35b25299bbbb73cd72ef5c900ca2e18cb",
+      "size": 436
+    },
+    "baseline/cases/sb_full_barrier/result.json": {
+      "sha256": "b0e84f25f1283843ca5e457a33fc0ad7f2965839b565c81f525fade63a58d102",
+      "size": 2750
+    },
+    "baseline/cases/sb_full_barrier/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "baseline/cases/sb_full_barrier/stdout.txt": {
+      "sha256": "03b8b5e45f8d38a17dbb57d02b5d8ec9ac5010390ca095e5d121bb712b4f2960",
+      "size": 274
+    },
+    "baseline/cases/sb_once_once/command.json": {
+      "sha256": "99962708438b0b68fe9b8b8d40b9f2a83b6a96a55864eb3644941073b98f0556",
+      "size": 431
+    },
+    "baseline/cases/sb_once_once/result.json": {
+      "sha256": "33e5609e0c1319f9370aff47f7702fe180f7cf245b3a7123eef923cc61b7cf8d",
+      "size": 2764
+    },
+    "baseline/cases/sb_once_once/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "baseline/cases/sb_once_once/stdout.txt": {
+      "sha256": "9bf2e9d586be355ec43b9775ebbe12e126156b73b6e69fa6881cf5300aa965d4",
+      "size": 279
+    },
+    "baseline/input-identities.json": {
+      "sha256": "f12d9434a03ff053fc212ffc857794d7dd1d2a4e2b695b41765c031e2c4cbf95",
+      "size": 3740
+    },
+    "baseline/inventory/compiled_default_libdir/command.json": {
+      "sha256": "d8e3f2c08677da4a655cfbe9edb132c7efc31c8e4fc5dd3afc0a65e183d34b9e",
+      "size": 224
+    },
+    "baseline/inventory/compiled_default_libdir/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "baseline/inventory/compiled_default_libdir/stdout.txt": {
+      "sha256": "3b25ea9c2ac75d141272ee29e50a4db97dcd828dde8b27f8dfe12418888b2be2",
+      "size": 42
+    },
+    "baseline/inventory/version/command.json": {
+      "sha256": "27e78ff4c5853cb981d0393c5a7973f7b32eba412da8005683ce6a930bd003ea",
+      "size": 225
+    },
+    "baseline/inventory/version/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "baseline/inventory/version/stdout.txt": {
+      "sha256": "f15276a3b23c96214a896647d44dc59e11636c50d363388a26210aec3a6a0471",
+      "size": 20
+    },
+    "baseline/manifest.json": {
+      "sha256": "fb256b96a66b561ea077fb55468f051acd99920ce8ea9410f0b55d0002c84dc2",
+      "size": 7795
+    },
+    "baseline/pilot-audit.json": {
+      "sha256": "3ed1e02e2288c64a94057d10673e59148434b4f4e1555fedc471cf9da0ea29d2",
+      "size": 43402
+    },
+    "build/base_config/command.json": {
+      "sha256": "df2c3b33acd193d2f2148cc663882e8847a6cd70acc55253878aabcd177edfe7",
+      "size": 428
+    },
+    "build/base_config/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "build/base_config/stdout.txt": {
+      "sha256": "c5899a53253a2230474413854cf01ab26525d8355baabcb1960448bd98ec27c3",
+      "size": 407
+    },
+    "build/compiler_target/command.json": {
+      "sha256": "804bc8337e86469a8ff62235c8ea7683ee4334d669a5240b25718b6aa6fd4cba",
+      "size": 227
+    },
+    "build/compiler_target/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "build/compiler_target/stdout.txt": {
+      "sha256": "08cababdf891ccbf96eb376f1e84f279f70302fb13d84e5f98637becdfc6d989",
+      "size": 17
+    },
+    "build/compiler_version/command.json": {
+      "sha256": "ec921881d45675b06318b21133611eca327f96410cc9d5a928236ad2ea8420f3",
+      "size": 224
+    },
+    "build/compiler_version/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "build/compiler_version/stdout.txt": {
+      "sha256": "6e876a25bb7fdb71ab2914e8f1eeaa00cc61d20a36a6c2981ab7d4d7ceab42f8",
+      "size": 239
+    },
+    "build/disassembly/command.json": {
+      "sha256": "de777d1d4466dcd3aba9d39407ff76e9bd56523a6066cd2774ecf5af255b74e7",
+      "size": 342
+    },
+    "build/disassembly/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "build/disassembly/stdout.txt": {
+      "sha256": "50afe201afc35f7963371dfb743d3f1e64a84a6a069dc811a77202b03a8224cb",
+      "size": 23700
+    },
+    "build/enable_config/command.json": {
+      "sha256": "654354fea5ddf70fa117c95105ca8c18a6717867ecd5ae537ae5091c886abdc7",
+      "size": 470
+    },
+    "build/enable_config/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "build/enable_config/stdout.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "build/finalize_config/command.json": {
+      "sha256": "fa8eea0cca9ba8044c3d4260dce5183daf2bc3371862b88c2c44e4db0450a58c",
+      "size": 424
+    },
+    "build/finalize_config/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "build/finalize_config/stdout.txt": {
+      "sha256": "c5899a53253a2230474413854cf01ab26525d8355baabcb1960448bd98ec27c3",
+      "size": 407
+    },
+    "build/make_version/command.json": {
+      "sha256": "f3532e5c4d72dc6e060e85613a949f979f0281c15e6032cb63ca86eec1c8edfa",
+      "size": 225
+    },
+    "build/make_version/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "build/make_version/stdout.txt": {
+      "sha256": "cb84250d994234272d0a465014ce2931be76e9e0cb114b9bffa078c3c211e8eb",
+      "size": 300
+    },
+    "build/objdump_version/command.json": {
+      "sha256": "71e9a3c19ad80818f1fbc068c40da88a614f17c8c9bb2471e5c88b7ee417539c",
+      "size": 228
+    },
+    "build/objdump_version/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "build/objdump_version/stdout.txt": {
+      "sha256": "9e64f2a24ea3a3c22b070d14eb2dcbe381044179b53c84323c1b7f00c3b13282",
+      "size": 288
+    },
+    "build/object/command.json": {
+      "sha256": "43fd852b736df14151873dff0df8b29d6080500fd24666f2f6dc864a1f6fba47",
+      "size": 444
+    },
+    "build/object/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "build/object/stdout.txt": {
+      "sha256": "10471154edb96ed0e895a7d5fcf7e956597e7fca29694b38178d7d5e732dc365",
+      "size": 421
+    },
+    "build/selected-disassembly.json": {
+      "sha256": "6129e1bcd29d221ff21bb6d7cbcd94d40fd8af2093023a9af0e40683870fd593",
+      "size": 946
+    },
+    "build/symbols/command.json": {
+      "sha256": "92d7d7cf0cf4faac0eed09d7a9e8876bc314a9e11c4b1e66c8cf8d5f0a6ee13d",
+      "size": 315
+    },
+    "build/symbols/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "build/symbols/stdout.txt": {
+      "sha256": "7e066240110fbe512fe01a1395ddb2c79e6a8584144d84ffe9b1a3d970a26ba8",
+      "size": 3346
+    },
+    "cases/atomic_inc_positive/command.json": {
+      "sha256": "18fd21c8a4220b414d36bd94e1b49528c23bec07dcdc50a09a3e97f992fa5178",
+      "size": 468
+    },
+    "cases/atomic_inc_positive/result.json": {
+      "sha256": "8d7bc8d1ea9d23c3380e0c376bf3f43f0066f5920a515bc945d943bc4bb0906d",
+      "size": 2559
+    },
+    "cases/atomic_inc_positive/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "cases/atomic_inc_positive/stdout.txt": {
+      "sha256": "c8925d0741b409b08a4ef47c6337f6dd1af74d69b1a347bcc58bf5ff9593abe7",
+      "size": 258
+    },
+    "cases/atomic_return_mb_positive/command.json": {
+      "sha256": "5ce3ce5d2e2a2af65c1e4c8e82f99c83b59b5226bb42be8e53282388ee223b84",
+      "size": 467
+    },
+    "cases/atomic_return_mb_positive/result.json": {
+      "sha256": "80b42f6caf8681d3c516d9b12f3005667efbbf212a39926aa3fce8c108d74e73",
+      "size": 2654
+    },
+    "cases/atomic_return_mb_positive/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "cases/atomic_return_mb_positive/stdout.txt": {
+      "sha256": "f8cb6d761d4587b16587c01fbe979cfd5b9903f907e82535588b8732a96f54a7",
+      "size": 295
+    },
+    "cases/atomic_return_relaxed_negative/command.json": {
+      "sha256": "167a9628646e7c969a7822dd8ad6936f3da74dbc6b7b493d2820270ba324fb3c",
+      "size": 472
+    },
+    "cases/atomic_return_relaxed_negative/result.json": {
+      "sha256": "92b0a141de204f74106097a2fb76a276992779706c1c53093c0dfcb381f5e859",
+      "size": 2735
+    },
+    "cases/atomic_return_relaxed_negative/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "cases/atomic_return_relaxed_negative/stdout.txt": {
+      "sha256": "1dbae436fe4cf310ef9f9a3235e79cc5a16426fa1da502532818cb230e5147ec",
+      "size": 330
+    },
+    "cases/split_once_negative/command.json": {
+      "sha256": "e73dd2a78474185acba2abae3a0f6a50dd170e50452d11cc840bc23f918ac18f",
+      "size": 468
+    },
+    "cases/split_once_negative/result.json": {
+      "sha256": "9004d69bd32ac0f4ac81df8137caa354d1ca9b3d3e0b34dc5bb904d9e507e7bb",
+      "size": 2613
+    },
+    "cases/split_once_negative/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "cases/split_once_negative/stdout.txt": {
+      "sha256": "eca95650c4046250d3b6b5f277b223b0e40c982df5a9fa2a7bcbe7ce1c3c7276",
+      "size": 275
+    },
+    "input-identities.json": {
+      "sha256": "a5581baa2c9e6c26456f404190c846100b22560b2038ea9b03ffd036935330a6",
+      "size": 4999
+    },
+    "manifest.json": {
+      "sha256": "5bcbd1f91e12a67b6fafbdd4f383d3a2c9c5a5121fe6d99b18186201c20a05a7",
+      "size": 12223
+    },
+    "source-model-evidence.json": {
+      "sha256": "5385a75b472dbc58a3b3b7aa7cb37ee557b2d97c52c8e561943f8a8b84f56f6d",
+      "size": 334
+    }
+  },
+  "remaining_c3": [
+    "A lifetime-sensitive lock-free functional case",
+    "Any separately justified progress property",
+    "Atomic/RMW and publication implementation mappings beyond x86-64",
+    "Broader production protocol coverage"
+  ],
+  "schema_version": 1,
+  "source_model_evidence": {
+    "caller_function_tokens": 722,
+    "counter_code_occurrences": 4,
+    "definition_callsite_inventory": [
+      {
+        "count": 1,
+        "path": "kernel/module/main.c"
+      },
+      {
+        "count": 1,
+        "path": "kernel/module/stats.c"
+      }
+    ],
+    "model_update_count": 2,
+    "source_function_tokens": 55,
+    "source_update_count": 1
+  },
+  "sudo_or_install_used": false,
+  "supplemental_calibration_count": 2,
+  "target": "linux-module-stats-atomic-rmw-x86_64-c3"
+}

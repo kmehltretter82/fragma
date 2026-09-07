@@ -1,0 +1,19 @@
+C Fragma-atomic-inc-atomicity
+
+(*
+ * Atomic-RMW calibration: two increments from zero cannot lose an update.
+ *)
+
+{}
+
+P0(atomic_t *counter)
+{
+	atomic_inc(counter);
+}
+
+P1(atomic_t *counter)
+{
+	atomic_inc(counter);
+}
+
+exists (counter=1) (* Lost update. *)

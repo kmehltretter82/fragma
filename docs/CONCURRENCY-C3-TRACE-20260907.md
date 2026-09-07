@@ -4,7 +4,7 @@ Status: **accepted for one source-linked kernel ordering property on one
 configured SMP x86-64 profile; 135/135 checks pass**.
 
 The retained result is
-[`results/concurrency-c3-trace-20260907-02`](../results/concurrency-c3-trace-20260907-02/SUMMARY.md).
+[`results/concurrency-c3-trace-20260907-03`](../results/concurrency-c3-trace-20260907-03/SUMMARY.md).
 This is evidence that bounded production-code weak-memory checking is now
 usable. It confirms correct synchronization in the selected source; it is not a
 new kernel bug.
@@ -96,9 +96,11 @@ other kernel architectures.
 Not accepted: map-element contents, allocation arithmetic, broader tracing
 behavior, architecture profiles other than this SMP x86-64 build, future
 reclamation, lock-free progress, fairness, wait freedom, or whole-subsystem race
-freedom. C3 remains incomplete until atomic/RMW semantics and a genuinely
-lifetime-sensitive lock-free case are added; other architectures require their
-own configured implementation evidence. C4 RCU remains separate.
+freedom. The subsequent
+[module-statistics atomic/RMW pilot](CONCURRENCY-C3-ATOMIC-20260907.md) supplies
+the first source-linked atomic property. C3 still requires a genuinely
+lifetime-sensitive lock-free case; other architectures require their own
+configured implementation evidence. C4 RCU remains separate.
 
 Reproduce with:
 

@@ -6,7 +6,8 @@ import os
 from pathlib import Path
 
 from . import (build, concurrency, concurrency_c2, concurrency_c2_irq,
-               concurrency_c3_lkmm, concurrency_c3_trace,
+               concurrency_c3_lkmm, concurrency_c3_module_stats,
+               concurrency_c3_trace,
                concurrency_evidence, profiles, rv32_zeropad, sources, suite,
                toolchain)
 
@@ -88,6 +89,18 @@ def main(argv=None):
         "--timeout", type=int, default=120,
         help="wall-clock limit in seconds for each build/provider invocation",
     )
+    c3_atomic = sub.add_parser(
+        "concurrency-c3-module-stats",
+        help="run the source-linked module-statistics atomic/RMW A/B pilot",
+    )
+    c3_atomic.add_argument(
+        "--output", type=Path,
+        help="new C3 atomic evidence directory; existing paths are never overwritten",
+    )
+    c3_atomic.add_argument(
+        "--timeout", type=int, default=120,
+        help="wall-clock limit in seconds for each build/provider invocation",
+    )
     rv32 = sub.add_parser(
         "rv32-zeropad-audit",
         help="audit the retained RV32 load_unaligned_zeropad A/B evidence",
@@ -157,6 +170,13 @@ def main(argv=None):
         if args.command == "concurrency-c3-trace":
             output = args.output or concurrency_c3_trace.default_output(root)
             result = concurrency_c3_trace.run_c3_trace(
+                root, output, args.timeout
+            )
+            print(f"{'passed' if result['accepted'] else 'failed'}: {output}")
+            return 0 if result["accepted"] else 1
+        if args.command == "concurrency-c3-module-stats":
+            output = args.output or concurrency_c3_module_stats.default_output(root)
+            result = concurrency_c3_module_stats.run_c3_module_stats(
                 root, output, args.timeout
             )
             print(f"{'passed' if result['accepted'] else 'failed'}: {output}")

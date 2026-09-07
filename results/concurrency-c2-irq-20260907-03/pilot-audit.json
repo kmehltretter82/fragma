@@ -1,0 +1,2693 @@
+{
+  "accepted": true,
+  "c2_stage_complete": true,
+  "cases": [
+    {
+      "access_locks": {
+        "handler_post_unlock_read": [
+          "cpu0-local-irq"
+        ],
+        "handler_status_rmw_read": [
+          "cpu0-local-irq",
+          "hdq-spinlock"
+        ],
+        "handler_status_rmw_write": [
+          "cpu0-local-irq",
+          "hdq-spinlock"
+        ],
+        "process_status_copy_read": [
+          "cpu0-local-irq",
+          "hdq-spinlock"
+        ],
+        "process_status_rmw_read": [
+          "cpu0-local-irq",
+          "hdq-spinlock"
+        ],
+        "process_status_rmw_write": [
+          "cpu0-local-irq",
+          "hdq-spinlock"
+        ],
+        "same_cpu_handler_marker_read": [
+          "cpu0-local-irq"
+        ],
+        "same_cpu_process_marker_clear": [
+          "cpu0-local-irq"
+        ],
+        "same_cpu_process_marker_set": [
+          "cpu0-local-irq"
+        ]
+      },
+      "all_accesses": [
+        {
+          "actor": "<main>",
+          "file": "concurrency/c2/omap_hdq_irq.c",
+          "line_end": 118,
+          "line_start": 118,
+          "locks": [
+            "cpu0-local-irq",
+            "hdq-spinlock"
+          ],
+          "object": "modeled_hdq.hdq_irqstatus",
+          "operation": "read",
+          "protection": "protected by cpu0-local-irq hdq-spinlock"
+        },
+        {
+          "actor": "<main>",
+          "file": "concurrency/c2/omap_hdq_irq.c",
+          "line_end": 120,
+          "line_start": 120,
+          "locks": [
+            "cpu0-local-irq",
+            "hdq-spinlock"
+          ],
+          "object": "modeled_hdq.hdq_irqstatus",
+          "operation": "read",
+          "protection": "protected by cpu0-local-irq hdq-spinlock"
+        },
+        {
+          "actor": "modeled_irq_thread",
+          "file": "concurrency/c2/omap_hdq_irq.c",
+          "line_end": 154,
+          "line_start": 154,
+          "locks": [
+            "cpu0-local-irq",
+            "hdq-spinlock"
+          ],
+          "object": "modeled_hdq.hdq_irqstatus",
+          "operation": "read",
+          "protection": "protected by cpu0-local-irq hdq-spinlock"
+        },
+        {
+          "actor": "modeled_irq_thread",
+          "file": "concurrency/c2/omap_hdq_irq.c",
+          "line_end": 160,
+          "line_start": 158,
+          "locks": [
+            "cpu0-local-irq"
+          ],
+          "object": "modeled_hdq.hdq_irqstatus",
+          "operation": "read",
+          "protection": "protected by cpu0-local-irq"
+        },
+        {
+          "actor": "<main>",
+          "file": "concurrency/c2/omap_hdq_irq.c",
+          "line_end": 120,
+          "line_start": 120,
+          "locks": [
+            "cpu0-local-irq",
+            "hdq-spinlock"
+          ],
+          "object": "modeled_hdq.hdq_irqstatus",
+          "operation": "write",
+          "protection": "protected by cpu0-local-irq hdq-spinlock"
+        },
+        {
+          "actor": "modeled_irq_thread",
+          "file": "concurrency/c2/omap_hdq_irq.c",
+          "line_end": 154,
+          "line_start": 154,
+          "locks": [
+            "cpu0-local-irq",
+            "hdq-spinlock"
+          ],
+          "object": "modeled_hdq.hdq_irqstatus",
+          "operation": "write",
+          "protection": "protected by cpu0-local-irq hdq-spinlock"
+        },
+        {
+          "actor": "modeled_irq_thread",
+          "file": "concurrency/c2/omap_hdq_irq.c",
+          "line_end": 174,
+          "line_start": 174,
+          "locks": [
+            "cpu0-local-irq"
+          ],
+          "object": "modeled_process_critical",
+          "operation": "read",
+          "protection": "protected by cpu0-local-irq"
+        },
+        {
+          "actor": "<main>",
+          "file": "concurrency/c2/omap_hdq_irq.c",
+          "line_end": 97,
+          "line_start": 97,
+          "locks": [
+            "cpu0-local-irq"
+          ],
+          "object": "modeled_process_critical",
+          "operation": "write",
+          "protection": "protected by cpu0-local-irq"
+        },
+        {
+          "actor": "<main>",
+          "file": "concurrency/c2/omap_hdq_irq.c",
+          "line_end": 88,
+          "line_start": 88,
+          "locks": [
+            "cpu0-local-irq"
+          ],
+          "object": "modeled_process_critical",
+          "operation": "write",
+          "protection": "protected by cpu0-local-irq"
+        }
+      ],
+      "assertions": {
+        "c2_irq_handler_entry_lock_succeeds": "valid",
+        "c2_irq_handler_exit_unlock_succeeds": "valid",
+        "c2_irq_handler_spin_lock_succeeds": "valid",
+        "c2_irq_handler_spin_unlock_succeeds": "valid",
+        "c2_irq_process_mask_lock_succeeds": "valid",
+        "c2_irq_process_mask_unlock_succeeds": "valid",
+        "c2_irq_process_spin_lock_succeeds": "valid",
+        "c2_irq_process_spin_unlock_succeeds": "valid",
+        "c2_irq_same_cpu_no_overlap_boundary": "unknown"
+      },
+      "checks": [
+        {
+          "actual": false,
+          "expected": false,
+          "name": "timed out",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "exit code",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "report present",
+          "passed": true
+        },
+        {
+          "actual": {
+            "c2_irq_handler_entry_lock_succeeds": "valid",
+            "c2_irq_handler_exit_unlock_succeeds": "valid",
+            "c2_irq_handler_spin_lock_succeeds": "valid",
+            "c2_irq_handler_spin_unlock_succeeds": "valid",
+            "c2_irq_process_mask_lock_succeeds": "valid",
+            "c2_irq_process_mask_unlock_succeeds": "valid",
+            "c2_irq_process_spin_lock_succeeds": "valid",
+            "c2_irq_process_spin_unlock_succeeds": "valid",
+            "c2_irq_same_cpu_no_overlap_boundary": "unknown"
+          },
+          "expected": {
+            "c2_irq_handler_entry_lock_succeeds": "valid",
+            "c2_irq_handler_exit_unlock_succeeds": "valid",
+            "c2_irq_handler_spin_lock_succeeds": "valid",
+            "c2_irq_handler_spin_unlock_succeeds": "valid",
+            "c2_irq_process_mask_lock_succeeds": "valid",
+            "c2_irq_process_mask_unlock_succeeds": "valid",
+            "c2_irq_process_spin_lock_succeeds": "valid",
+            "c2_irq_process_spin_unlock_succeeds": "valid",
+            "c2_irq_same_cpu_no_overlap_boundary": "unknown"
+          },
+          "name": "assertions",
+          "passed": true
+        },
+        {
+          "actual": null,
+          "expected": null,
+          "name": "access parser error",
+          "passed": true
+        },
+        {
+          "actual": {
+            "handler_post_unlock_read": [
+              "cpu0-local-irq"
+            ],
+            "handler_status_rmw_read": [
+              "cpu0-local-irq",
+              "hdq-spinlock"
+            ],
+            "handler_status_rmw_write": [
+              "cpu0-local-irq",
+              "hdq-spinlock"
+            ],
+            "process_status_copy_read": [
+              "cpu0-local-irq",
+              "hdq-spinlock"
+            ],
+            "process_status_rmw_read": [
+              "cpu0-local-irq",
+              "hdq-spinlock"
+            ],
+            "process_status_rmw_write": [
+              "cpu0-local-irq",
+              "hdq-spinlock"
+            ],
+            "same_cpu_handler_marker_read": [
+              "cpu0-local-irq"
+            ],
+            "same_cpu_process_marker_clear": [
+              "cpu0-local-irq"
+            ],
+            "same_cpu_process_marker_set": [
+              "cpu0-local-irq"
+            ]
+          },
+          "expected": {
+            "handler_post_unlock_read": [
+              "cpu0-local-irq"
+            ],
+            "handler_status_rmw_read": [
+              "cpu0-local-irq",
+              "hdq-spinlock"
+            ],
+            "handler_status_rmw_write": [
+              "cpu0-local-irq",
+              "hdq-spinlock"
+            ],
+            "process_status_copy_read": [
+              "cpu0-local-irq",
+              "hdq-spinlock"
+            ],
+            "process_status_rmw_read": [
+              "cpu0-local-irq",
+              "hdq-spinlock"
+            ],
+            "process_status_rmw_write": [
+              "cpu0-local-irq",
+              "hdq-spinlock"
+            ],
+            "same_cpu_handler_marker_read": [
+              "cpu0-local-irq"
+            ],
+            "same_cpu_process_marker_clear": [
+              "cpu0-local-irq"
+            ],
+            "same_cpu_process_marker_set": [
+              "cpu0-local-irq"
+            ]
+          },
+          "name": "selected access locksets",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "manual synchronisation diagnostic",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "analysis fixpoint",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "unsupported primitive diagnostic",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "provider user error",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "invalid/uninitialized mutex warning",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "positive initializes local IRQ gate",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "positive initializes HDQ spinlock",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "positive contains no negative event",
+          "passed": true
+        }
+      ],
+      "control_for": null,
+      "diagnostics": {
+        "analysis_stopped": false,
+        "eva_alarm_count": 1,
+        "fixpoint_reached": true,
+        "iterations": 3,
+        "races": {
+          "read_write": {
+            "body": "modeled_hdq.hdq_irqstatus:\n    read by <main> at concurrency/c2/omap_hdq_irq.c:118,\n       protected by cpu0-local-irq hdq-spinlock\n    read by <main> at concurrency/c2/omap_hdq_irq.c:120,\n       protected by cpu0-local-irq hdq-spinlock\n    read by modeled_irq_thread at concurrency/c2/omap_hdq_irq.c:154,\n       protected by cpu0-local-irq hdq-spinlock\n    read by modeled_irq_thread at concurrency/c2/omap_hdq_irq.c:158-160,\n       protected by cpu0-local-irq\n    write by <main> at concurrency/c2/omap_hdq_irq.c:120,\n       protected by cpu0-local-irq hdq-spinlock\n    write by modeled_irq_thread at concurrency/c2/omap_hdq_irq.c:154,\n       protected by cpu0-local-irq hdq-spinlock\n  modeled_process_critical:\n    read by modeled_irq_thread at concurrency/c2/omap_hdq_irq.c:174,\n       protected by cpu0-local-irq\n    write by <main> at concurrency/c2/omap_hdq_irq.c:97,\n       protected by cpu0-local-irq\n    write by <main> at concurrency/c2/omap_hdq_irq.c:88,\n       protected by cpu0-local-irq",
+            "reported": true,
+            "unprotected": false
+          },
+          "write_write": {
+            "body": "none",
+            "reported": false,
+            "unprotected": false
+          }
+        },
+        "unsupported": false,
+        "user_error": false
+      },
+      "id": "same_cpu_positive",
+      "passed": true,
+      "returncode": 0,
+      "timed_out": false,
+      "verification_candidate": true
+    },
+    {
+      "access_locks": {
+        "handler_post_unlock_read": [
+          "cpu0-local-irq"
+        ],
+        "handler_status_rmw_read": [
+          "cpu0-local-irq",
+          "hdq-spinlock"
+        ],
+        "handler_status_rmw_write": [
+          "cpu0-local-irq",
+          "hdq-spinlock"
+        ],
+        "process_status_copy_read": [
+          "hdq-spinlock"
+        ],
+        "process_status_rmw_read": [
+          "hdq-spinlock"
+        ],
+        "process_status_rmw_write": [
+          "hdq-spinlock"
+        ],
+        "same_cpu_handler_marker_read": [
+          "cpu0-local-irq"
+        ],
+        "same_cpu_process_marker_clear": [],
+        "same_cpu_process_marker_set": []
+      },
+      "all_accesses": [
+        {
+          "actor": "<main>",
+          "file": "concurrency/c2/omap_hdq_irq.c",
+          "line_end": 118,
+          "line_start": 118,
+          "locks": [
+            "hdq-spinlock"
+          ],
+          "object": "modeled_hdq.hdq_irqstatus",
+          "operation": "read",
+          "protection": "protected by hdq-spinlock"
+        },
+        {
+          "actor": "<main>",
+          "file": "concurrency/c2/omap_hdq_irq.c",
+          "line_end": 120,
+          "line_start": 120,
+          "locks": [
+            "hdq-spinlock"
+          ],
+          "object": "modeled_hdq.hdq_irqstatus",
+          "operation": "read",
+          "protection": "protected by hdq-spinlock"
+        },
+        {
+          "actor": "modeled_irq_thread",
+          "file": "concurrency/c2/omap_hdq_irq.c",
+          "line_end": 154,
+          "line_start": 154,
+          "locks": [
+            "cpu0-local-irq",
+            "hdq-spinlock"
+          ],
+          "object": "modeled_hdq.hdq_irqstatus",
+          "operation": "read",
+          "protection": "protected by cpu0-local-irq hdq-spinlock"
+        },
+        {
+          "actor": "modeled_irq_thread",
+          "file": "concurrency/c2/omap_hdq_irq.c",
+          "line_end": 160,
+          "line_start": 158,
+          "locks": [
+            "cpu0-local-irq"
+          ],
+          "object": "modeled_hdq.hdq_irqstatus",
+          "operation": "read",
+          "protection": "protected by cpu0-local-irq"
+        },
+        {
+          "actor": "<main>",
+          "file": "concurrency/c2/omap_hdq_irq.c",
+          "line_end": 120,
+          "line_start": 120,
+          "locks": [
+            "hdq-spinlock"
+          ],
+          "object": "modeled_hdq.hdq_irqstatus",
+          "operation": "write",
+          "protection": "protected by hdq-spinlock"
+        },
+        {
+          "actor": "modeled_irq_thread",
+          "file": "concurrency/c2/omap_hdq_irq.c",
+          "line_end": 154,
+          "line_start": 154,
+          "locks": [
+            "cpu0-local-irq",
+            "hdq-spinlock"
+          ],
+          "object": "modeled_hdq.hdq_irqstatus",
+          "operation": "write",
+          "protection": "protected by cpu0-local-irq hdq-spinlock"
+        },
+        {
+          "actor": "modeled_irq_thread",
+          "file": "concurrency/c2/omap_hdq_irq.c",
+          "line_end": 174,
+          "line_start": 174,
+          "locks": [
+            "cpu0-local-irq"
+          ],
+          "object": "modeled_process_critical",
+          "operation": "read",
+          "protection": "protected by cpu0-local-irq"
+        },
+        {
+          "actor": "<main>",
+          "file": "concurrency/c2/omap_hdq_irq.c",
+          "line_end": 97,
+          "line_start": 97,
+          "locks": [],
+          "object": "modeled_process_critical",
+          "operation": "write",
+          "protection": "unprotected"
+        },
+        {
+          "actor": "<main>",
+          "file": "concurrency/c2/omap_hdq_irq.c",
+          "line_end": 88,
+          "line_start": 88,
+          "locks": [],
+          "object": "modeled_process_critical",
+          "operation": "write",
+          "protection": "unprotected"
+        }
+      ],
+      "assertions": {
+        "c2_irq_handler_entry_lock_succeeds": "valid",
+        "c2_irq_handler_exit_unlock_succeeds": "valid",
+        "c2_irq_handler_spin_lock_succeeds": "valid",
+        "c2_irq_handler_spin_unlock_succeeds": "valid",
+        "c2_irq_process_spin_lock_succeeds": "valid",
+        "c2_irq_process_spin_unlock_succeeds": "valid",
+        "c2_irq_same_cpu_no_overlap_boundary": "unknown"
+      },
+      "checks": [
+        {
+          "actual": false,
+          "expected": false,
+          "name": "timed out",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "exit code",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "report present",
+          "passed": true
+        },
+        {
+          "actual": {
+            "c2_irq_handler_entry_lock_succeeds": "valid",
+            "c2_irq_handler_exit_unlock_succeeds": "valid",
+            "c2_irq_handler_spin_lock_succeeds": "valid",
+            "c2_irq_handler_spin_unlock_succeeds": "valid",
+            "c2_irq_process_spin_lock_succeeds": "valid",
+            "c2_irq_process_spin_unlock_succeeds": "valid",
+            "c2_irq_same_cpu_no_overlap_boundary": "unknown"
+          },
+          "expected": {
+            "c2_irq_handler_entry_lock_succeeds": "valid",
+            "c2_irq_handler_exit_unlock_succeeds": "valid",
+            "c2_irq_handler_spin_lock_succeeds": "valid",
+            "c2_irq_handler_spin_unlock_succeeds": "valid",
+            "c2_irq_process_spin_lock_succeeds": "valid",
+            "c2_irq_process_spin_unlock_succeeds": "valid",
+            "c2_irq_same_cpu_no_overlap_boundary": "unknown"
+          },
+          "name": "assertions",
+          "passed": true
+        },
+        {
+          "actual": null,
+          "expected": null,
+          "name": "access parser error",
+          "passed": true
+        },
+        {
+          "actual": {
+            "handler_post_unlock_read": [
+              "cpu0-local-irq"
+            ],
+            "handler_status_rmw_read": [
+              "cpu0-local-irq",
+              "hdq-spinlock"
+            ],
+            "handler_status_rmw_write": [
+              "cpu0-local-irq",
+              "hdq-spinlock"
+            ],
+            "process_status_copy_read": [
+              "hdq-spinlock"
+            ],
+            "process_status_rmw_read": [
+              "hdq-spinlock"
+            ],
+            "process_status_rmw_write": [
+              "hdq-spinlock"
+            ],
+            "same_cpu_handler_marker_read": [
+              "cpu0-local-irq"
+            ],
+            "same_cpu_process_marker_clear": [],
+            "same_cpu_process_marker_set": []
+          },
+          "expected": {
+            "handler_post_unlock_read": [
+              "cpu0-local-irq"
+            ],
+            "handler_status_rmw_read": [
+              "cpu0-local-irq",
+              "hdq-spinlock"
+            ],
+            "handler_status_rmw_write": [
+              "cpu0-local-irq",
+              "hdq-spinlock"
+            ],
+            "process_status_copy_read": [
+              "hdq-spinlock"
+            ],
+            "process_status_rmw_read": [
+              "hdq-spinlock"
+            ],
+            "process_status_rmw_write": [
+              "hdq-spinlock"
+            ],
+            "same_cpu_handler_marker_read": [
+              "cpu0-local-irq"
+            ],
+            "same_cpu_process_marker_clear": [],
+            "same_cpu_process_marker_set": []
+          },
+          "name": "selected access locksets",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "manual synchronisation diagnostic",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "analysis fixpoint",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "unsupported primitive diagnostic",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "provider user error",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "invalid/uninitialized mutex warning",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "required event: Monitored event: negative process irq mask elided",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "required event: Monitored event: negative process irq restore elided",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "negative cannot be verification candidate",
+          "passed": true
+        }
+      ],
+      "control_for": "linux_local_irq_mask",
+      "diagnostics": {
+        "analysis_stopped": false,
+        "eva_alarm_count": 1,
+        "fixpoint_reached": true,
+        "iterations": 3,
+        "races": {
+          "read_write": {
+            "body": "modeled_hdq.hdq_irqstatus:\n    read by <main> at concurrency/c2/omap_hdq_irq.c:118,\n       protected by hdq-spinlock\n    read by <main> at concurrency/c2/omap_hdq_irq.c:120,\n       protected by hdq-spinlock\n    read by modeled_irq_thread at concurrency/c2/omap_hdq_irq.c:154,\n       protected by cpu0-local-irq hdq-spinlock\n    read by modeled_irq_thread at concurrency/c2/omap_hdq_irq.c:158-160,\n       protected by cpu0-local-irq\n    write by <main> at concurrency/c2/omap_hdq_irq.c:120,\n       protected by hdq-spinlock\n    write by modeled_irq_thread at concurrency/c2/omap_hdq_irq.c:154,\n       protected by cpu0-local-irq hdq-spinlock\n  modeled_process_critical:\n    read by modeled_irq_thread at concurrency/c2/omap_hdq_irq.c:174,\n       protected by cpu0-local-irq\n    write by <main> at concurrency/c2/omap_hdq_irq.c:97, unprotected\n    write by <main> at concurrency/c2/omap_hdq_irq.c:88, unprotected",
+            "reported": true,
+            "unprotected": true
+          },
+          "write_write": {
+            "body": "none",
+            "reported": false,
+            "unprotected": false
+          }
+        },
+        "unsupported": false,
+        "user_error": false
+      },
+      "id": "same_cpu_mask_elided_negative",
+      "passed": true,
+      "returncode": 0,
+      "timed_out": false,
+      "verification_candidate": false
+    },
+    {
+      "access_locks": {
+        "handler_post_unlock_read": [],
+        "handler_status_rmw_read": [
+          "hdq-spinlock"
+        ],
+        "handler_status_rmw_write": [
+          "hdq-spinlock"
+        ],
+        "process_status_copy_read": [
+          "cpu0-local-irq",
+          "hdq-spinlock"
+        ],
+        "process_status_rmw_read": [
+          "cpu0-local-irq",
+          "hdq-spinlock"
+        ],
+        "process_status_rmw_write": [
+          "cpu0-local-irq",
+          "hdq-spinlock"
+        ]
+      },
+      "all_accesses": [
+        {
+          "actor": "<main>",
+          "file": "concurrency/c2/omap_hdq_irq.c",
+          "line_end": 118,
+          "line_start": 118,
+          "locks": [
+            "cpu0-local-irq",
+            "hdq-spinlock"
+          ],
+          "object": "modeled_hdq.hdq_irqstatus",
+          "operation": "read",
+          "protection": "protected by cpu0-local-irq hdq-spinlock"
+        },
+        {
+          "actor": "<main>",
+          "file": "concurrency/c2/omap_hdq_irq.c",
+          "line_end": 120,
+          "line_start": 120,
+          "locks": [
+            "cpu0-local-irq",
+            "hdq-spinlock"
+          ],
+          "object": "modeled_hdq.hdq_irqstatus",
+          "operation": "read",
+          "protection": "protected by cpu0-local-irq hdq-spinlock"
+        },
+        {
+          "actor": "modeled_irq_thread",
+          "file": "concurrency/c2/omap_hdq_irq.c",
+          "line_end": 154,
+          "line_start": 154,
+          "locks": [
+            "hdq-spinlock"
+          ],
+          "object": "modeled_hdq.hdq_irqstatus",
+          "operation": "read",
+          "protection": "protected by hdq-spinlock"
+        },
+        {
+          "actor": "modeled_irq_thread",
+          "file": "concurrency/c2/omap_hdq_irq.c",
+          "line_end": 160,
+          "line_start": 158,
+          "locks": [],
+          "object": "modeled_hdq.hdq_irqstatus",
+          "operation": "read",
+          "protection": "unprotected"
+        },
+        {
+          "actor": "<main>",
+          "file": "concurrency/c2/omap_hdq_irq.c",
+          "line_end": 120,
+          "line_start": 120,
+          "locks": [
+            "cpu0-local-irq",
+            "hdq-spinlock"
+          ],
+          "object": "modeled_hdq.hdq_irqstatus",
+          "operation": "write",
+          "protection": "protected by cpu0-local-irq hdq-spinlock"
+        },
+        {
+          "actor": "modeled_irq_thread",
+          "file": "concurrency/c2/omap_hdq_irq.c",
+          "line_end": 154,
+          "line_start": 154,
+          "locks": [
+            "hdq-spinlock"
+          ],
+          "object": "modeled_hdq.hdq_irqstatus",
+          "operation": "write",
+          "protection": "protected by hdq-spinlock"
+        }
+      ],
+      "assertions": {
+        "c2_irq_handler_spin_lock_succeeds": "valid",
+        "c2_irq_handler_spin_unlock_succeeds": "valid",
+        "c2_irq_process_mask_lock_succeeds": "valid",
+        "c2_irq_process_mask_unlock_succeeds": "valid",
+        "c2_irq_process_spin_lock_succeeds": "valid",
+        "c2_irq_process_spin_unlock_succeeds": "valid"
+      },
+      "checks": [
+        {
+          "actual": false,
+          "expected": false,
+          "name": "timed out",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "exit code",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "report present",
+          "passed": true
+        },
+        {
+          "actual": {
+            "c2_irq_handler_spin_lock_succeeds": "valid",
+            "c2_irq_handler_spin_unlock_succeeds": "valid",
+            "c2_irq_process_mask_lock_succeeds": "valid",
+            "c2_irq_process_mask_unlock_succeeds": "valid",
+            "c2_irq_process_spin_lock_succeeds": "valid",
+            "c2_irq_process_spin_unlock_succeeds": "valid"
+          },
+          "expected": {
+            "c2_irq_handler_spin_lock_succeeds": "valid",
+            "c2_irq_handler_spin_unlock_succeeds": "valid",
+            "c2_irq_process_mask_lock_succeeds": "valid",
+            "c2_irq_process_mask_unlock_succeeds": "valid",
+            "c2_irq_process_spin_lock_succeeds": "valid",
+            "c2_irq_process_spin_unlock_succeeds": "valid"
+          },
+          "name": "assertions",
+          "passed": true
+        },
+        {
+          "actual": null,
+          "expected": null,
+          "name": "access parser error",
+          "passed": true
+        },
+        {
+          "actual": {
+            "handler_post_unlock_read": [],
+            "handler_status_rmw_read": [
+              "hdq-spinlock"
+            ],
+            "handler_status_rmw_write": [
+              "hdq-spinlock"
+            ],
+            "process_status_copy_read": [
+              "cpu0-local-irq",
+              "hdq-spinlock"
+            ],
+            "process_status_rmw_read": [
+              "cpu0-local-irq",
+              "hdq-spinlock"
+            ],
+            "process_status_rmw_write": [
+              "cpu0-local-irq",
+              "hdq-spinlock"
+            ]
+          },
+          "expected": {
+            "handler_post_unlock_read": [],
+            "handler_status_rmw_read": [
+              "hdq-spinlock"
+            ],
+            "handler_status_rmw_write": [
+              "hdq-spinlock"
+            ],
+            "process_status_copy_read": [
+              "cpu0-local-irq",
+              "hdq-spinlock"
+            ],
+            "process_status_rmw_read": [
+              "cpu0-local-irq",
+              "hdq-spinlock"
+            ],
+            "process_status_rmw_write": [
+              "cpu0-local-irq",
+              "hdq-spinlock"
+            ]
+          },
+          "name": "selected access locksets",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "manual synchronisation diagnostic",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "analysis fixpoint",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "unsupported primitive diagnostic",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "provider user error",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "invalid/uninitialized mutex warning",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "positive initializes local IRQ gate",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "positive initializes HDQ spinlock",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "positive contains no negative event",
+          "passed": true
+        }
+      ],
+      "control_for": null,
+      "diagnostics": {
+        "analysis_stopped": false,
+        "eva_alarm_count": 0,
+        "fixpoint_reached": true,
+        "iterations": 3,
+        "races": {
+          "read_write": {
+            "body": "modeled_hdq.hdq_irqstatus:\n    read by <main> at concurrency/c2/omap_hdq_irq.c:118,\n       protected by cpu0-local-irq hdq-spinlock\n    read by <main> at concurrency/c2/omap_hdq_irq.c:120,\n       protected by cpu0-local-irq hdq-spinlock\n    read by modeled_irq_thread at concurrency/c2/omap_hdq_irq.c:154,\n       protected by hdq-spinlock\n    read by modeled_irq_thread at concurrency/c2/omap_hdq_irq.c:158-160,\n       unprotected\n    write by <main> at concurrency/c2/omap_hdq_irq.c:120,\n       protected by cpu0-local-irq hdq-spinlock\n    write by modeled_irq_thread at concurrency/c2/omap_hdq_irq.c:154,\n       protected by hdq-spinlock",
+            "reported": true,
+            "unprotected": true
+          },
+          "write_write": {
+            "body": "none",
+            "reported": false,
+            "unprotected": false
+          }
+        },
+        "unsupported": false,
+        "user_error": false
+      },
+      "id": "remote_cpu_positive",
+      "passed": true,
+      "returncode": 0,
+      "timed_out": false,
+      "verification_candidate": true
+    },
+    {
+      "access_locks": {
+        "handler_post_unlock_read": [],
+        "handler_status_rmw_read": [],
+        "handler_status_rmw_write": [],
+        "process_status_copy_read": [
+          "cpu0-local-irq"
+        ],
+        "process_status_rmw_read": [
+          "cpu0-local-irq"
+        ],
+        "process_status_rmw_write": [
+          "cpu0-local-irq"
+        ]
+      },
+      "all_accesses": [
+        {
+          "actor": "<main>",
+          "file": "concurrency/c2/omap_hdq_irq.c",
+          "line_end": 118,
+          "line_start": 118,
+          "locks": [
+            "cpu0-local-irq"
+          ],
+          "object": "modeled_hdq.hdq_irqstatus",
+          "operation": "read",
+          "protection": "protected by cpu0-local-irq"
+        },
+        {
+          "actor": "<main>",
+          "file": "concurrency/c2/omap_hdq_irq.c",
+          "line_end": 120,
+          "line_start": 120,
+          "locks": [
+            "cpu0-local-irq"
+          ],
+          "object": "modeled_hdq.hdq_irqstatus",
+          "operation": "read",
+          "protection": "protected by cpu0-local-irq"
+        },
+        {
+          "actor": "modeled_irq_thread",
+          "file": "concurrency/c2/omap_hdq_irq.c",
+          "line_end": 154,
+          "line_start": 154,
+          "locks": [],
+          "object": "modeled_hdq.hdq_irqstatus",
+          "operation": "read",
+          "protection": "unprotected"
+        },
+        {
+          "actor": "modeled_irq_thread",
+          "file": "concurrency/c2/omap_hdq_irq.c",
+          "line_end": 160,
+          "line_start": 158,
+          "locks": [],
+          "object": "modeled_hdq.hdq_irqstatus",
+          "operation": "read",
+          "protection": "unprotected"
+        },
+        {
+          "actor": "<main>",
+          "file": "concurrency/c2/omap_hdq_irq.c",
+          "line_end": 120,
+          "line_start": 120,
+          "locks": [
+            "cpu0-local-irq"
+          ],
+          "object": "modeled_hdq.hdq_irqstatus",
+          "operation": "write",
+          "protection": "protected by cpu0-local-irq"
+        },
+        {
+          "actor": "modeled_irq_thread",
+          "file": "concurrency/c2/omap_hdq_irq.c",
+          "line_end": 154,
+          "line_start": 154,
+          "locks": [],
+          "object": "modeled_hdq.hdq_irqstatus",
+          "operation": "write",
+          "protection": "unprotected"
+        }
+      ],
+      "assertions": {
+        "c2_irq_handler_spin_lock_succeeds": "valid",
+        "c2_irq_handler_spin_unlock_succeeds": "valid",
+        "c2_irq_process_mask_lock_succeeds": "valid",
+        "c2_irq_process_mask_unlock_succeeds": "valid",
+        "c2_irq_process_spin_lock_succeeds": "valid",
+        "c2_irq_process_spin_unlock_succeeds": "valid"
+      },
+      "checks": [
+        {
+          "actual": false,
+          "expected": false,
+          "name": "timed out",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "exit code",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "report present",
+          "passed": true
+        },
+        {
+          "actual": {
+            "c2_irq_handler_spin_lock_succeeds": "valid",
+            "c2_irq_handler_spin_unlock_succeeds": "valid",
+            "c2_irq_process_mask_lock_succeeds": "valid",
+            "c2_irq_process_mask_unlock_succeeds": "valid",
+            "c2_irq_process_spin_lock_succeeds": "valid",
+            "c2_irq_process_spin_unlock_succeeds": "valid"
+          },
+          "expected": {
+            "c2_irq_handler_spin_lock_succeeds": "valid",
+            "c2_irq_handler_spin_unlock_succeeds": "valid",
+            "c2_irq_process_mask_lock_succeeds": "valid",
+            "c2_irq_process_mask_unlock_succeeds": "valid",
+            "c2_irq_process_spin_lock_succeeds": "valid",
+            "c2_irq_process_spin_unlock_succeeds": "valid"
+          },
+          "name": "assertions",
+          "passed": true
+        },
+        {
+          "actual": null,
+          "expected": null,
+          "name": "access parser error",
+          "passed": true
+        },
+        {
+          "actual": {
+            "handler_post_unlock_read": [],
+            "handler_status_rmw_read": [],
+            "handler_status_rmw_write": [],
+            "process_status_copy_read": [
+              "cpu0-local-irq"
+            ],
+            "process_status_rmw_read": [
+              "cpu0-local-irq"
+            ],
+            "process_status_rmw_write": [
+              "cpu0-local-irq"
+            ]
+          },
+          "expected": {
+            "handler_post_unlock_read": [],
+            "handler_status_rmw_read": [],
+            "handler_status_rmw_write": [],
+            "process_status_copy_read": [
+              "cpu0-local-irq"
+            ],
+            "process_status_rmw_read": [
+              "cpu0-local-irq"
+            ],
+            "process_status_rmw_write": [
+              "cpu0-local-irq"
+            ]
+          },
+          "name": "selected access locksets",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "manual synchronisation diagnostic",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "analysis fixpoint",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "unsupported primitive diagnostic",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "provider user error",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "invalid/uninitialized mutex warning",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "required event: Monitored event: negative spin lock elided",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "required event: Monitored event: negative spin unlock elided",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "negative cannot be verification candidate",
+          "passed": true
+        }
+      ],
+      "control_for": "linux_hdq_spinlock",
+      "diagnostics": {
+        "analysis_stopped": false,
+        "eva_alarm_count": 0,
+        "fixpoint_reached": true,
+        "iterations": 4,
+        "races": {
+          "read_write": {
+            "body": "modeled_hdq.hdq_irqstatus:\n    read by <main> at concurrency/c2/omap_hdq_irq.c:118,\n       protected by cpu0-local-irq\n    read by <main> at concurrency/c2/omap_hdq_irq.c:120,\n       protected by cpu0-local-irq\n    read by modeled_irq_thread at concurrency/c2/omap_hdq_irq.c:154,\n       unprotected\n    read by modeled_irq_thread at concurrency/c2/omap_hdq_irq.c:158-160,\n       unprotected\n    write by <main> at concurrency/c2/omap_hdq_irq.c:120,\n       protected by cpu0-local-irq\n    write by modeled_irq_thread at concurrency/c2/omap_hdq_irq.c:154,\n       unprotected",
+            "reported": true,
+            "unprotected": true
+          },
+          "write_write": {
+            "body": "none",
+            "reported": false,
+            "unprotected": false
+          }
+        },
+        "unsupported": false,
+        "user_error": false
+      },
+      "id": "remote_cpu_spin_elided_negative",
+      "passed": true,
+      "returncode": 0,
+      "timed_out": false,
+      "verification_candidate": false
+    }
+  ],
+  "checks": [
+    {
+      "actual": "93cffd1d937e730bf3010bfc904db8ce5c8ebc8df6e8d610032dda667c2950bd",
+      "expected": "93cffd1d937e730bf3010bfc904db8ce5c8ebc8df6e8d610032dda667c2950bd",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/.fragma-source.json",
+      "passed": true
+    },
+    {
+      "actual": "dad2bea66e8bfc4ccc0522532e6ec360927bffd6a29a1d5c77cc5e007b2da6ae",
+      "expected": "dad2bea66e8bfc4ccc0522532e6ec360927bffd6a29a1d5c77cc5e007b2da6ae",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/drivers/w1/masters/omap_hdq.c",
+      "passed": true
+    },
+    {
+      "actual": "97e2ab17882fab1b01404bce51246e0bf5ec874b6bad7337c23c46673719931d",
+      "expected": "97e2ab17882fab1b01404bce51246e0bf5ec874b6bad7337c23c46673719931d",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/drivers/w1/masters/Makefile",
+      "passed": true
+    },
+    {
+      "actual": "47f79739a5d82a54f995b18a39abd44e6987986dafaca7d6bbad1980acf03fb8",
+      "expected": "47f79739a5d82a54f995b18a39abd44e6987986dafaca7d6bbad1980acf03fb8",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/drivers/w1/masters/Kconfig",
+      "passed": true
+    },
+    {
+      "actual": "66efd3c65e5d83b93748c6adfb09f20103398e7a8649b1a303f3ac502cc5f93b",
+      "expected": "66efd3c65e5d83b93748c6adfb09f20103398e7a8649b1a303f3ac502cc5f93b",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/include/linux/spinlock.h",
+      "passed": true
+    },
+    {
+      "actual": "69a7b2867e99c726a3ea633e164e682686303b783678c6a092f8789bc70be30b",
+      "expected": "69a7b2867e99c726a3ea633e164e682686303b783678c6a092f8789bc70be30b",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/include/linux/spinlock_api_smp.h",
+      "passed": true
+    },
+    {
+      "actual": "a75ca718d7055b83e41215e619c410b8cd646a6aa07ea7bf2eb272b07288efd2",
+      "expected": "a75ca718d7055b83e41215e619c410b8cd646a6aa07ea7bf2eb272b07288efd2",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/include/linux/irqflags.h",
+      "passed": true
+    },
+    {
+      "actual": "f576bf81e5fcdcd3ea97ee423a162343f766cf00456514a0c281744c007a269b",
+      "expected": "f576bf81e5fcdcd3ea97ee423a162343f766cf00456514a0c281744c007a269b",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/include/linux/preempt.h",
+      "passed": true
+    },
+    {
+      "actual": "3a95eead5525e3c709fbbe8eb2b1de9597ab9dff3bcf225d79f36db3e1e29d27",
+      "expected": "3a95eead5525e3c709fbbe8eb2b1de9597ab9dff3bcf225d79f36db3e1e29d27",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/arch/arm/include/asm/irqflags.h",
+      "passed": true
+    },
+    {
+      "actual": "bce4e47803a800f21f710fb0b21211bff629b429245949b3e4a922a1cc4c1f69",
+      "expected": "bce4e47803a800f21f710fb0b21211bff629b429245949b3e4a922a1cc4c1f69",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/arch/arm/configs/omap2plus_defconfig",
+      "passed": true
+    },
+    {
+      "actual": "ff0974dd5c6197bf864431acb20c1d3c031f2fb26a92192000ff9f6c54bd0997",
+      "expected": "ff0974dd5c6197bf864431acb20c1d3c031f2fb26a92192000ff9f6c54bd0997",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/kernel/locking/spinlock.c",
+      "passed": true
+    },
+    {
+      "actual": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+      "expected": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+      "name": "source receipt revision",
+      "passed": true
+    },
+    {
+      "actual": "054b6818c409ab20ae89b1031a1a7c358f673d87",
+      "expected": "054b6818c409ab20ae89b1031a1a7c358f673d87",
+      "name": "source receipt tree",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "source receipt requires content checks",
+      "passed": true
+    },
+    {
+      "actual": "9a6e0c889eb08e4fee3c97891a6f687f63eac212e8d4839fd1753962b1af5572",
+      "expected": "9a6e0c889eb08e4fee3c97891a6f687f63eac212e8d4839fd1753962b1af5572",
+      "name": "fixture identity",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "token-identical body: hdq_reset_irqstatus",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "token-identical body: hdq_isr",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "probe allocates, initializes, registers, then calls process path",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "probe registers selected handler",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "first post-registration process path calls selected helper",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "HDQ Makefile config maps object",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "HDQ Kconfig is OMAP-scoped",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "spin_lock_irqsave maps to raw SMP API",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "spin_unlock_irqrestore maps to raw SMP API",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured raw lock orders IRQ/preemption/spin acquire",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured raw unlock orders spin/IRQ/preemption release",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "ARMv6+ local IRQ save executes cpsid i",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "ARM local IRQ restore writes interrupt mask",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "pinned ARM compiler exists",
+      "passed": true
+    },
+    {
+      "actual": "/usr/bin/arm-linux-gnueabi-gcc-15",
+      "expected": "/usr/bin/arm-linux-gnueabi-gcc-15",
+      "name": "pinned ARM compiler realpath",
+      "passed": true
+    },
+    {
+      "actual": "b417460992a88c2df65d82f82c6af452210d25e8def84d35701393063afd30bd",
+      "expected": "b417460992a88c2df65d82f82c6af452210d25e8def84d35701393063afd30bd",
+      "name": "pinned ARM compiler identity",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "compiler version timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "compiler version exit",
+      "passed": true
+    },
+    {
+      "actual": "arm-linux-gnueabi-gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+      "expected": "arm-linux-gnueabi-gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+      "name": "compiler version line",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "configured profile timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "configured profile exit",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured profile produced .config",
+      "passed": true
+    },
+    {
+      "actual": "acf44274ccdbae68da6e356a26f5573220b82e2177518892579e2f02b689a89e",
+      "expected": "acf44274ccdbae68da6e356a26f5573220b82e2177518892579e2f02b689a89e",
+      "name": "configured profile identity",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "kernel config: CONFIG_ARM",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "kernel config: CONFIG_ARCH_OMAP",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "kernel config: CONFIG_ARCH_OMAP2PLUS",
+      "passed": true
+    },
+    {
+      "actual": "n",
+      "expected": "n",
+      "name": "kernel config: CONFIG_CPU_BIG_ENDIAN",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "kernel config: CONFIG_SMP",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "kernel config: CONFIG_PREEMPT_VOLUNTARY",
+      "passed": true
+    },
+    {
+      "actual": "n",
+      "expected": "n",
+      "name": "kernel config: CONFIG_PREEMPT_RT",
+      "passed": true
+    },
+    {
+      "actual": "m",
+      "expected": "m",
+      "name": "kernel config: CONFIG_W1",
+      "passed": true
+    },
+    {
+      "actual": "m",
+      "expected": "m",
+      "name": "kernel config: CONFIG_HDQ_MASTER_OMAP",
+      "passed": true
+    },
+    {
+      "actual": "n",
+      "expected": "n",
+      "name": "kernel config: CONFIG_PROVE_LOCKING",
+      "passed": true
+    },
+    {
+      "actual": "n",
+      "expected": "n",
+      "name": "kernel config: CONFIG_DEBUG_SPINLOCK",
+      "passed": true
+    },
+    {
+      "actual": "n",
+      "expected": "n",
+      "name": "kernel config: CONFIG_DEBUG_LOCK_ALLOC",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "configured object build timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "configured object build exit",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured object is ELF",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "configured object ELF class",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "configured object ELF byte order",
+      "passed": true
+    },
+    {
+      "actual": 40,
+      "expected": 40,
+      "name": "configured object ELF machine",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command names exact source",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: /usr/bin/arm-linux-gnueabi-gcc",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: -mlittle-endian",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: -D__LINUX_ARM_ARCH__=6",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: -march=armv6k",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: -DMODULE",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: drivers/w1/masters/omap_hdq.o",
+      "passed": true
+    },
+    {
+      "actual": "815c916df2361e7af5a18125c97b37665e4eed91e76daa185d571706563e7ef2",
+      "expected": "815c916df2361e7af5a18125c97b37665e4eed91e76daa185d571706563e7ef2",
+      "name": "provider binary identity",
+      "passed": true
+    },
+    {
+      "actual": "partial",
+      "expected": "partial",
+      "name": "automatic interrupt dimension remains partial",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "automatic registration gap calibration exists",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "automatic registration gap expects unknown assertions",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "provider registers handlers at main entry",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "provider passes current initial state to handler",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "exit code",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "report present",
+      "passed": true
+    },
+    {
+      "actual": {
+        "c2_irq_handler_entry_lock_succeeds": "valid",
+        "c2_irq_handler_exit_unlock_succeeds": "valid",
+        "c2_irq_handler_spin_lock_succeeds": "valid",
+        "c2_irq_handler_spin_unlock_succeeds": "valid",
+        "c2_irq_process_mask_lock_succeeds": "valid",
+        "c2_irq_process_mask_unlock_succeeds": "valid",
+        "c2_irq_process_spin_lock_succeeds": "valid",
+        "c2_irq_process_spin_unlock_succeeds": "valid",
+        "c2_irq_same_cpu_no_overlap_boundary": "unknown"
+      },
+      "expected": {
+        "c2_irq_handler_entry_lock_succeeds": "valid",
+        "c2_irq_handler_exit_unlock_succeeds": "valid",
+        "c2_irq_handler_spin_lock_succeeds": "valid",
+        "c2_irq_handler_spin_unlock_succeeds": "valid",
+        "c2_irq_process_mask_lock_succeeds": "valid",
+        "c2_irq_process_mask_unlock_succeeds": "valid",
+        "c2_irq_process_spin_lock_succeeds": "valid",
+        "c2_irq_process_spin_unlock_succeeds": "valid",
+        "c2_irq_same_cpu_no_overlap_boundary": "unknown"
+      },
+      "name": "assertions",
+      "passed": true
+    },
+    {
+      "actual": null,
+      "expected": null,
+      "name": "access parser error",
+      "passed": true
+    },
+    {
+      "actual": {
+        "handler_post_unlock_read": [
+          "cpu0-local-irq"
+        ],
+        "handler_status_rmw_read": [
+          "cpu0-local-irq",
+          "hdq-spinlock"
+        ],
+        "handler_status_rmw_write": [
+          "cpu0-local-irq",
+          "hdq-spinlock"
+        ],
+        "process_status_copy_read": [
+          "cpu0-local-irq",
+          "hdq-spinlock"
+        ],
+        "process_status_rmw_read": [
+          "cpu0-local-irq",
+          "hdq-spinlock"
+        ],
+        "process_status_rmw_write": [
+          "cpu0-local-irq",
+          "hdq-spinlock"
+        ],
+        "same_cpu_handler_marker_read": [
+          "cpu0-local-irq"
+        ],
+        "same_cpu_process_marker_clear": [
+          "cpu0-local-irq"
+        ],
+        "same_cpu_process_marker_set": [
+          "cpu0-local-irq"
+        ]
+      },
+      "expected": {
+        "handler_post_unlock_read": [
+          "cpu0-local-irq"
+        ],
+        "handler_status_rmw_read": [
+          "cpu0-local-irq",
+          "hdq-spinlock"
+        ],
+        "handler_status_rmw_write": [
+          "cpu0-local-irq",
+          "hdq-spinlock"
+        ],
+        "process_status_copy_read": [
+          "cpu0-local-irq",
+          "hdq-spinlock"
+        ],
+        "process_status_rmw_read": [
+          "cpu0-local-irq",
+          "hdq-spinlock"
+        ],
+        "process_status_rmw_write": [
+          "cpu0-local-irq",
+          "hdq-spinlock"
+        ],
+        "same_cpu_handler_marker_read": [
+          "cpu0-local-irq"
+        ],
+        "same_cpu_process_marker_clear": [
+          "cpu0-local-irq"
+        ],
+        "same_cpu_process_marker_set": [
+          "cpu0-local-irq"
+        ]
+      },
+      "name": "selected access locksets",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "manual synchronisation diagnostic",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "analysis fixpoint",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "unsupported primitive diagnostic",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "provider user error",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "invalid/uninitialized mutex warning",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "positive initializes local IRQ gate",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "positive initializes HDQ spinlock",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "positive contains no negative event",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "exit code",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "report present",
+      "passed": true
+    },
+    {
+      "actual": {
+        "c2_irq_handler_entry_lock_succeeds": "valid",
+        "c2_irq_handler_exit_unlock_succeeds": "valid",
+        "c2_irq_handler_spin_lock_succeeds": "valid",
+        "c2_irq_handler_spin_unlock_succeeds": "valid",
+        "c2_irq_process_spin_lock_succeeds": "valid",
+        "c2_irq_process_spin_unlock_succeeds": "valid",
+        "c2_irq_same_cpu_no_overlap_boundary": "unknown"
+      },
+      "expected": {
+        "c2_irq_handler_entry_lock_succeeds": "valid",
+        "c2_irq_handler_exit_unlock_succeeds": "valid",
+        "c2_irq_handler_spin_lock_succeeds": "valid",
+        "c2_irq_handler_spin_unlock_succeeds": "valid",
+        "c2_irq_process_spin_lock_succeeds": "valid",
+        "c2_irq_process_spin_unlock_succeeds": "valid",
+        "c2_irq_same_cpu_no_overlap_boundary": "unknown"
+      },
+      "name": "assertions",
+      "passed": true
+    },
+    {
+      "actual": null,
+      "expected": null,
+      "name": "access parser error",
+      "passed": true
+    },
+    {
+      "actual": {
+        "handler_post_unlock_read": [
+          "cpu0-local-irq"
+        ],
+        "handler_status_rmw_read": [
+          "cpu0-local-irq",
+          "hdq-spinlock"
+        ],
+        "handler_status_rmw_write": [
+          "cpu0-local-irq",
+          "hdq-spinlock"
+        ],
+        "process_status_copy_read": [
+          "hdq-spinlock"
+        ],
+        "process_status_rmw_read": [
+          "hdq-spinlock"
+        ],
+        "process_status_rmw_write": [
+          "hdq-spinlock"
+        ],
+        "same_cpu_handler_marker_read": [
+          "cpu0-local-irq"
+        ],
+        "same_cpu_process_marker_clear": [],
+        "same_cpu_process_marker_set": []
+      },
+      "expected": {
+        "handler_post_unlock_read": [
+          "cpu0-local-irq"
+        ],
+        "handler_status_rmw_read": [
+          "cpu0-local-irq",
+          "hdq-spinlock"
+        ],
+        "handler_status_rmw_write": [
+          "cpu0-local-irq",
+          "hdq-spinlock"
+        ],
+        "process_status_copy_read": [
+          "hdq-spinlock"
+        ],
+        "process_status_rmw_read": [
+          "hdq-spinlock"
+        ],
+        "process_status_rmw_write": [
+          "hdq-spinlock"
+        ],
+        "same_cpu_handler_marker_read": [
+          "cpu0-local-irq"
+        ],
+        "same_cpu_process_marker_clear": [],
+        "same_cpu_process_marker_set": []
+      },
+      "name": "selected access locksets",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "manual synchronisation diagnostic",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "analysis fixpoint",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "unsupported primitive diagnostic",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "provider user error",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "invalid/uninitialized mutex warning",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "required event: Monitored event: negative process irq mask elided",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "required event: Monitored event: negative process irq restore elided",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "negative cannot be verification candidate",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "exit code",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "report present",
+      "passed": true
+    },
+    {
+      "actual": {
+        "c2_irq_handler_spin_lock_succeeds": "valid",
+        "c2_irq_handler_spin_unlock_succeeds": "valid",
+        "c2_irq_process_mask_lock_succeeds": "valid",
+        "c2_irq_process_mask_unlock_succeeds": "valid",
+        "c2_irq_process_spin_lock_succeeds": "valid",
+        "c2_irq_process_spin_unlock_succeeds": "valid"
+      },
+      "expected": {
+        "c2_irq_handler_spin_lock_succeeds": "valid",
+        "c2_irq_handler_spin_unlock_succeeds": "valid",
+        "c2_irq_process_mask_lock_succeeds": "valid",
+        "c2_irq_process_mask_unlock_succeeds": "valid",
+        "c2_irq_process_spin_lock_succeeds": "valid",
+        "c2_irq_process_spin_unlock_succeeds": "valid"
+      },
+      "name": "assertions",
+      "passed": true
+    },
+    {
+      "actual": null,
+      "expected": null,
+      "name": "access parser error",
+      "passed": true
+    },
+    {
+      "actual": {
+        "handler_post_unlock_read": [],
+        "handler_status_rmw_read": [
+          "hdq-spinlock"
+        ],
+        "handler_status_rmw_write": [
+          "hdq-spinlock"
+        ],
+        "process_status_copy_read": [
+          "cpu0-local-irq",
+          "hdq-spinlock"
+        ],
+        "process_status_rmw_read": [
+          "cpu0-local-irq",
+          "hdq-spinlock"
+        ],
+        "process_status_rmw_write": [
+          "cpu0-local-irq",
+          "hdq-spinlock"
+        ]
+      },
+      "expected": {
+        "handler_post_unlock_read": [],
+        "handler_status_rmw_read": [
+          "hdq-spinlock"
+        ],
+        "handler_status_rmw_write": [
+          "hdq-spinlock"
+        ],
+        "process_status_copy_read": [
+          "cpu0-local-irq",
+          "hdq-spinlock"
+        ],
+        "process_status_rmw_read": [
+          "cpu0-local-irq",
+          "hdq-spinlock"
+        ],
+        "process_status_rmw_write": [
+          "cpu0-local-irq",
+          "hdq-spinlock"
+        ]
+      },
+      "name": "selected access locksets",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "manual synchronisation diagnostic",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "analysis fixpoint",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "unsupported primitive diagnostic",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "provider user error",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "invalid/uninitialized mutex warning",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "positive initializes local IRQ gate",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "positive initializes HDQ spinlock",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "positive contains no negative event",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "exit code",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "report present",
+      "passed": true
+    },
+    {
+      "actual": {
+        "c2_irq_handler_spin_lock_succeeds": "valid",
+        "c2_irq_handler_spin_unlock_succeeds": "valid",
+        "c2_irq_process_mask_lock_succeeds": "valid",
+        "c2_irq_process_mask_unlock_succeeds": "valid",
+        "c2_irq_process_spin_lock_succeeds": "valid",
+        "c2_irq_process_spin_unlock_succeeds": "valid"
+      },
+      "expected": {
+        "c2_irq_handler_spin_lock_succeeds": "valid",
+        "c2_irq_handler_spin_unlock_succeeds": "valid",
+        "c2_irq_process_mask_lock_succeeds": "valid",
+        "c2_irq_process_mask_unlock_succeeds": "valid",
+        "c2_irq_process_spin_lock_succeeds": "valid",
+        "c2_irq_process_spin_unlock_succeeds": "valid"
+      },
+      "name": "assertions",
+      "passed": true
+    },
+    {
+      "actual": null,
+      "expected": null,
+      "name": "access parser error",
+      "passed": true
+    },
+    {
+      "actual": {
+        "handler_post_unlock_read": [],
+        "handler_status_rmw_read": [],
+        "handler_status_rmw_write": [],
+        "process_status_copy_read": [
+          "cpu0-local-irq"
+        ],
+        "process_status_rmw_read": [
+          "cpu0-local-irq"
+        ],
+        "process_status_rmw_write": [
+          "cpu0-local-irq"
+        ]
+      },
+      "expected": {
+        "handler_post_unlock_read": [],
+        "handler_status_rmw_read": [],
+        "handler_status_rmw_write": [],
+        "process_status_copy_read": [
+          "cpu0-local-irq"
+        ],
+        "process_status_rmw_read": [
+          "cpu0-local-irq"
+        ],
+        "process_status_rmw_write": [
+          "cpu0-local-irq"
+        ]
+      },
+      "name": "selected access locksets",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "manual synchronisation diagnostic",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "analysis fixpoint",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "unsupported primitive diagnostic",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "provider user error",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "invalid/uninitialized mutex warning",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "required event: Monitored event: negative spin lock elided",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "required event: Monitored event: negative spin unlock elided",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "negative cannot be verification candidate",
+      "passed": true
+    }
+  ],
+  "configured_config_sha256": "acf44274ccdbae68da6e356a26f5573220b82e2177518892579e2f02b689a89e",
+  "configured_object": {
+    "class": 1,
+    "data": 1,
+    "elf": true,
+    "machine": 40,
+    "sha256": "614d6375651117c9cde07438b1ccfb3c97b5bf3fb0835722ea16364fefc3dcbe",
+    "size": 49636
+  },
+  "context": {
+    "handler": "one hard-IRQ-like hdq_isr invocation reached after registration ordering",
+    "lifetime": "the fixture object is static; real devm lifetime and remove-time IRQ teardown are source-reviewed but not analyzed",
+    "memory_order": "Mthread interleavings and locksets only; no LKMM or ARM weak-memory claim",
+    "preemption": "configured non-RT spin_lock_irqsave disables preemption in source; task/task scheduling is outside the selected process/hard-IRQ property",
+    "process": "one process-context hdq_reset_irqstatus invocation reached after lock initialization",
+    "remote_cpu": "local IRQ masking is CPU-local and only hdq-spinlock is shared",
+    "same_cpu": "the process mask interval and whole handler share cpu0-local-irq"
+  },
+  "entry_adapter": {
+    "argument": "Probe initializes hdq_spinlock before devm_request_irq. The adapter likewise initializes both abstract locks before creating one independently analyzed handler entry. One reached invocation is sufficient only for the site-based access-protection property; recurrence, nesting, priorities and liveness are excluded. Frama-C 33 automatic handlers instead start from main's initial state and cannot consume this probe-time initialization.",
+    "automatic_handler_calibration": "interrupt_registered_exclusion_gap",
+    "automatic_handler_status": "excluded_initialization_gap",
+    "kind": "one_post_init_pthread_hardirq_entry"
+  },
+  "gate_decision": {
+    "blocking_support": [],
+    "calibration_accepted": false,
+    "evidence_accepted": true,
+    "verification_accepted": true
+  },
+  "generated_at": "2026-09-07T11:45:19.872074+00:00",
+  "input_identities": {
+    "build/sources/linux-b9b3e33b70b71/.fragma-source.json": {
+      "sha256": "93cffd1d937e730bf3010bfc904db8ce5c8ebc8df6e8d610032dda667c2950bd",
+      "size": 227
+    },
+    "build/sources/linux-b9b3e33b70b71/arch/arm/configs/omap2plus_defconfig": {
+      "sha256": "bce4e47803a800f21f710fb0b21211bff629b429245949b3e4a922a1cc4c1f69",
+      "size": 17679
+    },
+    "build/sources/linux-b9b3e33b70b71/arch/arm/include/asm/irqflags.h": {
+      "sha256": "3a95eead5525e3c709fbbe8eb2b1de9597ab9dff3bcf225d79f36db3e1e29d27",
+      "size": 3969
+    },
+    "build/sources/linux-b9b3e33b70b71/drivers/w1/masters/Kconfig": {
+      "sha256": "47f79739a5d82a54f995b18a39abd44e6987986dafaca7d6bbad1980acf03fb8",
+      "size": 2552
+    },
+    "build/sources/linux-b9b3e33b70b71/drivers/w1/masters/Makefile": {
+      "sha256": "97e2ab17882fab1b01404bce51246e0bf5ec874b6bad7337c23c46673719931d",
+      "size": 480
+    },
+    "build/sources/linux-b9b3e33b70b71/drivers/w1/masters/omap_hdq.c": {
+      "sha256": "dad2bea66e8bfc4ccc0522532e6ec360927bffd6a29a1d5c77cc5e007b2da6ae",
+      "size": 17197
+    },
+    "build/sources/linux-b9b3e33b70b71/include/linux/irqflags.h": {
+      "sha256": "a75ca718d7055b83e41215e619c410b8cd646a6aa07ea7bf2eb272b07288efd2",
+      "size": 8153
+    },
+    "build/sources/linux-b9b3e33b70b71/include/linux/preempt.h": {
+      "sha256": "f576bf81e5fcdcd3ea97ee423a162343f766cf00456514a0c281744c007a269b",
+      "size": 15978
+    },
+    "build/sources/linux-b9b3e33b70b71/include/linux/spinlock.h": {
+      "sha256": "66efd3c65e5d83b93748c6adfb09f20103398e7a8649b1a303f3ac502cc5f93b",
+      "size": 23565
+    },
+    "build/sources/linux-b9b3e33b70b71/include/linux/spinlock_api_smp.h": {
+      "sha256": "69a7b2867e99c726a3ea633e164e682686303b783678c6a092f8789bc70be30b",
+      "size": 6156
+    },
+    "build/sources/linux-b9b3e33b70b71/kernel/locking/spinlock.c": {
+      "sha256": "ff0974dd5c6197bf864431acb20c1d3c031f2fb26a92192000ff9f6c54bd0997",
+      "size": 10853
+    },
+    "concurrency/c2/omap_hdq_irq.c": {
+      "sha256": "9a6e0c889eb08e4fee3c97891a6f687f63eac212e8d4839fd1753962b1af5572",
+      "size": 5894
+    },
+    "config/concurrency-c0.json": {
+      "sha256": "125ca11849bcdb688d3452560e21666fa59ca48e7435b7a10c3ee3e6395f93c8",
+      "size": 7342
+    },
+    "config/concurrency-c2-irq.json": {
+      "sha256": "95df3a80899c3ad1dff64e271c8db97c9fec32c42c130dff365ddebaf28df948",
+      "size": 18307
+    },
+    "config/concurrency-models.json": {
+      "sha256": "3c3420c44e985f23994c419a079deede24b78513270491795c1bcc9a8f82a26f",
+      "size": 6268
+    },
+    "config/concurrency-scopes.json": {
+      "sha256": "3ab9da7eaf16dda7b4b9b6b2f65a198dfea6b475d1dadb638d4f547f75692a0a",
+      "size": 11938
+    },
+    "fragma/__main__.py": {
+      "sha256": "10acdfcccb1c81be3555187eb851d8332e21cf797cedee525775fbd02b87c621",
+      "size": 13084
+    },
+    "fragma/concurrency.py": {
+      "sha256": "5cde045e5c58eb111759acb7feb94940c4d55b5f19e62fa4f278695fa6a3fd2a",
+      "size": 17293
+    },
+    "fragma/concurrency_c2.py": {
+      "sha256": "c837512a00bc9bce2f6950a7f95631a6c4024a81e199c59110e7b47c4a3cffe0",
+      "size": 36640
+    },
+    "fragma/concurrency_c2_irq.py": {
+      "sha256": "c59fb8ade3a74de810b268cbd0c5fdb850e27a912351e08727a142583e6b5b3d",
+      "size": 51550
+    },
+    "fragma/concurrency_evidence.py": {
+      "sha256": "150fa86294c68006492f42218e8e0ce542c41a9284b0aec53d228bbc5377de47",
+      "size": 28930
+    },
+    "tests/test_concurrency_c2_irq.py": {
+      "sha256": "fe9b85e9f751a32788eef8d0c1901e5bb6200f26c9768de8622c51068007fc7b",
+      "size": 8551
+    },
+    "toolchain/lock.json": {
+      "sha256": "0d3557b20e4a0ed16e6a4fe8622aa3ecd1572b9b30d490c7c69b4be82d7f47cb",
+      "size": 61074
+    },
+    "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_analysis_fixpoint.ml": {
+      "sha256": "3006aca5d6879a1aeaa3ff5af62fa643251aa81a1f48f707565d88ae84f743b4",
+      "size": 14674
+    },
+    "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_analysis_hooks.ml": {
+      "sha256": "276a2dc69a72881fd05029087cf785555d79618af7b87b57b7ddee742ffe9149",
+      "size": 34987
+    },
+    "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_lib.ml": {
+      "sha256": "585f86b6dc1597953228bf6f285bff3adacbcc6dacca2495a79c30a54b11595a",
+      "size": 3835
+    },
+    "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_main.ml": {
+      "sha256": "e5b00b819cdf56cc5f01285160b0fc72d70d8f676c1214432254de853449ff79",
+      "size": 6181
+    },
+    "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_mutexes.ml": {
+      "sha256": "ce144b7f99e6b00f1b7eba4842985445c17fd0b24d5875c2302f12a5f287d7c8",
+      "size": 6654
+    },
+    "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_thread.ml": {
+      "sha256": "2738f976a10f210458f0582b7d5222e848f49bebca0c057b70dbbde2fb2322d3",
+      "size": 13184
+    },
+    "toolchain/verified-prefix/opam/fragma/bin/frama-c": {
+      "sha256": "815c916df2361e7af5a18125c97b37665e4eed91e76daa185d571706563e7ef2",
+      "size": 43167392
+    },
+    "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread.c": {
+      "sha256": "be21be9f394bd94bd6d6255ed803ce71dfdebb8f481ce7c31ca7d5f5c366db3e",
+      "size": 855
+    },
+    "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread.h": {
+      "sha256": "362a97492be137b7205bd6a7fa77497f291da18eb1a382d0ffc31d805e464948",
+      "size": 2905
+    },
+    "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_interrupts.c": {
+      "sha256": "7c39f147cea35a5fba6957173405c942e0f3b1b69ed247ae30636f1d17cfda7a",
+      "size": 1420
+    },
+    "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_interrupts.h": {
+      "sha256": "7ae33c342f032814634a94569d7981f10f7b23e47d57ee9d4964178cf5fc90f3",
+      "size": 921
+    },
+    "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_pthread.c": {
+      "sha256": "c0c2836795c8ba99657f243046357e39e27d7042ea4bbd69e82684ed7bbdc51e",
+      "size": 3881
+    }
+  },
+  "kernel_profile": "arm-omap2plus-c2",
+  "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+  "kernel_tree": "054b6818c409ab20ae89b1031a1a7c358f673d87",
+  "kernel_verification_count": 1,
+  "kind": "omap-hdq-c2-hardirq-spinlock-pilot",
+  "model": {
+    "provider": "framac-33-mthread-eva-c0",
+    "provider_version": "33.0 (Arsenic)",
+    "verification_gate": {
+      "dimensions": {
+        "interrupts": {
+          "limitations": [
+            "No automatic-handler initialization, repeated delivery, nesting, priorities, FIQ/NMI, softirq, threaded IRQ, affinity migration or CPU-hotplug semantics are accepted."
+          ],
+          "scope": "One abstract post-probe hard-IRQ entry, separately checked for same-CPU local masking and remote-CPU spinlock exclusion.",
+          "status": "supported"
+        },
+        "mutex_protected_concurrency": {
+          "limitations": [
+            "No whole-object race freedom, functional status protocol, wait-queue ordering, weak-memory ordering or lock implementation proof follows."
+          ],
+          "scope": "Only Mthread lockset classification of the selected irqstatus accesses in the two token-identical OMAP HDQ functions.",
+          "status": "supported"
+        },
+        "sequential": {
+          "limitations": [
+            "The same-CPU functional no-overlap assertion remains Unknown and is a recorded precision boundary, not an accepted assertion."
+          ],
+          "scope": "Only the named adapter-result assertions in this exact fixture.",
+          "status": "supported"
+        }
+      },
+      "primitive_models": {
+        "linux_hdq_spinlock": {
+          "conservative_argument": "For access protection only, the configured non-RT SMP spinlock admits one owner across CPUs. Both copied critical sections route through the same abstract lock, and a remote-CPU lock-elided control must remove that common lockset.",
+          "empty_stub_allowed": false,
+          "limitations": [
+            "The atomic spin algorithm, contention, fairness, deadlock, acquire/release ordering and PREEMPT_RT behavior are not modeled."
+          ],
+          "semantics": "One successful Mthread mutex acquisition/release represents exclusive ownership of hdq_spinlock around the copied source critical sections.",
+          "status": "supported"
+        },
+        "linux_local_irq_mask": {
+          "conservative_argument": "The configured ARM local IRQ save disables IRQ entry on that CPU; the handler entry and selected process interval share the gate. A mask-elided control must expose the model marker while leaving the data spinlock active.",
+          "empty_stub_allowed": false,
+          "limitations": [
+            "Only CPU0 and ordinary hard IRQs are represented; nested masking depth, FIQ/NMI, softirq, migration and exact entry/return state are excluded."
+          ],
+          "semantics": "One per-CPU abstract mutex represents exclusion between the process critical interval after local_irq_save and the entire same-CPU hard-IRQ invocation.",
+          "status": "supported"
+        },
+        "post_init_hardirq_entry": {
+          "conservative_argument": "For a site-based lockset property, the independent handler entry exposes the selected process/handler access pairs and arbitrary cross-entry interference after the source-supported initialization point. No completion fact is consumed.",
+          "empty_stub_allowed": false,
+          "limitations": [
+            "The adapter is not Linux IRQ registration or delivery and does not model recurrence, nesting, priority or liveness."
+          ],
+          "semantics": "A pthread-created Mthread entry invokes the exact handler body once after both model locks are initialized.",
+          "status": "supported"
+        }
+      },
+      "target": {
+        "evidence_kind": "verification",
+        "required_dimensions": [
+          "sequential",
+          "mutex_protected_concurrency",
+          "interrupts"
+        ],
+        "required_primitives": [
+          "post_init_hardirq_entry",
+          "linux_local_irq_mask",
+          "linux_hdq_spinlock"
+        ]
+      }
+    }
+  },
+  "output": "/home/karl/linux-work/fragma/results/concurrency-c2-irq-20260907-03",
+  "property": {
+    "accepted_roles": [
+      "process_status_copy_read",
+      "process_status_rmw_read",
+      "process_status_rmw_write",
+      "handler_status_rmw_read",
+      "handler_status_rmw_write"
+    ],
+    "access_roles": {
+      "handler_post_unlock_read": {
+        "line_contains": "if (hdq_data->hdq_irqstatus &",
+        "object": "modeled_hdq.hdq_irqstatus",
+        "operation": "read"
+      },
+      "handler_status_rmw_read": {
+        "line_contains": "hdq_data->hdq_irqstatus |= hdq_reg_in(hdq_data, OMAP_HDQ_INT_STATUS);",
+        "object": "modeled_hdq.hdq_irqstatus",
+        "operation": "read"
+      },
+      "handler_status_rmw_write": {
+        "line_contains": "hdq_data->hdq_irqstatus |= hdq_reg_in(hdq_data, OMAP_HDQ_INT_STATUS);",
+        "object": "modeled_hdq.hdq_irqstatus",
+        "operation": "write"
+      },
+      "process_status_copy_read": {
+        "line_contains": "status = hdq_data->hdq_irqstatus;",
+        "object": "modeled_hdq.hdq_irqstatus",
+        "operation": "read"
+      },
+      "process_status_rmw_read": {
+        "line_contains": "hdq_data->hdq_irqstatus &= ~bits;",
+        "object": "modeled_hdq.hdq_irqstatus",
+        "operation": "read"
+      },
+      "process_status_rmw_write": {
+        "line_contains": "hdq_data->hdq_irqstatus &= ~bits;",
+        "object": "modeled_hdq.hdq_irqstatus",
+        "operation": "write"
+      },
+      "same_cpu_handler_marker_read": {
+        "line_contains": "bool process_active = modeled_process_critical;",
+        "object": "modeled_process_critical",
+        "operation": "read"
+      },
+      "same_cpu_process_marker_clear": {
+        "line_contains": "modeled_process_critical = false;",
+        "object": "modeled_process_critical",
+        "operation": "write"
+      },
+      "same_cpu_process_marker_set": {
+        "line_contains": "modeled_process_critical = true;",
+        "object": "modeled_process_critical",
+        "operation": "write"
+      }
+    },
+    "claim": "For the one post-initialization process/handler pair, every selected irqstatus access inside the token-identical hdq_reset_irqstatus critical section and hdq_isr locked update carries hdq-spinlock; same-CPU entry is additionally classified under the local IRQ gate and remote-CPU exclusion relies on the shared spinlock.",
+    "diagnostic_only_roles": [
+      "handler_post_unlock_read",
+      "same_cpu_handler_marker_read",
+      "same_cpu_process_marker_set",
+      "same_cpu_process_marker_clear"
+    ],
+    "exclusions": [
+      "The unlocked hdq_isr status read remains visible and is not accepted as protected on a remote CPU.",
+      "Whole-variable or whole-driver data-race freedom is not claimed; unlocked wait predicates and logging are outside this property.",
+      "No functional status protocol, wakeup correctness, MMIO behavior, handler recurrence, nesting or priority property is checked.",
+      "Softirq, threaded IRQ, FIQ/NMI, PREEMPT_RT, affinity migration, CPU hotplug, teardown lifetime and nested locks are not supported.",
+      "No weak-memory, compiler ordering, atomic, RCU, lock-free, deadlock, fairness, progress or termination property is checked."
+    ],
+    "kind": "kernel_hardirq_critical_access_protection",
+    "required_spinlock": "hdq-spinlock",
+    "shared_object": "modeled_hdq.hdq_irqstatus"
+  },
+  "provenance": {
+    "hdq_isr": {
+      "identical": true,
+      "token_count": 93,
+      "token_sha256": "eae33b035f74e1a8c987023e7fed48c7edde7bc5ef16093eab92ad1d15b06e88"
+    },
+    "hdq_reset_irqstatus": {
+      "identical": true,
+      "token_count": 57,
+      "token_sha256": "4caa9087fd8958232d1e60caf10077bcdbdd9e8f011634532abe82d14a3d1748"
+    }
+  },
+  "raw_artifacts": {
+    "results/concurrency-c2-irq-20260907-03/build/compiler-version/command.json": {
+      "sha256": "0424ccfab4aaae8cc9ea09d80b676c9c28450d7730393fc7f501f85e1166983f",
+      "size": 205
+    },
+    "results/concurrency-c2-irq-20260907-03/build/compiler-version/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "results/concurrency-c2-irq-20260907-03/build/compiler-version/stdout.txt": {
+      "sha256": "944e7e730715f4994fb530be76435235b31d7f89ff33f51ffd44a255c94bf285",
+      "size": 257
+    },
+    "results/concurrency-c2-irq-20260907-03/build/configure/command.json": {
+      "sha256": "ea457e94c8aea9f5e9d356d49334767c7351054925d31e1130d3c687acf58f7c",
+      "size": 443
+    },
+    "results/concurrency-c2-irq-20260907-03/build/configure/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "results/concurrency-c2-irq-20260907-03/build/configure/stdout.txt": {
+      "sha256": "5797c61996f564a97fbea1992677a09f232069b0520b0845a7dba21a86498e38",
+      "size": 383
+    },
+    "results/concurrency-c2-irq-20260907-03/build/object/command.json": {
+      "sha256": "0cb0c50dcc60c3e95161964cf1b769ddc6ee1ebe37ac37e40a909d3ccb8cfc45",
+      "size": 453
+    },
+    "results/concurrency-c2-irq-20260907-03/build/object/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "results/concurrency-c2-irq-20260907-03/build/object/stdout.txt": {
+      "sha256": "9909902a17de22764506ee6c20b64f785d878cfe05cad33ece957af41b02eaaa",
+      "size": 356
+    },
+    "results/concurrency-c2-irq-20260907-03/cases/remote_cpu_positive/command.json": {
+      "sha256": "be3ef90d17bec7fa20f9ee8c0e3af279003a51d04d0bbdf691d2727f6f804ae6",
+      "size": 973
+    },
+    "results/concurrency-c2-irq-20260907-03/cases/remote_cpu_positive/report.csv": {
+      "sha256": "1a4e12d88af552e9f4d2e24e0ee8f0dfc4581c9faccdf16b8944ec169247ca88",
+      "size": 4376
+    },
+    "results/concurrency-c2-irq-20260907-03/cases/remote_cpu_positive/result.json": {
+      "sha256": "05564471d8ed8999d5d1a37047d84cefdda0f7dfb9d78dafc8a334a505106729",
+      "size": 7320
+    },
+    "results/concurrency-c2-irq-20260907-03/cases/remote_cpu_positive/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "results/concurrency-c2-irq-20260907-03/cases/remote_cpu_positive/stdout.txt": {
+      "sha256": "b31a1f982bf3e549e01e1069583e8a6c7ba6fe0e96bf7f506b575c5944670ddc",
+      "size": 34838
+    },
+    "results/concurrency-c2-irq-20260907-03/cases/remote_cpu_spin_elided_negative/command.json": {
+      "sha256": "910b7d3e6743535b7506bc6855ef9418ad06d896498f2ecbbb961c8d07bdfbf1",
+      "size": 1021
+    },
+    "results/concurrency-c2-irq-20260907-03/cases/remote_cpu_spin_elided_negative/report.csv": {
+      "sha256": "1a4e12d88af552e9f4d2e24e0ee8f0dfc4581c9faccdf16b8944ec169247ca88",
+      "size": 4376
+    },
+    "results/concurrency-c2-irq-20260907-03/cases/remote_cpu_spin_elided_negative/result.json": {
+      "sha256": "fe9a54b860c81d8445e830d4f30b52f22dd420a46283beb171b72e94fd4504f6",
+      "size": 6729
+    },
+    "results/concurrency-c2-irq-20260907-03/cases/remote_cpu_spin_elided_negative/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "results/concurrency-c2-irq-20260907-03/cases/remote_cpu_spin_elided_negative/stdout.txt": {
+      "sha256": "0f00c287f61a9a0e0d98079f091855fb64a6b151c18c11f561f9941240459b2b",
+      "size": 34919
+    },
+    "results/concurrency-c2-irq-20260907-03/cases/same_cpu_mask_elided_negative/command.json": {
+      "sha256": "aae7a012b1f9e55c24976474303ed4efc82b295ff36437a8caf68f7cf268f6bb",
+      "size": 992
+    },
+    "results/concurrency-c2-irq-20260907-03/cases/same_cpu_mask_elided_negative/report.csv": {
+      "sha256": "eb99ff74b9bc55f8a76842414d478e6e8fa15b7b13add2a0424bc5c2010cb7b0",
+      "size": 4440
+    },
+    "results/concurrency-c2-irq-20260907-03/cases/same_cpu_mask_elided_negative/result.json": {
+      "sha256": "7f9c02f88e20385b8ecee19516bdc1906b9b00becd06de41ea4348a10641ba23",
+      "size": 9209
+    },
+    "results/concurrency-c2-irq-20260907-03/cases/same_cpu_mask_elided_negative/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "results/concurrency-c2-irq-20260907-03/cases/same_cpu_mask_elided_negative/stdout.txt": {
+      "sha256": "db91f245e2c97141c01dd6aad2c2ee7124f6505d6acab86faaf40c84cbf2e80f",
+      "size": 39964
+    },
+    "results/concurrency-c2-irq-20260907-03/cases/same_cpu_positive/command.json": {
+      "sha256": "8a04992c06b03f5f68c056a827c907a34b6c37f8249670b53a910faedcbd923d",
+      "size": 921
+    },
+    "results/concurrency-c2-irq-20260907-03/cases/same_cpu_positive/report.csv": {
+      "sha256": "7de8a7042416d4d5a5f0aa3eeb5204039fe527202eb9e4e670cb38e7157e2bda",
+      "size": 4642
+    },
+    "results/concurrency-c2-irq-20260907-03/cases/same_cpu_positive/result.json": {
+      "sha256": "3e5ab70b0f6214fef1a30bcf90ba27b7b2a6c500ef3251023abd6cc14d85f622",
+      "size": 10184
+    },
+    "results/concurrency-c2-irq-20260907-03/cases/same_cpu_positive/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "results/concurrency-c2-irq-20260907-03/cases/same_cpu_positive/stdout.txt": {
+      "sha256": "888c383f81eb511f01e8ec5e2ad6af2950fb4d772f8cf4e43e8cec87f47bc81a",
+      "size": 41684
+    },
+    "results/concurrency-c2-irq-20260907-03/input-identities.json": {
+      "sha256": "03690f1a9937ccafc572da9e40adc5bff6b0e4d423412213998150f38449af70",
+      "size": 6042
+    },
+    "results/concurrency-c2-irq-20260907-03/manifest.json": {
+      "sha256": "d6c908896555ca5a7ebc13530d6366939146ece584b241aac9c75c5bd51375fc",
+      "size": 18919
+    },
+    "results/concurrency-c2-irq-20260907-03/role-lines.json": {
+      "sha256": "35cbd42ea8b5a5a708f741c9acf0f97ddcff2580b6d8635fa998c151cf4817a1",
+      "size": 326
+    }
+  },
+  "remaining_concurrency": [
+    "C3 weak-memory, atomics and lock-free reasoning",
+    "C4 RCU lifetime and combined concurrency coverage",
+    "Broader IRQ classes, recurrence, nesting, priorities and teardown",
+    "The preserved unlocked HDQ status accesses require separate review"
+  ],
+  "role_lines": {
+    "handler_post_unlock_read": 158,
+    "handler_status_rmw_read": 154,
+    "handler_status_rmw_write": 154,
+    "process_status_copy_read": 118,
+    "process_status_rmw_read": 120,
+    "process_status_rmw_write": 120,
+    "same_cpu_handler_marker_read": 174,
+    "same_cpu_process_marker_clear": 97,
+    "same_cpu_process_marker_set": 88
+  },
+  "schema_version": 1,
+  "sudo_or_install_used": false,
+  "target": "omap-hdq-hardirq-spinlock-arm-smp-c2"
+}

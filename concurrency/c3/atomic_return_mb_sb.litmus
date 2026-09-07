@@ -1,0 +1,28 @@
+C Fragma-atomic-return-mb-sb
+
+(*
+ * Full-ordering RMW calibration. The return variants include an smp_mb-like
+ * ordering effect, so both following reads cannot observe zero.
+ *)
+
+{}
+
+P0(atomic_t *x, atomic_t *y)
+{
+	int r0;
+	int r1;
+
+	r1 = atomic_inc_return(x);
+	r0 = atomic_read(y);
+}
+
+P1(atomic_t *x, atomic_t *y)
+{
+	int r0;
+	int r1;
+
+	r1 = atomic_inc_return(y);
+	r0 = atomic_read(x);
+}
+
+exists (0:r0=0 /\ 1:r0=0)

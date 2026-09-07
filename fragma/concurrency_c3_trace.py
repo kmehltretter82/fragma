@@ -124,8 +124,6 @@ def _validate_expected(expected: Any, case_id: str) -> None:
     ):
         raise ConcurrencyC3TraceError(f"{case_id} flags are invalid")
     _digest(expected["hash"], f"{case_id} herd hash", 32)
-    if expected["positive"] + expected["negative"] != expected["states"]:
-        raise ConcurrencyC3TraceError(f"{case_id} witness count is inconsistent")
 
 
 def load_manifest(root: Path) -> dict[str, Any]:

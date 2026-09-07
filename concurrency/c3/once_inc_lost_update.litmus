@@ -1,0 +1,25 @@
+C Fragma-once-inc-lost-update
+
+(*
+ * Required weakened control: split each increment into once read/write events.
+ *)
+
+{}
+
+P0(int *counter)
+{
+	int r0;
+
+	r0 = READ_ONCE(*counter);
+	WRITE_ONCE(*counter, r0 + 1);
+}
+
+P1(int *counter)
+{
+	int r0;
+
+	r0 = READ_ONCE(*counter);
+	WRITE_ONCE(*counter, r0 + 1);
+}
+
+exists (counter=1) (* Lost update. *)
