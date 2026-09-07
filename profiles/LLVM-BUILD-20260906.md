@@ -3,7 +3,8 @@
 2026-09-06, pinned Linux `b9b3e33b70b71e516930117e21de3ad2a7723747`.
 The first genuine Hexagon compiler-build check passed. This is **not L1**, a
 new configured registry profile, a whole-kernel build or target execution.
-The registry remains ten configured profiles and eleven planned families.
+At this dated milestone, the registry remained ten configured profiles and
+eleven planned families.
 
 ## Delivered and verified
 

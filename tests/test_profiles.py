@@ -1,5 +1,6 @@
 """Fast negative tests for profile/model gates; actual tool checks use the CLI."""
 import copy
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -50,6 +51,56 @@ class ProfilesTests(unittest.TestCase):
         self.assertEqual(profile["compiler_target"], "s390x-linux-gnu")
         self.assertEqual(profile["abi"]["byte_order"], "big")
 
+    def test_registered_mips_profile_binds_mt7621_o32_clang_and_seed(self):
+        profile = self.profiles["mips32el-clang"]
+        architecture = next(row for row in load_architectures(ROOT)["architectures"]
+                            if row["id"] == "mips")
+        self.assertEqual(architecture["baseline_profile"], profile["id"])
+        self.assertEqual(profile["compiler_family"], "clang")
+        self.assertEqual(profile["compiler_target_args"], [
+            "--target=mipsel-linux-gnu", "-mabi=32", "-EL",
+            "-march=mips32r2", "-msoft-float"])
+        self.assertEqual(profile["kernel"]["required_config"]["CONFIG_SOC_MT7621"], "y")
+        self.assertEqual(profile["kernel"]["required_config"]["CONFIG_SMP"], "y")
+        seed = ROOT / profile["kernel"]["seed_config"]
+        self.assertEqual(hashlib.sha256(seed.read_bytes()).hexdigest(),
+                         profile["kernel"]["seed_config_sha256"])
+        validate_registration(profile)
+
+    def test_mips_profile_cannot_be_relabelled_to_another_abi_or_soc(self):
+        base = self.profiles["mips32el-clang"]
+        mutations = [
+            ("compiler_target_args", ["--target=mipsel-linux-gnu", "-mabi=64", "-EL",
+                                      "-march=mips32r2", "-msoft-float"]),
+            ("compiler_target", "mips-unknown-linux-gnu"),
+            ("compiler_version", "21.1.7"),
+        ]
+        for field, value in mutations:
+            profile = copy.deepcopy(base)
+            profile[field] = value
+            with self.subTest(field=field), self.assertRaises(ProfileError):
+                validate_registration(profile)
+        for field, value in (("bits", 64), ("byte_order", "big"),
+                             ("pointer_alignment", 8)):
+            profile = copy.deepcopy(base)
+            profile["abi"][field] = value
+            with self.subTest(abi=field), self.assertRaises(ProfileError):
+                validate_registration(profile)
+        for field, value in (("CONFIG_SOC_MT7621", "n"), ("CONFIG_SMP", "n"),
+                             ("CONFIG_CPU_MIPS32_R2", "n"),
+                             ("CONFIG_MIPS_MT_SMP", "n"), ("CONFIG_NR_CPUS", "2")):
+            profile = copy.deepcopy(base)
+            profile["kernel"]["required_config"][field] = value
+            with self.subTest(config=field), self.assertRaises(ProfileError):
+                validate_registration(profile)
+        for field, value in (("config_recipe", ["defconfig"]),
+                             ("seed_config", "profiles/other.config"),
+                             ("seed_config_sha256", "0" * 64)):
+            profile = copy.deepcopy(base)
+            profile["kernel"][field] = value
+            with self.subTest(kernel=field), self.assertRaises(ProfileError):
+                validate_registration(profile)
+
     def test_semantic_flags_include_kernel_char_and_wchar(self):
         for profile in self.profiles.values():
             if profile["status"] == "experimental":
@@ -89,7 +140,8 @@ class ProfilesTests(unittest.TestCase):
             run.assert_not_called()
 
     def test_32bit_profiles_do_not_define_config_64bit(self):
-        for name in ("arm-gcc", "powerpc32-gcc", "m68k-gcc", "sh-gcc"):
+        for name in ("arm-gcc", "powerpc32-gcc", "m68k-gcc", "sh-gcc",
+                     "mips32el-clang"):
             with self.subTest(profile=name):
                 self.assertNotIn("-DCONFIG_64BIT=1", _defines(self.profiles[name]))
                 self.assertIn("-DFRAGMA_POINTER_BYTES=4", _defines(self.profiles[name]))
@@ -103,7 +155,8 @@ class ProfilesTests(unittest.TestCase):
     def test_active_compilers_have_explicit_version_requirements(self):
         for profile in self.profiles.values():
             if profile["status"] == "experimental":
-                self.assertEqual(profile["compiler_version"], "15.2.0")
+                expected = "21.1.8" if profile.get("compiler_family") == "clang" else "15.2.0"
+                self.assertEqual(profile["compiler_version"], expected)
 
     def test_known_machine_fields(self):
         result = check_machine_description(self.profiles["x86_64-gcc"], self.machine)
@@ -128,7 +181,7 @@ class ProfilesTests(unittest.TestCase):
             validate_profile(ROOT, "not-a-profile")
 
     def test_planned_profile_is_not_passing_evidence(self):
-        result = validate_profile(ROOT, "mips-gcc")
+        result = validate_profile(ROOT, "nios2-gcc")
         self.assertEqual(result["status"], "blocked")
         self.assertEqual(result["level"], "L0")
         self.assertTrue(result["gaps"])

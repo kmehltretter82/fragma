@@ -7,7 +7,7 @@ not renew a saved proof result or award an architecture level.
 
 ## Model and execution boundary
 
-All ten configured profiles now declare
+All ten profiles configured at this dated review declare
 `runtime_checks.pointer_formation = "object-or-null"`, separately from the
 unchanged five integer-arithmetic flags and Typed memory model. The runner
 requests `-warn-invalid-pointer` before analysis and checks the actual retained

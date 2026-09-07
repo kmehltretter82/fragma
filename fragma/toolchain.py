@@ -112,10 +112,15 @@ def load_lock(root: Path) -> dict[str, Any]:
     return lock
 
 
-CLANG_TARGET_ARGS = ["--target=hexagon-linux-musl", "-mv68"]
-CLANG_TARGET = "hexagon-unknown-linux-musl"
 CLANG_VERSION = "21.1.8"
 CLANG_VERSION_PATTERN = r"clang version\s+(\d+\.\d+\.\d+)(?![\w.+-])"
+CLANG_ROUTES = {
+    ("hexagon-unknown-linux-musl",
+     ("--target=hexagon-linux-musl", "-mv68")): "Hexagon v68",
+    ("mipsel-unknown-linux-gnu",
+     ("--target=mipsel-linux-gnu", "-mabi=32", "-EL", "-march=mips32r2",
+      "-msoft-float")): "MIPS32el O32/MIPS32r2 soft-float",
+}
 
 
 def _compiler_specification_error(specification: Mapping[str, Any]) -> str | None:
@@ -126,13 +131,15 @@ def _compiler_specification_error(specification: Mapping[str, Any]) -> str | Non
         if "target_args" in specification or "resource_include_tree_sha256" in specification:
             return "Target arguments and resource pins require the explicit Clang route"
         return None
-    if (type(specification.get("target_args")) is not list or
-            specification["target_args"] != CLANG_TARGET_ARGS or
-            specification.get("target") != CLANG_TARGET or
+    target_args = specification.get("target_args")
+    route = (specification.get("target"), tuple(target_args)
+             if type(target_args) is list and all(isinstance(arg, str) for arg in target_args)
+             else ())
+    if (route not in CLANG_ROUTES or
             specification.get("version") != CLANG_VERSION or
             type(specification.get("version_args")) is not list or
             specification["version_args"] != ["--version"]):
-        return "Clang requires the exact Hexagon v68 target, version and query arguments"
+        return "Clang requires an exact reviewed target route, version and query arguments"
     for field in ("reference_sha256", "resource_include_tree_sha256"):
         value = specification.get(field)
         if not isinstance(value, str) or re.fullmatch(r"[0-9a-f]{64}", value) is None:

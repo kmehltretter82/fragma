@@ -36,7 +36,7 @@ class CandidatePolicyTests(unittest.TestCase):
                 analysis["runtime_checks"] = copy.deepcopy(policy.RUNTIME_CHECKS)
                 self.assertEqual("Typed", policy.model_identity(analysis)["wp_model"])
                 count += 1
-        self.assertEqual(10, count)
+        self.assertEqual(11, count)
 
     def test_missing_unknown_and_weakened_runtime_policies_fail(self):
         for value in (None, False, True, 0, {}, [], {"pointer_formation": False},

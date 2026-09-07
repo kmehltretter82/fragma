@@ -26,6 +26,26 @@ def prepare_build(root: Path, source: Path, profile: dict, env: dict,
     output = root / "build" / "kernel" / profile_id
     if output.exists():
         raise SourceError(f"build directory already exists; retain or explicitly choose a fresh workspace: {output}")
+    declared_seed_hash = profile["kernel"].get("seed_config_sha256")
+    declared_seed = profile["kernel"].get("seed_config")
+    if declared_seed_hash is not None and not declared_seed:
+        raise SourceError("pinned profile seed config path is missing")
+    if declared_seed_hash is not None:
+        candidate = Path(declared_seed)
+        if candidate.is_absolute() or ".." in candidate.parts:
+            raise SourceError("profile seed config must be a confined project-relative path")
+        candidate = (root / candidate).resolve()
+        if not candidate.is_relative_to(root):
+            raise SourceError("profile seed config escapes the project")
+        if seed_config is not None and seed_config.resolve() != candidate:
+            raise SourceError("explicit seed config differs from the registered profile seed")
+        seed_config = candidate
+    if seed_config:
+        seed_config = seed_config.resolve()
+        if not seed_config.is_file():
+            raise SourceError("seed config is missing")
+        if declared_seed_hash is not None and sha256(seed_config) != declared_seed_hash:
+            raise SourceError("registered profile seed config changed")
     compiler = shutil.which(profile["compiler"], path=env.get("PATH"))
     if not compiler:
         raise SourceError(f"compiler unavailable: {profile['compiler']}")
@@ -54,7 +74,6 @@ def prepare_build(root: Path, source: Path, profile: dict, env: dict,
         record["llvm"] = llvm_receipt
     config = output / ".config"
     if seed_config:
-        seed_config = seed_config.resolve()
         record["seed_config"] = {"path": str(seed_config), "sha256": sha256(seed_config)}
         shutil.copyfile(seed_config, config)
         recipe = ["olddefconfig"]

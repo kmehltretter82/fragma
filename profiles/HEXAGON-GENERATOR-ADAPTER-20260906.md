@@ -127,7 +127,7 @@ type/layout, parsing, arithmetic/byte-order and policy calibration must pass
 before registration, followed by scoped L2 proofs. The default-v2/modern-CPU
 mismatch and wider `ELF_CORE_EFLAGS` limitation remain open.
 
-Inventory is unchanged: ten configured/current L1 models, eleven planned
+Inventory at this dated milestone was unchanged: ten configured/current L1 models, eleven planned
 profiles, 31 targets and 24 distinct kernel functions. Earlier proof acceptances
 remain stale; this adapter neither renews them nor establishes a Hexagon baseline.
 No sudo or system package installation was needed.

@@ -1,5 +1,9 @@
 # Seven proof-target renewals, 2026-09-07
 
+Later status: registering `mips32el-clang` changed the central toolchain-lock
+and review-context identity. This document remains exact evidence for its run,
+but its proof acceptance is dated until post-registration replay.
+
 All seven selected non-common WP targets now pass the normal runner under the
 current shared provider identity. Three separately authorized batches completed
 with exit 0, retaining their original sources, contracts, reviews and full input
@@ -59,8 +63,8 @@ unchanged. No result discovery or success-only selection was used.
 The matrix has 16 current accepted proof variants, nine stale accepted Eva
 calibrations and six legacy nonpasses. Eighteen of 24 distinct kernel functions
 have a current accepted variant; six lack one. Repeated profile variants and
-project round trips do not add distinct kernel functions. All ten configured
-profiles now have current latest-dated L1: the 26 dated model observations
+project round trips do not add distinct kernel functions. All ten profiles
+configured at this dated renewal had current latest-dated L1: the 26 dated model observations
 comprise 13 current and 13 stale observations, alongside ten current undated
 standalone observations. Eleven additional profile rows remain planned.
 

@@ -4,8 +4,8 @@ Verification and calibration rig for selected Linux kernel C functions.
 Frama-C/ACSL checks conditional correctness claims; deliberately wrong contracts
 and altered control examples test whether the verification setup detects them.
 This is not a whole-kernel proof. One Linux RV32 wrong-result defect has now been
-dynamically reproduced and has a send-ready fix; it has not yet been emailed or
-acknowledged upstream.
+dynamically reproduced; the user sent the prepared fix manually. Upstream review
+or acknowledgement is not yet recorded, and this project does not send email.
 
 The public repository contains the authored runner, specifications, tests,
 plans, compact result summaries, and experimental provider patches. Downloaded
@@ -28,8 +28,8 @@ The [RV32 guard-page A/B result](riscv/rv32-zeropad/README.md) demonstrates that
 `load_unaligned_zeropad()` returns bytes from the preceding word at a page
 boundary before the fix and passes all three cases after it. The minimal patch
 is strict-checkpatch clean, applies to mainline and linux-next, has an RV32 A/B
-test and byte-identical RV64 objects, and passed a mail dry-run. It is
-send-ready, not sent.
+test and byte-identical RV64 objects, and passed an offline mail-format dry-run.
+The user subsequently sent it; upstream disposition remains pending.
 The [Mthread + Eva C0 record](docs/CONCURRENCY-C0-20260907.md) pins nine
 capability controls and their valid, invalid, unknown, race and unsupported
 outcomes. The [C1 evidence gate](docs/CONCURRENCY-C1-20260907.md) adds explicit
@@ -91,11 +91,14 @@ mapping is not yet a general Frama-C LoongArch profile.
 The [MIPS mapping record](docs/CONCURRENCY-C3-MIPS-20260907.md) does the same for
 the distinct little-endian O32/MIPS32r2 SMP route and keeps big-endian/64-bit
 MIPS and general Eva/WP support outside the claim.
-The separate [MIPS32el machine-model candidate](profiles/MIPS32EL-MACHDEP-20260907.md)
-now passes generator, compiler-layout, parser and Eva calibration for that O32
-little-endian variant. It remains deliberately unregistered and is not L1 or
-L2; the C3 object mapping and this model calibration do not inherit each
-other's acceptance.
+The preserved [MIPS32el machine-model candidate](profiles/MIPS32EL-MACHDEP-20260907.md)
+has now advanced to a registered
+[MT7621 configured profile](profiles/MIPS32EL-MT7621-L1-20260907.md). The exact
+O32 little-endian MIPS32r2 route passes 19/19 L1 gates against a genuine MT7621
+SMP/CPS `lib/string.c` build. The other ten configured profiles were also
+[renewed](results/l1-mips-registration-renewal-20260907/SUMMARY.md), giving
+201/201 current L1 checks across 11 profiles. MIPS L2, runtime evidence,
+big-endian MIPS and MIPS64 remain open.
 Unbounded progress, scheduler fairness, wait-freedom, architecture-backed LL/SC
 guarantees, remaining architecture mappings, broader lockless protocols,
 IRQ/NMI classes and explicit RCU grace-period reasoning remain open.
@@ -109,6 +112,10 @@ current ARM64 scalar, RISC-V encoder, s390 and string WP acceptance. The
 [nine-calibration renewal](docs/CALIBRATION-RENEWAL-20260907.md) restores the
 eight string cases and s390's mandatory byte-order case. S390's existing
 seven-helper L2 scope is separately rechecked, not expanded.
+Those L2/proof renewals retain their exact pre-MIPS project identity. The
+additive Clang lock entry does not alter their compilers, but their proof runs
+must be replayed before a new coverage matrix may label them current at the
+post-registration identity.
 The results and reproduction notes below describe the original experiments;
 they are not the acceptance baseline for the new runner and checked profiles.
 
@@ -120,18 +127,18 @@ The new entry point is `python3 -m fragma` (`list`, `preflight`, `snapshot`,
 `rv32-zeropad-audit`). See
 [toolchain setup](docs/toolchain.md) and
 [architecture profiles](profiles/README.md). Verification never installs
-packages. No `sudo` installation is needed on the current machine for the ten
-configured general analyzer profiles, including s390x and UML x86-64, the
-separate LoongArch and MIPS IPC object mappings, or the unregistered MIPS32el
-calibration described above.
+packages. No `sudo` installation is needed on the current machine for the eleven
+configured general analyzer profiles, including s390x, UML x86-64 and the new
+MT7621 MIPS32el profile, or for the separate LoongArch IPC object mapping.
 See [result semantics](docs/results.md) and [explicit-evidence coverage](docs/coverage.md)
 for the distinction between historical, current, incomplete and calibrated results.
 The [maintenance guide](docs/maintenance.md) covers adding targets, scoped reviews,
 pin updates and `python3 ci/check.py` for local core/extended/all regression runs.
 The [shared byte-helper harness](common/README.md) uses explicit profile-local
-policies and compiler controls. Its nine registered variants now have current
-accepted evidence and audited replay: 846 ordinary goals, 738 selected properties
-and 252 compiler observations, with 5,155 audit hashes unchanged. The
+policies and compiler controls. Its nine registered variants retain accepted
+evidence and audited replay at the preceding identity: 846 ordinary goals, 738
+selected properties and 252 compiler observations, with 5,155 audit hashes
+unchanged. They require post-registration replay before being current. The
 [wave-three record](common/WAVE3-20260906.md) preserves the initial failures,
 exact Alpha metadata and genuine `-Os` corrections, and scoped review renewal.
 The [Hexagon LLVM build milestone](profiles/LLVM-BUILD-20260906.md) passes
@@ -167,20 +174,20 @@ Patch 009 is unbuilt. Hexagon implementation is parked for the user's priority:
 actual bounded Linux kernel correctness review. No profile or accepted count
 changes; these are private tool/model observations and are unrelated to the
 separately confirmed RV32 finding.
-The [current coverage matrix](results/coverage-calibrations-clang-renewed-20260907/coverage.md)
-retains all 31 targets: 16 current proofs, nine current accepted Eva calibrations
-and six legacy nonpasses. No accepted-stale targets remain. Eighteen of 24
-distinct kernel functions have current
-accepted variants; six still lack one. The seven newly renewed proof targets
+The [pre-MIPS coverage matrix](results/coverage-calibrations-clang-renewed-20260907/coverage.md)
+retains all 31 targets: 16 accepted proofs, nine accepted Eva calibrations and
+six legacy nonpasses at that exact identity. Eighteen of 24 distinct kernel
+functions had accepted variants; six lacked one. The seven renewed proof targets
 pass 74 L1 checks, 418 ordinary goals and 331 selected properties, with 2,031
 independently checked hashes unchanged. Full-suite renewal remains open.
 The [socket-denied attempts](common/RENEWAL-SOCKET-FAILURE-20260907.md) remain
 failed and incomplete; the retry needed approved local solver IPC, not `sudo`.
 The new [L2 record](common/L2-CLANG-RENEWAL-20260907.md) also preserves the failed
 first coverage audit and distinguishes unavailable old-context validation from
-the nine current common24 proofs. The new combined matrix preserves those
+the nine then-current common24 proofs. The combined matrix preserves those
 histories and adds the seven renewed non-common proofs and nine renewed
-calibrations. This restores existing acceptance, not a new architecture or L3.
+calibrations. The lock extension dates that acceptance until replay; it did not
+add a new architecture proof or L3.
 See the [configured-profile queue](common/NEXT-PROFILES.md) and
 [remaining architecture prerequisites](profiles/NEXT-WAVE.md) for subsequent work.
 

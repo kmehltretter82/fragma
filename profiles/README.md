@@ -11,25 +11,27 @@ LP64 ABI, not the compiler's usual userspace LP64D ABI.
 
 The configured broader-ABI profiles include ARMv7 AAPCS Linux (`multi_v7_defconfig`), 32-bit
 big-endian PowerPC (`ppc6xx_defconfig`), Alpha (`defconfig`), m68k
-(`virt_defconfig`, 68040), and SH4A (`sh7757lcr_defconfig`). Each selected compiler
+(`virt_defconfig`, 68040), SH4A (`sh7757lcr_defconfig`), and MT7621 O32
+little-endian MIPS32r2. Each selected compiler
 must match its exact target/version requirement in `toolchain/lock.json`.
 In particular, m68k uses two-byte long/pointer alignment: the sample structure
 occupies ten bytes, compared with twelve on the ARM32 profile. Compiler and
 Frama-C fixtures independently check this difference.
 
-All ten configured profiles explicitly require
+All eleven configured profiles explicitly require
 `analysis.runtime_checks.pointer_formation = "object-or-null"`; the existing
 integer-arithmetic policy remains separate and unchanged. Parsing and EVA
 commands request the flag, and the positive calibration retains an actual
 correctness audit. The new `analysis-runtime-policy` gate validates that audit
-instead of trusting command intent. All ten fresh configured L1 receipts are
-indexed in [the current interface-compatibility renewal](../build/profile-checks/clang-interface-20260906/index.json):
-18 checks per cross/UML profile and 20 for x86 with its native fixture.
+instead of trusting command intent. The
+[post-registration renewal](../results/l1-mips-registration-renewal-20260907/SUMMARY.md)
+passes 201/201 checks across all eleven profiles: 18 per preceding cross/UML
+profile, 20 for x86 with its native fixture, and 19 for the target-aware MIPS
+Clang route.
 Old receipts do not inherit this policy, and L1 still does not establish L2.
-All ten configured profiles now also have current latest-dated suite-model
-evidence in the [combined renewal matrix](../results/coverage-calibrations-clang-renewed-20260907/coverage.md).
-The 28 dated observations comprise 15 current L1 and 13 stale observations;
-the ten explicit standalone observations remain undated and current L1.
+The preceding combined proof matrix remains exact evidence at its own identity;
+the additive MIPS lock entry requires proof replay before it is current again.
+The new standalone L1 receipts do not promote any proof target to L2.
 
 The hosted [UML x86-64 profile](UML.md) now has a separate configured L1
 baseline. It uses `ARCH=um SUBARCH=x86_64`, its own compiler-derived machine
@@ -51,18 +53,19 @@ python3 -m fragma.profiles --capabilities --output results/profile-capabilities.
 Availability is separate from support: a compiler executable alone does not
 establish a configured profile or any verification level. Capability output
 records the observed version/target, locked requirement, and emulator presence.
-The [remaining-architecture readiness plan](NEXT-WAVE.md) records the eleven
-unconfigured families, missing GCC cross tools, the explicit LLVM/tool-suite
+The [remaining-architecture readiness plan](NEXT-WAVE.md) records the ten
+families still without configured L1, missing GCC cross tools, the explicit LLVM/tool-suite
 work needed for Hexagon and other candidates, and Nios II's separate compiler
 version requirement. These are setup/implementation prerequisites, not current
-support claims; no installation is required for the ten existing profiles.
+support claims; no installation is required for the eleven configured profiles.
 
-The [MIPS32el candidate checkpoint](MIPS32EL-MACHDEP-20260907.md) is a deliberate
-step beyond compiler availability: an offline authenticated musl header sysroot,
-the unchanged Frama-C generator, O32 little-endian compiler calibration, two
-negative controls, parsing and Eva all pass. It remains absent from the profile
-registry and central toolchain lock, so it is unregistered rather than L1. The
-separate MIPS C3 IPC object mapping does not promote this general model.
+The preserved [MIPS32el candidate checkpoint](MIPS32EL-MACHDEP-20260907.md) led
+to the registered [MT7621 profile](MIPS32EL-MT7621-L1-20260907.md). The normal
+workflow binds authenticated generator headers, exact Clang/LLVM identities, a
+hash-locked MT7621 SMP/CPS seed, a genuine `lib/string.c` command/object and all
+19 L1 gates. This is one exact sequential C model, not general MIPS, L2 or
+runtime support. The [hardware priority note](MIPS-HARDWARE-TARGETS.md) keeps
+ath79, OCTEON and other materially different MIPS families separate.
 
 The [Hexagon LLVM compiler-build milestone](LLVM-BUILD-20260906.md) passes
 genuine v68 preparation and `lib/string.o`, with pinned tools and 37 new inert
@@ -153,7 +156,7 @@ assumption, proof and calibration gates for a documented function set; L3
 separately requires applicable target-runtime corroboration. See the renewed
 [s390 pilot](../s390/L2-RENEWAL-20260907.md) and the
 [nine freshly renewed common24 baselines](../common/L2-CLANG-RENEWAL-20260907.md) for exact
-scopes. The current nine-profile acceptance/audit covers 164 L1 checks, 846
+scopes. The preceding-identity nine-profile acceptance/audit covers 164 L1 checks, 846
 ordinary goals and 738 selected properties; 108 smoke outcomes remain inconclusive.
 The earlier wave-three identity passed
 [610 regression tests](../results/tests-common24-nine-reviewed-20260906.log).
@@ -163,16 +166,17 @@ does not claim another test-suite run. The common24 proof audit
 checks 5,155 file hashes without drift. The subsequent
 [seven-target WP renewal](../docs/PROOF-RENEWAL-20260907.md) passes 74 model checks,
 418 ordinary goals and 331 selected properties with 2,031 readback hashes
-unchanged. Its ARM64, RISC-V, s390 and string proof scopes are current. The
+unchanged at that identity. Its ARM64, RISC-V, s390 and string proof scopes
+require post-registration replay before a new matrix calls them current. The
 [nine-calibration renewal](../docs/CALIBRATION-RENEWAL-20260907.md) adds 38 model
 checks, 55 positive properties and revalidated retained native corroboration
 for the nine unchanged false-specification observations. The
 [current matrix](../results/coverage-calibrations-clang-renewed-20260907/coverage.md)
-records 16 current proof variants, nine current calibrations and six legacy
-nonpasses, covering 18 of 24 distinct kernel functions currently.
+records 16 proof variants, nine calibrations and six legacy nonpasses at its
+exact pre-MIPS identity, covering 18 of 24 distinct kernel functions there.
 Earlier [six-profile evidence](../common/L2-WAVE2-20260906.md)
 remains dated, not retroactively renewed. Nine freshly renewed common24 scopes plus
-the separately renewed s390 pilot name ten current architecture baselines; eleven roster families
+the separately renewed s390 pilot name ten dated architecture baselines; eleven roster families
 still have no L2 baseline. Neither the 21-entry roster nor these narrow scopes
 means whole-architecture support, and no L3 has been established.
 The s390 scope decision checks all four mandatory targets across two authentic

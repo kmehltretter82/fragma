@@ -2,6 +2,10 @@
 
 Result: **candidate calibrated; unregistered; not L1**.
 
+This result remains historical. The later
+[MT7621 L1 result](../mips32el-mt7621-l1-20260907/SUMMARY.md) uses a registered
+profile and genuine configured kernel build; this receipt itself is unchanged.
+
 The final local run completed at `2026-09-07T18:48:57.777250+00:00` with
 `status=candidate-calibrated-not-L1`, `level=unregistered`,
 `integration_eligible=false`, and `input_drift=false`. Its raw directory is

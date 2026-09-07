@@ -254,6 +254,49 @@ class BuildTests(unittest.TestCase):
         self.assertEqual(seed.read_text(), "CONFIG_TEST_FIXTURE=y\n")
         self._assert_retained(record)
 
+    def test_unpinned_profile_seed_remains_an_explicit_legacy_hint(self):
+        seed = self.root / "profiles/unpinned.config"
+        seed.parent.mkdir()
+        seed.write_text("CONFIG_UNPINNED=y\n")
+        profile = deepcopy(self.profile)
+        profile["id"] = "legacy-unpinned-seed"
+        profile["kernel"]["seed_config"] = "profiles/unpinned.config"
+        record = prepare_build(self.root, self.source, profile, self.env)
+        self.assertNotIn("seed_config", record)
+        self.assertEqual(record["commands"][0]["argv"][-1], "defconfig")
+        self.assertFalse((self._output(profile) / ".config").is_file())
+
+    def test_registered_seed_is_automatic_pinned_and_cannot_be_overridden(self):
+        seed = self.root / "profiles/target.config"
+        seed.parent.mkdir()
+        seed.write_text("CONFIG_TARGET_FIXTURE=y\n")
+        profile = deepcopy(self.profile)
+        profile["id"] = "registered-seed"
+        profile["kernel"].update(seed_config="profiles/target.config",
+                                 seed_config_sha256=sha256(seed))
+        record = prepare_build(self.root, self.source, profile, self.env)
+        output = self._output(profile)
+        self.assertEqual(record["seed_config"],
+                         {"path": str(seed.resolve()), "sha256": sha256(seed)})
+        self.assertEqual(record["commands"][0]["argv"][-1], "olddefconfig")
+        self.assertEqual((output / ".config").read_text(), seed.read_text())
+
+        for index, change in enumerate(("wrong-hash", "escape", "override")):
+            candidate = deepcopy(profile)
+            candidate["id"] = f"bad-registered-seed-{index}"
+            explicit = None
+            if change == "wrong-hash":
+                candidate["kernel"]["seed_config_sha256"] = "0" * 64
+            elif change == "escape":
+                candidate["kernel"]["seed_config"] = "../target.config"
+            else:
+                explicit = self.root / "different.config"
+                explicit.write_text("CONFIG_DIFFERENT=y\n")
+            with self.subTest(change=change), self.assertRaises(SourceError):
+                prepare_build(self.root, self.source, candidate, self.env,
+                              seed_config=explicit)
+            self.assertFalse(self._output(candidate).exists())
+
     def test_llvm_build_artifact_hashes_are_retained(self):
         output = self._output(self.llvm_profile)
         artifacts = {".config": b"CONFIG_HEXAGON_ARCH_VERSION=68\n",

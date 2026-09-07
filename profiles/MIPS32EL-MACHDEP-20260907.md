@@ -2,6 +2,11 @@
 
 Status: **candidate calibrated; deliberately unregistered; not L1 or L2**.
 
+This is the preserved pre-registration checkpoint. The later
+[MT7621 production-profile checkpoint](MIPS32EL-MT7621-L1-20260907.md)
+registers the same exact ABI route and passes genuine configured-kernel L1;
+it does not rewrite or relabel this historical candidate run.
+
 This checkpoint adds a fail-closed adapter for one precise MIPS variant: O32,
 little-endian MIPS32r2 with soft-float compiler selection and the Linux kernel's
 unsigned-char and two-byte `wchar_t` semantics. It uses Clang 21.1.8 and the

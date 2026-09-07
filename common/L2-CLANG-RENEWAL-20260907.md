@@ -1,5 +1,9 @@
 # Common24 scoped L2 renewal — nine GCC profiles, 2026-09-07
 
+Later status: registering `mips32el-clang` changed the central toolchain-lock
+and review-context identity. This document remains exact evidence for its run,
+but its scoped L2 acceptance is dated until post-registration replay.
+
 The same four explicit-byte Linux helpers again meet the scoped [L2 criteria](../PLAN.md)
 under all nine common24 profiles. This decision follows fresh normal proof
 execution, independent retained-evidence/replay audit and the corrected explicit

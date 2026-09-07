@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import copy
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -50,6 +51,35 @@ UML_HEADER_REVIEW_PATHS = frozenset({
     "scripts/Makefile.asm-headers", "arch/x86/um/Kconfig",
 })
 
+CLANG_PROFILE_ROUTES = {
+    "hexagon": {
+        "target": "hexagon-unknown-linux-musl",
+        "target_args": ["--target=hexagon-linux-musl", "-mv68"],
+        "required_config": {"CONFIG_HEXAGON_ARCH_VERSION": "68"},
+    },
+    "mips": {
+        "target": "mipsel-unknown-linux-gnu",
+        "target_args": ["--target=mipsel-linux-gnu", "-mabi=32", "-EL",
+                        "-march=mips32r2", "-msoft-float"],
+        "required_config": {
+            "CONFIG_MIPS": "y", "CONFIG_32BIT": "y", "CONFIG_RALINK": "y",
+            "CONFIG_SOC_MT7621": "y",
+            "CONFIG_CPU_LITTLE_ENDIAN": "y", "CONFIG_CPU_MIPS32_R2": "y",
+            "CONFIG_SMP": "y", "CONFIG_MIPS_MT_SMP": "y",
+            "CONFIG_MIPS_CPS": "y", "CONFIG_NR_CPUS": "4",
+        },
+        "config_recipe": ["olddefconfig"],
+        "seed_config": "profiles/configs/mips32el-mt7621.config",
+        "seed_config_sha256": "dd8a59933e4ab6d02a40a319953326871669f9d075f510ff28b80e5053cfeb2b",
+        "abi": {
+            "bits": 32, "byte_order": "little", "char_unsigned": True,
+            "wchar_bytes": 2, "short_bytes": 2, "int_bytes": 4, "long_bytes": 4,
+            "long_long_bytes": 8, "pointer_bytes": 4, "long_alignment": 4,
+            "pointer_alignment": 4, "long_long_alignment": 8,
+        },
+    },
+}
+
 
 def _header_architecture(profile):
     """Resolve only the explicitly reviewed UML kernel-header delegation.
@@ -82,7 +112,7 @@ def _header_architecture(profile):
 
 
 def _compiler_target_args(profile):
-    """One explicit Clang candidate; legacy GCC has no added driver flags."""
+    """Select only reviewed Clang target routes; legacy GCC remains unchanged."""
     family = profile.get("compiler_family", "gcc")
     if family == "gcc":
         if profile.get("compiler_target_args") not in (None, []):
@@ -90,14 +120,22 @@ def _compiler_target_args(profile):
         return []
     if family != "clang":
         raise ProfileError("Unsupported compiler family")
+    architecture = profile.get("architecture")
+    route = CLANG_PROFILE_ROUTES.get(architecture)
     kernel = profile.get("kernel", {})
-    expected = ["--target=hexagon-linux-musl", "-mv68"]
-    if (profile.get("architecture") != "hexagon" or kernel.get("arch") != "hexagon" or
-            kernel.get("required_config", {}).get("CONFIG_HEXAGON_ARCH_VERSION") != "68" or
+    if (not route or kernel.get("arch") != architecture or
             profile.get("compiler_version") != "21.1.8" or
-            profile.get("compiler_target") != "hexagon-unknown-linux-musl" or
-            profile.get("compiler_target_args") != expected):
-        raise ProfileError("Clang profile requires the explicit Hexagon v68 target/version/configuration route")
+            profile.get("compiler_target") != route["target"] or
+            profile.get("compiler_target_args") != route["target_args"] or
+            any(kernel.get("required_config", {}).get(key) != value
+                for key, value in route["required_config"].items()) or
+            ("config_recipe" in route and
+             (kernel.get("config_recipe") != route["config_recipe"] or
+              kernel.get("seed_config") != route["seed_config"] or
+              kernel.get("seed_config_sha256") != route["seed_config_sha256"])) or
+            ("abi" in route and any(profile.get("abi", {}).get(key) != value
+                                    for key, value in route["abi"].items()))):
+        raise ProfileError("Clang profile requires an exact reviewed target/version/configuration/ABI route")
     for key in ("flags", "common_flags"):
         flags = profile.get(key)
         if not isinstance(flags, list) or not all(isinstance(flag, str) and flag for flag in flags):
@@ -109,11 +147,12 @@ def _compiler_target_args(profile):
                     "--config", "--driver-mode", "-cc1", "-resource-dir", "--resource-dir",
                     "--sysroot", "-isysroot", "-I", "-isystem", "-include", "-imacros",
                     "-idirafter", "-iquote", "-iprefix", "-iwithprefix", "-B",
-                    "--gcc-toolchain", "--gcc-install-dir", "-fplugin", "-fpass-plugin")) or
-                    flag in ("-D", "-U") or
-                    flag.startswith(("-D__HEXAGON", "-U__HEXAGON", "-D__hexagon", "-U__hexagon"))):
+                    "--gcc-toolchain", "--gcc-install-dir", "-fplugin", "-fpass-plugin",
+                    "-mabi", "-mips", "-D__HEXAGON", "-U__HEXAGON", "-D__hexagon",
+                    "-U__hexagon", "-D__mips", "-U__mips")) or
+                    flag in ("-D", "-U", "-EL", "-EB", "-msoft-float", "-mhard-float")):
                 raise ProfileError("Conflicting or unreviewed Clang target/CPU/forwarded flags")
-    return list(expected)
+    return list(route["target_args"])
 
 
 def compiler_flags(profile):
@@ -173,6 +212,14 @@ def validate_registration(profile):
             raise ProfileError("Unknown profile layout: " + key)
     if abi["pointer_bytes"] * 8 != abi["bits"]:
         raise ProfileError("Profile pointer and kernel ABI widths disagree")
+    kernel = profile.get("kernel", {})
+    if "seed_config_sha256" in kernel:
+        seed = kernel.get("seed_config")
+        if (not isinstance(seed, str) or not seed or Path(seed).is_absolute() or
+                ".." in Path(seed).parts or
+                not isinstance(kernel["seed_config_sha256"], str) or
+                re.fullmatch(r"[0-9a-f]{64}", kernel["seed_config_sha256"]) is None):
+            raise ProfileError("Invalid pinned kernel seed configuration")
     try:
         analysis_policy.model_identity(profile.get("analysis"))
     except analysis_policy.AnalysisPolicyError as exc:
@@ -434,12 +481,68 @@ def _defines(profile):
 
 def _generator_headers(profile, root, compiler, output, *, env=None):
     """Use an explicitly provisioned target header sysroot, never a host ABI."""
-    if profile.get("compiler_family") == "clang":
-        # Tool resources are not a complete target libc/POSIX header route.
-        # No reviewed Hexagon adapter/source receipt exists yet, even if a
-        # caller supplies the unrelated RISC-V settings below.
-        raise ProfileError("Hexagon Clang model generation requires a reviewed generator-header route; no host or RISC-V fallback")
     settings = profile.get("generator_headers")
+    if profile.get("compiler_family") == "clang":
+        if profile.get("architecture") != "mips" or not isinstance(settings, dict):
+            # Tool resources are not a complete target libc/POSIX header route.
+            # Hexagon deliberately remains closed; unrelated sysroots cannot be
+            # borrowed to activate it.
+            raise ProfileError("Clang model generation requires its reviewed generator-header route; no host or cross-architecture fallback")
+        expected_keys = {
+            "sysroot", "environment", "provider", "receipt", "source_url",
+            "archive_sha256", "feature_flags", "include_order", "scope",
+        }
+        if (set(settings) != expected_keys or
+                settings.get("provider") != "profiles/setup_mips_musl.py" or
+                settings.get("receipt") != "fragma-mips-sysroot.json" or
+                settings.get("source_url") != "https://musl.libc.org/releases/musl-1.2.5.tar.gz" or
+                settings.get("archive_sha256") != "a9a118bbe84d8764da0ea0d28b3ab3fae8477fc7e4085d90102b8596fc7c75e4" or
+                settings.get("feature_flags") != ["-D_POSIX_C_SOURCE=200809L"] or
+                settings.get("include_order") != ["generator-overlay", "clang-resource", "musl"]):
+            raise ProfileError("MIPS generator-header specification is not the reviewed musl 1.2.5 route")
+        env = _environment(env)
+        sysroot = Path(env.get(settings["environment"], str(root / settings["sysroot"]))).resolve()
+        provider_input = root / settings["provider"]
+        if not provider_input.is_file():
+            raise ProfileError("Missing pinned MIPS generator-header verifier")
+        provider = provider_input.resolve()
+        specification = importlib.util.spec_from_file_location("fragma_profile_mips_headers", provider)
+        if specification is None or specification.loader is None:
+            raise ProfileError("Cannot load the pinned MIPS generator-header verifier")
+        module = importlib.util.module_from_spec(specification)
+        specification.loader.exec_module(module)
+        receipt = module.verify(sysroot)
+        receipt_path = sysroot / settings["receipt"]
+        if (receipt.get("kind") != "mips32el-generator-header-sysroot" or
+                receipt.get("status") != "provisioned" or
+                receipt.get("architecture") != "mips" or
+                receipt.get("source_url") != settings["source_url"] or
+                receipt.get("archive_sha256") != settings["archive_sha256"] or
+                receipt.get("include_order") != settings["include_order"]):
+            raise ProfileError("MIPS generator-header receipt identity mismatch")
+        resource = _run([compiler, *_compiler_target_args(profile), "-print-resource-dir"],
+                        output, "compiler-builtin-headers", env=env)
+        resource_root = Path(resource["stdout"].strip())
+        if (resource["exit_code"] or resource["stderr"].strip() or
+                len(resource["stdout"].splitlines()) != 1 or not resource_root.is_absolute()):
+            raise ProfileError("Target compiler builtin resource directory unavailable")
+        from . import toolchain
+        resources = toolchain.clang_resource_tree(resource_root)
+        lock = json.loads((root / "toolchain/lock.json").read_text())["tools"][profile["compiler"]]
+        if resources["include_tree_sha256"] != lock.get("resource_include_tree_sha256"):
+            raise ProfileError("MIPS generator Clang resource identity differs from the central lock")
+        flags = ["-nostdinc", "-isystem", str(sysroot / "generator-overlay"),
+                 "-isystem", resources["include_directory"],
+                 "-isystem", str(sysroot / "include"), *settings["feature_flags"]]
+        return flags, {
+            "provider": str(provider), "provider_sha256": _hash(provider),
+            "sysroot": str(sysroot), "archive_sha256": settings["archive_sha256"],
+            "header_hashes": receipt["header_hashes"],
+            "overlay_sha256": receipt["overlay_sha256"],
+            "compiler_resources": resources,
+            "receipt": str(receipt_path), "receipt_sha256": _hash(receipt_path),
+            "include_order": settings["include_order"], "scope": settings["scope"],
+        }
     if not settings:
         return [], None
     env = _environment(env)
@@ -556,6 +659,9 @@ def _check_build(profile, kernel_build, kernel, compiler, *, env=None):
         raise ProfileError("Kernel build receipt profile/revision/status mismatch")
     if receipt.get("compiler_sha256") != _hash(compiler):
         raise ProfileError("Kernel build compiler changed")
+    seed_sha256 = profile["kernel"].get("seed_config_sha256")
+    if seed_sha256 is not None and receipt.get("seed_config", {}).get("sha256") != seed_sha256:
+        raise ProfileError("Kernel build receipt seed configuration differs from the profile")
     if profile["architecture"] == "um":
         _check_uml_prepare_commands(receipt)
     llvm_validation = None
@@ -702,7 +808,7 @@ def validate_profile(root, profile_or_id, *, kernel=None, frama_c=None, output=N
         "settings": {key: env[key] for key in ("PATH", "LD_LIBRARY_PATH", "CAML_LD_LIBRARY_PATH", "OCAMLLIB",
                     "OCAMLPATH", "OPAM_SWITCH_PREFIX", "OPAMSWITCH", "FRAMAC_SHARE", "FRAMAC_PLUGIN",
                     "FRAMA_C", "FRAGMA_MACHDEP_PYTHON", "PYTHONPATH", "LIBRARY_PATH", "GCC_EXEC_PREFIX",
-                    "COMPILER_PATH", "LC_ALL") if key in env},
+                    "COMPILER_PATH", "FRAGMA_MIPS32EL_MUSL_SYSROOT", "LC_ALL") if key in env},
         "excluded_include_variables": ["CPATH", "C_INCLUDE_PATH", "CPLUS_INCLUDE_PATH", "OBJC_INCLUDE_PATH"]}
     if profile.get("status") != "experimental":
         return result

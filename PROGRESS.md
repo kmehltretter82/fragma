@@ -12,16 +12,24 @@ minimal send-ready patch, replay script and review/test notes; the
 [evidence audit](results/rv32-zeropad-mail-ready-20260907/SUMMARY.md) binds source, logs,
 images, configs, tool versions, patch identity, mainline/linux-next applicability,
 RV32/RV64 build controls, strict checkpatch, maintainers and mail dry-run. It has
-not been emailed or acknowledged upstream. No `sudo` or package installation was
-used.
+been sent manually by the user; upstream review or acknowledgement is not yet
+recorded. The project will not invoke email commands on this host. No `sudo` or
+package installation was used.
 
-The [MIPS32el machine-model checkpoint](profiles/MIPS32EL-MACHDEP-20260907.md)
-now passes an offline authenticated-header setup and the unchanged Frama-C 33
-generator for little-endian O32/MIPS32r2. Clang 21.1.8 produces the checked
-ELF32 MIPS calibration object; wrong-width and wrong-endian controls reject,
-and Eva reports zero alarms with 7/0/0 assertions. Input readback shows no
-drift. The candidate remains deliberately unregistered, integration-ineligible
-and below L1; no architecture-support count changes.
+The preserved [MIPS32el machine-model checkpoint](profiles/MIPS32EL-MACHDEP-20260907.md)
+has advanced to a registered
+[MT7621 production profile](profiles/MIPS32EL-MT7621-L1-20260907.md). Its normal
+no-override workflow selects a hash-locked SMP/CPS seed, builds genuine pinned
+kernel `lib/string.c`, and passes all 19 L1 gates with an ELF32 little-endian
+O32/MIPS32r2 object. The other ten profiles were freshly
+[renewed](results/l1-mips-registration-renewal-20260907/SUMMARY.md), so the
+configured model layer is now 11 profiles and 201/201 passing checks. MIPS L2,
+target execution, big-endian and 64-bit variants remain open.
+
+The additive lock entry leaves all 18 preceding tool records unchanged, and
+normal preflight passes the resulting 19-tool lock. Existing L2/proof receipts
+remain exact at their preceding identity but are dated for the post-registration
+project until their analyses are replayed; no L2 count is inferred from L1.
 
 The concurrency continuation has completed C0 capability characterization,
 C1 evidence/scope infrastructure and the limited C2 pilot milestone. The
@@ -137,9 +145,10 @@ The earlier IPC run `-04` is retained as a 736/738 failed matcher attempt caused
 only by PowerPC objdump whitespace, and IPC run `-05` is superseded because
 final readback caught its stale four-profile exclusion sentence.
 
-All [1,015 project tests](results/tests-mips-rv32-checkpoint-20260907.log)
-pass after the MIPS model and RV32 submission-hygiene checkpoint, with 20
-conditional skips. The
+The earlier [1,015-test checkpoint](results/tests-mips-rv32-checkpoint-20260907.log)
+remains preserved. The current
+[full regression](results/tests-mips32el-mt7621-l1-20260907/SUMMARY.md) passes
+1,025 tests after MT7621 profile registration, with 20 conditional skips. The
 IPC/refcount module has 23 focused tests, including exact profile inventory,
 ELF32/Alpha symbol parsing, diagnostic classification, native atomic-disassembly
 requirements, exhaustive progress outcomes and fail-closed scope controls.
@@ -311,7 +320,7 @@ The preceding [target-aware Clang interfaces](profiles/CLANG-INTERFACE-20260906.
 bind exact compiler family, target/CPU arguments, executable and builtin-resource
 identities, with genuine-TU flag matching. Existing GCC commands are preserved.
 All [690 regression tests](results/tests-clang-model-interface-20260906.log)
-pass in 75.666 seconds without skips; the actual 18-tool preflight has no issues.
+pass in 75.666 seconds without skips; that dated 18-tool preflight has no issues.
 The [fresh ten-model renewal](build/profile-checks/clang-interface-20260906/index.json)
 passes all 182 L1 checks with unchanged machine bytes and compiler flags.
 Independent audit verifies 133 logged command/log comparisons, all 771 renewal
@@ -327,15 +336,17 @@ The standalone adapter resolves the earlier probe/transport issues, and the
 layout continuation resolves representation and dialect/GNU-field calibration.
 No word size or missing model value is invented.
 
-The [current coverage matrix](results/coverage-calibrations-clang-renewed-20260907/coverage.md)
-has 25 accepted-current targets: 16 proofs and nine Eva calibrations. No
-accepted-stale targets remain; six legacy nonpasses are preserved. Eighteen of
-24 distinct functions have current accepted variants; six lack one. Its
+The [pre-MIPS coverage matrix](results/coverage-calibrations-clang-renewed-20260907/coverage.md)
+has 25 accepted targets at its exact identity: 16 proofs and nine Eva
+calibrations. Six legacy nonpasses are preserved, and eighteen of 24 distinct
+functions had accepted variants. The additive lock extension changes the
+current project identity, so those proof receipts remain dated until replay;
+the 11-profile L1 renewal does not silently renew L2. Its
 [independent readback](build/calibration-clang-renewal-audit-20260907/README.md)
 checks 4,983 generation inputs, 1,545 artifact references (1,478 unique paths),
 56 raw target receipts, 28 dated model receipts and all four Markdown tables,
-with no discrepancies or drift. All ten configured latest-dated models and ten
-standalone models are current L1; old observations remain preserved.
+with no discrepancies or drift at that identity. The separate post-registration
+renewal now supplies current L1 for all eleven configured profiles.
 The preceding common24-only [coverage audit 2](build/common24-clang-coverage-socket-enabled-audit-20260907/audit-2.json)
 retains its 4,500-input/1,218-reference check and separate 5,027-path post-readback.
 The [failed first coverage audit](build/common24-clang-coverage-socket-enabled-audit-20260907/audit-1.json)
@@ -373,12 +384,13 @@ The new matrix above supersedes those freshness counts, not the retained results
 The nine profile variants do not add distinct functions.
 
 Together with the [renewed seven-helper s390 pilot](s390/L2-RENEWAL-20260907.md),
-ten architecture families have current named L2 baselines; eleven still lack one.
-The nine common24 scopes and s390's complete four-target pilot gates have now
-been renewed. Arbitrary functions on those architectures are not covered. The
+ten architecture families have dated named L2 baselines; eleven still lack one.
+The nine common24 scopes and s390's complete four-target pilot gates were
+renewed at the preceding identity and now await post-registration replay.
+Arbitrary functions on those architectures are not covered. The
 [remaining architecture prerequisites](profiles/NEXT-WAVE.md) cover missing GCC
 tools, explicit LLVM bring-up and Nios II's pre-GCC-15 requirement.
-No sudo or installation is needed for the ten existing configured profiles.
+No sudo or installation is needed for the eleven configured profiles.
 
 Hardware x86's dated model checks include its separate benign native calibration
 under the recorded `-O2` context. No common24 compiler object is executed;
@@ -409,33 +421,33 @@ a proof of the whole kernel or automatic verification of every caller.
 | Area | Delivered result (dated where linked) | Still required |
 | --- | --- | --- |
 | Source identity | Token-based whole-TU/function gates, pinned source snapshot and consumed-header checks; dated relocated string experiment. | Register and rerun remaining historical examples; automate path-bound review relocation. |
-| Toolchain | Actual 18-tool preflight passes; target-aware Clang identities; genuine Hexagon v68 object build, 217 authenticated headers, 100-query generation and compiler/analyzer layout agreement. | Resolve extended alignment and integrate the Hexagon route; other tools, broader relocated setup and CVC5/WP compatibility investigation. |
-| Runner | Twenty-five targets have current acceptance: sixteen proof variants and nine Eva calibrations. Registry has 31 targets; old histories are preserved. | Renew and resolve six legacy nonpasses, automate relocation and expand the profile matrix. |
-| Architecture models | Ten-profile GCC renewal passes 182 L1 checks with unchanged models/flags; all ten named L2 scopes renewed; Hexagon still refuses extended alignment; an unregistered MIPS32el O32 candidate passes generator/layout/parser/Eva calibration. | Integrate and pass genuine L1 for MIPS32el; resolve Hexagon extended alignment; eleven unconfigured families still need L2 baselines, then broader ABI/endian/configuration variants. |
-| Stronger strings | Current conditional WP proofs: `strnchr` 48/48 and `strlcat` 62/62 ordinary goals, all 44 selected dependencies valid; eight current Eva calibrations with retained native evidence revalidated read-only. | Renew relocation; external implementations and kernel callers remain outside these proofs. |
-| s390 pilot | Current seven-helper scoped L2: 183 ordinary goals, 158 WP properties, three project round trips and mandatory byte-order calibration. All four target gates and retained native evidence rechecked. | Broaden trap models and verify kernel callers; whole-pilot L3 remains open. QEMU max is not exact z13 emulation. |
-| Common byte helpers | Current nine-profile scoped L2: 164 model checks, 846 ordinary goals, 738 properties, 252 fixture/compiler observations and accepted replay; 5,155 audit hashes match. | Remaining architectures, second-location runs, kernel callers, runtime corroboration and optional s390 common-provider convergence. |
-| RISC-V encoders | Current source/model/proof gates for seven helpers and five project witnesses: 119 ordinary goals, 119 dependencies and 47 postconditions. | Helper-specific calibration, kernel callers and a documented encoder L2 scope. |
-| ARM64 scalar extraction | Current runtime-safety gates for two cpuid helpers: six ordinary goals and ten selected dependencies with genuine-header checks. | Add functional contracts/calibration and verify kernel callers. |
-| Kernel bug review | RV32 `load_unaligned_zeropad()` wrong result dynamically reproduced in QEMU; identical-config A/B passes after a two-line fix; send-ready patch and exact evidence audit. | Human submission decision, then upstream review/revision; broaden review without treating alarms as bugs. |
+| Toolchain | Actual 19-tool preflight passes; target-aware Clang identities; exact MIPS32el and Hexagon routes, with Hexagon still build-only. | Resolve Hexagon extended alignment; other tools, broader relocated setup and CVC5/WP compatibility investigation. |
+| Runner | Twenty-five targets passed at the preceding identity: sixteen proof variants and nine Eva calibrations. Registry has 31 targets; old histories are preserved. | Replay current-identity proofs, renew and resolve six legacy nonpasses, automate relocation and expand the profile matrix. |
+| Architecture models | Eleven profiles pass 201/201 current L1 checks. MT7621 MIPS32el is registered with a genuine O32/MIPS32r2 SMP/CPS build; the preceding ten models were rerun under the additive lock. | Establish MIPS scoped L2; resolve Hexagon extended alignment; ten families still lack L1 and eleven lack L2, then broader ABI/endian/configuration variants. |
+| Stronger strings | Dated conditional WP proofs: `strnchr` 48/48 and `strlcat` 62/62 ordinary goals, all 44 selected dependencies valid; eight Eva calibrations with retained native evidence revalidated read-only. | Replay at the post-registration identity; external implementations and kernel callers remain outside these proofs. |
+| s390 pilot | Dated seven-helper scoped L2: 183 ordinary goals, 158 WP properties, three project round trips and mandatory byte-order calibration. All four target gates and retained native evidence were rechecked. | Replay at the post-registration identity; broaden trap models and verify kernel callers; whole-pilot L3 remains open. |
+| Common byte helpers | Dated nine-profile scoped L2: 164 model checks, 846 ordinary goals, 738 properties, 252 fixture/compiler observations and accepted replay; 5,155 audit hashes match. | Replay at the post-registration identity; remaining architectures, kernel callers and runtime corroboration. |
+| RISC-V encoders | Dated source/model/proof gates for seven helpers and five project witnesses: 119 ordinary goals, 119 dependencies and 47 postconditions. | Replay at the post-registration identity; helper-specific calibration, kernel callers and a documented encoder L2 scope. |
+| ARM64 scalar extraction | Dated runtime-safety gates for two cpuid helpers: six ordinary goals and ten selected dependencies with genuine-header checks. | Replay at the post-registration identity; add functional contracts/calibration and verify kernel callers. |
+| Kernel bug review | RV32 `load_unaligned_zeropad()` wrong result dynamically reproduced in QEMU; identical-config A/B passes after a two-line fix; the user sent the audited patch manually. | Track upstream review/revision; broaden review without treating alarms as bugs. |
 | Concurrency | C0/C1 infrastructure, limited C2 mutex/IRQ pilots, a 92-check LKMM baseline, a 135-check release/acquire pilot, a 162-check atomic/RMW pilot and a 1036-check IPC refcount lifetime/progress pilot are accepted. Six narrow kernel concurrency properties now exist: two access-protection claims, trace tgid-map publication ordering, module-statistics no-lost-update atomicity, IPC final-put/get-unless-zero exclusion with eleven checked SMP mappings, and bounded-quiescent strong-CAS retry progress with native/UML x86-64 and s390x mappings. A separate 609-check audit evaluates all eight existing LL/SC-bearing profiles and promotes none. | C3 architecture-backed unbounded/LL/SC progress, broader lockless lifetime behavior and remaining architecture mappings; then C4 RCU. Broader IRQ classes, functional protocols and the preserved unlocked HDQ accesses remain open. |
 
 The registry's 24 distinct kernel functions reach the plan's initial numerical
-range, not its proof/coverage acceptance. The current report has 18 functions
-with accepted-current variants, also 18 with latest-reported accepted variants.
-Six functions lack both a current and a dated accepted variant.
+range, not its proof/coverage acceptance. The pre-MIPS report had 18 functions
+with accepted-current variants and 18 with latest-reported accepted variants.
+Six functions lacked both a current and a dated accepted variant there; a fresh
+post-registration coverage report remains to be generated.
 Six nonpassing target variants are a
 different count because some variants repeat functions with stronger accepted
 contracts. The 62 kernel-function rows, 12 calibration rows and 26 project-witness
 rows do not increase the distinct kernel-function inventory.
 
-The ten configured profiles are `x86_64-gcc`, `arm64-gcc`, `riscv64-gcc`,
+The eleven configured profiles are `x86_64-gcc`, `arm64-gcc`, `riscv64-gcc`,
 `s390x-gcc`, `arm-gcc`, `powerpc32-gcc`, `alpha-gcc`, `m68k-gcc`,
-`sh-gcc` and `um-x86_64-gcc`. All ten explicitly supplied standalone model
-observations remain undated and current L1. The 28 dated suite-model observations
-comprise fifteen current L1 observations and thirteen older stale observations;
-all ten configured profiles now have current latest-dated L1. Eleven additional
-registry profile rows are planned without models, not configured profiles.
+`sh-gcc`, `um-x86_64-gcc` and `mips32el-clang`. Fresh standalone receipts pass
+201/201 L1 gates across all eleven. The older 28 suite-model observations retain
+their own historical freshness classifications. Ten additional registry profile
+rows are planned without models, not configured profiles.
 The generated architecture-level cells remain `not-assessed`; the separate
 s390/common24 documents supply the scoped L2 decisions.
 
@@ -593,7 +605,7 @@ FRAGMA_TOOLCHAIN_PREFIX="$PWD/toolchain/verified-prefix" python3 -m fragma prefl
 python3 -m unittest discover -s tests -v
 ```
 
-To reproduce the current coverage matrix, use the
+To reproduce the dated pre-MIPS coverage matrix, use the
 [recorded twelve-summary/ten-model command](build/calibration-clang-renewal-audit-20260907/README.md#exact-generation-command).
 Its direct tool invocation completed with exit 0; the matrix's generation inputs
 and raw artifact projections were independently read back. No separate wrapper
@@ -657,8 +669,11 @@ including herd7 7.58, are already available, and the isolated toolchain was
 installed inside this project. The distro herd7 library path is invalid, so the
 three exact generic CAT helpers are vendored and selected explicitly; no system
 installation or modification is needed.
-The [fresh read-only preflight](results/preflight-clang-model-interface-20260906.json)
-passes all 18 locked tools with zero issues and a complete installed dependency set.
+The current read-only preflight passes all 19 locked tools with zero issues; the
+[additive lock review](docs/TOOLCHAIN-LOCK-MIPS32EL-20260907.md) records the
+identity change. The preceding
+[18-tool receipt](results/preflight-clang-model-interface-20260906.json) remains
+dated evidence.
 The verification commands do not install or upgrade packages. A sandbox that
 blocks Why3's local Unix socket needs execution permission, not `sudo` or another
 package installation.
@@ -674,17 +689,18 @@ The bounded review, RV32 A/B handoff, limited C2 pilot, C3 LKMM baseline,
 source-linked release/acquire pilot, atomic/RMW pilot and IPC refcount
 lifetime/bounded-progress pilot are complete at their narrow boundaries. The
 eight-profile LL/SC admission evaluation is also complete, with zero promotion.
-Immediate choices are human review/submission of the patch, MIPS32el profile
-integration/L1, and further C3 protocol or architecture-backed progress work.
+Immediate work is post-registration proof replay, a scoped MIPS32el L2 proof,
+tracking the manually sent RV32 patch, and further C3 protocol or
+architecture-backed progress work.
 Mappings for architectures outside the refcount pilot's eleven-profile set,
 interrupt classes and functional protocols remain explicit extensions
 rather than inherited claims. The later
 milestones are still open backlog; Hexagon stays
 parked unless its workstream is resumed explicitly.
 
-1. Review the RV32 submission handoff and, only on explicit authorization, send
-   it to the recorded RISC-V maintainers/lists. Treat “send-ready”, “sent”, and
-   “maintainer accepted” as separate states.
+1. Track review of the manually sent RV32 patch. This project must not invoke
+   email commands on this host; treat “sent” and “maintainer accepted” as
+   separate states.
 2. Continue with C3 from the [concurrency plan](docs/CONCURRENCY-PLAN.md): broaden
    lockless functional protocols and establish, where supportable, path-specific
    unbounded or LL/SC progress premises that survive the new fail-closed audit.
@@ -694,8 +710,8 @@ parked unless its workstream is resumed explicitly.
    LoongArch64, MIPS32r2 and UML x86-64 cases. Do not treat Mthread
    interleavings as weak-memory
    evidence and do not install tools automatically.
-3. Renew and resolve the six legacy nonpasses beyond the 25 current accepted
-   targets across the 31 registered targets, and
+3. Replay the 25 previously accepted targets at the post-registration identity,
+   then renew and resolve the six legacy nonpasses across all 31 targets, and
    extend inventory/source gates to remaining examples.
    Keep the earlier 22-target results identifiable as dated evidence.
 4. Replay the current-policy suite with the clean toolchain and at a second location;
@@ -709,11 +725,11 @@ parked unless its workstream is resumed explicitly.
    then integrate the standalone adapter and authenticated headers. Open the
    Clang model route only after complete generator/calibration checks. Alpha ELF and
    genuine x86/UML `-Os` support were delivered in
-   [wave three](common/L2-WAVE3-20260906.md); their four-helper proof scopes now
-   have [current-input renewal](common/L2-CLANG-RENEWAL-20260907.md).
+   [wave three](common/L2-WAVE3-20260906.md); their four-helper proof scopes have
+   a [pre-MIPS renewal](common/L2-CLANG-RENEWAL-20260907.md) that now needs replay.
    Approvals do not transfer to a new architecture.
 6. Expand the curated function collection and run eligible generic helpers across
-   checked profiles. [Eleven architectures](profiles/NEXT-WAVE.md) still need
-   configured L1 evidence and documented L2 baselines. The renewed s390
+   checked profiles. [Ten architectures](profiles/NEXT-WAVE.md) still need
+   configured L1 evidence, while eleven need documented L2 baselines. The renewed s390
    and common24 scopes do not complete broader trap, runtime, ABI-variant
    or caller coverage; no new architecture is supplied by calibration renewal.

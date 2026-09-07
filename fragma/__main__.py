@@ -258,7 +258,10 @@ def main(argv=None):
             result = toolchain.inventory(root, toolchain.prepare_environment(root))
             print(json.dumps(result, indent=2))
             return 0 if result["ok"] else 1
-        default_source = root / "build/sources" / ("linux-" + revision[:12])
+        # Retained source snapshots and all evidence paths use the project's
+        # 13-hex short revision, so the no-override CLI must resolve that same
+        # directory rather than silently looking for a nonexistent 12-hex name.
+        default_source = root / "build/sources" / ("linux-" + revision[:13])
         if args.command == "snapshot":
             result = sources.snapshot(args.kernel, revision, args.output or default_source)
             print(json.dumps(result, indent=2))

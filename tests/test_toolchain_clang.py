@@ -187,6 +187,22 @@ class ToolchainClangTests(unittest.TestCase):
         self.assertEqual(self.probe(missing)["status"], "invalid-specification")
         self.mock_run.assert_not_called()
 
+    def test_mips32el_is_a_distinct_exact_clang_route(self):
+        spec = {**self.spec,
+                "target": "mipsel-unknown-linux-gnu",
+                "target_args": ["--target=mipsel-linux-gnu", "-mabi=32", "-EL",
+                                "-march=mips32r2", "-msoft-float"]}
+        self.assertIsNone(toolchain._compiler_specification_error(spec))
+        for change in (["--target=mipsel-linux-gnu", "-mabi=64", "-EL",
+                        "-march=mips32r2", "-msoft-float"],
+                       ["--target=mips-linux-gnu", "-mabi=32", "-EB",
+                        "-march=mips32r2", "-msoft-float"],
+                       [*spec["target_args"], "-O2"]):
+            with self.subTest(change=change):
+                self.assertIsNotNone(toolchain._compiler_specification_error(
+                    {**spec, "target_args": change}))
+        self.mock_run.assert_not_called()
+
     def test_changed_compiler_binary_fails_before_target_and_resource_queries(self):
         (self.bin / "clang-real").write_bytes(b"changed inert compiler")
         self.assertEqual(self.probe()["status"], "hash-mismatch")

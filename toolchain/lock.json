@@ -1233,6 +1233,25 @@
       ],
       "version_pattern": "^(\\d+(?:\\.\\d+)+)"
     },
+    "clang-21": {
+      "compiler_family": "clang",
+      "reference_sha256": "412bbe8c60571a1eb06f48fde89635033621caeb01a9b4ee76d46711bae8e932",
+      "require_binary_hash": true,
+      "required": false,
+      "resource_include_tree_sha256": "deb75785057f7fa7d497414c903e9c03a6d7005c84999204b21be6001e66b24c",
+      "target": "mipsel-unknown-linux-gnu",
+      "target_args": [
+        "--target=mipsel-linux-gnu",
+        "-mabi=32",
+        "-EL",
+        "-march=mips32r2",
+        "-msoft-float"
+      ],
+      "version": "21.1.8",
+      "version_args": [
+        "--version"
+      ]
+    },
     "cvc5": {
       "reference_sha256": "7562a8b0b835e3eaad5f1a7b4616cd762350cf567b6be03d7e8ee24fa5ced5ee",
       "require_binary_hash": true,

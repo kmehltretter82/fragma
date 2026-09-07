@@ -25,6 +25,73 @@
     {"id":"x86_64-gcc","architecture":"x86","status":"experimental","compiler":"gcc","compiler_target":"x86_64-linux-gnu","flags":["-m64","-mno-red-zone"],"kernel":{"arch":"x86","subarch":null,"config_recipe":["olddefconfig"],"seed_config":"kbuild/.config","required_config":{"CONFIG_64BIT":"y","CONFIG_X86_64":"y"},"build_path":null,"generated_headers":null},"abi":{"bits":64,"byte_order":"little","char_unsigned":true,"wchar_bytes":2,"short_bytes":2,"int_bytes":4,"long_bytes":8,"long_long_bytes":8,"pointer_bytes":8,"long_alignment":8,"pointer_alignment":8,"long_long_alignment":8},"runtime_methods":["native x86_64"],"header_type":"asm/posix_types_64.h"},
     {"id":"arm64-gcc","architecture":"arm64","status":"experimental","compiler":"aarch64-linux-gnu-gcc","compiler_target":"aarch64-linux-gnu","flags":["-mgeneral-regs-only","-mlittle-endian"],"kernel":{"arch":"arm64","subarch":null,"config_recipe":["defconfig"],"required_config":{"CONFIG_64BIT":"y","CONFIG_ARM64":"y","CONFIG_CPU_BIG_ENDIAN":"n"},"build_path":null,"generated_headers":null},"abi":{"bits":64,"byte_order":"little","char_unsigned":true,"wchar_bytes":2,"short_bytes":2,"int_bytes":4,"long_bytes":8,"long_long_bytes":8,"pointer_bytes":8,"long_alignment":8,"pointer_alignment":8,"long_long_alignment":8},"runtime_methods":["qemu-aarch64","target hardware"],"header_type":"asm-generic/posix_types.h"},
     {"id":"riscv64-gcc","architecture":"riscv","status":"experimental","compiler":"riscv64-linux-gnu-gcc","compiler_target":"riscv64-linux-gnu","flags":["-march=rv64imac","-mabi=lp64","-mno-save-restore"],"generator_headers":{"sysroot":"build/profile-sysroots/riscv64-musl-1.2.5","environment":"FRAGMA_RISCV64_MUSL_SYSROOT","source_url":"https://musl.libc.org/releases/musl-1.2.5.tar.gz","archive_sha256":"a9a118bbe84d8764da0ea0d28b3ab3fae8477fc7e4085d90102b8596fc7c75e4","feature_flags":["-D_POSIX_C_SOURCE=200809L"],"scope":"Generator-only libc/POSIX metadata. Actual kernel analysis uses pinned kernel headers with -nostdinc; no musl runtime or userspace ABI claim."},"kernel":{"arch":"riscv","subarch":null,"config_recipe":["defconfig"],"required_config":{"CONFIG_64BIT":"y","CONFIG_ARCH_RV64I":"y"},"build_path":null,"generated_headers":null},"abi":{"bits":64,"byte_order":"little","char_unsigned":true,"wchar_bytes":2,"short_bytes":2,"int_bytes":4,"long_bytes":8,"long_long_bytes":8,"pointer_bytes":8,"long_alignment":8,"pointer_alignment":8,"long_long_alignment":8},"runtime_methods":["qemu-riscv64","target hardware"],"header_type":"asm-generic/posix_types.h"},
+    {
+      "id": "mips32el-clang",
+      "architecture": "mips",
+      "status": "experimental",
+      "compiler": "clang-21",
+      "compiler_family": "clang",
+      "compiler_version": "21.1.8",
+      "compiler_target": "mipsel-unknown-linux-gnu",
+      "compiler_target_args": ["--target=mipsel-linux-gnu", "-mabi=32", "-EL", "-march=mips32r2", "-msoft-float"],
+      "flags": [],
+      "generator_headers": {
+        "sysroot": "build/profile-sysroots/mips32el-musl-1.2.5",
+        "environment": "FRAGMA_MIPS32EL_MUSL_SYSROOT",
+        "provider": "profiles/setup_mips_musl.py",
+        "receipt": "fragma-mips-sysroot.json",
+        "source_url": "https://musl.libc.org/releases/musl-1.2.5.tar.gz",
+        "archive_sha256": "a9a118bbe84d8764da0ea0d28b3ab3fae8477fc7e4085d90102b8596fc7c75e4",
+        "feature_flags": ["-D_POSIX_C_SOURCE=200809L"],
+        "include_order": ["generator-overlay", "clang-resource", "musl"],
+        "scope": "Generator-only MIPS musl headers and three source-derived POSIX limits. Actual kernel analysis uses pinned configured kernel headers; no libc object, runtime or userspace ABI claim."
+      },
+      "kernel": {
+        "arch": "mips",
+        "subarch": null,
+        "config_recipe": ["olddefconfig"],
+        "seed_config": "profiles/configs/mips32el-mt7621.config",
+        "seed_config_sha256": "dd8a59933e4ab6d02a40a319953326871669f9d075f510ff28b80e5053cfeb2b",
+        "required_config": {
+          "CONFIG_MIPS": "y",
+          "CONFIG_32BIT": "y",
+          "CONFIG_RALINK": "y",
+          "CONFIG_SOC_MT7621": "y",
+          "CONFIG_CPU_LITTLE_ENDIAN": "y",
+          "CONFIG_CPU_MIPS32_R2": "y",
+          "CONFIG_SMP": "y",
+          "CONFIG_MIPS_MT_SMP": "y",
+          "CONFIG_MIPS_CPS": "y",
+          "CONFIG_NR_CPUS": "4"
+        },
+        "build_path": null,
+        "generated_headers": null,
+        "llvm": {
+          "schema_version": 1,
+          "target": "mipsel-linux-gnu",
+          "observed_target": "mipsel-unknown-linux-gnu",
+          "cpu": "mips32r2",
+          "tools": {
+            "CC": {"path": "/usr/bin/clang-21", "sha256": "412bbe8c60571a1eb06f48fde89635033621caeb01a9b4ee76d46711bae8e932"},
+            "HOSTCC": {"path": "/usr/bin/clang-21", "sha256": "412bbe8c60571a1eb06f48fde89635033621caeb01a9b4ee76d46711bae8e932"},
+            "HOSTCXX": {"path": "/usr/bin/clang++-21", "sha256": "412bbe8c60571a1eb06f48fde89635033621caeb01a9b4ee76d46711bae8e932"},
+            "LD": {"path": "/usr/bin/ld.lld-21", "sha256": "6a65863a9eba1af6b6e8969f8e96a5ad4df0e8b705f98491a28b1790ce35718c"},
+            "AR": {"path": "/usr/bin/llvm-ar-21", "sha256": "50c8bca73777c6e0543faa844627b893c37d4ced22294bc56ea51ed472002c87"},
+            "LLVM_LINK": {"path": "/usr/bin/llvm-link-21", "sha256": "e5a6455cbcc37547a58c5443ef1529f5430bb73cf26dcf37aaacde4ec4aa6516"},
+            "NM": {"path": "/usr/bin/llvm-nm-21", "sha256": "b7b34e58c3c5c37bd9abe58d8bb9269f6bbe0a2ec6a16f8827315e90b9229ebd"},
+            "OBJCOPY": {"path": "/usr/bin/llvm-objcopy-21", "sha256": "0de5f7adbb648ed88aa04f2d91bd05c08306b99a27741540cc0473cbac0a0b40"},
+            "OBJDUMP": {"path": "/usr/bin/llvm-objdump-21", "sha256": "488163ed1ce6e9dcd82730dd1643e382ea811e835d41d4724b82bd34ccc0af8b"},
+            "READELF": {"path": "/usr/bin/llvm-readelf-21", "sha256": "35716d1eaa870ee4a723aa89c843df941d00645e734da803d797f230c31de50b"},
+            "STRIP": {"path": "/usr/bin/llvm-strip-21", "sha256": "0de5f7adbb648ed88aa04f2d91bd05c08306b99a27741540cc0473cbac0a0b40"}
+          }
+        }
+      },
+      "abi": {"bits":32,"byte_order":"little","char_unsigned":true,"wchar_bytes":2,"short_bytes":2,"int_bytes":4,"long_bytes":4,"long_long_bytes":8,"pointer_bytes":4,"long_alignment":4,"pointer_alignment":4,"long_long_alignment":8},
+      "runtime_methods": ["MT7621 target hardware"],
+      "header_type": "asm/posix_types.h",
+      "extra_uapi_headers": ["sgidefs.h"],
+      "model_scope": "MT7621 MIPS32el O32/MIPS32r2 kernel-side sequential integer/pointer C with natural scalar/struct layouts. Big-endian, MIPS64, other ISA revisions, userspace hard-float ABI, assembly, MMIO and concurrency remain outside this profile."
+    },
     {"id":"s390x-gcc","architecture":"s390","status":"experimental","compiler":"s390x-linux-gnu-gcc","compiler_target":"s390x-linux-gnu","flags":["-m64","-march=z13","-mtune=z13","-mpacked-stack","-mbackchain","-msoft-float"],"kernel":{"arch":"s390","subarch":null,"config_recipe":["defconfig"],"required_config":{"CONFIG_64BIT":"y","CONFIG_S390":"y","CONFIG_CPU_BIG_ENDIAN":"y","CONFIG_MARCH_Z13":"y"},"build_path":null,"generated_headers":null},"abi":{"bits":64,"byte_order":"big","char_unsigned":true,"wchar_bytes":2,"short_bytes":2,"int_bytes":4,"long_bytes":8,"long_long_bytes":8,"pointer_bytes":8,"long_alignment":8,"pointer_alignment":8,"long_long_alignment":8},"runtime_methods":["qemu-s390x","target hardware"],"header_type":"asm/posix_types.h"}
   ]
 }

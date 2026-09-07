@@ -141,7 +141,7 @@ class ClangProfileTests(unittest.TestCase):
     def test_all_existing_gcc_flag_and_version_arguments_are_unchanged(self):
         before = copy.deepcopy(self.registered)
         for profile in self.registered.values():
-            if profile["status"] != "experimental":
+            if profile["status"] != "experimental" or profile.get("compiler_family", "gcc") != "gcc":
                 continue
             with self.subTest(profile=profile["id"]):
                 self.assertEqual(profiles.compiler_flags(profile), profile["flags"] + profile["common_flags"])
@@ -153,7 +153,7 @@ class ClangProfileTests(unittest.TestCase):
         profiles.validate_registration(self.candidate)
         self.assertEqual(self.registered["hexagon-clang"]["status"], "planned")
         self.assertIsNone(self.registered["hexagon-clang"]["abi"])
-        self.assertEqual(sum(row["status"] == "experimental" for row in self.registered.values()), 10)
+        self.assertEqual(sum(row["status"] == "experimental" for row in self.registered.values()), 11)
         self.run.assert_not_called()
 
     def test_unknown_compiler_families_rejected_before_tools(self):

@@ -24,4 +24,5 @@ recorded mainline and linux-next commits, and has an RV64 compile control.
 The later no-rootfs panic in each log occurs after KUnit and is not a test
 failure. Raw images, configurations, logs, objects, and the source clone
 remain local; their pinned SHA-256 identities are in `pilot-audit.json`.
-The patch is send-ready but has not been emailed or maintainer-acknowledged.
+The patch was subsequently sent manually by the user. This workspace did not
+send email and does not record a maintainer acknowledgement.

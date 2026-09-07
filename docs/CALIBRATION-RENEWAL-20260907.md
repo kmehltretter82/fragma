@@ -1,5 +1,9 @@
 # Nine calibration renewals, 2026-09-07
 
+Later status: registering `mips32el-clang` changed the central toolchain-lock
+and review-context identity. This document remains exact evidence for its run,
+but its calibration acceptance is dated until post-registration replay.
+
 All nine selected Eva specification-sensitivity targets now pass the normal
 runner under the current shared provider identity. Both batches completed with
 exit 0. Sources, drivers, contracts, models, assumptions and retained native
