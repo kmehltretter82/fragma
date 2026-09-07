@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "kind": "historical_solver_driver_calibration",
+  "captured_at": "2026-09-05",
+  "command": [
+    "why3", "prove", "-C", "toolchain/why3.conf", "-P", "cvc5", "-t", "5",
+    "toolchain/prover-calibration.mlw"
+  ],
+  "why3_version": "1.8.2",
+  "prover_version": "1.3.4",
+  "prover_sha256": "7562a8b0b835e3eaad5f1a7b4616cd762350cf567b6be03d7e8ee24fa5ced5ee",
+  "configuration_sha256": "9525b95cfc7ea73d1b8a404f915d33e388a03cfdb19e1527de3f26916f05f671",
+  "process_returncode": 2,
+  "goals": [
+    {"name": "linear_valid", "expectation": "valid", "outcome": "Valid", "solver_seconds": 0.03, "steps": 59},
+    {"name": "linear_invalid", "expectation": "mathematically_false", "outcome": "Unknown (sat)", "solver_seconds": 0.02, "steps": 75}
+  ],
+  "stdout": "File \"toolchain/prover-calibration.mlw\", line 5, characters 21-45:\nGoal linear_valid.\nProver result is: Valid (0.03s, 59 steps).\n\nFile \"toolchain/prover-calibration.mlw\", line 6, characters 23-47:\nGoal linear_invalid.\nProver result is: Unknown (sat) (0.02s, 75 steps).\n\n",
+  "notes": [
+    "Direct Why3 execution required a local Unix socket, blocked by the default sandbox; this bounded calibration was rerun with approved escalation.",
+    "The negative result is recorded using the driver's actual Unknown(sat) classification; it is not labelled a timeout or a kernel defect.",
+    "This bounded check does not prove complete compatibility of the CVC5 1.3.4 binary and the Why3 1.8.2 cvc5 driver."
+  ]
+}

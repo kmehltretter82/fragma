@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "kind": "historical_native_dependency_test",
+  "captured_at": "2026-09-06",
+  "command": ["make", "-j4", "check"],
+  "working_directory": "toolchain/verified-build/fragma-setup-1n1vr87d/gmp-6.3.0",
+  "version": "6.3.0",
+  "source_sha256": "a3c2b80201b89e68616f4ad30bc66aee4927c3ce50e33929ca819d5c43538898",
+  "compiler": "gcc 15.2.0 -std=gnu17",
+  "process_returncode": 0,
+  "summary": {"total": 178, "pass": 177, "skip": 1, "fail": 0, "error": 0},
+  "skipped": [{"test": "mpn/t-addaddmul", "exit_status": 77}],
+  "log_directory": "toolchain/verified-build/fragma-setup-1n1vr87d/gmp-6.3.0/tests",
+  "notes": [
+    "Aggregated totals from the eight generated tests/**/test-suite.log files.",
+    "The C++ suite contains zero tests in this GMP configuration and is not claimed exercised.",
+    "This native dependency test completed after GMP installation during the first clean setup; subsequent setup recipes run make check before install."
+  ]
+}

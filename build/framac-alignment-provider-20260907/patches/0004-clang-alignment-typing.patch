@@ -1,0 +1,261 @@
+--- a/src/kernel_internals/typing/cabs2cil.ml
++++ b/src/kernel_internals/typing/cabs2cil.ml
+@@ -199,6 +199,23 @@
+ 
+ class check_no_locals = object
+   inherit Cil.nopCilVisitor
++  method! vexpr e =
++    let unevaluated =
++      match e.enode with
++      | SizeOfE operand ->
++        not (Cil.is_variably_modified_type (Cil.typeOf operand))
++      | AlignOfE _ -> true
++      | _ -> false
++    in
++    if Machine.clang_u32_alignment_policy () && unevaluated then begin
++      (* Static locals are hoisted. Fold the complete original query only
++         when the policy-aware folder can produce an integer without losing
++         declaration alignment. Residual/VLA references remain checked. *)
++      let folded = Cil.constFold true e in
++      match folded.enode with
++      | Const (CInt64 _) -> ChangeTo folded
++      | _ -> DoChildren
++    end else DoChildren
+   method! vlval (h,_) =
+     (match h with
+      | Var v ->
+@@ -214,17 +231,18 @@
+   let rec aux i =
+     match i with
+     | SingleInit e ->
+-      ignore (Cil.visitCilExpr (new check_no_locals) e)
++      SingleInit (Cil.visitCilExpr (new check_no_locals) e)
+     | CompoundInit (ct, initl) ->
+-      Cil.foldLeftCompound ~implicit:false
+-        ~doinit:(fun _off' i' _ () -> aux i')
+-        ~ct:ct
+-        ~initl:initl
+-        ~acc:()
++      let initl =
++        Cil.foldLeftCompound ~implicit:false
++          ~doinit:(fun off i _ acc -> (off, aux i) :: acc)
++          ~ct:ct ~initl:initl ~acc:[]
++      in
++      CompoundInit (ct, List.rev initl)
+   in
+   match i with
+-  | CInit i -> aux i
+-  | StrInit _ -> ()
++  | CInit i -> CInit (aux i)
++  | StrInit _ -> i
+ 
+ (* ---------- source error message handling ------------- *)
+ let cabslu s =
+@@ -462,6 +480,25 @@
+    Note that numeric values that are not powers of two are invalid and
+    also return [None]. *)
+ let eval_aligned_attrparams aps =
++  if Machine.clang_u32_alignment_policy () then begin
++    let requested = match aps with
++      | [] -> Z.of_int (Machine.Alignof.aligned ())
++      | [ap] ->
++        begin match Cil.integerOfAlignmentAttrparam ap with
++          | Some n -> n
++          | None ->
++            Kernel.abort ~current:true
++              "Unsupported typed expression in aligned attribute: %a"
++              Cil_printer.pp_attrparam ap
++        end
++      | _ -> Kernel.abort ~current:true "Invalid aligned attribute argument count"
++    in
++    (* Validate the original request before interpreting its contribution.
++       Some zero means a valid directive contributing no constraint; callers
++       must not erase its original attribute or confuse it with invalid input. *)
++    Some (Z.of_int (Option.value ~default:0
++                     (Cil.effectiveAlignment ~c11:false requested)))
++  end else
+   match aps with
+   | [] -> Some (Z.of_int (Machine.Alignof.aligned ()))
+   | [ap] ->
+@@ -529,6 +566,9 @@
+ let process_pragmas_pack_align_comp_attributes loc ci cattrs =
+   let source = snd loc in
+   match !current_packing_pragma, align_pragma_for_struct ci.corig_name with
++  | (Some _, _ | _, Some _) when Machine.clang_u32_alignment_policy () ->
++    Kernel.abort ~source
++      "pragma pack/align is unsupported by the private alignment policy"
+   | None, None -> check_aligned cattrs
+   | Some n, apragma ->
+     warn_incompatible_pragmas_attributes apragma (cattrs <> []);
+@@ -578,6 +618,9 @@
+   let open Current_loc.Operators in
+   let<> UpdatedCurrentLoc = fi.floc in
+   match !current_packing_pragma, align_pragma_for_struct fi.forig_name with
++  | (Some _, _ | _, Some _) when Machine.clang_u32_alignment_policy () ->
++    Kernel.abort ~current:true
++      "pragma pack/align is unsupported by the private alignment policy"
+   | None, None -> check_aligned fattrs
+   | Some n, apragma ->
+     warn_incompatible_pragmas_attributes apragma (fattrs <> []);
+@@ -2501,9 +2544,17 @@
+         (* C17 6.7.5 § 8 - Check _Alignas coherence, and update accordingly. *)
+ 
+         let same_alignas_value al1 al2 =
+-          Option.equal Z.equal
+-            (Cil.constFoldToInt al1)
+-            (Cil.constFoldToInt al2)
++          if Machine.clang_u32_alignment_policy () then
++            let contribution e =
++              match Cil.constFoldToInt ~machdep:true e with
++              | Some n -> Cil.effectiveAlignment ~c11:true n
++              | None -> Kernel.abort ~current:true "Nonconstant _Alignas redeclaration"
++            in
++            Option.equal Int.equal (contribution al1) (contribution al2)
++          else
++            Option.equal Z.equal
++              (Cil.constFoldToInt al1)
++              (Cil.constFoldToInt al2)
+         in
+         match H.find_opt alreadyDefined oldvi.vname with
+         | None ->
+@@ -3967,7 +4018,43 @@
+       end
+     | _ -> ()
+ 
+-let solveAlignas ~original_type alignas_specifiers =
++let solveAlignas ?(attributes=[]) ~original_type alignas_specifiers =
++  if Machine.clang_u32_alignment_policy () then begin
++    let original_and_effective e =
++      match Cil.constFoldToInt ~machdep:true e with
++      | None ->
++        Kernel.abort ~current:true
++          "Invalid _Alignas(%a): shall evaluate to a constant"
++          Cil_printer.pp_exp e
++      | Some requested ->
++        e, Option.value ~default:0 (Cil.effectiveAlignment ~c11:true requested)
++    in
++    (* Every original directive is validated, including a request which will
++       contribute zero after Clang's bit-cache conversion. Choose the retained
++       original expression by its effective contribution, never its raw size. *)
++    let directives = List.map original_and_effective alignas_specifiers in
++    match directives with
++    | [] -> None
++    | first :: rest ->
++      let expression, c11_alignment =
++        List.fold_left (fun ((_, best) as old) ((_, value) as next) ->
++            if value > best then next else old) first rest
++      in
++      let gnu_alignment =
++        match combine_aligned_attributes attributes with
++        | None -> 0
++        | Some n -> Z.to_int n
++      in
++      let effective = max c11_alignment gnu_alignment in
++      let natural = Cil.bytesAlignOf original_type in
++      if effective <> 0 && effective < natural then
++        Kernel.abort ~current:true
++          "Invalid _Alignas(%a): shall not reduce original alignof(%a): %d"
++          Cil_printer.pp_exp expression Cil_printer.pp_typ original_type natural;
++      (* Keep even an ignored original request. Layout consumers apply the
++         same policy; source/preprocessing evidence retains the full list. *)
++      Some expression
++  end else begin
+   let max_align = Machine.Alignof.max () in
+   let extended_align = Machine.max_extended_alignment () in
+ 
+@@ -4026,6 +4113,7 @@
+         Cil_printer.pp_exp alignas
+         extended_align ;
+     Some alignas
++  end
+ 
+ (* Return true if the given expression is a call or a struct-returning call. *)
+ let rec nested_call e =
+@@ -4471,7 +4559,7 @@
+         "_Alignas not allowed on register variables" ;
+   end ;
+ 
+-  let alignas = solveAlignas ~original_type:vtype alignas in
++  let alignas = solveAlignas ~attributes:nattr ~original_type:vtype alignas in
+ 
+   if inline && not (Ast_types.is_fun vtype) then
+     Kernel.error ~once:true ~current:true "inline for a non-function: %s" n;
+@@ -4593,9 +4681,11 @@
+       [(check_attribute_name s, List.map (attrOfExp ~check:false) el)]
+ 
+ and doAttributes (ghost:bool) (al: Cabs.attribute list) : attributes =
+-  List.fold_left (fun acc a ->
++  let attrs = List.fold_left (fun acc a ->
+       Ast_attributes.add_list (doAttr ghost a) acc
+     ) [] al
++  in
++  if Machine.clang_u32_alignment_policy () then check_aligned attrs else attrs
+ 
+ (* A version of Ast_attributes.partition that works on CABS attributes.
+    It would be better to use Ast_attributes.partition instead to avoid
+@@ -4742,6 +4832,17 @@
+             "declaration of array of 'zero-length arrays' ('%a`);@ \
+              zero-length arrays are not allowed in C99"
+             !Cil.pp_typ_ref bt;
++      if Machine.clang_u32_alignment_policy () &&
++         Cil.isCompleteType ~allowZeroSizeArrays:true bt &&
++         not (Cil.is_variably_modified_type bt)
++      then begin
++        let size = Cil.bytesSizeOf bt in
++        let alignment = Cil.bytesAlignOf bt in
++        if alignment <= 0 || size mod alignment <> 0 then
++          Kernel.abort ~current:true
++            "size of array element '%a' (%d bytes) is not a multiple of its alignment (%d bytes)"
++            Cil_printer.pp_typ bt size alignment
++      end;
+       let lo =
+         match len.expr_node with
+         | Cabs.NOTHING -> None
+@@ -5074,7 +5175,11 @@
+       | ((n, _, _, loc), _) :: _ -> n,loc
+     in
+     let bt, sto, falignas, inl, attrs = doSpecList loc ghost sugg s in
+-    let falignas = solveAlignas ~original_type:bt falignas in
++    let original_falignas = falignas in
++    let falignas =
++      if Machine.clang_u32_alignment_policy () then None
++      else solveAlignas ~original_type:bt falignas
++    in
+     (* Do the fields *)
+     let addFieldInfo ~last:last_field (flds : fieldinfo list)
+         (((n,ndt,a,cloc) : Cabs.name), (widtho : Cabs.expression option))
+@@ -5089,6 +5194,11 @@
+           ~allowZeroSizeArrays ghost `FieldDecl (AttrName false) bt
+           (Cabs.PARENTYPE(attrs, ndt, a))
+       in
++      let falignas =
++        if Machine.clang_u32_alignment_policy () then
++          solveAlignas ~attributes:fattr ~original_type:ftype original_falignas
++        else falignas
++      in
+       (* check for fields whose type is incomplete. In particular, this rules
+          out circularity:
+          struct C1 { struct C2 c2; };          //This line is now an error.
+@@ -5163,7 +5273,9 @@
+               w, ftype
+           end
+       in
+-      if None <> fbitfield && Option.is_some falignas then
++      if None <> fbitfield &&
++         (Option.is_some falignas ||
++          (Machine.clang_u32_alignment_policy () && original_falignas <> [])) then
+         (* C17 6.7.5 § 2 *)
+         Kernel.abort ~once:true ~current:true
+           "_Alignas not allowed on bitfields" ;
+@@ -8794,8 +8906,9 @@
+           Cil.update_var_type vi et;
+         if isNotEmpty se then
+           Kernel.error ~once:true ~current:true "global static initializer";
+-        (* Check that no locals are referred by the initializer *)
+-        check_no_locals_in_initializer ie';
++        (* Resolve supported unevaluated queries before hoisting and keep
++           checking any remaining evaluated local/VLA references. *)
++        let ie' = check_no_locals_in_initializer ie' in
+         (* Maybe the initializer refers to the function itself.
+            Push a prototype for the function, just in case. *)
+         cabsPushGlobal

@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "policy": "fragma-replay-v1",
+  "status": "replay-passed",
+  "replay_passed": true,
+  "inputs_equal": true,
+  "execution_equal": true,
+  "outcomes_equal": true,
+  "both_accepted": true,
+  "execution_limits_known": true,
+  "distinct_execution_evidence": true,
+  "input_diffs": [],
+  "execution_diffs": [],
+  "outcome_diffs": [],
+  "evidence_ids": [
+    "2120fdc9e0c1a2c84dfc11855abbe4b0b6e6481c95185f4d80edf50af6acc034",
+    "cabc6e18a5013b0038d8ebd8180574e551a8e30fa176287c5521bb64b33a07e0"
+  ]
+}

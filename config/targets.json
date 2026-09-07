@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+  "targets": [
+    {
+      "id": "string.strnchr", "suite": "core", "role": "proof", "profile": "x86_64-gcc",
+      "source": "lib/string.c", "harness": "annotated/string.eva.c",
+      "functions": ["strnchr"], "analysis": "wp", "input_mode": "kernel-tu",
+      "provenance": {"mode": "translation-unit"},
+      "required_properties": ["strnchr_ensures_found_in_range", "strnchr_ensures_found_first", "strnchr_ensures_null_means_absent"],
+      "assumptions": ["x86-header-overrides", "gnu-frontend-shims", "strnchr-input-domain"],
+      "claims": ["runtime-safety", "functional", "termination"], "caller_coverage": "unverified"
+    },
+    {
+      "id": "string.strlcat", "suite": "core", "role": "proof", "profile": "x86_64-gcc",
+      "source": "lib/string.c", "harness": "annotated/string.eva.c",
+      "functions": ["strlcat"], "analysis": "wp", "input_mode": "kernel-tu",
+      "provenance": {"mode": "translation-unit"},
+      "required_properties": ["strlcat_ensures_terminated", "strlcat_assert_guard_passed", "strlcat_assert_copy_fits"],
+      "assumptions": ["extern-strlen", "extern-memcpy", "kernel-trap", "x86-header-overrides", "gnu-frontend-shims"],
+      "claims": ["runtime-safety", "output-nul-termination"], "caller_coverage": "unverified"
+    },
+    {
+      "id": "calibration.strlcat.naive.wp", "suite": "calibration", "role": "calibration", "profile": "x86_64-gcc",
+      "source": "lib/string.c", "harness": "annotated/string.acsl.c",
+      "functions": ["strlcat"], "analysis": "wp", "input_mode": "kernel-tu",
+      "provenance": {"mode": "translation-unit"},
+      "required_properties": ["strlcat_ensures_terminated", "strlcat_ensures_naive_no_truncation"],
+      "expected_unresolved": ["strlcat_ensures_naive_no_truncation"],
+      "required_companion": "calibration.strlcat.naive.eva",
+      "companion_property_map": {"strlcat_ensures_naive_no_truncation": "naive_claim_REFUTED"},
+      "companion_mapping_reason": "The valid bounded driver uses count=5 and establishes result=6 and buf[4]=0. Thus the naive existential postcondition would need e=6 and e<5 simultaneously; the named negative also observes the earlier NUL. This is specification calibration, not kernel-defect evidence.",
+      "assumptions": ["extern-strlen", "extern-memcpy", "kernel-trap", "x86-header-overrides", "gnu-frontend-shims"],
+      "claims": [], "caller_coverage": "not-applicable"
+    },
+    {
+      "id": "calibration.strlcat.naive.eva", "suite": "calibration", "role": "calibration", "profile": "x86_64-gcc",
+      "source": "lib/string.c", "harness": "annotated/string.eva.c",
+      "functions": ["strlcat"], "analysis": "eva", "input_mode": "kernel-tu",
+      "provenance": {"mode": "translation-unit"},
+      "driver": "harness/naive_cex.c", "entry": "fragma_naive_cex",
+      "required_properties": ["result_is_intended_total", "truncated_string", "naive_claim_REFUTED"],
+      "expected_invalid": ["naive_claim_REFUTED"],
+      "assumptions": ["extern-strlen", "extern-memcpy", "kernel-trap", "x86-header-overrides", "gnu-frontend-shims"],
+      "claims": [], "caller_coverage": "not-applicable"
+    },
+    {
+      "id": "mpi.rshift", "suite": "extended", "role": "proof", "profile": "x86_64-gcc",
+      "source": "lib/crypto/mpi/generic_mpih-rshift.c", "harness": "mpi/annotated/mpih-rshift.acsl.c",
+      "functions": ["mpihelp_rshift"], "analysis": "wp", "input_mode": "standalone",
+      "provenance": {"mode": "functions"},
+      "required_properties": ["mpihelp_rshift_assigns"],
+      "assumptions": ["mpi-limb-model"], "claims": ["runtime-safety", "termination"],
+      "caller_coverage": "historical-manual-review"
+    },
+    {
+      "id": "arm64.immediates", "suite": "extended", "role": "proof", "profile": "arm64-gcc",
+      "source": "arch/arm64/lib/insn.c", "harness": "arm64/annotated/insn_imm.sweep.c",
+      "functions": ["aarch64_get_imm_shift_mask", "aarch64_insn_decode_immediate", "aarch64_insn_encode_immediate", "aarch64_insn_adrp_get_offset", "aarch64_insn_adrp_set_offset"],
+      "analysis": "wp", "input_mode": "standalone", "provenance": {"mode": "functions"},
+      "required_properties": ["aarch64_get_imm_shift_mask_ensures_shift_bounded"],
+      "assumptions": ["arm64-insn-preamble", "arm64-insn-trap", "arm64-adrp-classifier"],
+      "claims": ["runtime-safety"], "caller_coverage": "unverified"
+    }
+  ]
+}

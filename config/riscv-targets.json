@@ -1,0 +1,473 @@
+{
+  "schema_version": 1,
+  "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+  "targets": [
+    {
+      "id": "riscv.base-encoders",
+      "suite": "extended",
+      "role": "proof",
+      "profile": "riscv64-gcc",
+      "source": "arch/riscv/net/bpf_jit.h",
+      "harness": "riscv/annotated/base-encoders.proved.c",
+      "functions": [
+        "rv_r_insn",
+        "rv_i_insn",
+        "rv_s_insn",
+        "rv_b_insn",
+        "rv_u_insn",
+        "rv_j_insn",
+        "rv_amo_insn"
+      ],
+      "analysis_functions": [
+        "rv_r_insn",
+        "rv_i_insn",
+        "rv_s_insn",
+        "rv_b_insn",
+        "rv_u_insn",
+        "rv_j_insn",
+        "rv_amo_insn",
+        "fragma_riscv_roundtrip_i",
+        "fragma_riscv_roundtrip_s",
+        "fragma_riscv_roundtrip_b",
+        "fragma_riscv_roundtrip_u",
+        "fragma_riscv_roundtrip_j"
+      ],
+      "project_functions": [
+        "fragma_riscv_roundtrip_i",
+        "fragma_riscv_roundtrip_s",
+        "fragma_riscv_roundtrip_b",
+        "fragma_riscv_roundtrip_u",
+        "fragma_riscv_roundtrip_j"
+      ],
+      "analysis": "wp",
+      "input_mode": "standalone",
+      "provenance": {
+        "mode": "functions"
+      },
+      "kernel_model_check": "riscv/annotated/base-encoders.kernel-model.c",
+      "require_smoke": true,
+      "provers": [
+        "alt-ergo",
+        "z3"
+      ],
+      "required_properties": [
+        "rv_r_insn_ensures_opcode_field",
+        "rv_r_insn_ensures_rd_field",
+        "rv_r_insn_ensures_funct3_field",
+        "rv_r_insn_ensures_rs1_field",
+        "rv_r_insn_ensures_rs2_field",
+        "rv_r_insn_ensures_funct7_field",
+        "rv_i_insn_ensures_opcode_field",
+        "rv_i_insn_ensures_rd_field",
+        "rv_i_insn_ensures_funct3_field",
+        "rv_i_insn_ensures_rs1_field",
+        "rv_i_insn_ensures_immediate_field",
+        "rv_s_insn_ensures_opcode_field",
+        "rv_s_insn_ensures_funct3_field",
+        "rv_s_insn_ensures_rs1_field",
+        "rv_s_insn_ensures_rs2_field",
+        "rv_s_insn_ensures_immediate_low",
+        "rv_s_insn_ensures_immediate_high",
+        "rv_b_insn_ensures_opcode_field",
+        "rv_b_insn_ensures_funct3_field",
+        "rv_b_insn_ensures_rs1_field",
+        "rv_b_insn_ensures_rs2_field",
+        "rv_b_insn_ensures_immediate_4_1",
+        "rv_b_insn_ensures_immediate_10_5",
+        "rv_b_insn_ensures_immediate_11",
+        "rv_b_insn_ensures_immediate_12",
+        "rv_u_insn_ensures_opcode_field",
+        "rv_u_insn_ensures_rd_field",
+        "rv_u_insn_ensures_immediate_field",
+        "rv_j_insn_ensures_opcode_field",
+        "rv_j_insn_ensures_rd_field",
+        "rv_j_insn_ensures_immediate_10_1",
+        "rv_j_insn_ensures_immediate_11",
+        "rv_j_insn_ensures_immediate_19_12",
+        "rv_j_insn_ensures_immediate_20",
+        "rv_amo_insn_ensures_opcode_field",
+        "rv_amo_insn_ensures_rd_field",
+        "rv_amo_insn_ensures_funct3_field",
+        "rv_amo_insn_ensures_rs1_field",
+        "rv_amo_insn_ensures_rs2_field",
+        "rv_amo_insn_ensures_release_field",
+        "rv_amo_insn_ensures_acquire_field",
+        "rv_amo_insn_ensures_funct5_field",
+        "fragma_riscv_roundtrip_i_ensures_roundtrip",
+        "fragma_riscv_roundtrip_s_ensures_roundtrip",
+        "fragma_riscv_roundtrip_b_ensures_roundtrip",
+        "fragma_riscv_roundtrip_u_ensures_roundtrip",
+        "fragma_riscv_roundtrip_j_ensures_roundtrip"
+      ],
+      "assumptions": [
+        "riscv-encoder-types",
+        "riscv-encoder-inline",
+        "riscv-encoder-field-domain"
+      ],
+      "claims": [
+        "runtime-safety",
+        "functional",
+        "termination",
+        "encode-decode-roundtrip"
+      ],
+      "caller_coverage": "project-witness-preconditions-require-proof; kernel-callers-unverified",
+      "expected_outcome": "All119 ordinary WP obligations and119 consolidated selected properties Valid in retained full-domain probe; fresh common gates required, smoke timeouts remain inconclusive.",
+      "wp_strategy": "fragma_riscv_math",
+      "wp_strategy_file": "riscv/annotated/encoder-fieldproof.h",
+      "wp_strategy_provers": [
+        "alt-ergo",
+        "z3"
+      ],
+      "wp_auto_depth": 32,
+      "wp_smoke_timeout": 2,
+      "review_context": {
+        "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+        "profile": "riscv64-gcc",
+        "toolchain_lock_sha256": "0d3557b20e4a0ed16e6a4fe8622aa3ecd1572b9b30d490c7c69b4be82d7f47cb",
+        "analysis": {
+          "wp_model": "Typed",
+          "arithmetic_flags": [
+            "-no-warn-signed-overflow",
+            "-no-warn-unsigned-overflow",
+            "-no-warn-signed-downcast",
+            "-no-warn-unsigned-downcast",
+            "-no-warn-right-shift-negative"
+          ],
+          "runtime_checks": {
+            "pointer_formation": "object-or-null"
+          }
+        },
+        "preprocessing": {
+          "cpp_command": "/usr/bin/riscv64-linux-gnu-gcc -march=rv64imac -mabi=lp64 -mno-save-restore -std=gnu11 -funsigned-char -fshort-wchar -fno-strict-overflow -fno-strict-aliasing -ffreestanding -nostdinc -D__KERNEL__ -E -C",
+          "annotations": "Frama-C native -pp-annot with target compiler",
+          "input_mode": "standalone",
+          "extra_args": [
+            "-std=gnu11"
+          ]
+        },
+        "proof_search": {
+          "wp_strategy": "fragma_riscv_math",
+          "wp_strategy_file": "riscv/annotated/encoder-fieldproof.h",
+          "wp_strategy_provers": [
+            "alt-ergo",
+            "z3"
+          ],
+          "wp_auto_depth": 32,
+          "wp_smoke_timeout": 2
+        },
+        "file_hashes": {
+          "riscv/annotated/base-encoders.proved.c": "76d431c2abcca06aed601acab6300952b8f11a747393a5c822f9ba971cbb1ec2",
+          "riscv/annotated/encoder-fieldproof.h": "90662472273b45f83a5000a804d3bcda755a9b1d2ed7ea160fc526a95e60d3df",
+          "riscv/annotated/base-encoders.kernel-model.c": "04b65f3dc25c8497d8193916a757c91e015af48ad8927214e571c15936edb4b6",
+          "riscv/annotated/encoder-verification.md": "dda60750c70aabb5689aad812a4fe4e90859c981dcff532333458891136f6d8d",
+          "riscv/annotated/base-encoders.verified.c": "51c3e7fdff75748186a6cdee8da32409d0fdf24dccbaafbe38627cba1fa904f1",
+          "build/sources/linux-b9b3e33b70b71/arch/riscv/net/bpf_jit.h": "9c3f7b8b416bbf55a4af160ed583c31c730e51a06b01be3faca56789063156ad",
+          "build/kernel/riscv64-gcc/fragma-build.json": "43f9e4d56e3b12175cbe4dde8e608c0a2a8fb90c979573672b6a0b4707313e4a",
+          "build/riscv-verified/baseline-2/profile/profile.json": "f602a96c8a5198424b15a43854db3ab885a7652bb6fbb06d717bf1b8a764bde8",
+          "toolchain/verified-prefix/opam/fragma/bin/frama-c": "815c916df2361e7af5a18125c97b37665e4eed91e76daa185d571706563e7ef2",
+          "toolchain/why3.conf": "9525b95cfc7ea73d1b8a404f915d33e388a03cfdb19e1527de3f26916f05f671",
+          "fragma/analysis_policy.py": "b674caa823c2e703ae81e4972967ac5ce8b6a8b34b6f5203e9b39e2b4dd618ff",
+          "docs/pointer-policy-review.md": "bf605644084d3d9c83563d21231a75107c3110c85933d6def5b3106cec1adca9",
+          "build/profile-checks/pointer-policy-final-20260906/riscv64-gcc/riscv64-gcc.yaml": "d8db6139b59c7af73a895f38366113d19c0a9165bd2376817b89c081abac393e"
+        },
+        "review_evidence": [
+          "riscv/annotated/encoder-verification.md",
+          "build/riscv-verified/proof-work/all-fields-5/receipt.json",
+          "build/riscv-verified/proof-work/all-fields-5/goals.json",
+          "build/riscv-verified/proof-work/all-fields-5/properties.tsv",
+          "build/riscv-verified/proof-work/all-fields-5/analysis.log",
+          "build/riscv-verified/baseline-2/receipt.json",
+          "docs/pointer-policy-review.md",
+          "build/pointer-formation-review/builtin-audit-review.md"
+        ],
+        "analysis_pipeline": {
+          "kind": "wp-rte",
+          "functions": [
+            "rv_r_insn",
+            "rv_i_insn",
+            "rv_s_insn",
+            "rv_b_insn",
+            "rv_u_insn",
+            "rv_j_insn",
+            "rv_amo_insn",
+            "fragma_riscv_roundtrip_i",
+            "fragma_riscv_roundtrip_s",
+            "fragma_riscv_roundtrip_b",
+            "fragma_riscv_roundtrip_u",
+            "fragma_riscv_roundtrip_j"
+          ]
+        }
+      },
+      "reviewed_smoke": [],
+      "reviewed_warnings": [
+        {
+          "plugin": "kernel:attrs:unknown",
+          "message": "Ignoring unknown attribute: __gnu_inline__",
+          "severity": "warning",
+          "functions": [
+            "rv_r_insn",
+            "rv_i_insn",
+            "rv_s_insn",
+            "rv_b_insn",
+            "rv_u_insn",
+            "rv_j_insn",
+            "rv_amo_insn",
+            "fragma_riscv_roundtrip_i",
+            "fragma_riscv_roundtrip_s",
+            "fragma_riscv_roundtrip_b",
+            "fragma_riscv_roundtrip_u",
+            "fragma_riscv_roundtrip_j"
+          ],
+          "reason": "The real configured kernel-header fixture checks the exact inline spelling, scalar typedefs/promotions and every helper signature. All seven source bodies/declarators match the pinned kernel. These twelve functions perform only local scalar integer operations and six direct selected calls; no assembly, instrumentation, address-dependent operation or external function contract is modeled. GNU inline linkage/inlining does not change the integer relations being proved.",
+          "file_hashes": {
+            "riscv/annotated/base-encoders.proved.c": "76d431c2abcca06aed601acab6300952b8f11a747393a5c822f9ba971cbb1ec2",
+            "riscv/annotated/encoder-fieldproof.h": "90662472273b45f83a5000a804d3bcda755a9b1d2ed7ea160fc526a95e60d3df",
+            "riscv/annotated/base-encoders.kernel-model.c": "04b65f3dc25c8497d8193916a757c91e015af48ad8927214e571c15936edb4b6",
+            "riscv/annotated/encoder-verification.md": "dda60750c70aabb5689aad812a4fe4e90859c981dcff532333458891136f6d8d"
+          },
+          "review_evidence": [
+            "riscv/annotated/encoder-verification.md",
+            "build/riscv-verified/proof-work/all-fields-5/receipt.json",
+            "build/riscv-verified/proof-work/all-fields-5/goals.json",
+            "build/riscv-verified/proof-work/all-fields-5/properties.tsv",
+            "build/riscv-verified/proof-work/all-fields-5/analysis.log",
+            "build/riscv-verified/baseline-2/receipt.json"
+          ],
+          "file": "riscv/annotated/base-encoders.proved.c",
+          "line": 25
+        },
+        {
+          "plugin": "wp",
+          "message": "Skipped RTE guards: unaligned pointers (\\aligned not supported)",
+          "severity": "warning",
+          "functions": [
+            "rv_r_insn",
+            "rv_i_insn",
+            "rv_s_insn",
+            "rv_b_insn",
+            "rv_u_insn",
+            "rv_j_insn",
+            "rv_amo_insn",
+            "fragma_riscv_roundtrip_i",
+            "fragma_riscv_roundtrip_s",
+            "fragma_riscv_roundtrip_b",
+            "fragma_riscv_roundtrip_u",
+            "fragma_riscv_roundtrip_j"
+          ],
+          "reason": "No selected function has a pointer parameter, pointer cast/arithmetic, dereference, array access or indirect memory operation. All values are local scalar integers. The unsupported alignment-guard class is inapplicable to this exact twelve-function source scope; the complete generated shift/frame/call obligations are still required.",
+          "file_hashes": {
+            "riscv/annotated/base-encoders.proved.c": "76d431c2abcca06aed601acab6300952b8f11a747393a5c822f9ba971cbb1ec2",
+            "riscv/annotated/encoder-fieldproof.h": "90662472273b45f83a5000a804d3bcda755a9b1d2ed7ea160fc526a95e60d3df",
+            "riscv/annotated/base-encoders.kernel-model.c": "04b65f3dc25c8497d8193916a757c91e015af48ad8927214e571c15936edb4b6",
+            "riscv/annotated/encoder-verification.md": "dda60750c70aabb5689aad812a4fe4e90859c981dcff532333458891136f6d8d"
+          },
+          "review_evidence": [
+            "riscv/annotated/encoder-verification.md",
+            "build/riscv-verified/proof-work/all-fields-5/receipt.json",
+            "build/riscv-verified/proof-work/all-fields-5/goals.json",
+            "build/riscv-verified/proof-work/all-fields-5/properties.tsv",
+            "build/riscv-verified/proof-work/all-fields-5/analysis.log",
+            "build/riscv-verified/baseline-2/receipt.json"
+          ]
+        },
+        {
+          "plugin": "wp",
+          "message": "Skipped RTE guards: invalid function pointer calls (\\valid_function not supported)",
+          "severity": "warning",
+          "functions": [
+            "rv_r_insn",
+            "rv_i_insn",
+            "rv_s_insn",
+            "rv_b_insn",
+            "rv_u_insn",
+            "rv_j_insn",
+            "rv_amo_insn",
+            "fragma_riscv_roundtrip_i",
+            "fragma_riscv_roundtrip_s",
+            "fragma_riscv_roundtrip_b",
+            "fragma_riscv_roundtrip_u",
+            "fragma_riscv_roundtrip_j"
+          ],
+          "reason": "There are no function pointers. rv_amo_insn calls rv_r_insn directly, and each of the five project decode witnesses directly calls its corresponding encoder. All six call edges, callee preconditions and every callee functional dependency are selected and Valid in the complete119-goal probe. No external function contract or omitted callee is assumed.",
+          "file_hashes": {
+            "riscv/annotated/base-encoders.proved.c": "76d431c2abcca06aed601acab6300952b8f11a747393a5c822f9ba971cbb1ec2",
+            "riscv/annotated/encoder-fieldproof.h": "90662472273b45f83a5000a804d3bcda755a9b1d2ed7ea160fc526a95e60d3df",
+            "riscv/annotated/base-encoders.kernel-model.c": "04b65f3dc25c8497d8193916a757c91e015af48ad8927214e571c15936edb4b6",
+            "riscv/annotated/encoder-verification.md": "dda60750c70aabb5689aad812a4fe4e90859c981dcff532333458891136f6d8d"
+          },
+          "review_evidence": [
+            "riscv/annotated/encoder-verification.md",
+            "build/riscv-verified/proof-work/all-fields-5/receipt.json",
+            "build/riscv-verified/proof-work/all-fields-5/goals.json",
+            "build/riscv-verified/proof-work/all-fields-5/properties.tsv",
+            "build/riscv-verified/proof-work/all-fields-5/analysis.log",
+            "build/riscv-verified/baseline-2/receipt.json"
+          ]
+        },
+        {
+          "plugin": "wp",
+          "message": "-wp-rte can annotate signed overflow because -warn-signed-overflow is not set",
+          "severity": "warning",
+          "functions": [
+            "rv_r_insn",
+            "rv_i_insn",
+            "rv_s_insn",
+            "rv_b_insn",
+            "rv_u_insn",
+            "rv_j_insn",
+            "rv_amo_insn",
+            "fragma_riscv_roundtrip_i",
+            "fragma_riscv_roundtrip_s",
+            "fragma_riscv_roundtrip_b",
+            "fragma_riscv_roundtrip_u",
+            "fragma_riscv_roundtrip_j"
+          ],
+          "reason": "The genuine configured kernel uses -fno-strict-overflow and the compiler-calibrated WP two-complement wrapping arithmetic policy. u8/u16 operands promote to signed32 before shifting, and these shifted values are not assumed below INT_MAX. u32 shifts and downcasts also retain modulo semantics. Every generated shift-count guard is proved. Full u16/u32 immediate domains remain unchanged; no overflow-avoidance precondition or ISO-C defect inference is added. Exact types, compiler flags, real-header fixture and compiler/EVA calibration evidence are bound by this review context.",
+          "file_hashes": {
+            "riscv/annotated/base-encoders.proved.c": "76d431c2abcca06aed601acab6300952b8f11a747393a5c822f9ba971cbb1ec2",
+            "riscv/annotated/encoder-fieldproof.h": "90662472273b45f83a5000a804d3bcda755a9b1d2ed7ea160fc526a95e60d3df",
+            "riscv/annotated/base-encoders.kernel-model.c": "04b65f3dc25c8497d8193916a757c91e015af48ad8927214e571c15936edb4b6",
+            "riscv/annotated/encoder-verification.md": "dda60750c70aabb5689aad812a4fe4e90859c981dcff532333458891136f6d8d"
+          },
+          "review_evidence": [
+            "riscv/annotated/encoder-verification.md",
+            "build/riscv-verified/proof-work/all-fields-5/receipt.json",
+            "build/riscv-verified/proof-work/all-fields-5/goals.json",
+            "build/riscv-verified/proof-work/all-fields-5/properties.tsv",
+            "build/riscv-verified/proof-work/all-fields-5/analysis.log",
+            "build/riscv-verified/baseline-2/receipt.json"
+          ]
+        },
+        {
+          "plugin": "wp",
+          "message": "Missing RTE guards",
+          "severity": "warning",
+          "functions": [
+            "rv_r_insn",
+            "rv_i_insn",
+            "rv_s_insn",
+            "rv_b_insn",
+            "rv_u_insn",
+            "rv_j_insn",
+            "rv_amo_insn",
+            "fragma_riscv_roundtrip_i",
+            "fragma_riscv_roundtrip_s",
+            "fragma_riscv_roundtrip_b",
+            "fragma_riscv_roundtrip_u",
+            "fragma_riscv_roundtrip_j"
+          ],
+          "reason": "This exact summary is reviewed only with the individually matched alignment, function-pointer and configured signed-overflow-policy diagnostics on the same twelve functions. All119 ordinary and119 consolidated selected properties, including47 named postconditions and every callee/call dependency, must still pass. No additional diagnostic, skipped guard class, missing goal, unsupported status or tool error is waived.",
+          "file_hashes": {
+            "riscv/annotated/base-encoders.proved.c": "76d431c2abcca06aed601acab6300952b8f11a747393a5c822f9ba971cbb1ec2",
+            "riscv/annotated/encoder-fieldproof.h": "90662472273b45f83a5000a804d3bcda755a9b1d2ed7ea160fc526a95e60d3df",
+            "riscv/annotated/base-encoders.kernel-model.c": "04b65f3dc25c8497d8193916a757c91e015af48ad8927214e571c15936edb4b6",
+            "riscv/annotated/encoder-verification.md": "dda60750c70aabb5689aad812a4fe4e90859c981dcff532333458891136f6d8d"
+          },
+          "review_evidence": [
+            "riscv/annotated/encoder-verification.md",
+            "build/riscv-verified/proof-work/all-fields-5/receipt.json",
+            "build/riscv-verified/proof-work/all-fields-5/goals.json",
+            "build/riscv-verified/proof-work/all-fields-5/properties.tsv",
+            "build/riscv-verified/proof-work/all-fields-5/analysis.log",
+            "build/riscv-verified/baseline-2/receipt.json"
+          ]
+        }
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "riscv-encoder-types",
+      "kind": "type-model",
+      "files": [
+        "riscv/annotated/base-encoders.verified.c",
+        "riscv/annotated/base-encoders.kernel-model.c",
+        "config/profiles.json",
+        "riscv/annotated/base-encoders.proved.c",
+        "riscv/annotated/encoder-fieldproof.h"
+      ],
+      "kernel_files": [
+        "include/linux/types.h",
+        "include/asm-generic/int-ll64.h",
+        "include/uapi/asm-generic/int-ll64.h",
+        "arch/riscv/net/bpf_jit.h"
+      ],
+      "symbols": [
+        "u8",
+        "u16",
+        "u32",
+        "int"
+      ],
+      "scope": "Configured riscv64-gcc only: unsigned char/short/int are 8/16/32 bits; u8/u16 shift operands promote to signed 32-bit int. Actual profile uses kernel wrap semantics.",
+      "justification": "Real-header model compilation checks exact typedef compatibility, widths, promotions, all seven function-pointer types, and configured ABI. Fresh profile calibration independently checks wrapping arithmetic and casts; no ISO-C shift-base defect claim is made.",
+      "review_status": "reviewed",
+      "implementation_proved": false,
+      "review_evidence": [
+        "riscv/annotated/base-encoders.kernel-model.c",
+        "riscv/ENCODERS.md",
+        "riscv/REPORTABILITY.md",
+        "riscv/annotated/encoder-verification.md"
+      ]
+    },
+    {
+      "id": "riscv-encoder-inline",
+      "kind": "frontend-model",
+      "files": [
+        "riscv/annotated/base-encoders.verified.c",
+        "riscv/annotated/base-encoders.kernel-model.c",
+        "riscv/annotated/base-encoders.proved.c",
+        "riscv/annotated/encoder-fieldproof.h"
+      ],
+      "kernel_files": [
+        "include/linux/compiler_types.h",
+        "include/linux/compiler_attributes.h",
+        "arch/riscv/net/bpf_jit.h"
+      ],
+      "symbols": [
+        "inline"
+      ],
+      "scope": "The checked inline macro expansion for seven sequential scalar helpers only. No assembly, pointers, traps, instrumentation or external callees are modeled.",
+      "justification": "Configured compiler fixture checks the exact inline spelling. Function bodies and declarators are token-identical to pinned kernel definitions; rv_amo_insn's only callee rv_r_insn is included in the same proved batch.",
+      "review_status": "reviewed",
+      "implementation_proved": false,
+      "review_evidence": [
+        "riscv/annotated/base-encoders.kernel-model.c",
+        "riscv/ENCODERS.md",
+        "riscv/annotated/encoder-verification.md"
+      ]
+    },
+    {
+      "id": "riscv-encoder-field-domain",
+      "kind": "input-domain",
+      "files": [
+        "riscv/annotated/base-encoders.verified.c",
+        "riscv/ENCODERS.md",
+        "riscv/annotated/base-encoders.proved.c",
+        "riscv/annotated/encoder-fieldproof.h"
+      ],
+      "kernel_files": [
+        "arch/riscv/net/bpf_jit.h"
+      ],
+      "symbols": [
+        "rs1",
+        "rs2",
+        "rd",
+        "opcode",
+        "funct3",
+        "funct7",
+        "funct5",
+        "aq",
+        "rl"
+      ],
+      "scope": "ISA-sized register/control fields only; every immediate retains its complete u16/u32 argument domain. Reserved opcode combinations are not claimed executable. Kernel caller coverage remains unverified.",
+      "justification": "RISC-V base format fields specify five-bit registers, seven-bit opcode/funct7, three-bit funct3; AMO has five-bit funct5 and one-bit aq/rl. These prevent neighboring-field contamination, not signed-shift overflow. High immediate bits are ignored as defined by the actual helper, including sign-extended negative inputs.",
+      "review_status": "reviewed",
+      "implementation_proved": false,
+      "review_evidence": [
+        "riscv/ENCODERS.md",
+        "riscv/annotated/base-encoders.verified.c",
+        "riscv/annotated/encoder-verification.md"
+      ]
+    }
+  ]
+}

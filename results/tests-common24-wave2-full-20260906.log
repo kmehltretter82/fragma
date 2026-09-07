@@ -1,0 +1,40 @@
+======================================================================
+FAIL: test_registered_reviews_bind_explicit_current_model_and_pipeline (test_suite_policy.SuitePolicyTests.test_registered_reviews_bind_explicit_current_model_and_pipeline) (target='common.unaligned24.arm')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/karl/linux-work/fragma/tests/test_suite_policy.py", line 41, in test_registered_reviews_bind_explicit_current_model_and_pipeline
+    self.assertEqual(context["file_hashes"][filename], sha256(root / filename))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '36396e2e760bfb4a7302001798b8247d45709a7d9aba73b23f0e840e02e8e8ed' != 'c4729612d3d2417b22845e2faf1332f86c5aa9fedebdf8a0a43f06ec1f88db3b'
+- 36396e2e760bfb4a7302001798b8247d45709a7d9aba73b23f0e840e02e8e8ed
++ c4729612d3d2417b22845e2faf1332f86c5aa9fedebdf8a0a43f06ec1f88db3b
+
+
+======================================================================
+FAIL: test_registered_reviews_bind_explicit_current_model_and_pipeline (test_suite_policy.SuitePolicyTests.test_registered_reviews_bind_explicit_current_model_and_pipeline) (target='common.unaligned24.powerpc32')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/karl/linux-work/fragma/tests/test_suite_policy.py", line 41, in test_registered_reviews_bind_explicit_current_model_and_pipeline
+    self.assertEqual(context["file_hashes"][filename], sha256(root / filename))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '36396e2e760bfb4a7302001798b8247d45709a7d9aba73b23f0e840e02e8e8ed' != 'c4729612d3d2417b22845e2faf1332f86c5aa9fedebdf8a0a43f06ec1f88db3b'
+- 36396e2e760bfb4a7302001798b8247d45709a7d9aba73b23f0e840e02e8e8ed
++ c4729612d3d2417b22845e2faf1332f86c5aa9fedebdf8a0a43f06ec1f88db3b
+
+
+======================================================================
+FAIL: test_registered_reviews_bind_explicit_current_model_and_pipeline (test_suite_policy.SuitePolicyTests.test_registered_reviews_bind_explicit_current_model_and_pipeline) (target='common.unaligned24.m68k')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/karl/linux-work/fragma/tests/test_suite_policy.py", line 41, in test_registered_reviews_bind_explicit_current_model_and_pipeline
+    self.assertEqual(context["file_hashes"][filename], sha256(root / filename))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '36396e2e760bfb4a7302001798b8247d45709a7d9aba73b23f0e840e02e8e8ed' != 'c4729612d3d2417b22845e2faf1332f86c5aa9fedebdf8a0a43f06ec1f88db3b'
+- 36396e2e760bfb4a7302001798b8247d45709a7d9aba73b23f0e840e02e8e8ed
++ c4729612d3d2417b22845e2faf1332f86c5aa9fedebdf8a0a43f06ec1f88db3b
+
+
+----------------------------------------------------------------------
+Ran 580 tests in 74.475s
+
+FAILED (failures=3)

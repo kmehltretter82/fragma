@@ -1,0 +1,4 @@
+opam-version: "2.0"
+# Intentionally empty package repository: the full switch export supplies every
+# pinned package definition. No moving repository index participates in setup.
+archive-mirrors: "https://opam.ocaml.org/cache"

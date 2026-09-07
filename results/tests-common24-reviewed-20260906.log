@@ -1,0 +1,20 @@
+======================================================================
+FAIL: test_registered_reviews_bind_explicit_current_model_and_pipeline (test_suite_policy.SuitePolicyTests.test_registered_reviews_bind_explicit_current_model_and_pipeline)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/karl/linux-work/fragma/tests/test_suite_policy.py", line 21, in test_registered_reviews_bind_explicit_current_model_and_pipeline
+    self.assertEqual(set(reviewed), {"string.verified.strnchr", "string.verified.strlcat",
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        "s390.unaligned24", "s390.unaligned48", "s390.tod_to_ns",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        "riscv.base-encoders", "arm64.cpuid"})
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Items in the first set but not the second:
+'common.unaligned24.m68k'
+'common.unaligned24.powerpc32'
+'common.unaligned24.arm'
+
+----------------------------------------------------------------------
+Ran 556 tests in 69.843s
+
+FAILED (failures=1)

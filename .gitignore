@@ -1,0 +1,82 @@
+# Workspace and editor state
+/.agents/
+/.codex/
+/.frama-c/
+.DS_Store
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+.env
+.env.*
+!.env.example
+!.env.sample
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Generated kernel build state and compilation databases
+/kbuild/
+/compile_commands.json
+**/compile_commands.json
+**/compile_commands.raw.json
+**/sweep-db.json
+*.o
+*.ko
+*.a
+*.so
+*.cmd
+
+# Downloaded and installed toolchains. Keep the lock, setup sources,
+# reference data, exports, and the pinned opam repository identity.
+/toolchain/downloads/
+/toolchain/verified-build/
+/toolchain/verified-prefix/
+/toolchain/runtime-prefix/
+/toolchain/prefix/
+/toolchain/cvc5-Linux-x86_64-static/
+/toolchain/gmp-6.3.0/
+/toolchain/z3-4.13.4-x64-glibc-2.35/
+/toolchain/*.zip
+/toolchain/*.tar.*
+/toolchain/install.log
+
+# Kernel snapshots, prepared builds, and generated private-provider trees.
+# Keep the authored provider notes, scripts, policies, and patch series.
+/build/*
+!/build/framac-alignment-provider-20260907/
+/build/framac-alignment-provider-20260907/*
+!/build/framac-alignment-provider-20260907/*.md
+!/build/framac-alignment-provider-20260907/*.py
+!/build/framac-alignment-provider-20260907/*.yaml
+!/build/framac-alignment-provider-20260907/patches/
+/build/framac-alignment-provider-20260907/patches/*
+!/build/framac-alignment-provider-20260907/patches/*.patch
+!/build/framac-alignment-provider-20260907/patches/*.md
+
+# Generated analyzer/runtime products.
+*.log
+/harness/a.out.frama.c
+/harness/*.e-acsl
+/harness/eacsl_cex
+/harness/eacsl_fault_cex
+/riscv/repro/init
+/riscv/repro/init_glibc
+/riscv/repro/*.cpio
+
+# Full retained evidence is intentionally local. Publish only compact summaries,
+# coverage tables, and the small top-level/test audit records linked by docs.
+/results/*
+!/results/*.json
+!/results/*.log
+!/results/*/
+/results/*/*
+!/results/*/SUMMARY.md
+!/results/*/coverage.md
+!/results/*/ci.json
+!/results/*/pilot-audit.json
+!/results/*/pilot-audit-tests.log
+!/results/*/suite/
+/results/*/suite/*
+!/results/*/suite/SUMMARY.md

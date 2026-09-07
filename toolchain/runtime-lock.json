@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "host": {"system": "Linux", "machine": "x86_64"},
+  "artifact": {
+    "package": "qemu-user",
+    "version": "1:10.2.1+ds-1ubuntu3.2",
+    "file": "qemu-user_10.2.1+ds-1ubuntu3.2_amd64.deb",
+    "url": "https://mirror.hetzner.com/ubuntu/packages/pool/universe/q/qemu/qemu-user_10.2.1+ds-1ubuntu3.2_amd64.deb",
+    "sha256": "f0585a9676a039f46607f185b3657c1e78c1ba4187595724cc567fcc1ae0d1b9",
+    "size": 14771936,
+    "checksum_origin": "Configured Ubuntu resolute-updates apt index, observed 2026-09-06; upstream signatures not independently reauthenticated by this setup helper."
+  },
+  "probe": {"binary": "usr/bin/qemu-s390x", "version_prefix": "qemu-s390x version 10.2.1"},
+  "scope": "Optional statically linked Linux user-mode emulators on the x86-64 host. Availability alone establishes neither a target proof nor runtime corroboration.",
+  "limitations": [
+    "Extract data files only into a new local prefix; no package registration, maintainer scripts, binfmt registration, or service changes.",
+    "QEMU, host kernel/hardware and any separately linked target runtime remain trusted; user-mode checks do not execute a complete kernel.",
+    "This optional runtime lock is independent of the core proof-toolchain lock; dependent runtime evidence must explicitly bind it."
+  ]
+}

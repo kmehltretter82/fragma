@@ -1,0 +1,474 @@
+{
+  "schema_version": 1,
+  "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+  "targets": [
+    {
+      "id": "calibration.string.truncation.eva",
+      "suite": "calibration",
+      "role": "calibration",
+      "profile": "x86_64-gcc",
+      "source": "lib/string.c",
+      "harness": "harness/string_calibration.c",
+      "specs": "harness/specs.sensitivity.h",
+      "functions": [
+        "strlcat"
+      ],
+      "analysis": "eva",
+      "input_mode": "kernel-tu",
+      "provenance": {
+        "mode": "translation-unit"
+      },
+      "driver": "harness/string_sensitivity.c",
+      "entry": "fragma_string_truncation",
+      "required_properties": [
+        "truncation_attempted_length",
+        "truncation_preserved_prefix",
+        "truncation_exact_copy",
+        "truncation_exact_nul",
+        "truncation_outside_capacity_unchanged",
+        "truncation_source_unchanged",
+        "return_is_stored_length_REFUTED"
+      ],
+      "expected_invalid": [
+        "return_is_stored_length_REFUTED"
+      ],
+      "assumptions": [
+        "string-sensitivity-drivers",
+        "string-sensitivity-frontend",
+        "string-sensitivity-memcpy"
+      ],
+      "claims": [],
+      "caller_coverage": "not-applicable",
+      "tested_contract_properties": [
+        "strlcat_attempted_length_modulo",
+        "strlcat_preserved_destination_prefix",
+        "strlcat_exact_source_prefix",
+        "strlcat_exact_resulting_length",
+        "strlcat_terminated_in_capacity"
+      ],
+      "calibration_scope": "Bounded valid-input specification sensitivity; deliberately false driver property, unchanged kernel body; not a kernel defect or universal correctness result.",
+      "eva_auto_builtins": false,
+      "eva_builtins": [
+        "memcpy:Frama_C_memcpy"
+      ],
+      "specification_reference": {
+        "harness": "annotated/string.verified.c",
+        "specs": "annotated/specs.verified.h",
+        "target": "string.verified.strlcat"
+      }
+    },
+    {
+      "id": "calibration.string.no_copy_room.eva",
+      "suite": "calibration",
+      "role": "calibration",
+      "profile": "x86_64-gcc",
+      "source": "lib/string.c",
+      "harness": "harness/string_calibration.c",
+      "specs": "harness/specs.sensitivity.h",
+      "functions": [
+        "strlcat"
+      ],
+      "analysis": "eva",
+      "input_mode": "kernel-tu",
+      "provenance": {
+        "mode": "translation-unit"
+      },
+      "driver": "harness/string_sensitivity.c",
+      "entry": "fragma_string_no_copy_room",
+      "required_properties": [
+        "no_room_attempted_length",
+        "no_room_preserved_string",
+        "every_nonempty_source_adds_byte_REFUTED"
+      ],
+      "expected_invalid": [
+        "every_nonempty_source_adds_byte_REFUTED"
+      ],
+      "assumptions": [
+        "string-sensitivity-drivers",
+        "string-sensitivity-frontend",
+        "string-sensitivity-memcpy"
+      ],
+      "claims": [],
+      "caller_coverage": "not-applicable",
+      "tested_contract_properties": [
+        "strlcat_attempted_length_modulo",
+        "strlcat_preserved_destination_prefix",
+        "strlcat_exact_source_prefix",
+        "strlcat_exact_resulting_length"
+      ],
+      "calibration_scope": "Bounded valid-input specification sensitivity; deliberately false driver property, unchanged kernel body; not a kernel defect or universal correctness result.",
+      "eva_auto_builtins": false,
+      "eva_builtins": [
+        "memcpy:Frama_C_memcpy"
+      ],
+      "specification_reference": {
+        "harness": "annotated/string.verified.c",
+        "specs": "annotated/specs.verified.h",
+        "target": "string.verified.strlcat"
+      }
+    },
+    {
+      "id": "calibration.string.full_copy.eva",
+      "suite": "calibration",
+      "role": "calibration",
+      "profile": "x86_64-gcc",
+      "source": "lib/string.c",
+      "harness": "harness/string_calibration.c",
+      "specs": "harness/specs.sensitivity.h",
+      "functions": [
+        "strlcat"
+      ],
+      "analysis": "eva",
+      "input_mode": "kernel-tu",
+      "provenance": {
+        "mode": "translation-unit"
+      },
+      "driver": "harness/string_sensitivity.c",
+      "entry": "fragma_string_full_copy",
+      "required_properties": [
+        "full_copy_attempted_length",
+        "full_copy_exact_bytes",
+        "full_copy_exact_nul",
+        "full_copy_tail_unchanged",
+        "reversed_copy_is_equivalent_REFUTED"
+      ],
+      "expected_invalid": [
+        "reversed_copy_is_equivalent_REFUTED"
+      ],
+      "assumptions": [
+        "string-sensitivity-drivers",
+        "string-sensitivity-frontend",
+        "string-sensitivity-memcpy"
+      ],
+      "claims": [],
+      "caller_coverage": "not-applicable",
+      "tested_contract_properties": [
+        "strlcat_exact_source_prefix",
+        "strlcat_exact_resulting_length",
+        "strlcat_terminated_in_capacity"
+      ],
+      "calibration_scope": "Bounded valid-input specification sensitivity; deliberately false driver property, unchanged kernel body; not a kernel defect or universal correctness result.",
+      "eva_auto_builtins": false,
+      "eva_builtins": [
+        "memcpy:Frama_C_memcpy"
+      ],
+      "specification_reference": {
+        "harness": "annotated/string.verified.c",
+        "specs": "annotated/specs.verified.h",
+        "target": "string.verified.strlcat"
+      }
+    },
+    {
+      "id": "calibration.string.first_match.eva",
+      "suite": "calibration",
+      "role": "calibration",
+      "profile": "x86_64-gcc",
+      "source": "lib/string.c",
+      "harness": "harness/string_calibration.c",
+      "specs": "harness/specs.sensitivity.h",
+      "functions": [
+        "strnchr"
+      ],
+      "analysis": "eva",
+      "input_mode": "kernel-tu",
+      "provenance": {
+        "mode": "translation-unit"
+      },
+      "driver": "harness/string_sensitivity.c",
+      "entry": "fragma_string_first_match",
+      "required_properties": [
+        "first_match_exact_pointer",
+        "first_match_character",
+        "any_matching_pointer_is_first_REFUTED"
+      ],
+      "expected_invalid": [
+        "any_matching_pointer_is_first_REFUTED"
+      ],
+      "assumptions": [
+        "string-sensitivity-drivers",
+        "string-sensitivity-frontend"
+      ],
+      "claims": [],
+      "caller_coverage": "not-applicable",
+      "tested_contract_properties": [
+        "strnchr_found_in_range",
+        "strnchr_found_first"
+      ],
+      "calibration_scope": "Bounded valid-input specification sensitivity; deliberately false driver property, unchanged kernel body; not a kernel defect or universal correctness result.",
+      "eva_auto_builtins": false,
+      "eva_builtins": [
+        "memcpy:Frama_C_memcpy"
+      ],
+      "specification_reference": {
+        "harness": "annotated/string.verified.c",
+        "specs": "annotated/specs.verified.h",
+        "target": "string.verified.strnchr"
+      }
+    },
+    {
+      "id": "calibration.string.nul_conversion.eva",
+      "suite": "calibration",
+      "role": "calibration",
+      "profile": "x86_64-gcc",
+      "source": "lib/string.c",
+      "harness": "harness/string_calibration.c",
+      "specs": "harness/specs.sensitivity.h",
+      "functions": [
+        "strnchr"
+      ],
+      "analysis": "eva",
+      "input_mode": "kernel-tu",
+      "provenance": {
+        "mode": "translation-unit"
+      },
+      "driver": "harness/string_sensitivity.c",
+      "entry": "fragma_string_nul_conversion",
+      "required_properties": [
+        "converted_character_is_nul",
+        "nul_after_conversion_found",
+        "nul_search_never_matches_REFUTED"
+      ],
+      "expected_invalid": [
+        "nul_search_never_matches_REFUTED"
+      ],
+      "assumptions": [
+        "string-sensitivity-drivers",
+        "string-sensitivity-frontend"
+      ],
+      "claims": [],
+      "caller_coverage": "not-applicable",
+      "tested_contract_properties": [
+        "strnchr_found_in_range",
+        "strnchr_null_means_absent"
+      ],
+      "calibration_scope": "Bounded valid-input specification sensitivity; deliberately false driver property, unchanged kernel body; not a kernel defect or universal correctness result.",
+      "eva_auto_builtins": false,
+      "eva_builtins": [
+        "memcpy:Frama_C_memcpy"
+      ],
+      "specification_reference": {
+        "harness": "annotated/string.verified.c",
+        "specs": "annotated/specs.verified.h",
+        "target": "string.verified.strnchr"
+      }
+    },
+    {
+      "id": "calibration.string.early_nul.eva",
+      "suite": "calibration",
+      "role": "calibration",
+      "profile": "x86_64-gcc",
+      "source": "lib/string.c",
+      "harness": "harness/string_calibration.c",
+      "specs": "harness/specs.sensitivity.h",
+      "functions": [
+        "strnchr"
+      ],
+      "analysis": "eva",
+      "input_mode": "kernel-tu",
+      "provenance": {
+        "mode": "translation-unit"
+      },
+      "driver": "harness/string_sensitivity.c",
+      "entry": "fragma_string_early_nul",
+      "required_properties": [
+        "early_nul_returns_absent",
+        "early_nul_prefix_readable",
+        "full_count_storage_is_necessary_REFUTED"
+      ],
+      "expected_invalid": [
+        "full_count_storage_is_necessary_REFUTED"
+      ],
+      "assumptions": [
+        "string-sensitivity-drivers",
+        "string-sensitivity-frontend"
+      ],
+      "claims": [],
+      "caller_coverage": "not-applicable",
+      "tested_contract_properties": [
+        "strnchr_readable_scan",
+        "strnchr_null_means_absent"
+      ],
+      "calibration_scope": "Bounded valid-input specification sensitivity; deliberately false driver property, unchanged kernel body; not a kernel defect or universal correctness result.",
+      "eva_auto_builtins": false,
+      "eva_builtins": [
+        "memcpy:Frama_C_memcpy"
+      ],
+      "specification_reference": {
+        "harness": "annotated/string.verified.c",
+        "specs": "annotated/specs.verified.h",
+        "target": "string.verified.strnchr"
+      }
+    },
+    {
+      "id": "calibration.string.zero_count.eva",
+      "suite": "calibration",
+      "role": "calibration",
+      "profile": "x86_64-gcc",
+      "source": "lib/string.c",
+      "harness": "harness/string_calibration.c",
+      "specs": "harness/specs.sensitivity.h",
+      "functions": [
+        "strnchr"
+      ],
+      "analysis": "eva",
+      "input_mode": "kernel-tu",
+      "provenance": {
+        "mode": "translation-unit"
+      },
+      "driver": "harness/string_sensitivity.c",
+      "entry": "fragma_string_zero_count",
+      "required_properties": [
+        "zero_count_returns_null",
+        "zero_count_pointer_unchanged",
+        "zero_count_requires_readable_storage_REFUTED"
+      ],
+      "expected_invalid": [
+        "zero_count_requires_readable_storage_REFUTED"
+      ],
+      "assumptions": [
+        "string-sensitivity-drivers",
+        "string-sensitivity-frontend"
+      ],
+      "claims": [],
+      "caller_coverage": "not-applicable",
+      "tested_contract_properties": [
+        "strnchr_readable_scan",
+        "strnchr_zero_count"
+      ],
+      "calibration_scope": "Bounded valid-input specification sensitivity; deliberately false driver property, unchanged kernel body; not a kernel defect or universal correctness result.",
+      "eva_auto_builtins": false,
+      "eva_builtins": [
+        "memcpy:Frama_C_memcpy"
+      ],
+      "specification_reference": {
+        "harness": "annotated/string.verified.c",
+        "specs": "annotated/specs.verified.h",
+        "target": "string.verified.strnchr"
+      }
+    },
+    {
+      "id": "calibration.string.count_cutoff.eva",
+      "suite": "calibration",
+      "role": "calibration",
+      "profile": "x86_64-gcc",
+      "source": "lib/string.c",
+      "harness": "harness/string_calibration.c",
+      "specs": "harness/specs.sensitivity.h",
+      "functions": [
+        "strnchr"
+      ],
+      "analysis": "eva",
+      "input_mode": "kernel-tu",
+      "provenance": {
+        "mode": "translation-unit"
+      },
+      "driver": "harness/string_sensitivity.c",
+      "entry": "fragma_string_count_cutoff",
+      "required_properties": [
+        "count_cutoff_returns_absent",
+        "count_cutoff_input_readable",
+        "search_ignores_count_REFUTED"
+      ],
+      "expected_invalid": [
+        "search_ignores_count_REFUTED"
+      ],
+      "assumptions": [
+        "string-sensitivity-drivers",
+        "string-sensitivity-frontend"
+      ],
+      "claims": [],
+      "caller_coverage": "not-applicable",
+      "tested_contract_properties": [
+        "strnchr_readable_scan",
+        "strnchr_null_means_absent"
+      ],
+      "calibration_scope": "Bounded valid-input specification sensitivity; deliberately false driver property, unchanged kernel body; not a kernel defect or universal correctness result.",
+      "eva_auto_builtins": false,
+      "eva_builtins": [
+        "memcpy:Frama_C_memcpy"
+      ],
+      "specification_reference": {
+        "harness": "annotated/string.verified.c",
+        "specs": "annotated/specs.verified.h",
+        "target": "string.verified.strnchr"
+      }
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "string-sensitivity-drivers",
+      "kind": "calibration-driver",
+      "files": [
+        "harness/string_sensitivity.c",
+        "harness/specs.sensitivity.h"
+      ],
+      "kernel_files": [
+        "lib/string.c",
+        "include/linux/types.h"
+      ],
+      "symbols": [
+        "size_t",
+        "char",
+        "strlcat",
+        "strnchr"
+      ],
+      "scope": "Only eight bounded EVA entries on configured x86_64-gcc; driver unsigned long declarations must match kernel size_t, and char256 conversion uses checked unsigned 8-bit plain char.",
+      "justification": "Local arrays and constants satisfy the reviewed selected API domains; negative assertions are intentionally false candidate properties, never source changes or preconditions. EVA results require independent positive named properties and unconditional invalidity of exactly the named negative.",
+      "review_evidence": [
+        "harness/STRING-SENSITIVITY.md"
+      ],
+      "review_status": "reviewed",
+      "implementation_proved": false
+    },
+    {
+      "id": "string-sensitivity-frontend",
+      "kind": "frontend-model",
+      "files": [
+        "harness/string_calibration.c",
+        "harness/specs.sensitivity.h",
+        "annotated/compat.h",
+        "annotated/override/asm/bug.h",
+        "annotated/override/asm/string_64.h"
+      ],
+      "kernel_files": [
+        "lib/string.c"
+      ],
+      "symbols": [
+        "size_t",
+        "char",
+        "BUG_ON",
+        "fragma_unreachable"
+      ],
+      "scope": "Only selected sequential string C bodies in the genuine pinned x86_64-gcc configuration and bounded driver inputs. No trap, asm, concurrent, or unselected function behavior is certified.",
+      "justification": "Whole-TU token gate preserves kernel C; configured compiler headers establish size_t and unsigned plain char. Existing frontend/header substitutions are consumed and hashed. The normal-domain assert dsize<count is Valid before BUG_ON on all append samples, so replaced trap is never reached. Search has no trap/calls. Strong quantified contracts are intentionally absent to make this EVA evaluation independent.",
+      "review_evidence": [
+        "harness/STRING-SENSITIVITY.md"
+      ],
+      "review_status": "reviewed",
+      "implementation_proved": false
+    },
+    {
+      "id": "string-sensitivity-memcpy",
+      "kind": "external-contract",
+      "files": [
+        "harness/specs.sensitivity.h",
+        "config/string-sensitivity-targets.json"
+      ],
+      "kernel_files": [
+        "lib/string.c"
+      ],
+      "symbols": [
+        "memcpy",
+        "__builtin_memcpy",
+        "Frama_C_memcpy"
+      ],
+      "scope": "Only separated readable/writable byte extents in three bounded append examples; all call preconditions are checked by EVA.",
+      "justification": "GNU __builtin_memcpy spelling maps to memcpy and explicit EVA Frama_C_memcpy model provides exact byte values. Automatic builtins are disabled so generic kernel strlen executes. Neither kernel memcpy assembly nor Frama-C builtin implementation is proved by this calibration.",
+      "review_evidence": [
+        "harness/STRING-SENSITIVITY.md"
+      ],
+      "review_status": "reviewed",
+      "implementation_proved": false
+    }
+  ]
+}

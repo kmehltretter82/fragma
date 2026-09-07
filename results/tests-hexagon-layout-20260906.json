@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "kind": "unittest-regression-reproduction",
+  "cwd": "/home/karl/linux-work/fragma",
+  "command": {
+    "argv": [
+      "env",
+      "-i",
+      "PATH=/usr/bin:/bin",
+      "LANG=C.UTF-8",
+      "PYTHONDONTWRITEBYTECODE=1",
+      "FRAGMA_TOOLCHAIN_PREFIX=/home/karl/linux-work/fragma/toolchain/verified-prefix",
+      "FRAGMA_KERNEL_TREE=/home/karl/linux-work/linux",
+      "FRAGMA_POINTER_AUDIT_RESULTS=/home/karl/linux-work/fragma/build/pointer-formation-review",
+      "FRAGMA_POINTER_BUILTIN_RESULTS=/home/karl/linux-work/fragma/results/pointer-policy-non-s390-20260906",
+      "FRAGMA_REPLAY_PROJECT=/home/karl/linux-work/fragma",
+      "FRAGMA_STRING_NATIVE_RESULTS=/home/karl/linux-work/fragma/build/string-sensitivity/native-9",
+      "FRAGMA_S390_NATIVE_RESULTS=/home/karl/linux-work/fragma/build/s390-sensitivity/native-5",
+      "FRAGMA_RISCV_PROOF_RESULTS=/home/karl/linux-work/fragma/build/riscv-verified/proof-work/all-fields-5",
+      "FRAGMA_UM_PROFILE_RESULTS=/home/karl/linux-work/fragma/build/profile-checks/pointer-policy-final-20260906/um-x86_64-gcc",
+      "FRAGMA_ARM64_CPUID_RESULTS=/home/karl/linux-work/fragma/results/pointer-policy-final-ci-20260906/suite/arm64.cpuid",
+      "FRAGMA_STRING_SENSITIVITY_RESULTS=/home/karl/linux-work/fragma/build/string-sensitivity/baseline-3",
+      "FRAGMA_COMMON24_READBACK=/home/karl/linux-work/fragma/build/common-byte-calibration-work/run-2",
+      "FRAGMA_COMMON24_CONTROLS_READBACK=/home/karl/linux-work/fragma/build/common-byte-port-work/fixture-1",
+      "FRAGMA_COMMON24_NEXT_PROFILE_MODELS=/home/karl/linux-work/fragma/build/profile-checks/pointer-policy-final-20260906",
+      "FRAGMA_COMMON24_CONTEXT_RESULTS=/home/karl/linux-work/fragma/results/common24-integration-20260906",
+      "FRAGMA_COMMON24_CONTEXT_KERNEL=/home/karl/linux-work/linux",
+      "FRAGMA_COMMON24_ASSERTION_RESULTS=/home/karl/linux-work/fragma/results/common24-wave2-initial-20260906",
+      "FRAGMA_COMMON24_ELF_EVIDENCE=/home/karl/linux-work/fragma/build/common-byte-calibration-work/run-2",
+      "FRAGMA_COMMON24_ALPHA_ELF_EVIDENCE=/home/karl/linux-work/fragma/build/common24-wave3-compiler-work/initial-1/common.unaligned24.alpha",
+      "FRAGMA_COMMON24_ALPHA_LEGACY_EVIDENCE=/home/karl/linux-work/fragma/results/common24-six-reviewed-20260906",
+      "FRAGMA_COMMON24_SIZE_RECEIPTS=[\"/home/karl/linux-work/fragma/build/common24-wave3-compiler-work/corrected-1/common.unaligned24.x86_64/compiler-calibration/receipt.json\",\"/home/karl/linux-work/fragma/build/common24-wave3-compiler-work/corrected-1/common.unaligned24.um-x86_64/compiler-calibration/receipt.json\"]",
+      "python3",
+      "-"
+    ],
+    "stdin": "import hashlib\nimport json\nfrom pathlib import Path\nimport unittest\n\npath = Path('results/tests-hexagon-layout-20260906.log')\nwith path.open('x') as stream:\n    suite = unittest.defaultTestLoader.discover('tests')\n    result = unittest.TextTestRunner(stream=stream, verbosity=2).run(suite)\nprint(json.dumps({'tests': result.testsRun, 'failures': len(result.failures),\n                  'errors': len(result.errors), 'skips': len(result.skipped),\n                  'passed': result.wasSuccessful(), 'log': str(path.resolve()),\n                  'sha256': hashlib.sha256(path.read_bytes()).hexdigest()}, indent=2), flush=True)\nraise SystemExit(0 if result.wasSuccessful() else 1)\n",
+    "environment_policy": "env -i clears the inherited environment; only the explicit assignments in argv are supplied.",
+    "discovery": "unittest.defaultTestLoader.discover('tests')",
+    "runner": "unittest.TextTestRunner(stream=stream, verbosity=2)",
+    "log_open_mode": "x",
+    "reproduction_note": "These are the actual argv, stdin and working directory. To run again, change only the log path in stdin to a new unused filename; the recorded log is intentionally protected by exclusive creation. Do not overwrite or relabel this completed run."
+  },
+  "started_at": "2026-09-06T23:10:47.636871+00:00",
+  "completed_at": "2026-09-06T23:12:13.362202+00:00",
+  "status": "passed",
+  "actual_process": {
+    "exit_code": 0,
+    "stdout": "{\n  \"tests\": 867,\n  \"failures\": 0,\n  \"errors\": 0,\n  \"skips\": 0,\n  \"passed\": true,\n  \"log\": \"/home/karl/linux-work/fragma/results/tests-hexagon-layout-20260906.log\",\n  \"sha256\": \"00496e93b8d1d7d0f613b2843ad6c7c98fbf1f1cd9b035221bb18300ecc26362\"\n}\n",
+    "stderr": "",
+    "failure": null,
+    "timeout_seconds": 300,
+    "elapsed_seconds": 85.72530210501282
+  },
+  "result": {
+    "tests": 867,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "passed": true,
+    "log": "/home/karl/linux-work/fragma/results/tests-hexagon-layout-20260906.log",
+    "sha256": "00496e93b8d1d7d0f613b2843ad6c7c98fbf1f1cd9b035221bb18300ecc26362",
+    "exit_code": 0,
+    "verbose_passed_lines": 867,
+    "seconds_reported_by_unittest": 85.432
+  },
+  "log": {
+    "path": "/home/karl/linux-work/fragma/results/tests-hexagon-layout-20260906.log",
+    "sha256": "00496e93b8d1d7d0f613b2843ad6c7c98fbf1f1cd9b035221bb18300ecc26362"
+  },
+  "previous_invocation_input": {
+    "path": "/home/karl/linux-work/fragma/results/tests-hexagon-adapter-20260906.json",
+    "sha256": "b029d935ae77cefae63a34b6cc4c26243629afcf2f4e5f04ac18b048714e6be5"
+  },
+  "frozen_inputs_before": [
+    {
+      "path": "/home/karl/linux-work/fragma/fragma/hexagon_machdep.py",
+      "sha256": "8bf53dabea43a0830df3e08cfbef5847d4135b560aec896a776dcddf05c505fa"
+    },
+    {
+      "path": "/home/karl/linux-work/fragma/fragma/hexagon_layout.py",
+      "sha256": "e6e79c6f4e2c009f1a0dda6cd4bc120a396f9ecf05a8276c3f05283664602467"
+    },
+    {
+      "path": "/home/karl/linux-work/fragma/tests/test_hexagon_machdep.py",
+      "sha256": "2c4801f8a53d66012c1ef463c1a87be677cb497a9e2a5ec05e457753aee3facd"
+    },
+    {
+      "path": "/home/karl/linux-work/fragma/tests/test_hexagon_machdep_transport.py",
+      "sha256": "d0c7edea6647fe2ee3f47105079dd13083910b1b66c77f9892b2a8b562b9eff3"
+    },
+    {
+      "path": "/home/karl/linux-work/fragma/tests/test_hexagon_machdep_layout_integration.py",
+      "sha256": "fd64af30b4b7f188bf1c58bb8b23e6213fd3149deb5c6c5dda1a49a0f86230da"
+    },
+    {
+      "path": "/home/karl/linux-work/fragma/tests/test_hexagon_layout.py",
+      "sha256": "e369c68fd70082c1d2a9243955b16d3436d17c37d1051ab02569206d9fc7f045"
+    },
+    {
+      "path": "/home/karl/linux-work/fragma/config/profiles.json",
+      "sha256": "194fc90ea8a5bc5c3836fadefdd3de9657cb61e4fcd32167ac27acdaebb34306"
+    },
+    {
+      "path": "/home/karl/linux-work/fragma/toolchain/lock.json",
+      "sha256": "0d3557b20e4a0ed16e6a4fe8622aa3ecd1572b9b30d490c7c69b4be82d7f47cb"
+    },
+    {
+      "path": "/home/karl/linux-work/fragma/results/tests-hexagon-adapter-20260906.json",
+      "sha256": "b029d935ae77cefae63a34b6cc4c26243629afcf2f4e5f04ac18b048714e6be5"
+    },
+    {
+      "path": "/home/karl/linux-work/fragma/build/run-hexagon-adapter-regression-20260906.py",
+      "sha256": "8dce06eb8ded3e425160f0683192bfcd1cebc4d0634db0260391514b0dfe4b0c"
+    },
+    {
+      "path": "/home/karl/linux-work/fragma/build/run-hexagon-layout-regression-20260906.py",
+      "sha256": "8e01eb6f5d58121825c8f75fcc9aa5fa15e6bbd10381cb41f2201b88ced15473"
+    }
+  ],
+  "frozen_inputs_after": [
+    {
+      "path": "/home/karl/linux-work/fragma/fragma/hexagon_machdep.py",
+      "sha256": "8bf53dabea43a0830df3e08cfbef5847d4135b560aec896a776dcddf05c505fa"
+    },
+    {
+      "path": "/home/karl/linux-work/fragma/fragma/hexagon_layout.py",
+      "sha256": "e6e79c6f4e2c009f1a0dda6cd4bc120a396f9ecf05a8276c3f05283664602467"
+    },
+    {
+      "path": "/home/karl/linux-work/fragma/tests/test_hexagon_machdep.py",
+      "sha256": "2c4801f8a53d66012c1ef463c1a87be677cb497a9e2a5ec05e457753aee3facd"
+    },
+    {
+      "path": "/home/karl/linux-work/fragma/tests/test_hexagon_machdep_transport.py",
+      "sha256": "d0c7edea6647fe2ee3f47105079dd13083910b1b66c77f9892b2a8b562b9eff3"
+    },
+    {
+      "path": "/home/karl/linux-work/fragma/tests/test_hexagon_machdep_layout_integration.py",
+      "sha256": "fd64af30b4b7f188bf1c58bb8b23e6213fd3149deb5c6c5dda1a49a0f86230da"
+    },
+    {
+      "path": "/home/karl/linux-work/fragma/tests/test_hexagon_layout.py",
+      "sha256": "e369c68fd70082c1d2a9243955b16d3436d17c37d1051ab02569206d9fc7f045"
+    },
+    {
+      "path": "/home/karl/linux-work/fragma/config/profiles.json",
+      "sha256": "194fc90ea8a5bc5c3836fadefdd3de9657cb61e4fcd32167ac27acdaebb34306"
+    },
+    {
+      "path": "/home/karl/linux-work/fragma/toolchain/lock.json",
+      "sha256": "0d3557b20e4a0ed16e6a4fe8622aa3ecd1572b9b30d490c7c69b4be82d7f47cb"
+    },
+    {
+      "path": "/home/karl/linux-work/fragma/results/tests-hexagon-adapter-20260906.json",
+      "sha256": "b029d935ae77cefae63a34b6cc4c26243629afcf2f4e5f04ac18b048714e6be5"
+    },
+    {
+      "path": "/home/karl/linux-work/fragma/build/run-hexagon-adapter-regression-20260906.py",
+      "sha256": "8dce06eb8ded3e425160f0683192bfcd1cebc4d0634db0260391514b0dfe4b0c"
+    },
+    {
+      "path": "/home/karl/linux-work/fragma/build/run-hexagon-layout-regression-20260906.py",
+      "sha256": "8e01eb6f5d58121825c8f75fcc9aa5fa15e6bbd10381cb41f2201b88ced15473"
+    }
+  ],
+  "input_drift": false,
+  "drift_error": null,
+  "execution_boundaries": {
+    "retained_evidence": "The exact previous FRAGMA_* evidence paths are unchanged. Historical native, compiler, analyzer and proof receipts are read/validated, never regenerated or executed by this regression.",
+    "other_test_processes": "Existing tests use read-only Git operations, isolated temporary Git fixtures, inert executable/environment probes and bounded Python timeout/interruption checks. These are not target compiler/analyzer/native-harness runs.",
+    "hexagon_tests": "147 inert tests: 50 adapter source/parser/schema/ELF checks, 35 transport/control checks, 38 source-declaration/synthetic-ELF layout checks, and 24 producer-integration checks. All external compiler calls are mocked. Miniature generate model/schema and layout decoders are mocked where explicitly documented to test orchestration, not to establish genuine model acceptance.",
+    "separate_root_work": "Root-owned real generator, compiler/IR and analyzer work is independent of this regression and not included in its test count.",
+    "historical_fault_trap_oob_harnesses_executed": false,
+    "real_compiler_or_analyzer_runs": false,
+    "target_or_native_harness_execution": false,
+    "kernel_builds": false,
+    "downloads_or_installations": false,
+    "production_or_test_fixes_during_run": false,
+    "support_level_awarded": false
+  },
+  "limitations": "Exact explicit invocation and retained outcome, not a hermetic environment or independently captured whole-repository closure. Frozen identities cover two current providers, four Hexagon test modules, profile registry, tool lock, previous invocation/recorder and this recorder."
+}

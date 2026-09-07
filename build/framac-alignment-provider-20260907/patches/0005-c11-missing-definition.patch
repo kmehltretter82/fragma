@@ -1,0 +1,18 @@
+--- a/src/kernel_internals/typing/cabs2cil.ml
++++ b/src/kernel_internals/typing/cabs2cil.ml
+@@ -2543,6 +2543,15 @@
+       begin
+         (* C17 6.7.5 § 8 - Check _Alignas coherence, and update accordingly. *)
+ 
++        (* Check source presence before merging into the shared varinfo.
++           Valid zero and ignored high requests still specify _Alignas.
++           A later extern after a tentative definition is not [isadef]. *)
++        if Machine.clang_u32_alignment_policy () && isadef &&
++           Option.is_some oldvi.valignas && Option.is_none vi.valignas then
++          Kernel.abort ~current:true
++            "_Alignas must be specified on definition of %s because a prior declaration specifies it"
++            vi.vname;
++
+         let same_alignas_value al1 al2 =
+           if Machine.clang_u32_alignment_policy () then
+             let contribution e =

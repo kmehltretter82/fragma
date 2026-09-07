@@ -1,0 +1,26 @@
+--- a/src/kernel_internals/typing/cabs2cil.ml
++++ b/src/kernel_internals/typing/cabs2cil.ml
+@@ -201,13 +201,21 @@
+   inherit Cil.nopCilVisitor
+   method! vexpr e =
+     let unevaluated =
++      Machine.clang_u32_alignment_policy () &&
+       match e.enode with
++      | SizeOf typ ->
++        (* Query the actual layout: a pointer to a VLA still has fixed size.
++           A dynamic array must remain residual and retain its local checks. *)
++        begin
++          try ignore (Cil.bitsSizeOf typ); true
++          with Cil.SizeOfError _ -> false
++        end
+       | SizeOfE operand ->
+         not (Cil.is_variably_modified_type (Cil.typeOf operand))
+-      | AlignOfE _ -> true
++      | AlignOf _ | AlignOfE _ -> true
+       | _ -> false
+     in
+-    if Machine.clang_u32_alignment_policy () && unevaluated then begin
++    if unevaluated then begin
+       (* Static locals are hoisted. Fold the complete original query only
+          when the policy-aware folder can produce an integer without losing
+          declaration alignment. Residual/VLA references remain checked. *)

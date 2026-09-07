@@ -1,0 +1,7 @@
+(* These are solver/driver calibration goals, not kernel verification targets.
+   The negative goal is mathematically false and must never be reported Valid. *)
+theory ProverCalibration
+  use int.Int
+  goal linear_valid: forall x: int. x + 1 > x
+  goal linear_invalid: forall x: int. x + 1 = x
+end

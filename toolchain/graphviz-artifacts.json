@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "purpose": "Isolated dot -V prerequisite for conf-graphviz.0.1; graph rendering plugins are not claimed supported",
+  "artifacts": {
+    "graphviz-graphviz": {
+      "component": "graphviz-version-check",
+      "package": "graphviz",
+      "version": "14.1.2-1ubuntu1",
+      "file": "graphviz_14.1.2-1ubuntu1_amd64.deb",
+      "url": "https://mirror.hetzner.com/ubuntu/packages/pool/universe/g/graphviz/graphviz_14.1.2-1ubuntu1_amd64.deb",
+      "sha256": "deeba1629fdd86ce789329b287621b94575af7babf47aa37343a718dddb84aa6",
+      "size": 58550,
+      "checksum_origin": "configured Ubuntu resolute apt package index",
+      "dependencies": "libc6 (>= 2.34), libcgraph8 (>= 14.1.2), libgvc7 (>= 14.1.2), libgvpr2 (>= 14.1.2), libgvplugin-gd8, libgvplugin-pango8"
+    },
+    "graphviz-libcdt6": {
+      "component": "graphviz-version-check",
+      "package": "libcdt6",
+      "version": "14.1.2-1ubuntu1",
+      "file": "libcdt6_14.1.2-1ubuntu1_amd64.deb",
+      "url": "https://mirror.hetzner.com/ubuntu/packages/pool/universe/g/graphviz/libcdt6_14.1.2-1ubuntu1_amd64.deb",
+      "sha256": "5cdece41b30145cb87cf6d2e0a1de812269d3c80b066e109b6201f75abfe7243",
+      "size": 20146,
+      "checksum_origin": "configured Ubuntu resolute apt package index",
+      "dependencies": "libc6 (>= 2.4)"
+    },
+    "graphviz-libcgraph8": {
+      "component": "graphviz-version-check",
+      "package": "libcgraph8",
+      "version": "14.1.2-1ubuntu1",
+      "file": "libcgraph8_14.1.2-1ubuntu1_amd64.deb",
+      "url": "https://mirror.hetzner.com/ubuntu/packages/pool/universe/g/graphviz/libcgraph8_14.1.2-1ubuntu1_amd64.deb",
+      "sha256": "973d947573a467c36c1ebb3cbf31e134d4d2bdcf9cf2f4711613800749d434d0",
+      "size": 55328,
+      "checksum_origin": "configured Ubuntu resolute apt package index",
+      "dependencies": "libc6 (>= 2.38), libcdt6 (>= 14.1.2)"
+    },
+    "graphviz-libgvc7": {
+      "component": "graphviz-version-check",
+      "package": "libgvc7",
+      "version": "14.1.2-1ubuntu1",
+      "file": "libgvc7_14.1.2-1ubuntu1_amd64.deb",
+      "url": "https://mirror.hetzner.com/ubuntu/packages/pool/universe/g/graphviz/libgvc7_14.1.2-1ubuntu1_amd64.deb",
+      "sha256": "3059f000ecd4c681a24effba374844bd674b45dc744f4d971afcecba9c7dfea2",
+      "size": 397214,
+      "checksum_origin": "configured Ubuntu resolute apt package index",
+      "dependencies": "libc6 (>= 2.38), libcdt6 (>= 14.1.2), libcgraph8 (>= 14.1.2), libexpat1 (>= 2.0.1), libltdl7 (>= 2.5.4), libpathplan4 (>= 14.1.2), libxdot4 (>= 14.1.2), zlib1g (>= 1:1.2.11)"
+    },
+    "graphviz-libpathplan4": {
+      "component": "graphviz-version-check",
+      "package": "libpathplan4",
+      "version": "14.1.2-1ubuntu1",
+      "file": "libpathplan4_14.1.2-1ubuntu1_amd64.deb",
+      "url": "https://mirror.hetzner.com/ubuntu/packages/pool/universe/g/graphviz/libpathplan4_14.1.2-1ubuntu1_amd64.deb",
+      "sha256": "bbf4b3ce29246fa95ce6d62cf3f1d82bd2ca0c0e32e3ed5c1738118f9bf6b480",
+      "size": 26296,
+      "checksum_origin": "configured Ubuntu resolute apt package index",
+      "dependencies": "libc6 (>= 2.35)"
+    },
+    "graphviz-libxdot4": {
+      "component": "graphviz-version-check",
+      "package": "libxdot4",
+      "version": "14.1.2-1ubuntu1",
+      "file": "libxdot4_14.1.2-1ubuntu1_amd64.deb",
+      "url": "https://mirror.hetzner.com/ubuntu/packages/pool/universe/g/graphviz/libxdot4_14.1.2-1ubuntu1_amd64.deb",
+      "sha256": "c32b43a862d1e2d581cb7ec7d2e7834fddd864f14a9a3804a3a3574f2bd9cfd8",
+      "size": 23496,
+      "checksum_origin": "configured Ubuntu resolute apt package index",
+      "dependencies": "libc6 (>= 2.38)"
+    }
+  }
+}

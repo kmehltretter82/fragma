@@ -1,0 +1,244 @@
+{
+  "schema_version": 1,
+  "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+  "targets": [
+    {
+      "id": "arm64.cpuid",
+      "suite": "extended",
+      "role": "proof",
+      "profile": "arm64-gcc",
+      "source": "arch/arm64/include/asm/cpufeature.h",
+      "harness": "arm64/annotated/cpuid_extract.acsl.c",
+      "functions": [
+        "cpuid_feature_extract_signed_field_width",
+        "cpuid_feature_extract_unsigned_field_width"
+      ],
+      "analysis": "wp",
+      "input_mode": "standalone",
+      "provenance": {
+        "mode": "functions"
+      },
+      "required_properties": [
+        "cpuid_feature_extract_signed_field_width_assigns",
+        "cpuid_feature_extract_unsigned_field_width_assigns"
+      ],
+      "assumptions": [
+        "arm64-cpuid-configured-types",
+        "arm64-cpuid-pure-leaf-frontend"
+      ],
+      "claims": [
+        "runtime-safety"
+      ],
+      "caller_coverage": "historical-manual-review",
+      "kernel_model_check": "arm64/annotated/cpuid-kernel-model-check.c",
+      "review_context": {
+        "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+        "profile": "arm64-gcc",
+        "toolchain_lock_sha256": "0d3557b20e4a0ed16e6a4fe8622aa3ecd1572b9b30d490c7c69b4be82d7f47cb",
+        "analysis": {
+          "wp_model": "Typed",
+          "arithmetic_flags": [
+            "-no-warn-signed-overflow",
+            "-no-warn-unsigned-overflow",
+            "-no-warn-signed-downcast",
+            "-no-warn-unsigned-downcast",
+            "-no-warn-right-shift-negative"
+          ],
+          "runtime_checks": {
+            "pointer_formation": "object-or-null"
+          }
+        },
+        "preprocessing": {
+          "cpp_command": "/usr/bin/aarch64-linux-gnu-gcc -mgeneral-regs-only -mlittle-endian -std=gnu11 -funsigned-char -fshort-wchar -fno-strict-overflow -fno-strict-aliasing -ffreestanding -nostdinc -D__KERNEL__ -E -C",
+          "annotations": "Frama-C native -pp-annot with target compiler",
+          "input_mode": "standalone",
+          "extra_args": [
+            "-std=gnu11"
+          ]
+        },
+        "file_hashes": {
+          "arm64/annotated/cpuid_extract.acsl.c": "0642417abb3e112498f8779ca60bb9788409160a2669d7a28f297b8fab0bc41a",
+          "arm64/annotated/cpuid-kernel-model-check.c": "f8988e753cabcd7042a0a8fa5cfba748568a23e30209f29c2703837a1f438191",
+          "build/sources/linux-b9b3e33b70b71/arch/arm64/include/asm/cpufeature.h": "e292d3d4aa4da4293cd0244b692abc033104e117b40260c266d4894d41eb34af",
+          "build/kernel/arm64-gcc/fragma-build.json": "4cc98700c1f3de49c41f6ff246a1018117610ebc8ce45b0c42256fe56f875628",
+          "fragma/analysis_policy.py": "b674caa823c2e703ae81e4972967ac5ce8b6a8b34b6f5203e9b39e2b4dd618ff",
+          "docs/pointer-policy-review.md": "bf605644084d3d9c83563d21231a75107c3110c85933d6def5b3106cec1adca9",
+          "build/profile-checks/pointer-policy-final-20260906/arm64-gcc/arm64-gcc.yaml": "7a71dd718d73fd497a24a7484ea5d147cb2ea5927fe8c09e0e07148bc85d29fa"
+        },
+        "review_evidence": [
+          "arm64/CPUID.md",
+          "build/arm64-cpuid-review/candidate-2/fixture/receipt.json",
+          "results/all-registered-baseline-20260906/arm64.cpuid/result.json",
+          "docs/pointer-policy-review.md",
+          "build/pointer-formation-review/builtin-audit-review.md"
+        ],
+        "analysis_pipeline": {
+          "kind": "wp-rte",
+          "functions": [
+            "cpuid_feature_extract_signed_field_width",
+            "cpuid_feature_extract_unsigned_field_width"
+          ]
+        }
+      },
+      "reviewed_smoke": [],
+      "reviewed_warnings": [
+        {
+          "plugin": "wp",
+          "severity": "warning",
+          "message": "Skipped RTE guards: unaligned pointers (\\aligned not supported)",
+          "functions": [
+            "cpuid_feature_extract_signed_field_width",
+            "cpuid_feature_extract_unsigned_field_width"
+          ],
+          "reason": "Both selected bodies operate only on scalar value parameters and constants. They contain no pointer dereference, object access, or pointer arithmetic. The actual configured kernel fixture checks both signatures and exact scalar type identities; globals take function addresses only. No alignment-sensitive operation is omitted in these two bodies.",
+          "file_hashes": {
+            "arm64/annotated/cpuid_extract.acsl.c": "0642417abb3e112498f8779ca60bb9788409160a2669d7a28f297b8fab0bc41a",
+            "arm64/annotated/cpuid-kernel-model-check.c": "f8988e753cabcd7042a0a8fa5cfba748568a23e30209f29c2703837a1f438191",
+            "build/sources/linux-b9b3e33b70b71/arch/arm64/include/asm/cpufeature.h": "e292d3d4aa4da4293cd0244b692abc033104e117b40260c266d4894d41eb34af",
+            "build/kernel/arm64-gcc/fragma-build.json": "4cc98700c1f3de49c41f6ff246a1018117610ebc8ce45b0c42256fe56f875628",
+            "fragma/analysis_policy.py": "b674caa823c2e703ae81e4972967ac5ce8b6a8b34b6f5203e9b39e2b4dd618ff",
+            "docs/pointer-policy-review.md": "bf605644084d3d9c83563d21231a75107c3110c85933d6def5b3106cec1adca9",
+            "build/profile-checks/pointer-policy-final-20260906/arm64-gcc/arm64-gcc.yaml": "7a71dd718d73fd497a24a7484ea5d147cb2ea5927fe8c09e0e07148bc85d29fa"
+          },
+          "review_evidence": [
+            "arm64/CPUID.md",
+            "build/arm64-cpuid-review/candidate-2/fixture/receipt.json",
+            "results/all-registered-baseline-20260906/arm64.cpuid/result.json",
+            "docs/pointer-policy-review.md",
+            "build/pointer-formation-review/builtin-audit-review.md"
+          ]
+        },
+        {
+          "plugin": "wp",
+          "severity": "warning",
+          "message": "Skipped RTE guards: invalid function pointer calls (\\valid_function not supported)",
+          "functions": [
+            "cpuid_feature_extract_signed_field_width",
+            "cpuid_feature_extract_unsigned_field_width"
+          ],
+          "reason": "Neither selected helper calls any function. The two global function-pointer initializers merely take addresses and do not execute calls. This review does not cover callers or indirect dispatch through those globals.",
+          "file_hashes": {
+            "arm64/annotated/cpuid_extract.acsl.c": "0642417abb3e112498f8779ca60bb9788409160a2669d7a28f297b8fab0bc41a",
+            "arm64/annotated/cpuid-kernel-model-check.c": "f8988e753cabcd7042a0a8fa5cfba748568a23e30209f29c2703837a1f438191",
+            "build/sources/linux-b9b3e33b70b71/arch/arm64/include/asm/cpufeature.h": "e292d3d4aa4da4293cd0244b692abc033104e117b40260c266d4894d41eb34af",
+            "build/kernel/arm64-gcc/fragma-build.json": "4cc98700c1f3de49c41f6ff246a1018117610ebc8ce45b0c42256fe56f875628",
+            "fragma/analysis_policy.py": "b674caa823c2e703ae81e4972967ac5ce8b6a8b34b6f5203e9b39e2b4dd618ff",
+            "docs/pointer-policy-review.md": "bf605644084d3d9c83563d21231a75107c3110c85933d6def5b3106cec1adca9",
+            "build/profile-checks/pointer-policy-final-20260906/arm64-gcc/arm64-gcc.yaml": "7a71dd718d73fd497a24a7484ea5d147cb2ea5927fe8c09e0e07148bc85d29fa"
+          },
+          "review_evidence": [
+            "arm64/CPUID.md",
+            "build/arm64-cpuid-review/candidate-2/fixture/receipt.json",
+            "results/all-registered-baseline-20260906/arm64.cpuid/result.json",
+            "docs/pointer-policy-review.md",
+            "build/pointer-formation-review/builtin-audit-review.md"
+          ]
+        },
+        {
+          "plugin": "wp",
+          "severity": "warning",
+          "message": "-wp-rte can annotate signed overflow because -warn-signed-overflow is not set",
+          "functions": [
+            "cpuid_feature_extract_signed_field_width",
+            "cpuid_feature_extract_unsigned_field_width"
+          ],
+          "reason": "The unchanged domain gives 1<=width<=64 and 0<=field<=64-width. Therefore both int shift-count subtractions remain within 0..63, without signed arithmetic overflow. Both left shifts have unsigned u64 operands over their full domain. Signed high-bit conversion, negative s64 right shift and 32-bit return narrowing follow the explicit configured GCC/Frama-C model checked by the real kernel fixture; no width<=32 restriction or value-preserving return assumption is introduced.",
+          "file_hashes": {
+            "arm64/annotated/cpuid_extract.acsl.c": "0642417abb3e112498f8779ca60bb9788409160a2669d7a28f297b8fab0bc41a",
+            "arm64/annotated/cpuid-kernel-model-check.c": "f8988e753cabcd7042a0a8fa5cfba748568a23e30209f29c2703837a1f438191",
+            "build/sources/linux-b9b3e33b70b71/arch/arm64/include/asm/cpufeature.h": "e292d3d4aa4da4293cd0244b692abc033104e117b40260c266d4894d41eb34af",
+            "build/kernel/arm64-gcc/fragma-build.json": "4cc98700c1f3de49c41f6ff246a1018117610ebc8ce45b0c42256fe56f875628",
+            "fragma/analysis_policy.py": "b674caa823c2e703ae81e4972967ac5ce8b6a8b34b6f5203e9b39e2b4dd618ff",
+            "docs/pointer-policy-review.md": "bf605644084d3d9c83563d21231a75107c3110c85933d6def5b3106cec1adca9",
+            "build/profile-checks/pointer-policy-final-20260906/arm64-gcc/arm64-gcc.yaml": "7a71dd718d73fd497a24a7484ea5d147cb2ea5927fe8c09e0e07148bc85d29fa"
+          },
+          "review_evidence": [
+            "arm64/CPUID.md",
+            "build/arm64-cpuid-review/candidate-2/fixture/receipt.json",
+            "results/all-registered-baseline-20260906/arm64.cpuid/result.json",
+            "docs/pointer-policy-review.md",
+            "build/pointer-formation-review/builtin-audit-review.md"
+          ]
+        },
+        {
+          "plugin": "wp",
+          "severity": "warning",
+          "message": "Missing RTE guards",
+          "functions": [
+            "cpuid_feature_extract_signed_field_width",
+            "cpuid_feature_extract_unsigned_field_width"
+          ],
+          "reason": "This umbrella diagnostic is scoped to the exact reviewed alignment, function-pointer and signed-overflow-policy diagnostics for these two pure scalar bodies. Four concrete shift guards and both assigns goals are Valid; all ten selected consolidated properties, including termination/exits, are Valid. No claim is made about kernel callers, unrelated header functions, or future target variants.",
+          "file_hashes": {
+            "arm64/annotated/cpuid_extract.acsl.c": "0642417abb3e112498f8779ca60bb9788409160a2669d7a28f297b8fab0bc41a",
+            "arm64/annotated/cpuid-kernel-model-check.c": "f8988e753cabcd7042a0a8fa5cfba748568a23e30209f29c2703837a1f438191",
+            "build/sources/linux-b9b3e33b70b71/arch/arm64/include/asm/cpufeature.h": "e292d3d4aa4da4293cd0244b692abc033104e117b40260c266d4894d41eb34af",
+            "build/kernel/arm64-gcc/fragma-build.json": "4cc98700c1f3de49c41f6ff246a1018117610ebc8ce45b0c42256fe56f875628",
+            "fragma/analysis_policy.py": "b674caa823c2e703ae81e4972967ac5ce8b6a8b34b6f5203e9b39e2b4dd618ff",
+            "docs/pointer-policy-review.md": "bf605644084d3d9c83563d21231a75107c3110c85933d6def5b3106cec1adca9",
+            "build/profile-checks/pointer-policy-final-20260906/arm64-gcc/arm64-gcc.yaml": "7a71dd718d73fd497a24a7484ea5d147cb2ea5927fe8c09e0e07148bc85d29fa"
+          },
+          "review_evidence": [
+            "arm64/CPUID.md",
+            "build/arm64-cpuid-review/candidate-2/fixture/receipt.json",
+            "results/all-registered-baseline-20260906/arm64.cpuid/result.json",
+            "docs/pointer-policy-review.md",
+            "build/pointer-formation-review/builtin-audit-review.md"
+          ]
+        }
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "arm64-cpuid-configured-types",
+      "kind": "type-model",
+      "scope": "Only the two exact ARM64 cpuid scalar helper bodies, configured LP64 little-endian kernel profile, u64/s64/int types and implementation-defined conversions/right shifts.",
+      "justification": "Real linux/types.h and asm/cpufeature.h compile with the genuine configured kernel command. Exact u64/s64 identities, 64/32-bit widths, literal type and both const-attributed signatures are statically checked, together with concrete signed shift/conversion/narrowing boundaries. The ARM64 machine description and arithmetic policy remain explicit trusted compiler/analyzer semantics, not x86 width substitution.",
+      "files": [
+        "arm64/annotated/cpuid_extract.acsl.c",
+        "arm64/annotated/cpuid-kernel-model-check.c",
+        "arm64/CPUID.md"
+      ],
+      "kernel_files": [
+        "arch/arm64/include/asm/cpufeature.h",
+        "include/linux/types.h",
+        "include/linux/compiler_types.h",
+        "include/linux/compiler_attributes.h",
+        "include/uapi/asm-generic/int-ll64.h"
+      ],
+      "review_status": "reviewed-assumption",
+      "implementation_proved": false,
+      "review_evidence": [
+        "arm64/CPUID.md",
+        "build/arm64-cpuid-review/candidate-2/fixture/receipt.json",
+        "results/all-registered-baseline-20260906/arm64.cpuid/result.json"
+      ]
+    },
+    {
+      "id": "arm64-cpuid-pure-leaf-frontend",
+      "kind": "frontend-model",
+      "scope": "Omission of inline/always_inline/const declaration modifiers in the unchanged standalone pure-leaf harness; sequential body semantics only.",
+      "justification": "Pinned function declarators/complete bodies are source-gated. Real header macro expansions and attributed signatures are checked. Both bodies have no calls, memory accesses or effects, so inlining and const optimization metadata are outside the modeled sequential computation. No claim about linked machine code, instrumentation, function address identity or caller coverage is made.",
+      "files": [
+        "arm64/annotated/cpuid_extract.acsl.c",
+        "arm64/annotated/cpuid-kernel-model-check.c",
+        "arm64/CPUID.md"
+      ],
+      "kernel_files": [
+        "arch/arm64/include/asm/cpufeature.h",
+        "include/linux/types.h",
+        "include/linux/compiler_types.h",
+        "include/linux/compiler_attributes.h",
+        "include/uapi/asm-generic/int-ll64.h"
+      ],
+      "review_status": "reviewed-assumption",
+      "implementation_proved": false,
+      "review_evidence": [
+        "arm64/CPUID.md",
+        "build/arm64-cpuid-review/candidate-2/fixture/receipt.json",
+        "results/all-registered-baseline-20260906/arm64.cpuid/result.json"
+      ]
+    }
+  ]
+}

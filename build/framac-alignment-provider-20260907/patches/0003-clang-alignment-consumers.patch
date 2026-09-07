@@ -1,0 +1,281 @@
+--- a/src/kernel_services/ast_queries/cil.ml
++++ b/src/kernel_services/ast_queries/cil.ml
+@@ -3171,11 +3171,37 @@
+ (* Hack to prevent infinite recursion in alignments *)
+ let ignoreAlignmentAttrs = ref false
+ 
++(* Interpret a validated byte request without overwriting its source form.
++   The private policy models Clang's unsigned 32-bit bit-alignment cache.
++   A zero cache contributes no constraint, not a zero object alignment. *)
++let effectiveAlignment ~c11 requested =
++  if Z.is_zero requested && c11 then None
++  else begin
++    if Z.sign requested <= 0 ||
++       not (Z.is_zero (Z.logand requested (Z.pred requested))) then
++      Kernel.abort ~current:true
++        "%s alignment must be a positive power of two"
++        (if c11 then "C11" else "GNU");
++    if Z.gt requested (Z.shift_left Z.one 32) then
++      Kernel.abort ~current:true "requested alignment exceeds 2^32 bytes";
++    let effective =
++      if Machine.clang_u32_alignment_policy () then
++        Z.shift_right (Z.extract (Z.shift_left requested 3) 0 32) 3
++      else requested
++    in
++    if Z.is_zero effective then None
++    else match Z.to_int_opt effective with
++      | Some n -> Some n
++      | None -> Kernel.abort ~current:true "alignment exceeds host integer range"
++  end
++
+ let foldAlignasToInt = function
+   | None -> None
+   | Some v ->
+     match !constfoldtoint v with
+     | None -> Kernel.fatal "%a should be a constant expression" !pp_exp_ref v
++    | Some v when Machine.clang_u32_alignment_policy () ->
++      effectiveAlignment ~c11:true v
+     | Some v when not @@ Z.fits_int v -> Kernel.fatal "_Alignas is too big"
+     | Some v when Z.equal Z.zero v -> None
+     | Some v -> Some (Z.to_int v)
+@@ -3202,7 +3228,14 @@
+       Alignof.longlong ()
+     | TInt (IInt128|IUInt128) ->
+       16
+-    | TEnum ei ->  bytesAlignOf ~standard_or_gcc (Cil_const.mk_tint ei.ekind)
++    | TEnum ei ->
++      let natural () =
++        bytesAlignOf ~standard_or_gcc (Cil_const.mk_tint ei.ekind)
++      in
++      if clang_u32_alignment_policy () then
++        process_aligned_attribute ~may_reduce:false
++          (fun fmt -> !pp_typ_ref fmt t) ei.eattr natural
++      else natural ()
+     | TFloat (FFloat|FFloat32) ->
+       Alignof.float ()
+     | TFloat (FDouble|FFloat64) ->
+@@ -3227,12 +3260,18 @@
+         | [] -> []
+       in
+       let fields = dropZeros false (Option.value ~default:[] c.cfields) in
+-      List.fold_left
+-        (fun sofar f ->
+-           (* Bitfields with zero width do not contribute to the alignment in
+-            * GCC *)
+-           if not (msvcMode ()) && f.fbitfield = Some 0 then sofar else
+-             max sofar (bytesAlignOfField ~standard_or_gcc f)) 1 fields
++      let natural () =
++        List.fold_left
++          (fun sofar f ->
++             (* Bitfields with zero width do not contribute to the alignment in
++              * GCC *)
++             if not (msvcMode ()) && f.fbitfield = Some 0 then sofar else
++               max sofar (bytesAlignOfField ~standard_or_gcc f)) 1 fields
++      in
++      if clang_u32_alignment_policy () then
++        process_aligned_attribute ~may_reduce:false
++          (fun fmt -> !pp_typ_ref fmt t) c.cattr natural
++      else natural ()
+     (* These are some error cases *)
+     | TFun _ when Alignof.func () > 0 ->
+       Alignof.func ()
+@@ -3241,9 +3280,15 @@
+       Alignof.void ()
+     | TVoid -> raise (SizeOfError ("Undefined alignof(void).", t))
+   in
++  (* Under the policy, retain typedef layers instead of flattening inherited
++     attributes. Record/enum declaration attributes were handled above and
++     cannot reduce natural alignment; an outer typedef attribute can. *)
++  let attrs =
++    if Machine.clang_u32_alignment_policy () then t.tattr
++    else Ast_types.get_attributes t
++  in
+   process_aligned_attribute ~may_reduce:true
+-    (fun fmt -> !pp_typ_ref fmt t)
+-    (Ast_types.get_attributes t) alignOfType
++    (fun fmt -> !pp_typ_ref fmt t) attrs alignOfType
+ 
+ (* Alignment of a possibly-packed or aligned struct field.
+    From the GCC manual (https://gcc.gnu.org/onlinedocs/gcc/Common-Type-Attributes.html):
+@@ -3256,7 +3301,21 @@
+   let fieldIsPacked =
+     Ast_attributes.(contains "packed" fi.fattr || contains "packed" fi.fcomp.cattr)
+   in
+-  if fieldIsPacked && not @@ Ast_attributes.contains "aligned" fi.fattr then 1
++  if Machine.clang_u32_alignment_policy () then begin
++    if fi.fbitfield <> None then
++      raise (SizeOfError
++               ("bitfield alignment is not calibrated for the private policy",
++                fi.ftype));
++    let natural () =
++      if fieldIsPacked then 1 else bytesAlignOf ~standard_or_gcc fi.ftype
++    in
++    let aligned = process_aligned_attribute ~may_reduce:false
++        (fun fmt -> Format.fprintf fmt "field %s" fi.fname)
++        fi.fattr natural
++    in
++    max aligned (Option.value ~default:0 (foldAlignasToInt fi.falignas))
++  end
++  else if fieldIsPacked && not @@ Ast_attributes.contains "aligned" fi.fattr then 1
+   else
+     let aligned = process_aligned_attribute ~may_reduce:fieldIsPacked
+         (fun fmt -> Format.fprintf fmt "field %s" fi.fname)
+@@ -3268,6 +3327,73 @@
+       | Some v -> v
+     in
+     max alignas aligned
++
++(* Attribute parameters no longer carry the integer kinds needed for C
++   arithmetic. Do not interpret an untyped ABinOp using either host integers
++   or mathematical integers: e.g. 0xffffffffU + 1 is zero in target C.
++   Literal values and typed queries remain representable without that loss. *)
++and integerOfAlignmentAttrparam a =
++  match a with
++  | AInt n -> Some n
++  | ASizeOf _ | AAlignOf _ when not !ignoreAlignmentAttrs ->
++    ignoreAlignmentAttrs := true;
++    Fun.protect
++      ~finally:(fun () -> ignoreAlignmentAttrs := false)
++      (fun () ->
++         let node = match a with
++           | ASizeOf t -> SizeOf t
++           | AAlignOf (t, i) -> AlignOf (t, i)
++           | _ -> assert false
++         in
++         constFoldToInt ~machdep:true
++           (new_exp ~loc:Fileloc.unknown node))
++  | _ -> None
++
++and alignmentOfAttributes attrs =
++  let combine old_align (_, args) =
++    let requested = match args with
++      | [] -> Z.of_int (Machine.Alignof.aligned ())
++      | [a] -> begin
++          match integerOfAlignmentAttrparam a with
++          | Some n -> n
++          | None -> Kernel.abort ~current:true
++              "unsupported or recursive GNU alignment constant expression"
++        end
++      | _ -> Kernel.abort ~current:true
++          "GNU aligned attribute expects at most one argument"
++    in
++    let contribution = effectiveAlignment ~c11:false requested in
++    match old_align, contribution with
++    | None, a | a, None -> a
++    | Some a, Some b -> Some (max a b)
++  in
++  (* Map each original request before combining; an ignored high request
++     must never erase an honored low request. No AST attributes are edited. *)
++  List.fold_left combine None (Ast_attributes.filter "aligned" attrs)
++
++and bytesAlignOfDeclaration ~standard_or_gcc vi =
++  let gnu = alignmentOfAttributes vi.vattr in
++  let c11 = foldAlignasToInt vi.valignas in
++  match gnu, c11 with
++  | None, None -> bytesAlignOf ~standard_or_gcc vi.vtype
++  | Some a, None | None, Some a -> a
++  | Some a, Some b -> max a b
++
++and bytesAlignOfExpression ~standard_or_gcc e =
++  let unsupported message = raise (SizeOfError (message, typeOf e)) in
++  match standard_or_gcc, e.enode with
++  | `GCC, Lval (Var vi, NoOffset) ->
++    bytesAlignOfDeclaration ~standard_or_gcc vi
++  | `GCC, Lval (_, Field (fi, NoOffset)) ->
++    bytesAlignOfField ~standard_or_gcc fi
++  | `GCC, Lval (Mem _, NoOffset) ->
++    (* A plain dereference has no declaration request to inherit. Keep the
++       pointed-to typedef/type attributes instead of tracing pointer values. *)
++    bytesAlignOf ~standard_or_gcc (typeOf e)
++  | `Standard, _ ->
++    unsupported "C11 expression alignment is not calibrated for the private policy"
++  | `GCC, _ ->
++    unsupported "expression alignment form is not calibrated for the private policy"
+ 
+ and intOfAttrparam (a:attrparam) : int option =
+   let rec doit a : int =
+@@ -3320,7 +3446,11 @@
+      be specified as well. When used as part of a typedef, the aligned attribute
+      can both increase and decrease alignment, and specifying the packed
+      attribute generates a warning." *)
+-  match Ast_attributes.filter "aligned" attrs with
++  if Machine.clang_u32_alignment_policy () then
++    match alignmentOfAttributes attrs with
++    | None -> default_align ()
++    | Some n -> if may_reduce then n else max n (default_align ())
++  else match Ast_attributes.filter "aligned" attrs with
+   | [] ->
+     (* no __aligned__ attribute, so get the default alignment *)
+     default_align ()
+@@ -3740,8 +3870,14 @@
+       try kinteger ~loc (Machine.sizeof_kind ()) (bytesAlignOf ~standard_or_gcc t)
+       with SizeOfError _ -> e
+     end
+-  | AlignOfE (e, i) when machdep ->
+-    constFold machdep (new_exp ~loc:e.eloc (AlignOf (typeOf e, i)))
++  | AlignOfE (operand, i) when machdep ->
++    if Machine.clang_u32_alignment_policy () then begin
++      try kinteger ~loc (Machine.sizeof_kind ())
++          (bytesAlignOfExpression ~standard_or_gcc:i operand)
++      with SizeOfError _ -> e
++    end
++    else constFold machdep
++        (new_exp ~loc:operand.eloc (AlignOf (typeOf operand, i)))
+   | AlignOfE _ | AlignOf _ | SizeOfE _ | SizeOf _ ->
+     e (* Depends on machdep. Do not evaluate in this case*)
+ 
+@@ -4013,7 +4149,9 @@
+   bytesAlignOfField ~standard_or_gcc:`Standard f
+ 
+ let bytesAlignOfVarinfo vi =
+-  match foldAlignasToInt vi.valignas with
++  if Machine.clang_u32_alignment_policy () then
++    bytesAlignOfDeclaration ~standard_or_gcc:`Standard vi
++  else match foldAlignasToInt vi.valignas with
+   | None -> bytesAlignOf vi.vtype
+   | Some align -> align
+ 
+@@ -4431,6 +4569,9 @@
+       with SizeOfError _ -> t
+     end
+   | TSizeOfE { term_type= Ctype typ } -> constFoldTermNodeAtTop (TSizeOf typ)
++  | TAlignOfE _ when Machine.clang_u32_alignment_policy () ->
++    Kernel.abort ~current:true
++      "ACSL expression alignment is unsupported by the private alignment policy"
+   | TAlignOfE { term_type= Ctype typ }
+     -> constFoldTermNodeAtTop (TAlignOf typ)
+   | TSizeOfE _ | TAlignOfE _ ->
+--- a/src/kernel_services/ast_queries/cil.mli
++++ b/src/kernel_services/ast_queries/cil.mli
+@@ -1944,6 +1944,21 @@
+     dependent, so you should only call this after you call {!Machine.init}.  *)
+ val sizeOf: loc:location -> typ -> exp
+ 
++(** Validate an original byte-valued alignment request and return its
++    effective contribution. Reject negative, non-power-of-two, GNU zero and
++    values greater than 2^32 with [Kernel.abort]. C11 zero yields [None].
++    With the private Clang policy, an unsigned-32 bit-cache contribution of
++    zero also yields [None]; it is not an object's natural alignment.
++    This helper does not alter source expressions or attributes. *)
++val effectiveAlignment: c11:bool -> Z.t -> int option
++
++(** Read a literal alignment parameter or fold a typed sizeof/alignof query.
++    Returns [None] for arithmetic and other forms whose target C integer
++    kinds have been lost by conversion to attribute parameters. Recursive
++    queries are not silently interpreted with ignored alignment attributes.
++    This is deliberately narrower than {!intOfAttrparam}. *)
++val integerOfAlignmentAttrparam: attrparam -> Z.t option
++
+ (** The minimum alignment (in bytes) for a type. This function is
+     architecture dependent, so you should only call this after you call
+     {!Machine.init}.
+@@ -1953,6 +1968,9 @@
+ (** The alignment of the variable according to:
+     - its _Alignas specifier, or if unspecified,
+     - its type.
++    With the private Clang policy, validated GNU declaration contributions
++    are also considered, after effective mapping. An explicit GNU declaration
++    may reduce alignment; this is not a preferred storage-allocation query.
+       @raise {!SizeOfError} when it cannot compute the alignment.
+       @since 32.0-Germanium
+ *)

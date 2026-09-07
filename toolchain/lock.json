@@ -1,0 +1,1402 @@
+{
+  "artifacts": {
+    "cvc5": {
+      "checksum_origin": "observed local artifact; upstream signature not independently authenticated",
+      "file": "cvc5.zip",
+      "sha256": "dcdbfada0ce493ee98259c0816e0daafc561c223aadb3af298c2968e73ea39c6",
+      "size": 42994469,
+      "url": "https://github.com/cvc5/cvc5/releases/download/cvc5-1.3.4/cvc5-Linux-x86_64-static.zip"
+    },
+    "gmp": {
+      "checksum_origin": "observed local artifact; upstream signature not independently authenticated",
+      "file": "gmp-6.3.0.tar.xz",
+      "sha256": "a3c2b80201b89e68616f4ad30bc66aee4927c3ce50e33929ca819d5c43538898",
+      "size": 2094196,
+      "url": "https://ftp.gnu.org/gnu/gmp/gmp-6.3.0.tar.xz"
+    },
+    "graphviz-graphviz": {
+      "checksum_origin": "configured Ubuntu resolute apt package index",
+      "component": "graphviz-version-check",
+      "dependencies": "libc6 (>= 2.34), libcgraph8 (>= 14.1.2), libgvc7 (>= 14.1.2), libgvpr2 (>= 14.1.2), libgvplugin-gd8, libgvplugin-pango8",
+      "file": "graphviz_14.1.2-1ubuntu1_amd64.deb",
+      "package": "graphviz",
+      "sha256": "deeba1629fdd86ce789329b287621b94575af7babf47aa37343a718dddb84aa6",
+      "size": 58550,
+      "url": "https://mirror.hetzner.com/ubuntu/packages/pool/universe/g/graphviz/graphviz_14.1.2-1ubuntu1_amd64.deb",
+      "version": "14.1.2-1ubuntu1"
+    },
+    "graphviz-libcdt6": {
+      "checksum_origin": "configured Ubuntu resolute apt package index",
+      "component": "graphviz-version-check",
+      "dependencies": "libc6 (>= 2.4)",
+      "file": "libcdt6_14.1.2-1ubuntu1_amd64.deb",
+      "package": "libcdt6",
+      "sha256": "5cdece41b30145cb87cf6d2e0a1de812269d3c80b066e109b6201f75abfe7243",
+      "size": 20146,
+      "url": "https://mirror.hetzner.com/ubuntu/packages/pool/universe/g/graphviz/libcdt6_14.1.2-1ubuntu1_amd64.deb",
+      "version": "14.1.2-1ubuntu1"
+    },
+    "graphviz-libcgraph8": {
+      "checksum_origin": "configured Ubuntu resolute apt package index",
+      "component": "graphviz-version-check",
+      "dependencies": "libc6 (>= 2.38), libcdt6 (>= 14.1.2)",
+      "file": "libcgraph8_14.1.2-1ubuntu1_amd64.deb",
+      "package": "libcgraph8",
+      "sha256": "973d947573a467c36c1ebb3cbf31e134d4d2bdcf9cf2f4711613800749d434d0",
+      "size": 55328,
+      "url": "https://mirror.hetzner.com/ubuntu/packages/pool/universe/g/graphviz/libcgraph8_14.1.2-1ubuntu1_amd64.deb",
+      "version": "14.1.2-1ubuntu1"
+    },
+    "graphviz-libgvc7": {
+      "checksum_origin": "configured Ubuntu resolute apt package index",
+      "component": "graphviz-version-check",
+      "dependencies": "libc6 (>= 2.38), libcdt6 (>= 14.1.2), libcgraph8 (>= 14.1.2), libexpat1 (>= 2.0.1), libltdl7 (>= 2.5.4), libpathplan4 (>= 14.1.2), libxdot4 (>= 14.1.2), zlib1g (>= 1:1.2.11)",
+      "file": "libgvc7_14.1.2-1ubuntu1_amd64.deb",
+      "package": "libgvc7",
+      "sha256": "3059f000ecd4c681a24effba374844bd674b45dc744f4d971afcecba9c7dfea2",
+      "size": 397214,
+      "url": "https://mirror.hetzner.com/ubuntu/packages/pool/universe/g/graphviz/libgvc7_14.1.2-1ubuntu1_amd64.deb",
+      "version": "14.1.2-1ubuntu1"
+    },
+    "graphviz-libpathplan4": {
+      "checksum_origin": "configured Ubuntu resolute apt package index",
+      "component": "graphviz-version-check",
+      "dependencies": "libc6 (>= 2.35)",
+      "file": "libpathplan4_14.1.2-1ubuntu1_amd64.deb",
+      "package": "libpathplan4",
+      "sha256": "bbf4b3ce29246fa95ce6d62cf3f1d82bd2ca0c0e32e3ed5c1738118f9bf6b480",
+      "size": 26296,
+      "url": "https://mirror.hetzner.com/ubuntu/packages/pool/universe/g/graphviz/libpathplan4_14.1.2-1ubuntu1_amd64.deb",
+      "version": "14.1.2-1ubuntu1"
+    },
+    "graphviz-libxdot4": {
+      "checksum_origin": "configured Ubuntu resolute apt package index",
+      "component": "graphviz-version-check",
+      "dependencies": "libc6 (>= 2.38)",
+      "file": "libxdot4_14.1.2-1ubuntu1_amd64.deb",
+      "package": "libxdot4",
+      "sha256": "c32b43a862d1e2d581cb7ec7d2e7834fddd864f14a9a3804a3a3574f2bd9cfd8",
+      "size": 23496,
+      "url": "https://mirror.hetzner.com/ubuntu/packages/pool/universe/g/graphviz/libxdot4_14.1.2-1ubuntu1_amd64.deb",
+      "version": "14.1.2-1ubuntu1"
+    },
+    "opam": {
+      "checksum_origin": "observed local artifact; upstream signature not independently authenticated",
+      "file": "opam-2.5.0-x86_64-linux",
+      "sha256": "7aae51da01a66666c8733130852c2c00546eff486effb0999b78145cb75aee74",
+      "size": 8943344,
+      "url": "https://github.com/ocaml/opam/releases/download/2.5.0/opam-2.5.0-x86_64-linux"
+    },
+    "z3": {
+      "checksum_origin": "observed local artifact; upstream signature not independently authenticated",
+      "file": "z3.zip",
+      "sha256": "93f91f9c6f4a00a041c19fc7a74adc1f441c8244ce70d486e19abcd89c6a014b",
+      "size": 50898702,
+      "url": "https://github.com/Z3Prover/z3/releases/download/z3-4.13.4/z3-4.13.4-x64-glibc-2.35.zip"
+    }
+  },
+  "captured_at": "2026-09-05",
+  "host": {
+    "machine": "x86_64",
+    "system": "Linux"
+  },
+  "limitations": [
+    "The bootstrap binaries target Linux x86_64; kernel analysis targets can use cross-compilers.",
+    "Downloaded artifact hashes pin observed bytes; upstream signatures have not been independently authenticated.",
+    "The complete opam export includes source URLs and checksums, including transitive packages. It does not vendor all source archives.",
+    "The historical 90-package switch lacks the conf-graphviz post dependency. Clean setup uses a separately locked 91-package complete export.",
+    "Compiler executables and system-library hashes are recorded. Distribution build dependencies are observed, not supplied as a hermetic operating-system image.",
+    "Rebuilt OCaml tool binaries can differ due to build paths. Their versions are enforced and their actual hashes remain part of run identity.",
+    "CVC5 1.3.4 requires explicit Why3 configuration because Why3 1.8.2 detection expects an older version banner. Standard cvc5 driver compatibility beyond the recorded calibration remains an assumption.",
+    "A clean installation and proof replay at another location have not yet been established by this lock alone."
+  ],
+  "opam": {
+    "complete_export": "toolchain/opam-switch.complete.export",
+    "complete_export_sha256": "0cadf16259c7a74d5526e86412a5e26cc49b9217a2452caa1c1e5116e489836f",
+    "complete_installed": [
+      "alt-ergo-lib.2.6.3",
+      "alt-ergo-parsers.2.6.3",
+      "alt-ergo.2.6.3",
+      "astring.0.8.5",
+      "base-bigarray.base",
+      "base-domains.base",
+      "base-nnp.base",
+      "base-threads.base",
+      "base-unix.base",
+      "base.v0.17.3",
+      "bos.0.3.0",
+      "camlzip.1.14",
+      "cmdliner.2.1.1",
+      "conf-gmp.5",
+      "conf-graphviz.0.1",
+      "conf-pkg-config.5",
+      "conf-zlib.1",
+      "cppo.1.8.0",
+      "csexp.1.5.2",
+      "ctypes.0.24.0",
+      "dolmen.0.10",
+      "dolmen_loop.0.10",
+      "dolmen_type.0.10",
+      "dune-build-info.3.24.2",
+      "dune-configurator.3.24.2",
+      "dune-private-libs.3.24.2",
+      "dune-site.3.24.2",
+      "dune.3.24.2",
+      "dyn.3.24.2",
+      "fmt.0.11.0",
+      "fpath.0.7.3",
+      "frama-c.33.0",
+      "fs-io.3.24.2",
+      "gen.1.1",
+      "hmap.0.8.1",
+      "integers.0.8.0",
+      "jane-street-headers.v0.17.0",
+      "jst-config.v0.17.0",
+      "logs.0.10.0",
+      "menhir.20250912",
+      "menhirCST.20250912",
+      "menhirLib.20250912",
+      "menhirSdk.20250912",
+      "ocaml-base-compiler.5.2.1",
+      "ocaml-compiler-libs.v0.17.0",
+      "ocaml-config.3",
+      "ocaml-options-vanilla.1",
+      "ocaml.5.2.1",
+      "ocaml_intrinsics_kernel.v0.17.2",
+      "ocamlbuild.0.16.1",
+      "ocamlfind.1.9.8",
+      "ocamlgraph.2.2.0",
+      "ocplib-simplex.0.5.1",
+      "ordering.3.24.2",
+      "pp.2.0.0",
+      "pp_loc.2.1.0",
+      "ppx_assert.v0.17.0",
+      "ppx_base.v0.17.0",
+      "ppx_blob.0.9.0",
+      "ppx_cold.v0.17.0",
+      "ppx_compare.v0.17.0",
+      "ppx_derivers.1.2.1",
+      "ppx_deriving.6.0.3",
+      "ppx_deriving_yaml.0.4.0",
+      "ppx_deriving_yojson.3.9.1",
+      "ppx_enumerate.v0.17.0",
+      "ppx_globalize.v0.17.0",
+      "ppx_hash.v0.17.0",
+      "ppx_here.v0.17.0",
+      "ppx_inline_test.v0.17.0",
+      "ppx_optcomp.v0.17.0",
+      "ppx_sexp_conv.v0.17.0",
+      "ppxlib.0.35.0",
+      "ppxlib_jane.v0.17.0",
+      "psmt2-frontend.0.4.0",
+      "rresult.0.7.0",
+      "seq.base",
+      "sexplib0.v0.17.0",
+      "spelll.0.4",
+      "stdio.v0.17.0",
+      "stdlib-shims.0.3.0",
+      "stdune.3.24.2",
+      "time_now.v0.17.0",
+      "top-closure.3.24.2",
+      "topkg.1.1.1",
+      "unionFind.20250818",
+      "uutf.1.0.4",
+      "why3.1.8.2",
+      "yaml.3.2.0",
+      "yojson.3.0.0",
+      "zarith.1.14"
+    ],
+    "export": "toolchain/opam-switch.export",
+    "export_sha256": "342f57ffb9461a69712a492b95062987429fa6bf82b454adedc24f19911b00e4",
+    "historical_missing_post_dependency": "conf-graphviz.0.1 (dot absent; original post-install failed)",
+    "historical_repository": "git+https://github.com/ocaml/opam-repository.git#3e2ef3aff96fed8cfa47af6ea93970d3ff8c1c10",
+    "installed": [
+      "alt-ergo-lib.2.6.3",
+      "alt-ergo-parsers.2.6.3",
+      "alt-ergo.2.6.3",
+      "astring.0.8.5",
+      "base-bigarray.base",
+      "base-domains.base",
+      "base-nnp.base",
+      "base-threads.base",
+      "base-unix.base",
+      "base.v0.17.3",
+      "bos.0.3.0",
+      "camlzip.1.14",
+      "cmdliner.2.1.1",
+      "conf-gmp.5",
+      "conf-pkg-config.5",
+      "conf-zlib.1",
+      "cppo.1.8.0",
+      "csexp.1.5.2",
+      "ctypes.0.24.0",
+      "dolmen.0.10",
+      "dolmen_loop.0.10",
+      "dolmen_type.0.10",
+      "dune-build-info.3.24.2",
+      "dune-configurator.3.24.2",
+      "dune-private-libs.3.24.2",
+      "dune-site.3.24.2",
+      "dune.3.24.2",
+      "dyn.3.24.2",
+      "fmt.0.11.0",
+      "fpath.0.7.3",
+      "frama-c.33.0",
+      "fs-io.3.24.2",
+      "gen.1.1",
+      "hmap.0.8.1",
+      "integers.0.8.0",
+      "jane-street-headers.v0.17.0",
+      "jst-config.v0.17.0",
+      "logs.0.10.0",
+      "menhir.20250912",
+      "menhirCST.20250912",
+      "menhirLib.20250912",
+      "menhirSdk.20250912",
+      "ocaml-base-compiler.5.2.1",
+      "ocaml-compiler-libs.v0.17.0",
+      "ocaml-config.3",
+      "ocaml-options-vanilla.1",
+      "ocaml.5.2.1",
+      "ocaml_intrinsics_kernel.v0.17.2",
+      "ocamlbuild.0.16.1",
+      "ocamlfind.1.9.8",
+      "ocamlgraph.2.2.0",
+      "ocplib-simplex.0.5.1",
+      "ordering.3.24.2",
+      "pp.2.0.0",
+      "pp_loc.2.1.0",
+      "ppx_assert.v0.17.0",
+      "ppx_base.v0.17.0",
+      "ppx_blob.0.9.0",
+      "ppx_cold.v0.17.0",
+      "ppx_compare.v0.17.0",
+      "ppx_derivers.1.2.1",
+      "ppx_deriving.6.0.3",
+      "ppx_deriving_yaml.0.4.0",
+      "ppx_deriving_yojson.3.9.1",
+      "ppx_enumerate.v0.17.0",
+      "ppx_globalize.v0.17.0",
+      "ppx_hash.v0.17.0",
+      "ppx_here.v0.17.0",
+      "ppx_inline_test.v0.17.0",
+      "ppx_optcomp.v0.17.0",
+      "ppx_sexp_conv.v0.17.0",
+      "ppxlib.0.35.0",
+      "ppxlib_jane.v0.17.0",
+      "psmt2-frontend.0.4.0",
+      "rresult.0.7.0",
+      "seq.base",
+      "sexplib0.v0.17.0",
+      "spelll.0.4",
+      "stdio.v0.17.0",
+      "stdlib-shims.0.3.0",
+      "stdune.3.24.2",
+      "time_now.v0.17.0",
+      "top-closure.3.24.2",
+      "topkg.1.1.1",
+      "unionFind.20250818",
+      "uutf.1.0.4",
+      "why3.1.8.2",
+      "yaml.3.2.0",
+      "yojson.3.0.0",
+      "zarith.1.14"
+    ],
+    "packages": {
+      "alt-ergo-lib.2.6.3": {
+        "reference_metadata_sha256": "55dc493d6a94de1855d617274b510053b77fa0ad532ab32e6c048a51ee032740",
+        "source_checksums": [
+          "sha256=4ac2b5d8ae6c54a11a0cc349ec76a153aa95727bf57ef9cb3309a706a7fb1bfa",
+          "sha512=68b952ec7940c9f5d8ec9750420a6fd9ccaf6ca149ce96f5c32bbd8ff3b07481940b8c2938815b8540df1369e06da02f1edcbaeda809e8386be186011b7dd962"
+        ],
+        "source_urls": [
+          "https://github.com/OCamlPro/alt-ergo/releases/download/v2.6.3/alt-ergo-2.6.3.tbz"
+        ]
+      },
+      "alt-ergo-parsers.2.6.3": {
+        "reference_metadata_sha256": "53048017f4cc5272a65556803f670833698ca15ecc7df7326f617dad1d181855",
+        "source_checksums": [
+          "sha256=4ac2b5d8ae6c54a11a0cc349ec76a153aa95727bf57ef9cb3309a706a7fb1bfa",
+          "sha512=68b952ec7940c9f5d8ec9750420a6fd9ccaf6ca149ce96f5c32bbd8ff3b07481940b8c2938815b8540df1369e06da02f1edcbaeda809e8386be186011b7dd962"
+        ],
+        "source_urls": [
+          "https://github.com/OCamlPro/alt-ergo/releases/download/v2.6.3/alt-ergo-2.6.3.tbz"
+        ]
+      },
+      "alt-ergo.2.6.3": {
+        "reference_metadata_sha256": "ba4f17bd94bfa9b5bda0d23c1ce845f2b33f98de5428b180b0fba55c65f5c391",
+        "source_checksums": [
+          "sha256=4ac2b5d8ae6c54a11a0cc349ec76a153aa95727bf57ef9cb3309a706a7fb1bfa",
+          "sha512=68b952ec7940c9f5d8ec9750420a6fd9ccaf6ca149ce96f5c32bbd8ff3b07481940b8c2938815b8540df1369e06da02f1edcbaeda809e8386be186011b7dd962"
+        ],
+        "source_urls": [
+          "https://github.com/OCamlPro/alt-ergo/releases/download/v2.6.3/alt-ergo-2.6.3.tbz"
+        ]
+      },
+      "astring.0.8.5": {
+        "reference_metadata_sha256": "68d17e99997a91a9b321c9399d96f71802063d47c48160bf56f119badd1b9343",
+        "source_checksums": [
+          "md5=e148907c24157d1df43bec89b58b3ec8",
+          "sha256=865692630c07c3ab87c66cdfc2734c0fdfc9c34a57f8e89ffec7c7d15e7a70fa"
+        ],
+        "source_urls": [
+          "https://erratique.ch/software/astring/releases/astring-0.8.5.tbz"
+        ]
+      },
+      "base-bigarray.base": {
+        "reference_metadata_sha256": "6f0e15f4c28cb951f057ad1bf45656bedc11888862d246d4c431834c946c6488",
+        "source_checksums": [],
+        "source_urls": []
+      },
+      "base-domains.base": {
+        "reference_metadata_sha256": "e4f7a54bb8d32e964d230739629f556b2e0cc456336e9e4fc958c97dfd488944",
+        "source_checksums": [],
+        "source_urls": []
+      },
+      "base-nnp.base": {
+        "reference_metadata_sha256": "887e565901ceb76b76d2a94fa7914b125e45877fdb8022247cd1c0273bfcbca1",
+        "source_checksums": [],
+        "source_urls": []
+      },
+      "base-threads.base": {
+        "reference_metadata_sha256": "9392d84d6dcbb1210a6c57eff8bcce296965abcd3a3af0a27ef290a755cbd7a1",
+        "source_checksums": [],
+        "source_urls": []
+      },
+      "base-unix.base": {
+        "reference_metadata_sha256": "424fbd2606bfb8df3d38fdcb48593efaa95df38417af2c2ad2816ab9e2faf26c",
+        "source_checksums": [],
+        "source_urls": []
+      },
+      "base.v0.17.3": {
+        "reference_metadata_sha256": "6dbe02fd8b1188197453853f518de769352a7cca8e3914412578d9156996d3e3",
+        "source_checksums": [
+          "md5=2100b0ed13fecf43be86ed45c5b2cc4d",
+          "sha512=628610caff7e124631870fa1e29661caac28bdfdb18750ee43b868037da3d65d6dd9023b4be7c4c52405679efb5e865a6632d95606a22b28a36636a6bf706ef3"
+        ],
+        "source_urls": [
+          "https://github.com/janestreet/base/archive/refs/tags/v0.17.3.tar.gz"
+        ]
+      },
+      "bos.0.3.0": {
+        "reference_metadata_sha256": "8c05e888ff3bc7d5648eaf299576e567eaadca164b64afd935a88b98aa1269d3",
+        "source_checksums": [
+          "sha512=77416442448462fb316b9b64ec213038153e82c6de030d511838a15bb13b80700598c1bcfae1c90ef766d4f42c9bf5dcf231eeff23709558246d7946962858cc"
+        ],
+        "source_urls": [
+          "https://erratique.ch/software/bos/releases/bos-0.3.0.tbz"
+        ]
+      },
+      "camlzip.1.14": {
+        "reference_metadata_sha256": "1746ed813e47bdbdf96bcd53a6aa4e3860e99abe75b48130a936eee44aedeba7",
+        "source_checksums": [
+          "sha256=d2ce7ebc4d3b7c029daecd0b491a36163b22f7e1d95e86224d4a27a101f36177",
+          "sha512=b623efc5c5cfc28bad54dcb74f3d08e8cc4b9216d739e23cf3886d2490ef78c518ec37a344121fe1dab0a40e61b5c6e9908c8f12305a0754aaf9278a32c1dba6"
+        ],
+        "source_urls": [
+          "https://github.com/xavierleroy/camlzip/archive/refs/tags/v1.14.tar.gz"
+        ]
+      },
+      "cmdliner.2.1.1": {
+        "reference_metadata_sha256": "ae536937d0bb1bc5ddb586ac80e88657ea775e7c19542f127ef52eab65846618",
+        "source_checksums": [
+          "sha512=cdc338ae2e56a72b7c75dae9564c57cca4e1fbfac454aabbf8303fcb612346284aede5984dfde7e8a7a496cc870bbd57ddf28cab3a38667279b31657f85c15dd"
+        ],
+        "source_urls": [
+          "https://erratique.ch/software/cmdliner/releases/cmdliner-2.1.1.tbz"
+        ]
+      },
+      "conf-gmp.5": {
+        "reference_metadata_sha256": "5460f4ade5dc80f7a90bc5d189cb9168fb2c8b1b3c25c8ca1f64be672f086ff3",
+        "source_checksums": [
+          "md5=2fd2970c293c36222a6d299ec155823f",
+          "sha256=54a30735f1f271a2531526747e75716f4490dd7bc1546efd6498ccfe3cc4d6fb"
+        ],
+        "source_urls": [
+          "https://raw.githubusercontent.com/ocaml/opam-source-archives/main/patches/conf-gmp/test.c.4"
+        ]
+      },
+      "conf-pkg-config.5": {
+        "reference_metadata_sha256": "205dc5d153165d184580ad00ccfdac1b98e2e2fe10aa6caa963e5b2daccf5b58",
+        "source_checksums": [
+          "sha256=9f99322c38b0889f5b1dafbb35ab31dc012ae98c4f98b0f740a89f943142d961",
+          "sha256=b6cc5f98c2cfc23a7bc7774038621a2e7e7b94ed3d3080db40bc455a2575fc7a",
+          "sha512=00c4e7c605e46c8fb4d24c40da0a9317e31e3ec723a7aac59546b1cfb180024cc76dbd27c2aca8d223047ad4b0a4bcd047443fc64a6e218a21931aaa672c3e71",
+          "sha512=0b76a529454b00027b5768fa6ead1b8dda6bc3adab55f4288a702f4cc5d7b280be938cced6841b1556e8cf98f56ecc95b7b22006859d7a91f0ef852aea74e88c"
+        ],
+        "source_urls": [
+          "https://raw.githubusercontent.com/dra27/mingw-w64-shims/refs/tags/1.0.1/install-shim.sh",
+          "https://raw.githubusercontent.com/dra27/mingw-w64-shims/refs/tags/1.0.1/write-config.sh"
+        ]
+      },
+      "conf-zlib.1": {
+        "reference_metadata_sha256": "e7098d7f74bb1f0feeed53f5f7687ba2260ff4d38c37bec93ccd675f33d6f64e",
+        "source_checksums": [],
+        "source_urls": []
+      },
+      "cppo.1.8.0": {
+        "reference_metadata_sha256": "6d4791b6c9fe1897fe39dce5b4818d49dd7161d2eb8a9b2eaca5ff2f63d6513a",
+        "source_checksums": [
+          "md5=a197cb393b84f6b30e0ff55080ac429b",
+          "sha512=3840725b767a0300bdc48f11d26d798bdcae0a764ed6798df3a08dfc8cc76fe124b14a19d47c9b5ea8e229d68b0311510afce77c0e4d9131fbda5116dc2689a2"
+        ],
+        "source_urls": [
+          "https://github.com/ocaml-community/cppo/archive/v1.8.0.tar.gz"
+        ]
+      },
+      "csexp.1.5.2": {
+        "reference_metadata_sha256": "1aa13168f3cc63509cbb4a7e225ea94335f8e0d089aa91a266fd47288efaced7",
+        "source_checksums": [
+          "sha256=1a14dd04bb4379a41990248550628c77913a9c07f3c35c1370b6960e697787ff",
+          "sha512=be281018bcfc20d4db14894ef51c4b836d6338d2fdfe22e63d46f405f8dea7349e16f1c0ecd65f73d4c85a2a80e618cdbb8c9dafcbb9f229f04f1adca5b1973c"
+        ],
+        "source_urls": [
+          "https://github.com/ocaml-dune/csexp/releases/download/1.5.2/csexp-1.5.2.tbz"
+        ]
+      },
+      "ctypes.0.24.0": {
+        "reference_metadata_sha256": "67059647c66eb59f2a6c7976f096f51be60e66831f8e21747144a7e12405fc08",
+        "source_checksums": [
+          "md5=064316aaf508a9db203f114bb8401dee",
+          "sha256=249c5604c8554659761a7282db4ad200aa8c0fdc408cdb53102bd70feeb51955"
+        ],
+        "source_urls": [
+          "https://github.com/yallop/ocaml-ctypes/archive/refs/tags/0.24.0.tar.gz"
+        ]
+      },
+      "dolmen.0.10": {
+        "reference_metadata_sha256": "56649236866fb4a362daeb5981f0744820b3520b84d641ebbaa28566c60e8476",
+        "source_checksums": [
+          "sha256=c5c85f77e3924f378e8d82f166eefe4131b4e041bf9cdeca467410f33c71fa61",
+          "sha512=42feb39d13cfdc8a2054abe85ccc47755f45059cda7d95e9261b5a9fd5c730f420732547b3fa19c4af059474f887ef78c119ab5933375a5ea2dbe888f65a3e4f"
+        ],
+        "source_urls": [
+          "https://github.com/Gbury/dolmen/releases/download/v0.10/dolmen-0.10.tbz"
+        ]
+      },
+      "dolmen_loop.0.10": {
+        "reference_metadata_sha256": "aacd45fbdd678911fa281a98fc999512b87cb699dc64bf2baa438c2e27bf7450",
+        "source_checksums": [
+          "sha256=c5c85f77e3924f378e8d82f166eefe4131b4e041bf9cdeca467410f33c71fa61",
+          "sha512=42feb39d13cfdc8a2054abe85ccc47755f45059cda7d95e9261b5a9fd5c730f420732547b3fa19c4af059474f887ef78c119ab5933375a5ea2dbe888f65a3e4f"
+        ],
+        "source_urls": [
+          "https://github.com/Gbury/dolmen/releases/download/v0.10/dolmen-0.10.tbz"
+        ]
+      },
+      "dolmen_type.0.10": {
+        "reference_metadata_sha256": "775bf58fa7fc734b9eaaa6bd909690d7fec60802bdd311c5719eeb95403fc4da",
+        "source_checksums": [
+          "sha256=c5c85f77e3924f378e8d82f166eefe4131b4e041bf9cdeca467410f33c71fa61",
+          "sha512=42feb39d13cfdc8a2054abe85ccc47755f45059cda7d95e9261b5a9fd5c730f420732547b3fa19c4af059474f887ef78c119ab5933375a5ea2dbe888f65a3e4f"
+        ],
+        "source_urls": [
+          "https://github.com/Gbury/dolmen/releases/download/v0.10/dolmen-0.10.tbz"
+        ]
+      },
+      "dune-build-info.3.24.2": {
+        "reference_metadata_sha256": "e8e8d3af926d00e7d50ba2bfd83b4404ce4402b0a70492a3d795343b4dc2fba8",
+        "source_checksums": [
+          "sha256=472798691b0216daf538709f0f4703b3617ef24ad0866c9096068baaba4d762a",
+          "sha512=13082a66a28e940d4b3c9f78b556f6c1455987cd522355ba4502e01e60a3d002d3101b51284726ae21aa87494efa2dc54d016173f05b616bbc5dad714d5714a3"
+        ],
+        "source_urls": [
+          "https://github.com/ocaml/dune/releases/download/3.24.2/dune-3.24.2.tbz"
+        ]
+      },
+      "dune-configurator.3.24.2": {
+        "reference_metadata_sha256": "f3137cc1e68f5826a2468f02b177fb197cbbe2b82cfc2e320ad05add2a15e0ac",
+        "source_checksums": [
+          "sha256=472798691b0216daf538709f0f4703b3617ef24ad0866c9096068baaba4d762a",
+          "sha512=13082a66a28e940d4b3c9f78b556f6c1455987cd522355ba4502e01e60a3d002d3101b51284726ae21aa87494efa2dc54d016173f05b616bbc5dad714d5714a3"
+        ],
+        "source_urls": [
+          "https://github.com/ocaml/dune/releases/download/3.24.2/dune-3.24.2.tbz"
+        ]
+      },
+      "dune-private-libs.3.24.2": {
+        "reference_metadata_sha256": "aabee5f0b574647715fd4d170b23c2415529b471e9280fbb28e3267234c032ac",
+        "source_checksums": [
+          "sha256=472798691b0216daf538709f0f4703b3617ef24ad0866c9096068baaba4d762a",
+          "sha512=13082a66a28e940d4b3c9f78b556f6c1455987cd522355ba4502e01e60a3d002d3101b51284726ae21aa87494efa2dc54d016173f05b616bbc5dad714d5714a3"
+        ],
+        "source_urls": [
+          "https://github.com/ocaml/dune/releases/download/3.24.2/dune-3.24.2.tbz"
+        ]
+      },
+      "dune-site.3.24.2": {
+        "reference_metadata_sha256": "4a8371e4355ce46e6d0afe0b204833dba822c156ede63350b5b9da991324ff18",
+        "source_checksums": [
+          "sha256=472798691b0216daf538709f0f4703b3617ef24ad0866c9096068baaba4d762a",
+          "sha512=13082a66a28e940d4b3c9f78b556f6c1455987cd522355ba4502e01e60a3d002d3101b51284726ae21aa87494efa2dc54d016173f05b616bbc5dad714d5714a3"
+        ],
+        "source_urls": [
+          "https://github.com/ocaml/dune/releases/download/3.24.2/dune-3.24.2.tbz"
+        ]
+      },
+      "dune.3.24.2": {
+        "reference_metadata_sha256": "50414c51712c16340bc28f07fb385472c08a1f8430db0fa9be16ade0a2a7f4b0",
+        "source_checksums": [
+          "sha256=472798691b0216daf538709f0f4703b3617ef24ad0866c9096068baaba4d762a",
+          "sha512=13082a66a28e940d4b3c9f78b556f6c1455987cd522355ba4502e01e60a3d002d3101b51284726ae21aa87494efa2dc54d016173f05b616bbc5dad714d5714a3"
+        ],
+        "source_urls": [
+          "https://github.com/ocaml/dune/releases/download/3.24.2/dune-3.24.2.tbz"
+        ]
+      },
+      "dyn.3.24.2": {
+        "reference_metadata_sha256": "59b904e45fb1df4d66072d6df5170c66bce16691df2c05bdd875bb6daff69eeb",
+        "source_checksums": [
+          "sha256=472798691b0216daf538709f0f4703b3617ef24ad0866c9096068baaba4d762a",
+          "sha512=13082a66a28e940d4b3c9f78b556f6c1455987cd522355ba4502e01e60a3d002d3101b51284726ae21aa87494efa2dc54d016173f05b616bbc5dad714d5714a3"
+        ],
+        "source_urls": [
+          "https://github.com/ocaml/dune/releases/download/3.24.2/dune-3.24.2.tbz"
+        ]
+      },
+      "fmt.0.11.0": {
+        "reference_metadata_sha256": "6eb175885cf738571084fbabd81491c1a72d4f6ea70409af3e39638c4e372134",
+        "source_checksums": [
+          "sha512=3f40155fc6a7315202e410585964307d63416c8001fd243667ed9d8d1a02b67deecacb25e9c2feb409c537bbdfb7817d91168de4ddd643532ff51d6c1c696a4a"
+        ],
+        "source_urls": [
+          "https://erratique.ch/software/fmt/releases/fmt-0.11.0.tbz"
+        ]
+      },
+      "fpath.0.7.3": {
+        "reference_metadata_sha256": "1af2b0ed1dc662103559b253877e903341d4ce769f3bbdc003ac7701727f670e",
+        "source_checksums": [
+          "md5=0740b530e8fed5b0adc5eee8463cfc2f",
+          "sha256=12b08ff192d037d9b6d69e9ca19d1d385184f20b3237c27231e437ac81ace70f"
+        ],
+        "source_urls": [
+          "https://erratique.ch/software/fpath/releases/fpath-0.7.3.tbz"
+        ]
+      },
+      "frama-c.33.0": {
+        "reference_metadata_sha256": "83e5a9632e27f21cc47b502f98ff04e17b227a2797ed2e66fe314382fd691002",
+        "source_checksums": [
+          "sha256=9c1cbffd28bb33c17a668107e39c96e4ae7378a3d8249f69b47afc7ee964e9b8"
+        ],
+        "source_urls": [
+          "https://www.frama-c.com/download/frama-c-33.0-Arsenic.tar.gz"
+        ]
+      },
+      "fs-io.3.24.2": {
+        "reference_metadata_sha256": "c43cfb8ad45b40de59b02a146e859d46ace36b80f7c36ecf728c6451e4e30bd7",
+        "source_checksums": [
+          "sha256=472798691b0216daf538709f0f4703b3617ef24ad0866c9096068baaba4d762a",
+          "sha512=13082a66a28e940d4b3c9f78b556f6c1455987cd522355ba4502e01e60a3d002d3101b51284726ae21aa87494efa2dc54d016173f05b616bbc5dad714d5714a3"
+        ],
+        "source_urls": [
+          "https://github.com/ocaml/dune/releases/download/3.24.2/dune-3.24.2.tbz"
+        ]
+      },
+      "gen.1.1": {
+        "reference_metadata_sha256": "390a8661d6de450b26f92e5590d0a313524e6521d752978d44a8b42847816d05",
+        "source_checksums": [
+          "md5=fa8066511b693815fe659fd022f4c6bc",
+          "sha512=71a4b5c3666a7c11935398a78feea7383f61d2c549dfb96e324d40783ffa87b5ec492c5ec468803aabfb9b48e7d0ebaa30b24d2b974540afc7cca5feea3121c1"
+        ],
+        "source_urls": [
+          "https://github.com/c-cube/gen/archive/v1.1.tar.gz"
+        ]
+      },
+      "hmap.0.8.1": {
+        "reference_metadata_sha256": "c74f09a8073ae2a4b28288557e591015edf8f1221b62a52d7b19c46431047e88",
+        "source_checksums": [
+          "md5=04169252265a11d852e1547445177196",
+          "sha256=6a00db1b12b6f55e1b2419f206fdfbaa669e14b51c78f8ac3cffa0a58897be83"
+        ],
+        "source_urls": [
+          "http://erratique.ch/software/hmap/releases/hmap-0.8.1.tbz"
+        ]
+      },
+      "integers.0.8.0": {
+        "reference_metadata_sha256": "35b7979e4b3b6182a9a83dab8953070c6dee115651e19965eaeff435eaf50f86",
+        "source_checksums": [
+          "md5=5155b252a1143ebe7f895003a7103f5e",
+          "sha256=04a1a6d5cc1ecfd3f354a83caed27e59995bb26adec64d88193ccc36268929fa"
+        ],
+        "source_urls": [
+          "https://github.com/yallop/ocaml-integers/archive/0.8.0.tar.gz"
+        ]
+      },
+      "jane-street-headers.v0.17.0": {
+        "reference_metadata_sha256": "d6cbe902b0756aa4bf1783fb3c7ca662fa481d01d31ac5ee4e42205f77d6b36a",
+        "source_checksums": [
+          "sha256=78fa6084cd067b7a7d930d1fe1cb7eb9dcd1a90c73017e570213b47a3762eb4f"
+        ],
+        "source_urls": [
+          "https://github.com/janestreet/jane-street-headers/archive/refs/tags/v0.17.0.tar.gz"
+        ]
+      },
+      "jst-config.v0.17.0": {
+        "reference_metadata_sha256": "ca057087875090249db22af20b543fde2ee3994780988ae0872cef2c593df531",
+        "source_checksums": [
+          "sha256=2cf345e33bed0ee4c325667e77dfc5bee8f12afd56318b7c9acf81ec875ecf6e"
+        ],
+        "source_urls": [
+          "https://github.com/janestreet/jst-config/archive/refs/tags/v0.17.0.tar.gz"
+        ]
+      },
+      "logs.0.10.0": {
+        "reference_metadata_sha256": "8e1821819d7f82ccfb98af904ee06bc0bb246bab1b8be7de17e5084bb201e04d",
+        "source_checksums": [
+          "sha512=122b7a77bd07aee1e0cb8e07e82b195a12528cf015e72fa0dd5afaae26ce04bad9b29f32a6d3bd3547fe522b8a036608785e8adb900e31580a0d555719bbb7e7"
+        ],
+        "source_urls": [
+          "https://erratique.ch/software/logs/releases/logs-0.10.0.tbz"
+        ]
+      },
+      "menhir.20250912": {
+        "reference_metadata_sha256": "6159e93b47793415e8146cde0ee06a6458d0c4cc3130e0dc2138c3eb904d19ca",
+        "source_checksums": [
+          "md5=b8f83df02226419f99e49f1b637dcb11",
+          "sha512=72c85ec63104d6a7c7b6305b4642b86909fcad2e46561427ad596e37e686b3c94cd382da440f058d32800a15b157b80a8242df8043440a209ba73d209657ea84"
+        ],
+        "source_urls": [
+          "https://gitlab.inria.fr/fpottier/menhir/-/archive/20250912/archive.tar.gz"
+        ]
+      },
+      "menhirCST.20250912": {
+        "reference_metadata_sha256": "c9859c9dca7fedb0702994defb113edf97eeb18401ae705d354b2b35a9958c7a",
+        "source_checksums": [
+          "md5=b8f83df02226419f99e49f1b637dcb11",
+          "sha512=72c85ec63104d6a7c7b6305b4642b86909fcad2e46561427ad596e37e686b3c94cd382da440f058d32800a15b157b80a8242df8043440a209ba73d209657ea84"
+        ],
+        "source_urls": [
+          "https://gitlab.inria.fr/fpottier/menhir/-/archive/20250912/archive.tar.gz"
+        ]
+      },
+      "menhirLib.20250912": {
+        "reference_metadata_sha256": "97bedc92efe52784f516c94c7af63525a77e14633320a7a068f871c172b2cebd",
+        "source_checksums": [
+          "md5=b8f83df02226419f99e49f1b637dcb11",
+          "sha512=72c85ec63104d6a7c7b6305b4642b86909fcad2e46561427ad596e37e686b3c94cd382da440f058d32800a15b157b80a8242df8043440a209ba73d209657ea84"
+        ],
+        "source_urls": [
+          "https://gitlab.inria.fr/fpottier/menhir/-/archive/20250912/archive.tar.gz"
+        ]
+      },
+      "menhirSdk.20250912": {
+        "reference_metadata_sha256": "47e05285a7ad74da1cfcfb973da47bf4dc57b0ee7d890ae5198ca293eb4cbf17",
+        "source_checksums": [
+          "md5=b8f83df02226419f99e49f1b637dcb11",
+          "sha512=72c85ec63104d6a7c7b6305b4642b86909fcad2e46561427ad596e37e686b3c94cd382da440f058d32800a15b157b80a8242df8043440a209ba73d209657ea84"
+        ],
+        "source_urls": [
+          "https://gitlab.inria.fr/fpottier/menhir/-/archive/20250912/archive.tar.gz"
+        ]
+      },
+      "ocaml-base-compiler.5.2.1": {
+        "reference_metadata_sha256": "9f7fe48f88ffb20f6f9842c0efcffdd8ca7aaa9370d945ef8c8336ae1ff7523c",
+        "source_checksums": [
+          "md5=3e969b841df1f51ca448e6e6295cb451",
+          "sha256=2d0f8090951a97a2c0e5b8a11e90096c0e1791d2e471e4a67f87e3b974044cd0",
+          "sha256=79f2a1a5044a91350a0eb6ce12e261a72a2855c094c425cddf3860e58c486678"
+        ],
+        "source_urls": [
+          "https://github.com/ocaml/ocaml/releases/download/5.2.1/ocaml-5.2.1.tar.gz",
+          "https://raw.githubusercontent.com/ocaml/ocaml/8c17fd444391392c5f9801241374d749c080c1a8/ocaml-variants.install"
+        ]
+      },
+      "ocaml-compiler-libs.v0.17.0": {
+        "reference_metadata_sha256": "ff6cce43969b67dd6e4add7804eb3c461320c180d6b6419b5dc126a095011a97",
+        "source_checksums": [
+          "md5=aaf66efea8752475c25a942443579b41",
+          "sha512=c5cd418b0eb74e00c3f63235754bbdb3a3328ac743d6ae885424d8c50b4edaa7068572e689cb3456d222793283927f2984a1ff840b1bc3817f810b5314faf897"
+        ],
+        "source_urls": [
+          "https://github.com/janestreet/ocaml-compiler-libs/archive/refs/tags/v0.17.0.tar.gz"
+        ]
+      },
+      "ocaml-config.3": {
+        "reference_metadata_sha256": "adf9c0f51afc068b891ce9277ee5c46c9cd79e578265d6e2432ebd635f33583b",
+        "source_checksums": [
+          "md5=8e50c5e2517d3463b3aad649748cafd7",
+          "md5=c0a50fb1f6ffe7a48bf8600e83ae6d38",
+          "sha256=6e4fd93f4cce6bad0ed3c08afd0248dbe7d7817109281de6294e5b5ef5597051",
+          "sha256=a9ad8d84a08961159653a978db92d10f694510182b206cacb96d5c9f63b5121e"
+        ],
+        "source_urls": [
+          "https://raw.githubusercontent.com/ocaml/ocaml/66f33f6e08857f3c3cb53fc1759fbad6860c59bd/tools/opam/gen_ocaml_config.ml.in",
+          "https://raw.githubusercontent.com/ocaml/ocaml/363fb9f5a2fb87dbd5f8cc579af87dd04e14343b/tools/opam/ocaml-config.install"
+        ]
+      },
+      "ocaml-options-vanilla.1": {
+        "reference_metadata_sha256": "920b0ebe1106ea0b6c25e2266666ad2f1562e92d3b0a18b3624bae90d8a3edb5",
+        "source_checksums": [],
+        "source_urls": []
+      },
+      "ocaml.5.2.1": {
+        "reference_metadata_sha256": "7b89ee31a6fa00b9f83a90c75f53074ced58b033b526a6eea4b49aa7e32974c0",
+        "source_checksums": [],
+        "source_urls": []
+      },
+      "ocaml_intrinsics_kernel.v0.17.2": {
+        "reference_metadata_sha256": "f36121959118b9698cd1131d8de6efe75d1cd4703ea18c037b795d76ccc28f26",
+        "source_checksums": [
+          "md5=94d4734d6844417053e93ef0e3b26e33",
+          "sha512=21397340656d9fbe8dc079d5772bb4ca3e9c8c9c235fe2bddbbabe75fff7d38afc95f10d16f71ad0ab67f9e6fcb4ce08bece8b56cb2b37904c7210c45aa44bb5"
+        ],
+        "source_urls": [
+          "https://github.com/janestreet/ocaml_intrinsics_kernel/archive/refs/tags/v0.17.2.tar.gz"
+        ]
+      },
+      "ocamlbuild.0.16.1": {
+        "reference_metadata_sha256": "e0b54f6f707e95073e969c6610c5056e66a098766665b58c2f72efab26bfe914",
+        "source_checksums": [
+          "sha512=e918b9a0081f271e507c7a4f4d5d5a7cdf818ca51c52acec1bac85ddad5f6cad078cb3c568252fbcf5401c2d75323ed8f50fdd881bda1c9632840320408393ae"
+        ],
+        "source_urls": [
+          "https://github.com/ocaml/ocamlbuild/archive/refs/tags/0.16.1.tar.gz"
+        ]
+      },
+      "ocamlfind.1.9.8": {
+        "reference_metadata_sha256": "f561ca816131c23726ee38f0cc916727e01fd94cd0dcd7702a629daac5b2dfd0",
+        "source_checksums": [
+          "md5=ca770e5806032a96131b670f6e07f146",
+          "sha512=8967986de2ab4ec5993f437b0a4206742adf37aa7a292a3bba0a04438d78539b84d001191e60b2d5bde98a695b38cba2593b7051f7749adbdb964a0df3c4b661"
+        ],
+        "source_urls": [
+          "https://github.com/ocaml/ocamlfind/archive/refs/tags/findlib-1.9.8.tar.gz"
+        ]
+      },
+      "ocamlgraph.2.2.0": {
+        "reference_metadata_sha256": "024bc388691045ac34347d6fbae57d1041e4670604c0484d1a97f27bf8aefafe",
+        "source_checksums": [
+          "sha256=b0956210863cc24f480203ba3c2ef06dfae5579536a05744364e7de58822b230",
+          "sha512=257cdd5fb90337b3e3682cade1269c1d181f3124e569a731909f49bbfbe581ab529ac401472fb9ef57166ac34d8ebadfa6a32c93665f38f5a335982d5e5dc0e1"
+        ],
+        "source_urls": [
+          "https://github.com/backtracking/ocamlgraph/releases/download/2.2.0/ocamlgraph-2.2.0.tbz"
+        ]
+      },
+      "ocplib-simplex.0.5.1": {
+        "reference_metadata_sha256": "5c693e9b7058ca04d358171dd85308466fbf145026e3cfa90f864a34309ecf36",
+        "source_checksums": [
+          "sha256=a5c814be4d18e60c525d37c5b21e880b05b42e7c57b351aa3d20173521d513cf",
+          "sha512=2cf2936792c4429556fa7349069474056d5ae4ca0cf8ad3587880ebbc32cec39fad9b36df7c1ae18fa15f89fe4291bdb5a350b20d0cf84ce5ae651a77d0dd163"
+        ],
+        "source_urls": [
+          "https://github.com/OCamlPro/ocplib-simplex/releases/download/v0.5.1/ocplib-simplex-0.5.1.tbz"
+        ]
+      },
+      "ordering.3.24.2": {
+        "reference_metadata_sha256": "0093ef233175a549ec74758c8135d35f8a0dfd5e8daad4b0d82397d7b316918d",
+        "source_checksums": [
+          "sha256=472798691b0216daf538709f0f4703b3617ef24ad0866c9096068baaba4d762a",
+          "sha512=13082a66a28e940d4b3c9f78b556f6c1455987cd522355ba4502e01e60a3d002d3101b51284726ae21aa87494efa2dc54d016173f05b616bbc5dad714d5714a3"
+        ],
+        "source_urls": [
+          "https://github.com/ocaml/dune/releases/download/3.24.2/dune-3.24.2.tbz"
+        ]
+      },
+      "pp.2.0.0": {
+        "reference_metadata_sha256": "afa524c481eed19c6e7eda00babd8c5121223ea49abfd7e59292c43f42721898",
+        "source_checksums": [
+          "sha256=8651351518b092b4a2def4e08171c276152f92fb6a84a8b19b6b929ccdb44419",
+          "sha512=78cb68f35c0b975dd1e91bd83d5e33bcec1ee642431585d55864c483c70a032755dfcf21ec5697691e7e7554381ddb580639fd149e28ba6f74d04d2ee43d360d"
+        ],
+        "source_urls": [
+          "https://github.com/ocaml-dune/pp/releases/download/2.0.0/pp-2.0.0.tbz"
+        ]
+      },
+      "pp_loc.2.1.0": {
+        "reference_metadata_sha256": "b72a468b7167a7f70c87670fb3e6675d2618250fac3731367c8008fdaacc5061",
+        "source_checksums": [
+          "sha256=2f736505d431e81a4fe851ad310ff29ec4cd20c8fd37ef050d9e6f1050baa7cb",
+          "sha512=7e51eeeb29037d1e1db4ebe4d4d14e40cbb45162970773f35ffe43b6107570ee5d6ec21698791fc8cfd79df5ccfd173fb6b2a8108af7bda976368b13b64ea749"
+        ],
+        "source_urls": [
+          "https://github.com/Armael/pp_loc/releases/download/v2.1.0/pp_loc-2.1.0.tbz"
+        ]
+      },
+      "ppx_assert.v0.17.0": {
+        "reference_metadata_sha256": "0418fed2e6396508e4d4f2a24718d672212962d6099abec06ab87a09bff58acb",
+        "source_checksums": [
+          "sha256=94c47289a6393642b1cca7d2cdb8decdbf387c3cee4faf50d9b00efc871cce8b"
+        ],
+        "source_urls": [
+          "https://github.com/janestreet/ppx_assert/archive/refs/tags/v0.17.0.tar.gz"
+        ]
+      },
+      "ppx_base.v0.17.0": {
+        "reference_metadata_sha256": "2c5dc6390169305a4f9006d1f2994e8771f77fce365305a5605f79782fde74a4",
+        "source_checksums": [
+          "sha256=80e7e6c6a704114d1d0989ee9bc01bca45278096c0caf3f2c4ef28d3c12ae61c"
+        ],
+        "source_urls": [
+          "https://github.com/janestreet/ppx_base/archive/refs/tags/v0.17.0.tar.gz"
+        ]
+      },
+      "ppx_blob.0.9.0": {
+        "reference_metadata_sha256": "6a5474529700fafac042a32138922ac81f8dde4f0ada223ae0187f4db58c727c",
+        "source_checksums": [
+          "sha256=f115e90a5f1075cedc9d930ab91271f8670ece4dee10dc1147ab39b8afb570e4",
+          "sha512=bad11f8ffbec82a04bb5f90e7548a7ad9ac4bf7e9b733815f6c956d7e0002fb258c52783ded847ab09fe3cd60e5eac2901fccaefd4fd4f885f20942d0ef66fea"
+        ],
+        "source_urls": [
+          "https://github.com/johnwhitington/ppx_blob/releases/download/0.9.0/ppx_blob-0.9.0.tbz"
+        ]
+      },
+      "ppx_cold.v0.17.0": {
+        "reference_metadata_sha256": "6efca4fc1e2d5cf317222d6a2098f1d952de9a367b76663e703b141ad5da65dd",
+        "source_checksums": [
+          "sha256=670ee6f4efef2020a4bedf91b72cc2cd97ea0d74b47dad2f8f6b72d722a7452d"
+        ],
+        "source_urls": [
+          "https://github.com/janestreet/ppx_cold/archive/refs/tags/v0.17.0.tar.gz"
+        ]
+      },
+      "ppx_compare.v0.17.0": {
+        "reference_metadata_sha256": "9e72de42386e2a0d0c3f16818bcfa786858fe98e6dd3634839fe86c10a8c3905",
+        "source_checksums": [
+          "sha256=f0b23eb78082ef4dc71a66939bbc63c6b0cc2cf6a4744a906b7a2c016cbe3098"
+        ],
+        "source_urls": [
+          "https://github.com/janestreet/ppx_compare/archive/refs/tags/v0.17.0.tar.gz"
+        ]
+      },
+      "ppx_derivers.1.2.1": {
+        "reference_metadata_sha256": "a1e90ad274d3e382eebd664d1d5c5008dc60321c7739fd0542b282283d8c428d",
+        "source_checksums": [
+          "md5=5dc2bf130c1db3c731fe0fffc5648b41",
+          "sha256=b6595ee187dea792b31fc54a0e1524ab1e48bc6068d3066c45215a138cc73b95"
+        ],
+        "source_urls": [
+          "https://github.com/ocaml-ppx/ppx_derivers/archive/1.2.1.tar.gz"
+        ]
+      },
+      "ppx_deriving.6.0.3": {
+        "reference_metadata_sha256": "efc57053ddcffec81953e48958d259f9bd780f20bcc7715df5e87d9c2ce59650",
+        "source_checksums": [
+          "sha256=374aa97b32c5e01c09a97810a48bfa218c213b5b649e4452101455ac19c94a6d",
+          "sha512=971443a5df0acbdad577360deed8c9af137695bec6d826ef517a382941371f3546aef53456dda7c89d0ed30fefadf45d5dae2a8b1940a75aee7f7382c68cedb0"
+        ],
+        "source_urls": [
+          "https://github.com/ocaml-ppx/ppx_deriving/releases/download/v6.0.3/ppx_deriving-6.0.3.tbz"
+        ]
+      },
+      "ppx_deriving_yaml.0.4.0": {
+        "reference_metadata_sha256": "c48f56c1ba1cf5fecc3558a48a791cb67b4ccc9f37360addfb554f6a327e5a7c",
+        "source_checksums": [
+          "sha256=315c02140658f548b580e7247db6e3f3cdb0d9a9681c21a6261a4bd410d41008",
+          "sha512=950f765c9c221c2413e5d96f05dd14af1d64e218657041be22e9dcce30f2409a496a81661e84c9aed651b4a2444a0efc293ec2d306aa8b622ddd7d678a92cf20"
+        ],
+        "source_urls": [
+          "https://github.com/patricoferris/ppx_deriving_yaml/releases/download/v0.4.0/ppx_deriving_yaml-0.4.0.tbz"
+        ]
+      },
+      "ppx_deriving_yojson.3.9.1": {
+        "reference_metadata_sha256": "57e742b98f91a3ef492ff008462cd1c6962c931505eac87f387ca6ba26cddbd8",
+        "source_checksums": [
+          "sha256=6a3ef7c7bb381f57448853f2a6d2287cf623628162a979587d1e8f7502114f4d",
+          "sha512=df919be7c023cb9ff1b832de333f8d158e88746b4cc33ea5dcf511c64aba186628015b6ca29a0310642531e0640d79834d64b99d542a624168154a11736489a0"
+        ],
+        "source_urls": [
+          "https://github.com/ocaml-ppx/ppx_deriving_yojson/releases/download/v3.9.1/ppx_deriving_yojson-3.9.1.tbz"
+        ]
+      },
+      "ppx_enumerate.v0.17.0": {
+        "reference_metadata_sha256": "66d4c9db7a0df57c9891e19204c389b9b740010492acb1c68ed060a4d2989d9b",
+        "source_checksums": [
+          "sha256=a27f1797b1315bdf7678fde783dff493bd348f1c5b644d7616b660bd295dad36"
+        ],
+        "source_urls": [
+          "https://github.com/janestreet/ppx_enumerate/archive/refs/tags/v0.17.0.tar.gz"
+        ]
+      },
+      "ppx_globalize.v0.17.0": {
+        "reference_metadata_sha256": "a6c6c3f160a23ad6be6d23532498fd8f47a3b8d157dd6dc512dff51b2df42ab5",
+        "source_checksums": [
+          "sha256=42a28764e39f641abfc723ec755c68f0b6467bf7f5057c6f326cef2c34e73618"
+        ],
+        "source_urls": [
+          "https://github.com/janestreet/ppx_globalize/archive/refs/tags/v0.17.0.tar.gz"
+        ]
+      },
+      "ppx_hash.v0.17.0": {
+        "reference_metadata_sha256": "e0d9e04572a3fcd521a16b0b344e3a49ad38127d5a1c3416a6087f2157a35e19",
+        "source_checksums": [
+          "sha256=8c8acae276a349d412eab9112cc3afa996d26ad4a01f2882121fc0adee0dd05e"
+        ],
+        "source_urls": [
+          "https://github.com/janestreet/ppx_hash/archive/refs/tags/v0.17.0.tar.gz"
+        ]
+      },
+      "ppx_here.v0.17.0": {
+        "reference_metadata_sha256": "ec11afddf80070e2562967437e7f6367db2705013214aadf79bdd91da7008b94",
+        "source_checksums": [
+          "sha256=27ac69db34a5ff0efbf6e3c52d52dda46d1e5d5db4d14fb4d8c20370b932a913"
+        ],
+        "source_urls": [
+          "https://github.com/janestreet/ppx_here/archive/refs/tags/v0.17.0.tar.gz"
+        ]
+      },
+      "ppx_inline_test.v0.17.0": {
+        "reference_metadata_sha256": "41298e7b61e6cee39935fdac1e73a0114ddd664d45dcbee8fa4fd31ba0458bfd",
+        "source_checksums": [
+          "sha256=b71e4f01ab8aed418a3358688241a94b6d16d723deec7caaf5e4e917c2a76d2c"
+        ],
+        "source_urls": [
+          "https://github.com/janestreet/ppx_inline_test/archive/refs/tags/v0.17.0.tar.gz"
+        ]
+      },
+      "ppx_optcomp.v0.17.0": {
+        "reference_metadata_sha256": "fa0328b67d7e4020baf49f109f75501ac1dcc5884356d472ea7d146703510209",
+        "source_checksums": [
+          "sha256=a62010eaf74035ee48ef2095da464f16fb6a087948a6c9d69dd1551c4836c64b"
+        ],
+        "source_urls": [
+          "https://github.com/janestreet/ppx_optcomp/archive/refs/tags/v0.17.0.tar.gz"
+        ]
+      },
+      "ppx_sexp_conv.v0.17.0": {
+        "reference_metadata_sha256": "54c9957bab09d5c57f7ba795271b8aac1b938d5ee1c81149b02d3a0c9d524aa5",
+        "source_checksums": [
+          "sha256=4af4f99d774fab77bf63ba2298fc288c356a88bdac0a37e3a23b0d669410ee5a"
+        ],
+        "source_urls": [
+          "https://github.com/janestreet/ppx_sexp_conv/archive/refs/tags/v0.17.0.tar.gz"
+        ]
+      },
+      "ppxlib.0.35.0": {
+        "reference_metadata_sha256": "9af7dbbc5281bcd329a4abc652bdfbbaba0ec78db83ea892a132b46b5efcd124",
+        "source_checksums": [
+          "sha256=d9d959fc9f84260487e45684dc741898a92fc5506b61a7f5cac65d21832db925",
+          "sha512=e428b1e3b89261c7efdaa18016264d1afbf067cb9b0d41124b04796c2487ac7ca8ee9a24a60d56f20d1774cb44aaa9ecf1512f17455812ba8d62d4ef93616ee7"
+        ],
+        "source_urls": [
+          "https://github.com/ocaml-ppx/ppxlib/releases/download/0.35.0/ppxlib-0.35.0.tbz"
+        ]
+      },
+      "ppxlib_jane.v0.17.0": {
+        "reference_metadata_sha256": "001af109451401717572925ff868f4606362149a6b19f5dff036899f7abc0f73",
+        "source_checksums": [
+          "sha256=42757d7b44a5f2a766778e6b4710100c6ef9d0c074eb3e7fa4c69647336d8398"
+        ],
+        "source_urls": [
+          "https://github.com/janestreet/ppxlib_jane/archive/refs/tags/v0.17.0.tar.gz"
+        ]
+      },
+      "psmt2-frontend.0.4.0": {
+        "reference_metadata_sha256": "5f0072a270802692d6f7c3add29bf17a4a6da0e0c6e28ae1134ba190575f4718",
+        "source_checksums": [
+          "sha256=06eff884b629ce30704d08fb4559e54812e8c234e6086da770ea693613fe9780"
+        ],
+        "source_urls": [
+          "https://github.com/OCamlPro-Coquera/psmt2-frontend/archive/0.4.0.tar.gz"
+        ]
+      },
+      "rresult.0.7.0": {
+        "reference_metadata_sha256": "e896888db853f9bfef360bf6ff41e7ce8be5397647253c36f1d89a8ca3022efd",
+        "source_checksums": [
+          "sha512=f1bb631c986996388e9686d49d5ae4d8aaf14034f6865c62a88fb58c48ce19ad2eb785327d69ca27c032f835984e0bd2efd969b415438628a31f3e84ec4551d3"
+        ],
+        "source_urls": [
+          "https://erratique.ch/software/rresult/releases/rresult-0.7.0.tbz"
+        ]
+      },
+      "seq.base": {
+        "reference_metadata_sha256": "101ac7e81efc755753f620200a0df672c3d58ef36793078744e1442a31f4530f",
+        "source_checksums": [
+          "md5=026b31e1df290373198373d5aaa26e42",
+          "md5=b33c8a1a6c7ed797816ce27df4855107",
+          "sha256=e95062b4d0519ef8335c02f7d0f1952d11b814c7ab7e6d566a206116162fa2be",
+          "sha256=fff926c2c4d5a82b6c94c60c4c35eb06e3d39975893ebe6b1f0e6557cbe34904"
+        ],
+        "source_urls": [
+          "https://raw.githubusercontent.com/ocaml/opam-source-archives/main/patches/seq/META.seq",
+          "https://raw.githubusercontent.com/ocaml/opam-source-archives/main/patches/seq/seq.install"
+        ]
+      },
+      "sexplib0.v0.17.0": {
+        "reference_metadata_sha256": "6951557bfd3ac4d2fcbf8697104d55ada12e3b0f930ac5de414a9ba460ce873d",
+        "source_checksums": [
+          "md5=abafe8fd1d6302e55a315f4d78960d2a",
+          "sha512=ad387e40789fe70a11473db7e85fe017b801592624414e9030730b2e92ea08f98095fb6e9236430f33c801605ebee0a2a6284e0f618a26a7da4599d4fd9d395d"
+        ],
+        "source_urls": [
+          "https://github.com/janestreet/sexplib0/archive/refs/tags/v0.17.0.tar.gz"
+        ]
+      },
+      "spelll.0.4": {
+        "reference_metadata_sha256": "8421af3381514446e1b9c80825ec657579a3199fd8f729891b8dcf72c1bcea76",
+        "source_checksums": [
+          "md5=5be47bca50e0c92e1f029b3bb3ee5abc",
+          "sha512=6a7f0e6434b952819a90c05a7f6b28e12d1cd98bbb626d1e0f098bfdf95e8d910962261f332b48b7e277b72514ca224ecea964dcdd481b91924b35b1a099e786"
+        ],
+        "source_urls": [
+          "https://github.com/c-cube/spelll/archive/v0.4.tar.gz"
+        ]
+      },
+      "stdio.v0.17.0": {
+        "reference_metadata_sha256": "c89e3a49553545185feefd4892146088f850c575a7d1e63a253930d8fe47eee2",
+        "source_checksums": [
+          "sha256=e7cb473d4bffcf419f307c658cf2599fab03a2b4fe655bfd0be699f8f7af176e"
+        ],
+        "source_urls": [
+          "https://github.com/janestreet/stdio/archive/refs/tags/v0.17.0.tar.gz"
+        ]
+      },
+      "stdlib-shims.0.3.0": {
+        "reference_metadata_sha256": "e8a314be64264341d4665c56acaf1ba1bfdc49610fb9c7cbbda8be14f8c1ebae",
+        "source_checksums": [
+          "sha256=babf72d3917b86f707885f0c5528e36c63fccb698f4b46cf2bab5c7ccdd6d84a",
+          "sha512=1151d7edc8923516e9a36995a3f8938d323aaade759ad349ed15d6d8501db61ffbe63277e97c4d86149cf371306ac23df0f581ec7e02611f58335126e1870980"
+        ],
+        "source_urls": [
+          "https://github.com/ocaml/stdlib-shims/releases/download/0.3.0/stdlib-shims-0.3.0.tbz"
+        ]
+      },
+      "stdune.3.24.2": {
+        "reference_metadata_sha256": "7e802e42df1c5d7e8b5855fceca6116f1eb689afdfd19dba4fd6097187f5ddae",
+        "source_checksums": [
+          "sha256=472798691b0216daf538709f0f4703b3617ef24ad0866c9096068baaba4d762a",
+          "sha512=13082a66a28e940d4b3c9f78b556f6c1455987cd522355ba4502e01e60a3d002d3101b51284726ae21aa87494efa2dc54d016173f05b616bbc5dad714d5714a3"
+        ],
+        "source_urls": [
+          "https://github.com/ocaml/dune/releases/download/3.24.2/dune-3.24.2.tbz"
+        ]
+      },
+      "time_now.v0.17.0": {
+        "reference_metadata_sha256": "1a249b75addc29250a1110f21b327ffd8d8271a5cce80e9d458a54571cd58381",
+        "source_checksums": [
+          "sha256=fc85d6e46c4eb9370de9385f7bbfa6d57b4e48a9e96b20009007226b73f9530c"
+        ],
+        "source_urls": [
+          "https://github.com/janestreet/time_now/archive/refs/tags/v0.17.0.tar.gz"
+        ]
+      },
+      "top-closure.3.24.2": {
+        "reference_metadata_sha256": "329f6d97e73bbf6ab57f6fb4bb26b6e305a5c9ac779fda179d00b3af58976b21",
+        "source_checksums": [
+          "sha256=472798691b0216daf538709f0f4703b3617ef24ad0866c9096068baaba4d762a",
+          "sha512=13082a66a28e940d4b3c9f78b556f6c1455987cd522355ba4502e01e60a3d002d3101b51284726ae21aa87494efa2dc54d016173f05b616bbc5dad714d5714a3"
+        ],
+        "source_urls": [
+          "https://github.com/ocaml/dune/releases/download/3.24.2/dune-3.24.2.tbz"
+        ]
+      },
+      "topkg.1.1.1": {
+        "reference_metadata_sha256": "8d0a114b75987c18ffb3a1c729a8c409be196d38b247ee45a12a22a83ba6c4dd",
+        "source_checksums": [
+          "sha512=c36c549a362ddf5b7fe3f6ff91c79b7ab531c43633bb9737576370bcbd69db7e1625d247c278a869b503d45a175e9753231ccf595e5bfa4e3b7e2602ac3d3b42"
+        ],
+        "source_urls": [
+          "https://erratique.ch/software/topkg/releases/topkg-1.1.1.tbz"
+        ]
+      },
+      "unionFind.20250818": {
+        "reference_metadata_sha256": "95ce078d001f950fbe198167f90bb407ad75c86e168a2a2e90c885c3c6d15a20",
+        "source_checksums": [
+          "md5=a0c130e7c7500fc183a9f8dbc5c7b8a8",
+          "sha512=a1f591a3de021c9ce952a15dab904b4ccc4fe36750ccc20a868f9a9630f68cffe694dcf9fc1dca5675fb09b320175eeb3799069b7a4dd05714a5d1bb64ee814e"
+        ],
+        "source_urls": [
+          "https://gitlab.inria.fr/fpottier/unionFind/-/archive/20250818/archive.tar.gz"
+        ]
+      },
+      "uutf.1.0.4": {
+        "reference_metadata_sha256": "a0dfab85211d26edf3a8f923f1fce148edb11daee519626f240aa0c6b2302841",
+        "source_checksums": [
+          "sha512=e35f408bc971cd8da3077e6c3321e0d8f4eb569898e0e219fde62dae78fbd0a0095cb7f036287656f6a1b346584f7b9f0c6dec0a5a092180da36e43247027598"
+        ],
+        "source_urls": [
+          "https://erratique.ch/software/uutf/releases/uutf-1.0.4.tbz"
+        ]
+      },
+      "why3.1.8.2": {
+        "reference_metadata_sha256": "c899e972eee06f64ac34451589003a9a87616c4ae1ea4460283ba4f472e6cdf3",
+        "source_checksums": [
+          "md5=76244d73d2cdaff1dbae867b60d0aa0d",
+          "sha256=b7d112edd5bcce6bcce0023d2bc834eb2ae1a1c42d7aea44ffa124d649b50bea"
+        ],
+        "source_urls": [
+          "https://why3.gitlabpages.inria.fr/releases/why3-1.8.2.tar.gz"
+        ]
+      },
+      "yaml.3.2.0": {
+        "reference_metadata_sha256": "25c8a81505183d794c257ce484c4d7dc145105a85c9678a7b2762f59f537acf5",
+        "source_checksums": [
+          "sha256=c50d2aca28b9f966792b71e1603351e5d24eda4dfd3e4453fbd50366a3a08227",
+          "sha512=e87ae73f3e376800a09e4359d5c7090ef5107807f540b51fbdee9017bcbacb2414ec12255b37caead115ea1562303436cac2c91c60814c2ba44bdd3d677fc0d1"
+        ],
+        "source_urls": [
+          "https://github.com/avsm/ocaml-yaml/releases/download/v3.2.0/yaml-3.2.0.tbz"
+        ]
+      },
+      "yojson.3.0.0": {
+        "reference_metadata_sha256": "a176e8df0708587a8296183191e2bd2404913aa04528f53268bfa5d337f84bac",
+        "source_checksums": [
+          "sha256=99414da7609b92a02474ef4b49ecda15edc8cbba5229341b124e7e4695c39610",
+          "sha512=896d0ea829a36ccadba6628800369c1a3ab9e7c64dbda8b76331889c9db481cd64e137f467481ae80a8dd5fca45d748bfa71f58641806cc1bb1a007f8291789f"
+        ],
+        "source_urls": [
+          "https://github.com/ocaml-community/yojson/releases/download/3.0.0/yojson-3.0.0.tbz"
+        ]
+      },
+      "zarith.1.14": {
+        "reference_metadata_sha256": "d6b1ce7a786d65775694517207af6dca2a16c1bf66f60287ae83370e38249ae3",
+        "source_checksums": [
+          "sha256=5db9dcbd939153942a08581fabd846d0f3f2b8c67fe68b855127e0472d4d1859",
+          "sha512=8a7f3e82dfa5699c8dda54dd5398c712f3ac4fe04f5208d43d8ba198fb8152de5f91cbb59c15c0a4ba010d4dfcc79f52e405bdd0abbf2798167e9e4216bcb3dd"
+        ],
+        "source_urls": [
+          "https://github.com/ocaml/Zarith/archive/release-1.14.tar.gz"
+        ]
+      }
+    },
+    "repository": "toolchain/opam-repository",
+    "repository_sha256": "115c340c275a638c8f2a42ab7fa1a10361c2e3abd5f7d84e378ffe094eae4d04"
+  },
+  "reference_distribution_packages": [
+    "binutils=2.46-3ubuntu2",
+    "gcc-15=15.2.0-16ubuntu1",
+    "libc6=2.43-2ubuntu2.3",
+    "libgmp10=2:6.3.0+dfsg-5ubuntu2",
+    "make=4.4.1-3",
+    "pkg-config=2.5.1-4",
+    "zlib1g=1:1.3.dfsg+really1.3.1-1ubuntu3.1"
+  ],
+  "required_plugins": [
+    "WP",
+    "Eva",
+    "RteGen",
+    "E-ACSL",
+    "Report"
+  ],
+  "required_scripts": [
+    "e-acsl-gcc"
+  ],
+  "runtime_libraries": {
+    "libc.so.6": {
+      "reference_path": "/usr/lib/x86_64-linux-gnu/libc.so.6",
+      "reference_sha256": "a3947513a02831ec692ebf13053c07614882ab54a2101fb91a1b15724062ed0c"
+    },
+    "libgmp.so.10.5.0": {
+      "reference_path": "/home/karl/.local/lib/libgmp.so.10.5.0",
+      "reference_sha256": "24e79f5012f0226d917045e8318bb56ffbe26e21f218daa8f9b186d4c36663a4"
+    },
+    "libz.so.1": {
+      "reference_path": "/usr/lib/x86_64-linux-gnu/libz.so.1.3.1",
+      "reference_sha256": "47b61967895b30e8c0c6818dd633ffeb87711cf637c688f981896f0dd84ce23b"
+    }
+  },
+  "schema_version": 1,
+  "tools": {
+    "aarch64-linux-gnu-gcc": {
+      "reference_sha256": "50d0961827e521a7c06d7794d4b15282559a117d365a149aaca5726917ab1603",
+      "require_binary_hash": false,
+      "required": false,
+      "target": "aarch64-linux-gnu",
+      "version": "15.2.0",
+      "version_args": [
+        "-dumpfullversion",
+        "-dumpversion"
+      ],
+      "version_pattern": "^(\\d+(?:\\.\\d+)+)"
+    },
+    "alpha-linux-gnu-gcc": {
+      "reference_sha256": "498e83234f815b51d56d7bdad9605c54313e41f40700d0c3c4da7a75944125c3",
+      "require_binary_hash": false,
+      "required": false,
+      "target": "alpha-linux-gnu",
+      "version": "15.2.0",
+      "version_args": [
+        "-dumpfullversion",
+        "-dumpversion"
+      ],
+      "version_pattern": "^(\\d+(?:\\.\\d+)+)"
+    },
+    "alt-ergo": {
+      "reference_sha256": "5a42643281cfbaa6fd4be7b97c30a852c8edff238e654e4ca2f00e1fcb18ebe7",
+      "require_binary_hash": false,
+      "required": true,
+      "version": "2.6.3",
+      "version_args": [
+        "--version"
+      ],
+      "version_pattern": "^v(\\d+(?:\\.\\d+)+)"
+    },
+    "arm-linux-gnueabi-gcc": {
+      "reference_sha256": "b417460992a88c2df65d82f82c6af452210d25e8def84d35701393063afd30bd",
+      "require_binary_hash": false,
+      "required": false,
+      "target": "arm-linux-gnueabi",
+      "version": "15.2.0",
+      "version_args": [
+        "-dumpfullversion",
+        "-dumpversion"
+      ],
+      "version_pattern": "^(\\d+(?:\\.\\d+)+)"
+    },
+    "cvc5": {
+      "reference_sha256": "7562a8b0b835e3eaad5f1a7b4616cd762350cf567b6be03d7e8ee24fa5ced5ee",
+      "require_binary_hash": true,
+      "required": true,
+      "version": "1.3.4",
+      "version_args": [
+        "--version"
+      ],
+      "version_pattern": "^cvc5 (\\d+(?:\\.\\d+)+)"
+    },
+    "frama-c": {
+      "reference_sha256": "5646555cde1e19d511dcf849bccfa40ba992eb859b5bbb983ab8d1f590d37b77",
+      "require_binary_hash": false,
+      "required": true,
+      "version": "33.0",
+      "version_args": [
+        "-version"
+      ],
+      "version_pattern": "^(\\d+\\.\\d+)"
+    },
+    "gcc": {
+      "reference_sha256": "b5f1b773a7c733738352000c92a077dc5852a1a2fc6d836b1e411be1e9ec5f88",
+      "require_binary_hash": false,
+      "required": true,
+      "target": "x86_64-linux-gnu",
+      "version": "15.2.0",
+      "version_args": [
+        "-dumpfullversion",
+        "-dumpversion"
+      ],
+      "version_pattern": "^(\\d+(?:\\.\\d+)+)"
+    },
+    "i686-linux-gnu-gcc": {
+      "reference_sha256": "123ba8d5aba7a0eac7e7acaceada95c80ef2c7b9803ee03cb5a3c01c6f220f16",
+      "require_binary_hash": false,
+      "required": false,
+      "target": "i686-linux-gnu",
+      "version": "15.2.0",
+      "version_args": [
+        "-dumpfullversion",
+        "-dumpversion"
+      ],
+      "version_pattern": "^(\\d+(?:\\.\\d+)+)"
+    },
+    "m68k-linux-gnu-gcc": {
+      "reference_sha256": "5484f0c26c54a7111a89b0e231ce58b760f77714478713946180bde44b9eae3e",
+      "require_binary_hash": false,
+      "required": false,
+      "target": "m68k-linux-gnu",
+      "version": "15.2.0",
+      "version_args": [
+        "-dumpfullversion",
+        "-dumpversion"
+      ],
+      "version_pattern": "^(\\d+(?:\\.\\d+)+)"
+    },
+    "ocamlc": {
+      "reference_sha256": "18ece2c9931c32a147d05ce1b242ebbf32b9e0af54b1eab95bc0811beae08fbf",
+      "require_binary_hash": false,
+      "required": true,
+      "version": "5.2.1",
+      "version_args": [
+        "-version"
+      ],
+      "version_pattern": "^(\\d+(?:\\.\\d+)+)"
+    },
+    "opam": {
+      "reference_sha256": "7aae51da01a66666c8733130852c2c00546eff486effb0999b78145cb75aee74",
+      "require_binary_hash": true,
+      "required": true,
+      "version": "2.5.0",
+      "version_args": [
+        "--version"
+      ],
+      "version_pattern": "^(\\d+(?:\\.\\d+)+)"
+    },
+    "powerpc-linux-gnu-gcc": {
+      "reference_sha256": "ff435633e9d6087fa654443fea45a94dd9c4edfcbe691d10158b802a0c3cc363",
+      "require_binary_hash": false,
+      "required": false,
+      "target": "powerpc-linux-gnu",
+      "version": "15.2.0",
+      "version_args": [
+        "-dumpfullversion",
+        "-dumpversion"
+      ],
+      "version_pattern": "^(\\d+(?:\\.\\d+)+)"
+    },
+    "riscv64-linux-gnu-gcc": {
+      "reference_sha256": "fdcd0a16c510b9a7328b7bfba0e02c49b85d12364faac3a02ed1da304a2ea6be",
+      "require_binary_hash": false,
+      "required": false,
+      "target": "riscv64-linux-gnu",
+      "version": "15.2.0",
+      "version_args": [
+        "-dumpfullversion",
+        "-dumpversion"
+      ],
+      "version_pattern": "^(\\d+(?:\\.\\d+)+)"
+    },
+    "s390x-linux-gnu-gcc": {
+      "reference_sha256": "7460813207bc4c0520dcf8181fca5abf25ff07eae515d57f56388446ce409b6d",
+      "require_binary_hash": false,
+      "required": false,
+      "target": "s390x-linux-gnu",
+      "version": "15.2.0",
+      "version_args": [
+        "-dumpfullversion",
+        "-dumpversion"
+      ],
+      "version_pattern": "^(\\d+(?:\\.\\d+)+)"
+    },
+    "sh4-linux-gnu-gcc": {
+      "reference_sha256": "df27248ebba071edec01891da2a3f7e197b6e30676f5c2ccd42eab505537f353",
+      "require_binary_hash": false,
+      "required": false,
+      "target": "sh4-linux-gnu",
+      "version": "15.2.0",
+      "version_args": [
+        "-dumpfullversion",
+        "-dumpversion"
+      ],
+      "version_pattern": "^(\\d+(?:\\.\\d+)+)"
+    },
+    "why3": {
+      "reference_sha256": "90180c79ef420361815ae133e5ca280e1b375204e10101e8d2fc3f84a2ae7a23",
+      "require_binary_hash": false,
+      "required": true,
+      "version": "1.8.2",
+      "version_args": [
+        "--version"
+      ],
+      "version_pattern": "version (\\d+(?:\\.\\d+)+)"
+    },
+    "x86_64-linux-gnu-gcc": {
+      "reference_sha256": "b5f1b773a7c733738352000c92a077dc5852a1a2fc6d836b1e411be1e9ec5f88",
+      "require_binary_hash": false,
+      "required": false,
+      "target": "x86_64-linux-gnu",
+      "version": "15.2.0",
+      "version_args": [
+        "-dumpfullversion",
+        "-dumpversion"
+      ],
+      "version_pattern": "^(\\d+(?:\\.\\d+)+)"
+    },
+    "z3": {
+      "reference_sha256": "e0385660ab6f1314049376c6188e70ab91692cdca4680b7b1cb42cac258ea836",
+      "require_binary_hash": true,
+      "required": false,
+      "version": "4.13.4",
+      "version_args": [
+        "--version"
+      ],
+      "version_pattern": "^Z3 version (\\d+(?:\\.\\d+)+)"
+    }
+  },
+  "why3": {
+    "config": "toolchain/why3.conf",
+    "driver_compatibility": "CVC5 1.3.4 uses Why3 1.8.2 cvc5 driver; bounded true/false arithmetic calibration passed, general compatibility remains assumed",
+    "required_provers": [
+      "alt-ergo",
+      "cvc5"
+    ],
+    "sha256": "9525b95cfc7ea73d1b8a404f915d33e388a03cfdb19e1527de3f26916f05f671"
+  }
+}

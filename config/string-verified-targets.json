@@ -1,0 +1,588 @@
+{
+  "schema_version": 1,
+  "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+  "targets": [
+    {
+      "id": "string.verified.strnchr",
+      "suite": "core",
+      "role": "proof",
+      "profile": "x86_64-gcc",
+      "source": "lib/string.c",
+      "harness": "annotated/string.verified.c",
+      "specs": "annotated/specs.verified.h",
+      "functions": [
+        "strnchr"
+      ],
+      "analysis": "wp",
+      "input_mode": "kernel-tu",
+      "provenance": {
+        "mode": "translation-unit"
+      },
+      "required_properties": [
+        "strnchr_ensures_zero_count",
+        "strnchr_ensures_found_in_range",
+        "strnchr_ensures_found_first",
+        "strnchr_ensures_null_means_absent",
+        "strnchr_assert_next_byte_readable",
+        "strnchr_assert_exit_witness"
+      ],
+      "require_smoke": true,
+      "provers": [
+        "alt-ergo",
+        "z3"
+      ],
+      "assumptions": [
+        "verified-string-x86-types",
+        "verified-string-frontend",
+        "verified-string-header-overrides",
+        "verified-strnchr-domain"
+      ],
+      "claims": [
+        "runtime-safety",
+        "functional",
+        "termination"
+      ],
+      "caller_coverage": "unverified",
+      "review_context": {
+        "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+        "file_hashes": {
+          "annotated/string.verified.c": "7fd3ddb0c8cbf9aaac346b4e2cd2805c449ea2f2de102dd34c5c8956055accfd",
+          "annotated/specs.verified.h": "701fb893f1c8622b16d04ec865e6231a5288c4e8ca52ced1ac382840f513e09f",
+          "annotated/compat.h": "9320b8de0d50c1e52742866b265fb35beb564010b81709fd31402ef4300e8fd9",
+          "annotated/override/asm/bug.h": "f99dd6334fadaf63dfc9c131a7089665a39573c03ea4b8f573f5c34dac56b570",
+          "annotated/override/asm/string_64.h": "06250323788d2ddd07da386464d615af17866c7790940672a6f2e02b97628e52",
+          "build/sources/linux-b9b3e33b70b71/lib/string.c": "954031a542ba7a8bd82af019d7d6e2f0e15666014b5827afcd0b131c260dd5be",
+          "build/kernel/x86_64-gcc/fragma-build.json": "04152fe199764c6691f04ddc6f9d62c6fa7a8b08e022316b9a9d9ab743c09883",
+          "fragma/analysis_policy.py": "b674caa823c2e703ae81e4972967ac5ce8b6a8b34b6f5203e9b39e2b4dd618ff",
+          "docs/pointer-policy-review.md": "bf605644084d3d9c83563d21231a75107c3110c85933d6def5b3106cec1adca9",
+          "build/profile-checks/pointer-policy-final-20260906/x86_64-gcc/x86_64-gcc.yaml": "106103531bae6c3e42eeec83dfd8734d54aefaca392e7db74f0d9a5718b491a1"
+        },
+        "review_evidence": [
+          "annotated/verification-notes.md",
+          "build/string-verified/final/strnchr/receipt.json",
+          "build/string-verified/native-review/receipt.json",
+          "build/string-verified/native-review/equivalence.json",
+          "docs/pointer-policy-review.md",
+          "build/pointer-formation-review/inspected-3.json",
+          "build/pointer-formation-review/run-3/string.verified.strnchr/analysis.log",
+          "build/pointer-formation-review/run-3/string.verified.strnchr/wp.json",
+          "build/pointer-formation-review/run-3/string.verified.strnchr/properties.tsv",
+          "build/pointer-formation-review/builtin-audit-review.md"
+        ],
+        "profile": "x86_64-gcc",
+        "analysis": {
+          "wp_model": "Typed",
+          "arithmetic_flags": [
+            "-no-warn-signed-overflow",
+            "-no-warn-unsigned-overflow",
+            "-no-warn-signed-downcast",
+            "-no-warn-unsigned-downcast",
+            "-no-warn-right-shift-negative"
+          ],
+          "runtime_checks": {
+            "pointer_formation": "object-or-null"
+          }
+        },
+        "toolchain_lock_sha256": "0d3557b20e4a0ed16e6a4fe8622aa3ecd1572b9b30d490c7c69b4be82d7f47cb",
+        "preprocessing": {
+          "cpp_command": "/usr/bin/gcc -I /home/karl/linux-work/fragma/annotated/override -nostdinc -I/home/karl/linux-work/fragma/build/sources/linux-b9b3e33b70b71/arch/x86/include -I./arch/x86/include/generated -I/home/karl/linux-work/fragma/build/sources/linux-b9b3e33b70b71/include -I./include -I/home/karl/linux-work/fragma/build/sources/linux-b9b3e33b70b71/arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I/home/karl/linux-work/fragma/build/sources/linux-b9b3e33b70b71/include/uapi -I./include/generated/uapi -include /home/karl/linux-work/fragma/build/sources/linux-b9b3e33b70b71/include/linux/compiler-version.h -include /home/karl/linux-work/fragma/build/sources/linux-b9b3e33b70b71/include/linux/kconfig.h -include /home/karl/linux-work/fragma/build/sources/linux-b9b3e33b70b71/include/linux/compiler_types.h -D__KERNEL__ -fmacro-prefix-map=/home/karl/linux-work/fragma/build/sources/linux-b9b3e33b70b71/= -fshort-wchar -funsigned-char -fno-common -fno-PIE -fno-strict-aliasing -std=gnu11 -fms-extensions -mno-sse -mno-mmx -mno-sse2 -mno-3dnow -mno-avx -mno-sse4a -fcf-protection=branch -fno-jump-tables -m64 -falign-jumps=1 -falign-loops=1 -mno-80387 -mno-fp-ret-in-387 -mpreferred-stack-boundary=3 -mskip-rax-setup -march=x86-64 -mtune=generic -mno-red-zone -mcmodel=kernel -Wno-sign-compare -fno-asynchronous-unwind-tables -fno-delete-null-pointer-checks -Os -fno-allow-store-data-races -fno-stack-protector -fomit-frame-pointer -ftrivial-auto-var-init=zero -fzero-init-padding-bits=all -fno-stack-clash-protection -fmin-function-alignment=16 -fstrict-flex-arrays=3 -fno-strict-overflow -fno-stack-check -fconserve-stack -fno-builtin-wcslen -Wall -Wextra -Wundef -Werror=implicit-function-declaration -Werror=implicit-int -Werror=return-type -Werror=strict-prototypes -Wno-format-security -Wno-trigraphs -Wno-frame-address -Wno-address-of-packed-member -Wmissing-declarations -Wmissing-prototypes -Wframe-larger-than=1280 -Wno-main -Wno-type-limits -Wno-dangling-pointer -Wvla-larger-than=1 -Wno-pointer-sign -Wcast-function-type -Wno-unterminated-string-initialization -Wno-array-bounds -Wno-stringop-overflow -Wno-alloc-size-larger-than -Wimplicit-fallthrough=5 -Werror=date-time -Werror=incompatible-pointer-types -Werror=designated-init -Wenum-conversion -Wunused -Wno-unused-but-set-variable -Wno-unused-const-variable -Wno-packed-not-aligned -Wno-format-overflow -Wno-format-truncation -Wno-stringop-truncation -Wno-override-init -Wno-missing-field-initializers -Wno-shift-negative-value -Wno-maybe-uninitialized -Wno-sign-compare -Wno-unused-parameter -ffreestanding -I/home/karl/linux-work/fragma/build/sources/linux-b9b3e33b70b71/lib -Ilib '-DKBUILD_MODFILE=\"lib/string\"' '-DKBUILD_BASENAME=\"string\"' '-DKBUILD_MODNAME=\"string\"' -D__KBUILD_MODNAME=string -include /home/karl/linux-work/fragma/annotated/specs.verified.h -include /home/karl/linux-work/fragma/annotated/compat.h -D__builtin_memcpy=memcpy -D__typeof_unqual__=__typeof__ -D__restrict__=restrict -D__SIZEOF_INT128__=16 -D__signed__= -D__builtin_unreachable=fragma_unreachable -std=gnu11 -E -C",
+          "annotations": "Frama-C native -pp-annot with target compiler",
+          "input_mode": "kernel-tu",
+          "extra_args": [
+            "-std=gnu11"
+          ]
+        },
+        "analysis_pipeline": {
+          "kind": "wp-rte",
+          "functions": [
+            "strnchr"
+          ]
+        }
+      },
+      "reviewed_warnings": [
+        {
+          "message": "Skipped RTE guards: unaligned pointers (\\aligned not supported)",
+          "reason": "All selected-function dereferences and trusted memcpy footprints are char accesses, alignment one in the checked profile. No typed multibyte access is claimed. This does not review alignment guards for any other target.",
+          "functions": [
+            "strnchr"
+          ],
+          "file_hashes": {
+            "annotated/string.verified.c": "7fd3ddb0c8cbf9aaac346b4e2cd2805c449ea2f2de102dd34c5c8956055accfd",
+            "annotated/specs.verified.h": "701fb893f1c8622b16d04ec865e6231a5288c4e8ca52ced1ac382840f513e09f"
+          },
+          "review_evidence": [
+            "annotated/verification-notes.md",
+            "build/string-verified/final/strnchr/analysis.log"
+          ],
+          "plugin": "wp",
+          "severity": "warning"
+        },
+        {
+          "message": "Skipped RTE guards: invalid function pointer calls (\\valid_function not supported)",
+          "reason": "strnchr has no calls; strlcat has direct strlen/memcpy calls and the proved-unreachable fragma_unreachable guard. There are no indirect calls in the selected bodies.",
+          "functions": [
+            "strnchr"
+          ],
+          "file_hashes": {
+            "annotated/string.verified.c": "7fd3ddb0c8cbf9aaac346b4e2cd2805c449ea2f2de102dd34c5c8956055accfd",
+            "annotated/specs.verified.h": "701fb893f1c8622b16d04ec865e6231a5288c4e8ca52ced1ac382840f513e09f"
+          },
+          "review_evidence": [
+            "annotated/verification-notes.md",
+            "build/string-verified/final/strnchr/analysis.log"
+          ],
+          "plugin": "wp",
+          "severity": "warning"
+        },
+        {
+          "message": "-wp-rte can annotate signed overflow because -warn-signed-overflow is not set",
+          "reason": "The configured compiler uses -fno-strict-overflow and the calibrated Frama-C profile deliberately selects wrap arithmetic. These selected bodies perform size arithmetic in unsigned long, not signed arithmetic; character conversion follows the unsigned-char profile.",
+          "functions": [
+            "strnchr"
+          ],
+          "file_hashes": {
+            "annotated/string.verified.c": "7fd3ddb0c8cbf9aaac346b4e2cd2805c449ea2f2de102dd34c5c8956055accfd",
+            "annotated/specs.verified.h": "701fb893f1c8622b16d04ec865e6231a5288c4e8ca52ced1ac382840f513e09f"
+          },
+          "review_evidence": [
+            "annotated/verification-notes.md",
+            "build/string-verified/final/strnchr/analysis.log"
+          ],
+          "plugin": "wp",
+          "severity": "warning"
+        },
+        {
+          "message": "Missing RTE guards",
+          "reason": "This exact global diagnostic follows the individually reviewed signed-overflow option diagnostic, with the two other skipped guard classes separately reviewed. The selected bodies have no signed arithmetic requiring overflow guards, unsigned wrap is intended, all emitted memory guards are Valid, and no division/shift/indirect-call operations occur. Not a general waiver of missing guards.",
+          "functions": [
+            "strnchr"
+          ],
+          "file_hashes": {
+            "annotated/string.verified.c": "7fd3ddb0c8cbf9aaac346b4e2cd2805c449ea2f2de102dd34c5c8956055accfd",
+            "annotated/specs.verified.h": "701fb893f1c8622b16d04ec865e6231a5288c4e8ca52ced1ac382840f513e09f"
+          },
+          "review_evidence": [
+            "annotated/verification-notes.md",
+            "build/string-verified/final/strnchr/analysis.log"
+          ],
+          "plugin": "wp",
+          "severity": "warning"
+        }
+      ],
+      "reviewed_smoke": []
+    },
+    {
+      "id": "string.verified.strlcat",
+      "suite": "core",
+      "role": "proof",
+      "profile": "x86_64-gcc",
+      "source": "lib/string.c",
+      "harness": "annotated/string.verified.c",
+      "specs": "annotated/specs.verified.h",
+      "functions": [
+        "strlcat"
+      ],
+      "analysis": "wp",
+      "input_mode": "kernel-tu",
+      "provenance": {
+        "mode": "translation-unit"
+      },
+      "required_properties": [
+        "strlcat_ensures_attempted_length_modulo",
+        "strlcat_ensures_preserved_destination_prefix",
+        "strlcat_ensures_exact_source_prefix",
+        "strlcat_ensures_exact_resulting_length",
+        "strlcat_ensures_terminated_in_capacity",
+        "strlcat_assert_destination_length_unique",
+        "strlcat_assert_source_length_unique",
+        "strlcat_assert_valid_api_excludes_bug",
+        "strlcat_assert_copy_geometry",
+        "strlcat_assert_selected_copy_length",
+        "strlcat_assert_exact_output_string",
+        "strlcat_terminates"
+      ],
+      "require_smoke": true,
+      "provers": [
+        "alt-ergo",
+        "z3"
+      ],
+      "assumptions": [
+        "verified-string-x86-types",
+        "verified-string-frontend",
+        "verified-string-header-overrides",
+        "verified-strlcat-domain",
+        "verified-modular-strlen",
+        "verified-extern-memcpy",
+        "verified-dead-trap"
+      ],
+      "claims": [
+        "runtime-safety",
+        "functional",
+        "termination"
+      ],
+      "caller_coverage": "unverified",
+      "review_context": {
+        "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+        "file_hashes": {
+          "annotated/string.verified.c": "7fd3ddb0c8cbf9aaac346b4e2cd2805c449ea2f2de102dd34c5c8956055accfd",
+          "annotated/specs.verified.h": "701fb893f1c8622b16d04ec865e6231a5288c4e8ca52ced1ac382840f513e09f",
+          "annotated/compat.h": "9320b8de0d50c1e52742866b265fb35beb564010b81709fd31402ef4300e8fd9",
+          "annotated/override/asm/bug.h": "f99dd6334fadaf63dfc9c131a7089665a39573c03ea4b8f573f5c34dac56b570",
+          "annotated/override/asm/string_64.h": "06250323788d2ddd07da386464d615af17866c7790940672a6f2e02b97628e52",
+          "build/sources/linux-b9b3e33b70b71/lib/string.c": "954031a542ba7a8bd82af019d7d6e2f0e15666014b5827afcd0b131c260dd5be",
+          "build/kernel/x86_64-gcc/fragma-build.json": "04152fe199764c6691f04ddc6f9d62c6fa7a8b08e022316b9a9d9ab743c09883",
+          "fragma/analysis_policy.py": "b674caa823c2e703ae81e4972967ac5ce8b6a8b34b6f5203e9b39e2b4dd618ff",
+          "docs/pointer-policy-review.md": "bf605644084d3d9c83563d21231a75107c3110c85933d6def5b3106cec1adca9",
+          "build/profile-checks/pointer-policy-final-20260906/x86_64-gcc/x86_64-gcc.yaml": "106103531bae6c3e42eeec83dfd8734d54aefaca392e7db74f0d9a5718b491a1"
+        },
+        "review_evidence": [
+          "annotated/verification-notes.md",
+          "build/string-verified/final/strlcat/receipt.json",
+          "build/string-verified/native-review/receipt.json",
+          "build/string-verified/native-review/equivalence.json",
+          "docs/pointer-policy-review.md",
+          "build/pointer-formation-review/inspected-3.json",
+          "build/pointer-formation-review/run-3/string.verified.strlcat/analysis.log",
+          "build/pointer-formation-review/run-3/string.verified.strlcat/wp.json",
+          "build/pointer-formation-review/run-3/string.verified.strlcat/properties.tsv",
+          "build/pointer-formation-review/builtin-audit-review.md"
+        ],
+        "profile": "x86_64-gcc",
+        "analysis": {
+          "wp_model": "Typed",
+          "arithmetic_flags": [
+            "-no-warn-signed-overflow",
+            "-no-warn-unsigned-overflow",
+            "-no-warn-signed-downcast",
+            "-no-warn-unsigned-downcast",
+            "-no-warn-right-shift-negative"
+          ],
+          "runtime_checks": {
+            "pointer_formation": "object-or-null"
+          }
+        },
+        "toolchain_lock_sha256": "0d3557b20e4a0ed16e6a4fe8622aa3ecd1572b9b30d490c7c69b4be82d7f47cb",
+        "preprocessing": {
+          "cpp_command": "/usr/bin/gcc -I /home/karl/linux-work/fragma/annotated/override -nostdinc -I/home/karl/linux-work/fragma/build/sources/linux-b9b3e33b70b71/arch/x86/include -I./arch/x86/include/generated -I/home/karl/linux-work/fragma/build/sources/linux-b9b3e33b70b71/include -I./include -I/home/karl/linux-work/fragma/build/sources/linux-b9b3e33b70b71/arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I/home/karl/linux-work/fragma/build/sources/linux-b9b3e33b70b71/include/uapi -I./include/generated/uapi -include /home/karl/linux-work/fragma/build/sources/linux-b9b3e33b70b71/include/linux/compiler-version.h -include /home/karl/linux-work/fragma/build/sources/linux-b9b3e33b70b71/include/linux/kconfig.h -include /home/karl/linux-work/fragma/build/sources/linux-b9b3e33b70b71/include/linux/compiler_types.h -D__KERNEL__ -fmacro-prefix-map=/home/karl/linux-work/fragma/build/sources/linux-b9b3e33b70b71/= -fshort-wchar -funsigned-char -fno-common -fno-PIE -fno-strict-aliasing -std=gnu11 -fms-extensions -mno-sse -mno-mmx -mno-sse2 -mno-3dnow -mno-avx -mno-sse4a -fcf-protection=branch -fno-jump-tables -m64 -falign-jumps=1 -falign-loops=1 -mno-80387 -mno-fp-ret-in-387 -mpreferred-stack-boundary=3 -mskip-rax-setup -march=x86-64 -mtune=generic -mno-red-zone -mcmodel=kernel -Wno-sign-compare -fno-asynchronous-unwind-tables -fno-delete-null-pointer-checks -Os -fno-allow-store-data-races -fno-stack-protector -fomit-frame-pointer -ftrivial-auto-var-init=zero -fzero-init-padding-bits=all -fno-stack-clash-protection -fmin-function-alignment=16 -fstrict-flex-arrays=3 -fno-strict-overflow -fno-stack-check -fconserve-stack -fno-builtin-wcslen -Wall -Wextra -Wundef -Werror=implicit-function-declaration -Werror=implicit-int -Werror=return-type -Werror=strict-prototypes -Wno-format-security -Wno-trigraphs -Wno-frame-address -Wno-address-of-packed-member -Wmissing-declarations -Wmissing-prototypes -Wframe-larger-than=1280 -Wno-main -Wno-type-limits -Wno-dangling-pointer -Wvla-larger-than=1 -Wno-pointer-sign -Wcast-function-type -Wno-unterminated-string-initialization -Wno-array-bounds -Wno-stringop-overflow -Wno-alloc-size-larger-than -Wimplicit-fallthrough=5 -Werror=date-time -Werror=incompatible-pointer-types -Werror=designated-init -Wenum-conversion -Wunused -Wno-unused-but-set-variable -Wno-unused-const-variable -Wno-packed-not-aligned -Wno-format-overflow -Wno-format-truncation -Wno-stringop-truncation -Wno-override-init -Wno-missing-field-initializers -Wno-shift-negative-value -Wno-maybe-uninitialized -Wno-sign-compare -Wno-unused-parameter -ffreestanding -I/home/karl/linux-work/fragma/build/sources/linux-b9b3e33b70b71/lib -Ilib '-DKBUILD_MODFILE=\"lib/string\"' '-DKBUILD_BASENAME=\"string\"' '-DKBUILD_MODNAME=\"string\"' -D__KBUILD_MODNAME=string -include /home/karl/linux-work/fragma/annotated/specs.verified.h -include /home/karl/linux-work/fragma/annotated/compat.h -D__builtin_memcpy=memcpy -D__typeof_unqual__=__typeof__ -D__restrict__=restrict -D__SIZEOF_INT128__=16 -D__signed__= -D__builtin_unreachable=fragma_unreachable -std=gnu11 -E -C",
+          "annotations": "Frama-C native -pp-annot with target compiler",
+          "input_mode": "kernel-tu",
+          "extra_args": [
+            "-std=gnu11"
+          ]
+        },
+        "analysis_pipeline": {
+          "kind": "wp-rte",
+          "functions": [
+            "strlcat"
+          ]
+        }
+      },
+      "reviewed_warnings": [
+        {
+          "message": "Skipped RTE guards: unaligned pointers (\\aligned not supported)",
+          "reason": "All selected-function dereferences and trusted memcpy footprints are char accesses, alignment one in the checked profile. No typed multibyte access is claimed. This does not review alignment guards for any other target.",
+          "functions": [
+            "strlcat"
+          ],
+          "file_hashes": {
+            "annotated/string.verified.c": "7fd3ddb0c8cbf9aaac346b4e2cd2805c449ea2f2de102dd34c5c8956055accfd",
+            "annotated/specs.verified.h": "701fb893f1c8622b16d04ec865e6231a5288c4e8ca52ced1ac382840f513e09f"
+          },
+          "review_evidence": [
+            "annotated/verification-notes.md",
+            "build/string-verified/final/strlcat/analysis.log"
+          ],
+          "plugin": "wp",
+          "severity": "warning"
+        },
+        {
+          "message": "Skipped RTE guards: invalid function pointer calls (\\valid_function not supported)",
+          "reason": "strnchr has no calls; strlcat has direct strlen/memcpy calls and the proved-unreachable fragma_unreachable guard. There are no indirect calls in the selected bodies.",
+          "functions": [
+            "strlcat"
+          ],
+          "file_hashes": {
+            "annotated/string.verified.c": "7fd3ddb0c8cbf9aaac346b4e2cd2805c449ea2f2de102dd34c5c8956055accfd",
+            "annotated/specs.verified.h": "701fb893f1c8622b16d04ec865e6231a5288c4e8ca52ced1ac382840f513e09f"
+          },
+          "review_evidence": [
+            "annotated/verification-notes.md",
+            "build/string-verified/final/strlcat/analysis.log"
+          ],
+          "plugin": "wp",
+          "severity": "warning"
+        },
+        {
+          "message": "-wp-rte can annotate signed overflow because -warn-signed-overflow is not set",
+          "reason": "The configured compiler uses -fno-strict-overflow and the calibrated Frama-C profile deliberately selects wrap arithmetic. These selected bodies perform size arithmetic in unsigned long, not signed arithmetic; character conversion follows the unsigned-char profile.",
+          "functions": [
+            "strlcat"
+          ],
+          "file_hashes": {
+            "annotated/string.verified.c": "7fd3ddb0c8cbf9aaac346b4e2cd2805c449ea2f2de102dd34c5c8956055accfd",
+            "annotated/specs.verified.h": "701fb893f1c8622b16d04ec865e6231a5288c4e8ca52ced1ac382840f513e09f"
+          },
+          "review_evidence": [
+            "annotated/verification-notes.md",
+            "build/string-verified/final/strlcat/analysis.log"
+          ],
+          "plugin": "wp",
+          "severity": "warning"
+        },
+        {
+          "message": "Missing RTE guards",
+          "reason": "This exact global diagnostic follows the individually reviewed signed-overflow option diagnostic, with the two other skipped guard classes separately reviewed. The selected bodies have no signed arithmetic requiring overflow guards, unsigned wrap is intended, all emitted memory guards are Valid, and no division/shift/indirect-call operations occur. Not a general waiver of missing guards.",
+          "functions": [
+            "strlcat"
+          ],
+          "file_hashes": {
+            "annotated/string.verified.c": "7fd3ddb0c8cbf9aaac346b4e2cd2805c449ea2f2de102dd34c5c8956055accfd",
+            "annotated/specs.verified.h": "701fb893f1c8622b16d04ec865e6231a5288c4e8ca52ced1ac382840f513e09f"
+          },
+          "review_evidence": [
+            "annotated/verification-notes.md",
+            "build/string-verified/final/strlcat/analysis.log"
+          ],
+          "plugin": "wp",
+          "severity": "warning"
+        }
+      ],
+      "reviewed_smoke": [
+        {
+          "goal": "typed_fragma_unreachable_wp_smoke_dead_call_s4355",
+          "property": "fragma_unreachable_wp_smoke_dead_call_s4355",
+          "function": "strlcat",
+          "file": "annotated/string.verified.c",
+          "line": 274,
+          "reason": "destination_fits and the trusted first-NUL strlen result imply dsize < count before BUG_ON. The guard's true branch and its trap call are deliberately unreachable on this valid API domain. Both length-uniqueness assertions and target termination are independently Valid. Review applies only to this branch, not to default preconditions or another statement.",
+          "file_hashes": {
+            "annotated/string.verified.c": "7fd3ddb0c8cbf9aaac346b4e2cd2805c449ea2f2de102dd34c5c8956055accfd",
+            "annotated/specs.verified.h": "701fb893f1c8622b16d04ec865e6231a5288c4e8ca52ced1ac382840f513e09f"
+          },
+          "review_evidence": [
+            "annotated/verification-notes.md",
+            "build/string-verified/native-review/goals.json",
+            "build/string-verified/native-review/properties.tsv",
+            "build/string-verified/native-review/equivalence.json"
+          ],
+          "unreachable_property": {
+            "file": "annotated/string.verified.c",
+            "line": 274,
+            "function": "fragma_unreachable",
+            "kind": "user assertion",
+            "status": "Invalid or unreachable",
+            "property": "\\false"
+          }
+        },
+        {
+          "goal": "typed_strlcat_wp_smoke_dead_code_s4355",
+          "property": "strlcat_wp_smoke_dead_code_s4355",
+          "function": "strlcat",
+          "file": "annotated/string.verified.c",
+          "line": 274,
+          "reason": "destination_fits and the trusted first-NUL strlen result imply dsize < count before BUG_ON. The guard's true branch and its trap call are deliberately unreachable on this valid API domain. Both length-uniqueness assertions and target termination are independently Valid. Review applies only to this branch, not to default preconditions or another statement.",
+          "file_hashes": {
+            "annotated/string.verified.c": "7fd3ddb0c8cbf9aaac346b4e2cd2805c449ea2f2de102dd34c5c8956055accfd",
+            "annotated/specs.verified.h": "701fb893f1c8622b16d04ec865e6231a5288c4e8ca52ced1ac382840f513e09f"
+          },
+          "review_evidence": [
+            "annotated/verification-notes.md",
+            "build/string-verified/native-review/goals.json",
+            "build/string-verified/native-review/properties.tsv",
+            "build/string-verified/native-review/equivalence.json"
+          ]
+        }
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "verified-string-x86-types",
+      "kind": "type-model",
+      "files": [
+        "annotated/specs.verified.h",
+        "config/profiles.json"
+      ],
+      "symbols": [
+        "size_t",
+        "char",
+        "int"
+      ],
+      "scope": "Only the configured x86_64-gcc profile: size_t unsigned long, 64-bit long/pointer, 32-bit int, 8-bit unsigned plain char.",
+      "justification": "Generated model and configured real-header calibration establish selected types. The modular attempted length uses the C unsigned-long conversion, not mathematical no-overflow.",
+      "review_evidence": [
+        "build/profile-checks/x86_64-gcc-configured/profile.json"
+      ],
+      "review_status": "reviewed",
+      "implementation_proved": false,
+      "file_hashes": {
+        "annotated/string.verified.c": "7fd3ddb0c8cbf9aaac346b4e2cd2805c449ea2f2de102dd34c5c8956055accfd",
+        "annotated/specs.verified.h": "701fb893f1c8622b16d04ec865e6231a5288c4e8ca52ced1ac382840f513e09f"
+      }
+    },
+    {
+      "id": "verified-string-frontend",
+      "kind": "frontend-model",
+      "files": [
+        "annotated/compat.h",
+        "fragma/inputs.py",
+        "annotated/string.verified.c"
+      ],
+      "scope": "Only strnchr/strlcat and the explicitly trusted strlen/memcpy calls in the pinned configured whole TU.",
+      "justification": "Reviewed preprocessed selected bodies and exact command. GNU spelling changes do not alter their scalar declarations or operations. __builtin_memcpy is the separately contracted memcpy, and __builtin_unreachable occurs only on a proved-dead branch. Unselected overflow/bitops builtins, pointer conversions and ignored attributes are not assumed implemented.",
+      "review_evidence": [
+        "annotated/verification-notes.md",
+        "build/string-verified/final/strnchr/receipt.json",
+        "build/string-verified/final/strlcat/receipt.json"
+      ],
+      "review_status": "reviewed",
+      "implementation_proved": false,
+      "file_hashes": {
+        "annotated/string.verified.c": "7fd3ddb0c8cbf9aaac346b4e2cd2805c449ea2f2de102dd34c5c8956055accfd",
+        "annotated/specs.verified.h": "701fb893f1c8622b16d04ec865e6231a5288c4e8ca52ced1ac382840f513e09f"
+      }
+    },
+    {
+      "id": "verified-string-header-overrides",
+      "kind": "header-model",
+      "files": [
+        "annotated/override/asm/bug.h",
+        "annotated/override/asm/string_64.h"
+      ],
+      "scope": "Pinned x86 selected string bodies only; no other architecture/configuration inheritance.",
+      "justification": "string_64.h's C23-to-typeof edits are in unselected memset helpers. BUG's asm replacement is accepted solely because strlcat proves its guard unreachable on the stated valid domain; strnchr uses neither replacement.",
+      "review_evidence": [
+        "annotated/verification-notes.md",
+        "build/string-verified/final/strlcat/properties.tsv"
+      ],
+      "review_status": "reviewed",
+      "implementation_proved": false,
+      "file_hashes": {
+        "annotated/string.verified.c": "7fd3ddb0c8cbf9aaac346b4e2cd2805c449ea2f2de102dd34c5c8956055accfd",
+        "annotated/specs.verified.h": "701fb893f1c8622b16d04ec865e6231a5288c4e8ca52ced1ac382840f513e09f"
+      }
+    },
+    {
+      "id": "verified-strnchr-domain",
+      "kind": "input-domain",
+      "files": [
+        "annotated/string.verified.c",
+        "annotated/specs.verified.h"
+      ],
+      "symbols": [
+        "strnchr",
+        "fragma_scan_readable"
+      ],
+      "scope": "Zero count needs no readable object; otherwise count readable bytes OR a readable NUL-terminated prefix shorter than count. Early non-NUL match with no such readable/NUL prefix is intentionally not covered.",
+      "justification": "All actual accesses are proved readable from loop invariants. Contract includes searching for NUL after (char)c conversion, count exhaustion, first-match behavior and early termination. Kernel caller coverage remains unverified.",
+      "review_evidence": [
+        "annotated/verification-notes.md",
+        "build/string-verified/final/strnchr/properties.tsv"
+      ],
+      "review_status": "reviewed",
+      "implementation_proved": false,
+      "file_hashes": {
+        "annotated/string.verified.c": "7fd3ddb0c8cbf9aaac346b4e2cd2805c449ea2f2de102dd34c5c8956055accfd",
+        "annotated/specs.verified.h": "701fb893f1c8622b16d04ec865e6231a5288c4e8ca52ced1ac382840f513e09f"
+      }
+    },
+    {
+      "id": "verified-strlcat-domain",
+      "kind": "input-domain",
+      "files": [
+        "annotated/string.verified.c",
+        "annotated/specs.verified.h"
+      ],
+      "symbols": [
+        "strlcat",
+        "fragma_cstring"
+      ],
+      "scope": "Positive writable capacity, initial first NUL before capacity, readable source first-NUL string, and disjoint source/destination. No extra bound on sum of independent lengths.",
+      "justification": "Matches this kernel API's BUG_ON(dsize >= count) accepted normal-return domain. Individual lengths leave room for a NUL byte; attempted total is returned modulo 2^64. Out-of-domain trap behavior and actual callers are not certified.",
+      "review_evidence": [
+        "annotated/verification-notes.md",
+        "build/string-verified/final/strlcat/properties.tsv"
+      ],
+      "review_status": "reviewed",
+      "implementation_proved": false,
+      "file_hashes": {
+        "annotated/string.verified.c": "7fd3ddb0c8cbf9aaac346b4e2cd2805c449ea2f2de102dd34c5c8956055accfd",
+        "annotated/specs.verified.h": "701fb893f1c8622b16d04ec865e6231a5288c4e8ca52ced1ac382840f513e09f"
+      }
+    },
+    {
+      "id": "verified-modular-strlen",
+      "kind": "external-contract",
+      "files": [
+        "annotated/specs.verified.h"
+      ],
+      "kernel_files": [
+        "lib/string.c"
+      ],
+      "symbols": [
+        "strlen"
+      ],
+      "scope": "Readable first-NUL string, no writes, terminating, first-NUL length result.",
+      "justification": "A consistent defined-predicate contract used modularly. The generic implementation is present in this configured TU but is not selected for proof; each selected strlcat call precondition is Valid. Implementation correctness is explicitly trusted.",
+      "review_evidence": [
+        "annotated/verification-notes.md",
+        "build/string-verified/final/strlcat/properties.tsv"
+      ],
+      "review_status": "reviewed",
+      "implementation_proved": false,
+      "file_hashes": {
+        "annotated/string.verified.c": "7fd3ddb0c8cbf9aaac346b4e2cd2805c449ea2f2de102dd34c5c8956055accfd",
+        "annotated/specs.verified.h": "701fb893f1c8622b16d04ec865e6231a5288c4e8ca52ced1ac382840f513e09f"
+      }
+    },
+    {
+      "id": "verified-extern-memcpy",
+      "kind": "external-contract",
+      "files": [
+        "annotated/specs.verified.h"
+      ],
+      "symbols": [
+        "memcpy",
+        "__builtin_memcpy"
+      ],
+      "scope": "Writable/readable separated byte ranges, exact prestate copy, frame, destination return and termination; empty ranges allow len zero.",
+      "justification": "Models the architecture copy implementation reached by builtin substitution. Selected strlcat call-instance preconditions all prove; external implementation remains trusted, not proved.",
+      "review_evidence": [
+        "annotated/verification-notes.md",
+        "build/string-verified/final/strlcat/properties.tsv"
+      ],
+      "review_status": "reviewed",
+      "implementation_proved": false,
+      "file_hashes": {
+        "annotated/string.verified.c": "7fd3ddb0c8cbf9aaac346b4e2cd2805c449ea2f2de102dd34c5c8956055accfd",
+        "annotated/specs.verified.h": "701fb893f1c8622b16d04ec865e6231a5288c4e8ca52ced1ac382840f513e09f"
+      }
+    },
+    {
+      "id": "verified-dead-trap",
+      "kind": "control-flow-model",
+      "files": [
+        "annotated/specs.verified.h",
+        "annotated/override/asm/bug.h"
+      ],
+      "symbols": [
+        "fragma_unreachable",
+        "BUG",
+        "BUG_ON"
+      ],
+      "scope": "Only the strlcat BUG_ON true branch proved unreachable under destination_fits.",
+      "justification": "terminates false, exits false, ensures false permits divergence instead of an inconsistent forced-termination/no-exit contract. This is not a model of arbitrary trap-handler effects. The selected path cannot call the stub; normal termination independently proves. Individually listed dead-path smoke findings remain visible.",
+      "review_evidence": [
+        "annotated/verification-notes.md",
+        "build/string-verified/final/strlcat/goals.json",
+        "build/string-verified/final/strlcat/properties.tsv"
+      ],
+      "review_status": "reviewed",
+      "implementation_proved": false,
+      "file_hashes": {
+        "annotated/string.verified.c": "7fd3ddb0c8cbf9aaac346b4e2cd2805c449ea2f2de102dd34c5c8956055accfd",
+        "annotated/specs.verified.h": "701fb893f1c8622b16d04ec865e6231a5288c4e8ca52ced1ac382840f513e09f"
+      }
+    }
+  ]
+}

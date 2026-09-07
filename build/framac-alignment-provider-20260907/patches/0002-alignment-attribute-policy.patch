@@ -1,0 +1,176 @@
+--- a/src/kernel_internals/runtime/machdep.ml
++++ b/src/kernel_internals/runtime/machdep.ml
+@@ -62,6 +62,7 @@
+   alignof_aligned: int;
+   alignof_max_align_t: int;
+   max_extended_alignment: int;
++  alignment_attribute_policy: string [@ default "legacy"];
+   gcc_alignof_short: int [@ default -1];
+   gcc_alignof_int: int [@ default -1];
+   gcc_alignof_long: int [@ default -1];
+@@ -100,6 +101,35 @@
+   machdep_name: string;
+   custom_defs: (string * string) list [@of_yaml yaml_dict_to_list];
+ } [@@deriving yaml]
++
++let validate_alignment_attribute_policy mach =
++  match mach.alignment_attribute_policy with
++  | "legacy" -> Ok ()
++  | "clang-21-u32-bits" ->
++    if mach.compiler <> "clang" then
++      Error (`Msg "alignment_attribute_policy=clang-21-u32-bits requires compiler=clang")
++    else if not Z.(equal (of_int mach.max_extended_alignment) (shift_left one 32)) then
++      Error (`Msg "alignment_attribute_policy=clang-21-u32-bits requires max_extended_alignment=4294967296 bytes")
++    else Ok ()
++  | policy ->
++    Error (`Msg (Format.asprintf "unknown alignment_attribute_policy: %S" policy))
++
++(* Keep the generated decoder's defaults and type checks, then validate the
++   explicit policy before a parsed machdep can be used for preprocessing. *)
++let mach_of_yaml yaml =
++  let repeated_policy =
++    match yaml with
++    | `O fields ->
++      List.length
++        (List.filter (fun (name, _) -> name = "alignment_attribute_policy") fields) > 1
++    | _ -> false
++  in
++  if repeated_policy then
++    Error (`Msg "duplicate alignment_attribute_policy")
++  else
++    Result.bind (mach_of_yaml yaml)
++      (fun mach ->
++         Result.map (fun () -> mach) (validate_alignment_attribute_policy mach))
+ 
+ let dummy = {
+   sizeof_short = 2;
+@@ -143,6 +173,7 @@
+   alignof_aligned = 16;
+   alignof_max_align_t = 16;
+   max_extended_alignment = -1;
++  alignment_attribute_policy = "legacy";
+   gcc_alignof_short = -1;
+   gcc_alignof_int = -1;
+   gcc_alignof_long = -1;
+@@ -214,6 +245,7 @@
+        alignof_ptr=%d;alignof_float=%d;alignof_double=%d;alignof_longdouble=%d;\
+        alignof_void=%d;alignof_fun=%d;alignof_aligned=%d;\
+        alignof_max_align_t=%d;max_extended_alignment=%d;\
++       alignment_attribute_policy=%s;\
+        gcc_alignof_short=%d;gcc_alignof_int=%d;gcc_alignof_long=%d;\
+        gcc_alignof_longlong=%d;gcc_alignof_ptr=%d;gcc_alignof_float=%d;\
+        gcc_alignof_double=%d;gcc_alignof_longdouble=%d;\
+@@ -267,6 +299,7 @@
+       mach.alignof_aligned
+       mach.alignof_max_align_t
+       mach.max_extended_alignment
++      mach.alignment_attribute_policy
+       mach.gcc_alignof_short
+       mach.gcc_alignof_int
+       mach.gcc_alignof_long
+--- a/src/kernel_internals/runtime/machdep.mli
++++ b/src/kernel_internals/runtime/machdep.mli
+@@ -56,6 +56,12 @@
+   alignof_aligned: int;   (** Alignment of a type with aligned attribute *)
+   alignof_max_align_t: int; (** [_Alignof(max_align_t)]. Negative if unsupported. *)
+   max_extended_alignment: int; (** -1 if extended alignment is unsupported. *)
++  alignment_attribute_policy: string;
++  (** Optional YAML policy, default ["legacy"]. The explicit
++      ["clang-21-u32-bits"] policy interprets a Clang 21 alignment attribute
++      through its 32-bit unsigned bit-count cache, separately from the
++      original byte request and its maximum. It requires [compiler="clang"]
++      and [max_extended_alignment=4294967296]. Unknown policies are rejected. *)
+   gcc_alignof_short: int;      (** GCC [__alignof__(short)]. Negative if unsupported.  *)
+   gcc_alignof_int: int;        (** GCC [__alignof__(int)]. Negative if unsupported.  *)
+   gcc_alignof_long: int;       (** GCC [__alignof__(long)]. Negative if unsupported.  *)
+@@ -97,6 +103,11 @@
+   custom_defs: (string * string) list; (** sequence of key/value for C macros *)
+ } [@@deriving yaml]
+ (** @since 30.0-Zinc  *)
++
++val validate_alignment_attribute_policy: mach -> (unit, [ `Msg of string ]) result
++(** Validate the explicit alignment policy and its machine prerequisites.
++    [mach_of_yaml] calls this after decoding; [Machine.init] also checks direct
++    OCaml record inputs. This does not measure or validate compiler behavior. *)
+ 
+ module Machdep: Datatype.S_with_collections with type t = mach
+ (** @since 30.0-Zinc  *)
+--- a/src/kernel_services/ast_data/machine.ml
++++ b/src/kernel_services/ast_data/machine.ml
+@@ -174,6 +174,16 @@
+ 
+ let max_extended_alignment () = the_machine.machdep.max_extended_alignment
+ 
++let require_alignment_attribute_policy machdep =
++  match Machdep.validate_alignment_attribute_policy machdep with
++  | Ok () -> ()
++  | Error (`Msg message) -> Kernel.abort "Invalid machine alignment policy: %s" message
++
++let clang_u32_alignment_policy () =
++  let machdep = get_machdep () in
++  require_alignment_attribute_policy machdep;
++  machdep.alignment_attribute_policy = "clang-21-u32-bits"
++
+ module GCCAlignof : AlignofInfo = struct
+   let short () = the_machine.machdep.gcc_alignof_short
+   let int () = the_machine.machdep.gcc_alignof_int
+@@ -288,6 +298,7 @@
+ let init_builtins_ref : (unit -> unit) ref = Extlib.mk_fun "init_builtins_ref"
+ 
+ let init ~initLogicBuiltins machdep =
++  require_alignment_attribute_policy machdep;
+   if not (TheMachine.is_computed ()) then begin
+     (* Set the machine *)
+     the_machine.machdep <- machdep;
+--- a/src/kernel_services/ast_data/machine.mli
++++ b/src/kernel_services/ast_data/machine.mli
+@@ -168,6 +168,15 @@
+ 
+ val insert_implicit_casts: unit -> bool
+ 
++val clang_u32_alignment_policy: unit -> bool
++(** Whether the explicit ["clang-21-u32-bits"] alignment-attribute policy is
++    selected. Returns [false] for omitted/["legacy"] policies, and rejects
++    invalid policy/compiler/maximum combinations. Frama-C models 8-bit bytes;
++    the cache width is not inferred from the target's [sizeof(int)].
++    Consumers must retain and validate source requests separately from their
++    effective alignment contribution. This getter does not alter the maximum
++    accepted request or establish architecture support. *)
++
+ val max_extended_alignment: unit -> int
+ (** -1 if the platform does not support extended alignments
+     @since 32.0-Germanium
+--- a/share/machdeps/machdep-schema.yaml
++++ b/share/machdeps/machdep-schema.yaml
+@@ -77,6 +77,20 @@
+   description: definition of 'max_align_t' (in stddef.h)
+ 
+   type: string
++
++alignment_attribute_policy:
++
++  description: |
++    Explicit alignment-attribute interpretation policy; omitted means legacy.
++    clang-21-u32-bits selects Clang 21's unsigned 32-bit bit-count cache with
++    Frama-C's 8-bit bytes, while retaining the original byte-valued request.
++    It requires compiler exactly clang and max_extended_alignment 4294967296.
++    This opt-in does not itself validate a compiler or establish target support.
++
++  type: string
++  enum: [legacy, clang-21-u32-bits]
++  default: legacy
++  optional: true
+ 
+ max_extended_alignment:
+ 
+--- a/share/machdeps/make_machdep/make_machdep.py
++++ b/share/machdeps/make_machdep/make_machdep.py
+@@ -114,7 +114,7 @@
+ 
+         strict_schema = {
+             # extract the keys
+-            "required": [x for x in schema],
++            "required": [x for x in schema if schema[x].get("optional") is not True],
+             "properties": schema,
+             "additionalProperties": False,
+         }

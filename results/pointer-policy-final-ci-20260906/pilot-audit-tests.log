@@ -1,0 +1,22 @@
+test_boolean_status_or_count_is_rejected (__main__.MachineDiscriminatorTests.test_boolean_status_or_count_is_rejected) ... ok
+test_current_model_policy_cannot_be_missing_legacy_or_self_asserted (__main__.MachineDiscriminatorTests.test_current_model_policy_cannot_be_missing_legacy_or_self_asserted) ... ok
+test_exact_endian_only_mutation_and_named_failure (__main__.MachineDiscriminatorTests.test_exact_endian_only_mutation_and_named_failure) ... ok
+test_extra_model_or_preprocessor_change_is_not_endian_evidence (__main__.MachineDiscriminatorTests.test_extra_model_or_preprocessor_change_is_not_endian_evidence) ... ok
+test_missing_check_or_positive_unknown_is_rejected (__main__.MachineDiscriminatorTests.test_missing_check_or_positive_unknown_is_rejected) ... ok
+test_only_unique_positive_receipt_bound_audit_pair_is_normalized (__main__.MachineDiscriminatorTests.test_only_unique_positive_receipt_bound_audit_pair_is_normalized) ... ok
+test_real_completed_four_target_evidence (__main__.MachineDiscriminatorTests.test_real_completed_four_target_evidence) ... ok
+test_unrelated_invalid_property_cannot_be_discriminator (__main__.MachineDiscriminatorTests.test_unrelated_invalid_property_cannot_be_discriminator) ... ok
+test_calibration_requires_all_sixteen_positive_rows_and_exact_negative (__main__.PointerFormationTests.test_calibration_requires_all_sixteen_positive_rows_and_exact_negative) ... ok
+test_inspected_inventory_samples_are_not_pilot_approval (__main__.PointerFormationTests.test_inspected_inventory_samples_are_not_pilot_approval) ... ok
+test_missing_replaced_duplicate_conditional_or_wrong_location_guards_fail (__main__.PointerFormationTests.test_missing_replaced_duplicate_conditional_or_wrong_location_guards_fail) ... ok
+test_complete_exact_pilot (__main__.TerminalInventoryTests.test_complete_exact_pilot) ... ok
+test_duplicate_or_wrong_revision_or_untyped_fields (__main__.TerminalInventoryTests.test_duplicate_or_wrong_revision_or_untyped_fields) ... ok
+test_live_is_not_accepted_even_after_four_passing_rows (__main__.TerminalInventoryTests.test_live_is_not_accepted_even_after_four_passing_rows) ... ok
+test_missing_calibration_is_not_pilot_acceptance (__main__.TerminalInventoryTests.test_missing_calibration_is_not_pilot_acceptance) ... ok
+test_unfinalized_full_selection_is_not_terminal_evidence (__main__.TerminalInventoryTests.test_unfinalized_full_selection_is_not_terminal_evidence) ... ok
+test_unrelated_failure_does_not_shrink_pilot (__main__.TerminalInventoryTests.test_unrelated_failure_does_not_shrink_pilot) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 4.152s
+
+OK

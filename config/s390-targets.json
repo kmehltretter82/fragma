@@ -1,0 +1,911 @@
+{
+  "schema_version": 1,
+  "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+  "targets": [
+    {
+      "id": "s390.unaligned24",
+      "suite": "extended",
+      "role": "proof",
+      "profile": "s390x-gcc",
+      "source": "include/linux/unaligned.h",
+      "harness": "s390/annotated/unaligned.verified.c",
+      "functions": [
+        "__get_unaligned_be24",
+        "__get_unaligned_le24",
+        "__put_unaligned_be24",
+        "__put_unaligned_le24"
+      ],
+      "analysis_functions": [
+        "__get_unaligned_be24",
+        "__get_unaligned_le24",
+        "__put_unaligned_be24",
+        "__put_unaligned_le24",
+        "fragma_roundtrip_be24",
+        "fragma_roundtrip_le24"
+      ],
+      "project_functions": [
+        "fragma_roundtrip_be24",
+        "fragma_roundtrip_le24"
+      ],
+      "analysis": "wp",
+      "input_mode": "standalone",
+      "provenance": {
+        "mode": "functions"
+      },
+      "kernel_model_check": "s390/annotated/kernel-model-check.c",
+      "required_properties": [
+        "get_unaligned_be24_ensures_decoded_value",
+        "get_unaligned_be24_ensures_decoded_range",
+        "get_unaligned_le24_ensures_decoded_value",
+        "get_unaligned_le24_ensures_decoded_range",
+        "put_unaligned_be24_ensures_byte_0",
+        "put_unaligned_be24_ensures_byte_1",
+        "put_unaligned_be24_ensures_byte_2",
+        "put_unaligned_le24_ensures_byte_0",
+        "put_unaligned_le24_ensures_byte_1",
+        "put_unaligned_le24_ensures_byte_2",
+        "fragma_roundtrip_be24_ensures_roundtrip",
+        "fragma_roundtrip_le24_ensures_roundtrip"
+      ],
+      "assumptions": [
+        "s390-byte24-types",
+        "s390-byte24-frontend"
+      ],
+      "claims": [
+        "runtime-safety",
+        "functional",
+        "termination",
+        "encode-decode-roundtrip"
+      ],
+      "caller_coverage": "project-witnesses-require-proof; kernel-callers-unverified",
+      "wp_strategy": "fragma_byte_decompose",
+      "wp_strategy_file": "s390/annotated/byteproof.h",
+      "wp_strategy_provers": [
+        "alt-ergo",
+        "z3"
+      ],
+      "wp_auto_depth": 64,
+      "wp_smoke_timeout": 2,
+      "review_context": {
+        "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+        "profile": "s390x-gcc",
+        "toolchain_lock_sha256": "0d3557b20e4a0ed16e6a4fe8622aa3ecd1572b9b30d490c7c69b4be82d7f47cb",
+        "analysis": {
+          "wp_model": "Typed",
+          "arithmetic_flags": [
+            "-no-warn-signed-overflow",
+            "-no-warn-unsigned-overflow",
+            "-no-warn-signed-downcast",
+            "-no-warn-unsigned-downcast",
+            "-no-warn-right-shift-negative"
+          ],
+          "runtime_checks": {
+            "pointer_formation": "object-or-null"
+          }
+        },
+        "preprocessing": {
+          "cpp_command": "/usr/bin/s390x-linux-gnu-gcc -m64 -march=z13 -mtune=z13 -mpacked-stack -mbackchain -msoft-float -std=gnu11 -funsigned-char -fshort-wchar -fno-strict-overflow -fno-strict-aliasing -ffreestanding -nostdinc -D__KERNEL__ -E -C",
+          "annotations": "Frama-C native -pp-annot with target compiler",
+          "input_mode": "standalone",
+          "extra_args": [
+            "-std=gnu11"
+          ]
+        },
+        "proof_search": {
+          "wp_strategy": "fragma_byte_decompose",
+          "wp_strategy_file": "s390/annotated/byteproof.h",
+          "wp_strategy_provers": [
+            "alt-ergo",
+            "z3"
+          ],
+          "wp_auto_depth": 64,
+          "wp_smoke_timeout": 2
+        },
+        "file_hashes": {
+          "s390/annotated/unaligned.verified.c": "6cae9b7f5f09fd2295c9d0a0e3c600bc5826bb945db6f57b5f1787ea0bb8a601",
+          "s390/annotated/byteproof.h": "9a9c584c56d36329f866e060500d5d64557c63ffc538cf9551fe073b94d53017",
+          "s390/annotated/kernel-model-check.c": "851f6223a59a58d26ecf2628a39bbad58956801fdf2f273208668327454a2577",
+          "build/sources/linux-b9b3e33b70b71/include/linux/unaligned.h": "877cc68addf72f84834a7da87c09fc54b86cb383d6a3d93f2a97a16e751458ce",
+          "build/kernel/s390x-gcc/fragma-build.json": "9159a7c93c54a3782dade0238a375b3ce5539bf3557f8b81d26668acca01e144",
+          "fragma/analysis_policy.py": "b674caa823c2e703ae81e4972967ac5ce8b6a8b34b6f5203e9b39e2b4dd618ff",
+          "docs/pointer-policy-review.md": "bf605644084d3d9c83563d21231a75107c3110c85933d6def5b3106cec1adca9",
+          "build/profile-checks/pointer-policy-final-20260906/s390x-gcc/s390x-gcc.yaml": "4ccbe516e87c21ac357944eb3ad9214311098354fee9484f4d164a0bcc40edfa"
+        },
+        "review_evidence": [
+          "s390/annotated/byte-verification.md",
+          "build/s390-pilot/byte24-final-2/receipt.json",
+          "build/s390-pilot/byte24-final-2/properties.tsv",
+          "docs/pointer-policy-review.md",
+          "build/pointer-formation-review/inspected-3.json",
+          "build/pointer-formation-review/run-2/s390.unaligned24/analysis.log",
+          "build/pointer-formation-review/run-2/s390.unaligned24/wp.json",
+          "build/pointer-formation-review/run-2/s390.unaligned24/properties.tsv",
+          "build/pointer-formation-review/builtin-audit-review.md"
+        ],
+        "analysis_pipeline": {
+          "kind": "wp-rte",
+          "functions": [
+            "__get_unaligned_be24",
+            "__get_unaligned_le24",
+            "__put_unaligned_be24",
+            "__put_unaligned_le24",
+            "fragma_roundtrip_be24",
+            "fragma_roundtrip_le24"
+          ]
+        }
+      },
+      "reviewed_smoke": [],
+      "reviewed_warnings": [
+        {
+          "plugin": "kernel:attrs:unknown",
+          "message": "Ignoring unknown attribute: __gnu_inline__",
+          "severity": "warning",
+          "functions": [
+            "__get_unaligned_be24",
+            "__get_unaligned_le24",
+            "__put_unaligned_be24",
+            "__put_unaligned_le24",
+            "fragma_roundtrip_be24",
+            "fragma_roundtrip_le24"
+          ],
+          "reason": "The genuine configured kernel-header fixture checks exact inline expansion and the selected helper signatures. GNU inline affects linkage/inlining, not these explicit sequential byte operations. All four kernel bodies/declarators match pinned source; only the two selected project witnesses call them, directly. There is no assembly, instrumentation, external call, address-dependent behavior or unselected calibration caller in this proof-only translation unit.",
+          "file_hashes": {
+            "s390/annotated/unaligned.verified.c": "6cae9b7f5f09fd2295c9d0a0e3c600bc5826bb945db6f57b5f1787ea0bb8a601",
+            "s390/annotated/byteproof.h": "9a9c584c56d36329f866e060500d5d64557c63ffc538cf9551fe073b94d53017",
+            "s390/annotated/kernel-model-check.c": "851f6223a59a58d26ecf2628a39bbad58956801fdf2f273208668327454a2577"
+          },
+          "review_evidence": [
+            "s390/annotated/byte-verification.md",
+            "build/s390-pilot/byte24-final-2/analysis.log",
+            "build/s390-pilot/byte24-final-2/receipt.json"
+          ],
+          "file": "s390/annotated/unaligned.verified.c",
+          "line": 30
+        },
+        {
+          "plugin": "wp",
+          "message": "Skipped RTE guards: unaligned pointers (\\aligned not supported)",
+          "severity": "warning",
+          "functions": [
+            "__get_unaligned_be24",
+            "__get_unaligned_le24",
+            "__put_unaligned_be24",
+            "__put_unaligned_le24",
+            "fragma_roundtrip_be24",
+            "fragma_roundtrip_le24"
+          ],
+          "reason": "All accessed objects are unsigned-byte elements or three-byte arrays. The genuine kernel-header fixture verifies exact u8 identity and alignment one; valid three-byte extents and every generated access guard are proved. No pointer cast, wider object access or stronger alignment is used.",
+          "file_hashes": {
+            "s390/annotated/unaligned.verified.c": "6cae9b7f5f09fd2295c9d0a0e3c600bc5826bb945db6f57b5f1787ea0bb8a601",
+            "s390/annotated/byteproof.h": "9a9c584c56d36329f866e060500d5d64557c63ffc538cf9551fe073b94d53017",
+            "s390/annotated/kernel-model-check.c": "851f6223a59a58d26ecf2628a39bbad58956801fdf2f273208668327454a2577"
+          },
+          "review_evidence": [
+            "s390/annotated/byte-verification.md",
+            "build/s390-pilot/byte24-final-2/analysis.log",
+            "build/s390-pilot/byte24-final-2/receipt.json"
+          ]
+        },
+        {
+          "plugin": "wp",
+          "message": "Skipped RTE guards: invalid function pointer calls (\\valid_function not supported)",
+          "severity": "warning",
+          "functions": [
+            "__get_unaligned_be24",
+            "__get_unaligned_le24",
+            "__put_unaligned_be24",
+            "__put_unaligned_le24",
+            "fragma_roundtrip_be24",
+            "fragma_roundtrip_le24"
+          ],
+          "reason": "The four selected kernel helpers make no calls. The two selected project round-trip witnesses make only direct calls to those helpers, with all call preconditions and callee dependencies Valid. There are no function pointers or substituted external function contracts.",
+          "file_hashes": {
+            "s390/annotated/unaligned.verified.c": "6cae9b7f5f09fd2295c9d0a0e3c600bc5826bb945db6f57b5f1787ea0bb8a601",
+            "s390/annotated/byteproof.h": "9a9c584c56d36329f866e060500d5d64557c63ffc538cf9551fe073b94d53017",
+            "s390/annotated/kernel-model-check.c": "851f6223a59a58d26ecf2628a39bbad58956801fdf2f273208668327454a2577"
+          },
+          "review_evidence": [
+            "s390/annotated/byte-verification.md",
+            "build/s390-pilot/byte24-final-2/analysis.log",
+            "build/s390-pilot/byte24-final-2/receipt.json"
+          ]
+        },
+        {
+          "plugin": "wp",
+          "message": "-wp-rte can annotate signed overflow because -warn-signed-overflow is not set",
+          "severity": "warning",
+          "functions": [
+            "__get_unaligned_be24",
+            "__get_unaligned_le24",
+            "__put_unaligned_be24",
+            "__put_unaligned_le24",
+            "fragma_roundtrip_be24",
+            "fragma_roundtrip_le24"
+          ],
+          "reason": "Decoder operands are unsigned bytes in [0,255], promoted to the checked 32-bit int type. Constant left shifts by 8 and 16 produce values at most 16711680, below INT_MAX; bitwise OR does not add an overflow operation. Stores use full-domain unsigned u32 values and constant right shifts 8/16. All generated shift/access guards and exact decoded ranges prove. Pointer increments stay within the valid three-byte extent or its one-past address. No extra input bound or no-overflow assumption is added.",
+          "file_hashes": {
+            "s390/annotated/unaligned.verified.c": "6cae9b7f5f09fd2295c9d0a0e3c600bc5826bb945db6f57b5f1787ea0bb8a601",
+            "s390/annotated/byteproof.h": "9a9c584c56d36329f866e060500d5d64557c63ffc538cf9551fe073b94d53017",
+            "s390/annotated/kernel-model-check.c": "851f6223a59a58d26ecf2628a39bbad58956801fdf2f273208668327454a2577"
+          },
+          "review_evidence": [
+            "s390/annotated/byte-verification.md",
+            "build/s390-pilot/byte24-final-2/analysis.log",
+            "build/s390-pilot/byte24-final-2/receipt.json"
+          ]
+        },
+        {
+          "plugin": "wp",
+          "message": "Missing RTE guards",
+          "severity": "warning",
+          "functions": [
+            "__get_unaligned_be24",
+            "__get_unaligned_le24",
+            "__put_unaligned_be24",
+            "__put_unaligned_le24",
+            "fragma_roundtrip_be24",
+            "fragma_roundtrip_le24"
+          ],
+          "reason": "The exact companion alignment, function-pointer and signed-overflow-policy diagnostics are individually reviewed for these four byte helpers and two witnesses only. Their complete runtime, functional, frame, termination, exit and selected call/dependency results pass; signed promoted-byte shifts have independently bounded operands. This does not waive warnings in the unselected 48-bit helpers or future targets.",
+          "file_hashes": {
+            "s390/annotated/unaligned.verified.c": "6cae9b7f5f09fd2295c9d0a0e3c600bc5826bb945db6f57b5f1787ea0bb8a601",
+            "s390/annotated/byteproof.h": "9a9c584c56d36329f866e060500d5d64557c63ffc538cf9551fe073b94d53017",
+            "s390/annotated/kernel-model-check.c": "851f6223a59a58d26ecf2628a39bbad58956801fdf2f273208668327454a2577"
+          },
+          "review_evidence": [
+            "s390/annotated/byte-verification.md",
+            "build/s390-pilot/byte24-final-2/analysis.log",
+            "build/s390-pilot/byte24-final-2/receipt.json"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s390.unaligned48",
+      "suite": "extended",
+      "role": "proof",
+      "profile": "s390x-gcc",
+      "source": "include/linux/unaligned.h",
+      "harness": "s390/annotated/unaligned48.verified.c",
+      "functions": [
+        "__get_unaligned_be48",
+        "__put_unaligned_be48"
+      ],
+      "analysis_functions": [
+        "__get_unaligned_be48",
+        "__put_unaligned_be48",
+        "fragma_roundtrip_be48"
+      ],
+      "project_functions": [
+        "fragma_roundtrip_be48"
+      ],
+      "analysis": "wp",
+      "input_mode": "standalone",
+      "provenance": {
+        "mode": "functions"
+      },
+      "kernel_model_check": "s390/annotated/kernel-model-check.c",
+      "required_properties": [
+        "get_unaligned_be48_ensures_decoded_value",
+        "get_unaligned_be48_ensures_decoded_range",
+        "put_unaligned_be48_ensures_byte_0",
+        "put_unaligned_be48_ensures_byte_1",
+        "put_unaligned_be48_ensures_byte_2",
+        "put_unaligned_be48_ensures_byte_3",
+        "put_unaligned_be48_ensures_byte_4",
+        "put_unaligned_be48_ensures_byte_5",
+        "fragma_roundtrip_be48_ensures_roundtrip"
+      ],
+      "assumptions": [
+        "s390-byte48-types",
+        "s390-byte48-frontend"
+      ],
+      "claims": [
+        "runtime-safety",
+        "functional",
+        "termination",
+        "encode-decode-roundtrip"
+      ],
+      "caller_coverage": "project-witness-requires-proof; kernel-callers-unverified",
+      "wp_strategy": "fragma_byte64_leftmath",
+      "wp_strategy_file": "s390/annotated/byteproof64.h",
+      "wp_strategy_provers": [
+        "alt-ergo",
+        "z3"
+      ],
+      "wp_auto_depth": 64,
+      "wp_smoke_timeout": 2,
+      "review_context": {
+        "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+        "profile": "s390x-gcc",
+        "toolchain_lock_sha256": "0d3557b20e4a0ed16e6a4fe8622aa3ecd1572b9b30d490c7c69b4be82d7f47cb",
+        "analysis": {
+          "wp_model": "Typed",
+          "arithmetic_flags": [
+            "-no-warn-signed-overflow",
+            "-no-warn-unsigned-overflow",
+            "-no-warn-signed-downcast",
+            "-no-warn-unsigned-downcast",
+            "-no-warn-right-shift-negative"
+          ],
+          "runtime_checks": {
+            "pointer_formation": "object-or-null"
+          }
+        },
+        "preprocessing": {
+          "cpp_command": "/usr/bin/s390x-linux-gnu-gcc -m64 -march=z13 -mtune=z13 -mpacked-stack -mbackchain -msoft-float -std=gnu11 -funsigned-char -fshort-wchar -fno-strict-overflow -fno-strict-aliasing -ffreestanding -nostdinc -D__KERNEL__ -E -C",
+          "annotations": "Frama-C native -pp-annot with target compiler",
+          "input_mode": "standalone",
+          "extra_args": [
+            "-std=gnu11"
+          ]
+        },
+        "proof_search": {
+          "wp_strategy": "fragma_byte64_leftmath",
+          "wp_strategy_file": "s390/annotated/byteproof64.h",
+          "wp_strategy_provers": [
+            "alt-ergo",
+            "z3"
+          ],
+          "wp_auto_depth": 64,
+          "wp_smoke_timeout": 2
+        },
+        "file_hashes": {
+          "s390/annotated/unaligned48.verified.c": "58fac658b4cd70444b47a554016ad54c979813f26131a3f4c0b4b46348142f34",
+          "s390/annotated/byteproof64.h": "db5d6cf841b5f0a92a0381fa9aba2d28c0f348d063e6a95b61743d345ae25571",
+          "s390/annotated/kernel-model-check.c": "851f6223a59a58d26ecf2628a39bbad58956801fdf2f273208668327454a2577",
+          "build/sources/linux-b9b3e33b70b71/include/linux/unaligned.h": "877cc68addf72f84834a7da87c09fc54b86cb383d6a3d93f2a97a16e751458ce",
+          "build/kernel/s390x-gcc/fragma-build.json": "9159a7c93c54a3782dade0238a375b3ce5539bf3557f8b81d26668acca01e144",
+          "fragma/analysis_policy.py": "b674caa823c2e703ae81e4972967ac5ce8b6a8b34b6f5203e9b39e2b4dd618ff",
+          "docs/pointer-policy-review.md": "bf605644084d3d9c83563d21231a75107c3110c85933d6def5b3106cec1adca9",
+          "build/profile-checks/pointer-policy-final-20260906/s390x-gcc/s390x-gcc.yaml": "4ccbe516e87c21ac357944eb3ad9214311098354fee9484f4d164a0bcc40edfa"
+        },
+        "review_evidence": [
+          "s390/annotated/byte48-verification.md",
+          "build/s390-pilot/byte48-final/receipt.json",
+          "build/s390-pilot/byte48-final/properties.tsv",
+          "docs/pointer-policy-review.md",
+          "build/pointer-formation-review/inspected-3.json",
+          "build/pointer-formation-review/run-2/s390.unaligned48/analysis.log",
+          "build/pointer-formation-review/run-2/s390.unaligned48/wp.json",
+          "build/pointer-formation-review/run-2/s390.unaligned48/properties.tsv",
+          "build/pointer-formation-review/builtin-audit-review.md"
+        ],
+        "analysis_pipeline": {
+          "kind": "wp-rte",
+          "functions": [
+            "__get_unaligned_be48",
+            "__put_unaligned_be48",
+            "fragma_roundtrip_be48"
+          ]
+        }
+      },
+      "reviewed_smoke": [],
+      "reviewed_warnings": [
+        {
+          "plugin": "kernel:attrs:unknown",
+          "message": "Ignoring unknown attribute: __gnu_inline__",
+          "severity": "warning",
+          "functions": [
+            "__get_unaligned_be48",
+            "__put_unaligned_be48",
+            "fragma_roundtrip_be48"
+          ],
+          "reason": "The single diagnostic is emitted at the first, unselected 24-bit inline definition, but the exact same local macro annotates the two selected 48-bit helpers. The genuine configured kernel-header fixture checks the effective inline expansion and all selected signatures. GNU inline affects linkage/inlining, not these retained sequential byte operations. Only the selected project witness calls the two helpers, directly; no assembly, instrumentation, external call, address-dependent behavior or unselected calibration caller is in this 48-bit proof graph. This review does not infer a proof of the unselected 24-bit functions.",
+          "file_hashes": {
+            "s390/annotated/unaligned48.verified.c": "58fac658b4cd70444b47a554016ad54c979813f26131a3f4c0b4b46348142f34",
+            "s390/annotated/byteproof64.h": "db5d6cf841b5f0a92a0381fa9aba2d28c0f348d063e6a95b61743d345ae25571",
+            "s390/annotated/kernel-model-check.c": "851f6223a59a58d26ecf2628a39bbad58956801fdf2f273208668327454a2577"
+          },
+          "review_evidence": [
+            "s390/annotated/byte48-verification.md",
+            "build/s390-pilot/byte48-final/analysis.log",
+            "build/s390-pilot/byte48-final/receipt.json"
+          ],
+          "file": "s390/annotated/unaligned48.verified.c",
+          "line": 31
+        },
+        {
+          "plugin": "wp",
+          "message": "Skipped RTE guards: unaligned pointers (\\aligned not supported)",
+          "severity": "warning",
+          "functions": [
+            "__get_unaligned_be48",
+            "__put_unaligned_be48",
+            "fragma_roundtrip_be48"
+          ],
+          "reason": "All accessed objects are unsigned-byte elements or six-byte arrays. The genuine kernel-header fixture verifies exact u8 identity and alignment one; valid six-byte extents and every generated access guard are proved. No pointer cast or wider object access introduces a stronger alignment requirement.",
+          "file_hashes": {
+            "s390/annotated/unaligned48.verified.c": "58fac658b4cd70444b47a554016ad54c979813f26131a3f4c0b4b46348142f34",
+            "s390/annotated/byteproof64.h": "db5d6cf841b5f0a92a0381fa9aba2d28c0f348d063e6a95b61743d345ae25571",
+            "s390/annotated/kernel-model-check.c": "851f6223a59a58d26ecf2628a39bbad58956801fdf2f273208668327454a2577"
+          },
+          "review_evidence": [
+            "s390/annotated/byte48-verification.md",
+            "build/s390-pilot/byte48-final/analysis.log",
+            "build/s390-pilot/byte48-final/receipt.json"
+          ]
+        },
+        {
+          "plugin": "wp",
+          "message": "Skipped RTE guards: invalid function pointer calls (\\valid_function not supported)",
+          "severity": "warning",
+          "functions": [
+            "__get_unaligned_be48",
+            "__put_unaligned_be48",
+            "fragma_roundtrip_be48"
+          ],
+          "reason": "The two selected kernel helpers make no calls. The selected project round-trip witness makes only direct calls to those helpers, with all call preconditions and callee dependencies Valid. There are no function pointers or substituted external function contracts.",
+          "file_hashes": {
+            "s390/annotated/unaligned48.verified.c": "58fac658b4cd70444b47a554016ad54c979813f26131a3f4c0b4b46348142f34",
+            "s390/annotated/byteproof64.h": "db5d6cf841b5f0a92a0381fa9aba2d28c0f348d063e6a95b61743d345ae25571",
+            "s390/annotated/kernel-model-check.c": "851f6223a59a58d26ecf2628a39bbad58956801fdf2f273208668327454a2577"
+          },
+          "review_evidence": [
+            "s390/annotated/byte48-verification.md",
+            "build/s390-pilot/byte48-final/analysis.log",
+            "build/s390-pilot/byte48-final/receipt.json"
+          ]
+        },
+        {
+          "plugin": "wp",
+          "message": "-wp-rte can annotate signed overflow because -warn-signed-overflow is not set",
+          "severity": "warning",
+          "functions": [
+            "__get_unaligned_be48",
+            "__put_unaligned_be48",
+            "fragma_roundtrip_be48"
+          ],
+          "reason": "The getter explicitly casts its high three bytes to u64 before shifts by 40, 32 and 24. Its two signed-int promoted-byte shifts use counts 16 and 8 with byte operands in [0,255], giving at most 16711680, below INT_MAX in the checked 32-bit-int model. Signed 32-bit and unsigned 64-bit conversion cases and exact decoded bounds are proved, not removed. The store uses full-domain u64 and constant right shifts up to 40. Pointer increments remain within the valid six-byte extent or its one-past address. No extra input bound or no-overflow assumption is added.",
+          "file_hashes": {
+            "s390/annotated/unaligned48.verified.c": "58fac658b4cd70444b47a554016ad54c979813f26131a3f4c0b4b46348142f34",
+            "s390/annotated/byteproof64.h": "db5d6cf841b5f0a92a0381fa9aba2d28c0f348d063e6a95b61743d345ae25571",
+            "s390/annotated/kernel-model-check.c": "851f6223a59a58d26ecf2628a39bbad58956801fdf2f273208668327454a2577"
+          },
+          "review_evidence": [
+            "s390/annotated/byte48-verification.md",
+            "build/s390-pilot/byte48-final/analysis.log",
+            "build/s390-pilot/byte48-final/receipt.json"
+          ]
+        },
+        {
+          "plugin": "wp",
+          "message": "Missing RTE guards",
+          "severity": "warning",
+          "functions": [
+            "__get_unaligned_be48",
+            "__put_unaligned_be48",
+            "fragma_roundtrip_be48"
+          ],
+          "reason": "The exact companion alignment, function-pointer and signed-overflow-policy diagnostics are individually reviewed for these two 48-bit helpers and their one project witness only. All 74 ordinary runtime/functional/frame goals and all 59 selected termination/exit/call/dependency properties are Valid, including each signed/unsigned conversion case and the full u64 round trip modulo 2^48. This does not waive warnings in unselected 24-bit functions or future targets.",
+          "file_hashes": {
+            "s390/annotated/unaligned48.verified.c": "58fac658b4cd70444b47a554016ad54c979813f26131a3f4c0b4b46348142f34",
+            "s390/annotated/byteproof64.h": "db5d6cf841b5f0a92a0381fa9aba2d28c0f348d063e6a95b61743d345ae25571",
+            "s390/annotated/kernel-model-check.c": "851f6223a59a58d26ecf2628a39bbad58956801fdf2f273208668327454a2577"
+          },
+          "review_evidence": [
+            "s390/annotated/byte48-verification.md",
+            "build/s390-pilot/byte48-final/analysis.log",
+            "build/s390-pilot/byte48-final/receipt.json"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s390.tod_to_ns",
+      "suite": "extended",
+      "role": "proof",
+      "profile": "s390x-gcc",
+      "source": "arch/s390/include/asm/timex.h",
+      "harness": "s390/annotated/tod.acsl.c",
+      "functions": [
+        "tod_to_ns"
+      ],
+      "analysis": "wp",
+      "input_mode": "standalone",
+      "provenance": {
+        "mode": "functions"
+      },
+      "kernel_model_check": "s390/annotated/kernel-model-check.c",
+      "required_properties": [
+        "tod_to_ns_ensures_nanoseconds",
+        "tod_to_ns_ensures_bounded"
+      ],
+      "assumptions": [
+        "s390-pilot-inline",
+        "s390-tod-unsigned-long"
+      ],
+      "claims": [
+        "runtime-safety",
+        "functional",
+        "termination"
+      ],
+      "caller_coverage": "unverified",
+      "wp_strategy": "fragma_scalar_math",
+      "wp_strategy_file": "s390/annotated/bitproof.h",
+      "wp_strategy_provers": [
+        "alt-ergo",
+        "z3"
+      ],
+      "wp_auto_depth": 64,
+      "wp_smoke_timeout": 2,
+      "review_context": {
+        "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+        "profile": "s390x-gcc",
+        "toolchain_lock_sha256": "0d3557b20e4a0ed16e6a4fe8622aa3ecd1572b9b30d490c7c69b4be82d7f47cb",
+        "analysis": {
+          "wp_model": "Typed",
+          "arithmetic_flags": [
+            "-no-warn-signed-overflow",
+            "-no-warn-unsigned-overflow",
+            "-no-warn-signed-downcast",
+            "-no-warn-unsigned-downcast",
+            "-no-warn-right-shift-negative"
+          ],
+          "runtime_checks": {
+            "pointer_formation": "object-or-null"
+          }
+        },
+        "preprocessing": {
+          "cpp_command": "/usr/bin/s390x-linux-gnu-gcc -m64 -march=z13 -mtune=z13 -mpacked-stack -mbackchain -msoft-float -std=gnu11 -funsigned-char -fshort-wchar -fno-strict-overflow -fno-strict-aliasing -ffreestanding -nostdinc -D__KERNEL__ -E -C",
+          "annotations": "Frama-C native -pp-annot with target compiler",
+          "input_mode": "standalone",
+          "extra_args": [
+            "-std=gnu11"
+          ]
+        },
+        "proof_search": {
+          "wp_strategy": "fragma_scalar_math",
+          "wp_strategy_file": "s390/annotated/bitproof.h",
+          "wp_strategy_provers": [
+            "alt-ergo",
+            "z3"
+          ],
+          "wp_auto_depth": 64,
+          "wp_smoke_timeout": 2
+        },
+        "file_hashes": {
+          "s390/annotated/tod.acsl.c": "26501343120968ee3866444a77239f41182fd68a13cf5b309e37a1a33d64105d",
+          "s390/annotated/bitproof.h": "62bc1995e75e879288f4a3678964d78b613a4f6a06c70dca8191305b5579540f",
+          "s390/annotated/kernel-model-check.c": "851f6223a59a58d26ecf2628a39bbad58956801fdf2f273208668327454a2577",
+          "build/sources/linux-b9b3e33b70b71/arch/s390/include/asm/timex.h": "aa9e0cc51c525c6aa07a577a2f97e5a47b8c29f79945efaff2898a2f944d2f14",
+          "build/kernel/s390x-gcc/fragma-build.json": "9159a7c93c54a3782dade0238a375b3ce5539bf3557f8b81d26668acca01e144",
+          "fragma/analysis_policy.py": "b674caa823c2e703ae81e4972967ac5ce8b6a8b34b6f5203e9b39e2b4dd618ff",
+          "docs/pointer-policy-review.md": "bf605644084d3d9c83563d21231a75107c3110c85933d6def5b3106cec1adca9",
+          "build/profile-checks/pointer-policy-final-20260906/s390x-gcc/s390x-gcc.yaml": "4ccbe516e87c21ac357944eb3ad9214311098354fee9484f4d164a0bcc40edfa"
+        },
+        "review_evidence": [
+          "s390/TARGETS.md",
+          "build/s390-pilot/tod-final/receipt.json",
+          "build/s390-pilot/tod-final/properties.tsv",
+          "docs/pointer-policy-review.md",
+          "build/pointer-formation-review/builtin-audit-review.md"
+        ],
+        "analysis_pipeline": {
+          "kind": "wp-rte",
+          "functions": [
+            "tod_to_ns"
+          ]
+        }
+      },
+      "reviewed_smoke": [],
+      "reviewed_warnings": [
+        {
+          "plugin": "kernel:attrs:unknown",
+          "message": "Ignoring unknown attribute: __gnu_inline__",
+          "severity": "warning",
+          "functions": [
+            "tod_to_ns"
+          ],
+          "file": "s390/annotated/tod.acsl.c",
+          "line": 20,
+          "reason": "The genuine configured kernel-model fixture checks exact inline/__always_inline expansion and the original TOD signature. GNU inline affects linkage/inlining, not this leaf's sequential unsigned arithmetic. This selected helper contains no external calls, assembly, instrumentation or address-dependent behavior; its full body and declaration match the pinned source.",
+          "file_hashes": {
+            "s390/annotated/tod.acsl.c": "26501343120968ee3866444a77239f41182fd68a13cf5b309e37a1a33d64105d",
+            "s390/annotated/bitproof.h": "62bc1995e75e879288f4a3678964d78b613a4f6a06c70dca8191305b5579540f",
+            "s390/annotated/kernel-model-check.c": "851f6223a59a58d26ecf2628a39bbad58956801fdf2f273208668327454a2577"
+          },
+          "review_evidence": [
+            "s390/TARGETS.md",
+            "build/s390-pilot/tod-final/analysis.log",
+            "build/s390-pilot/tod-final/receipt.json"
+          ]
+        },
+        {
+          "plugin": "wp",
+          "message": "Skipped RTE guards: unaligned pointers (\\aligned not supported)",
+          "severity": "warning",
+          "functions": [
+            "tod_to_ns"
+          ],
+          "reason": "tod_to_ns takes and returns an unsigned-long value and has no pointer parameters, dereferences or memory access. No alignment obligation is applicable to this helper.",
+          "file_hashes": {
+            "s390/annotated/tod.acsl.c": "26501343120968ee3866444a77239f41182fd68a13cf5b309e37a1a33d64105d",
+            "s390/annotated/bitproof.h": "62bc1995e75e879288f4a3678964d78b613a4f6a06c70dca8191305b5579540f",
+            "s390/annotated/kernel-model-check.c": "851f6223a59a58d26ecf2628a39bbad58956801fdf2f273208668327454a2577"
+          },
+          "review_evidence": [
+            "s390/TARGETS.md",
+            "build/s390-pilot/tod-final/analysis.log",
+            "build/s390-pilot/tod-final/receipt.json"
+          ]
+        },
+        {
+          "plugin": "wp",
+          "message": "Skipped RTE guards: invalid function pointer calls (\\valid_function not supported)",
+          "severity": "warning",
+          "functions": [
+            "tod_to_ns"
+          ],
+          "reason": "tod_to_ns contains no calls, direct or indirect. This warning review does not extend to any other helper.",
+          "file_hashes": {
+            "s390/annotated/tod.acsl.c": "26501343120968ee3866444a77239f41182fd68a13cf5b309e37a1a33d64105d",
+            "s390/annotated/bitproof.h": "62bc1995e75e879288f4a3678964d78b613a4f6a06c70dca8191305b5579540f",
+            "s390/annotated/kernel-model-check.c": "851f6223a59a58d26ecf2628a39bbad58956801fdf2f273208668327454a2577"
+          },
+          "review_evidence": [
+            "s390/TARGETS.md",
+            "build/s390-pilot/tod-final/analysis.log",
+            "build/s390-pilot/tod-final/receipt.json"
+          ]
+        },
+        {
+          "plugin": "wp",
+          "message": "-wp-rte can annotate signed overflow because -warn-signed-overflow is not set",
+          "severity": "warning",
+          "functions": [
+            "tod_to_ns"
+          ],
+          "reason": "All executed arithmetic is unsigned long, width 64 in the checked real-header z13 model. The function's constant shifts use count 9. Unsigned operations and casts retain the configured modular semantics; the checked tactic explicitly proves the relevant range cases rather than adding a no-overflow precondition.",
+          "file_hashes": {
+            "s390/annotated/tod.acsl.c": "26501343120968ee3866444a77239f41182fd68a13cf5b309e37a1a33d64105d",
+            "s390/annotated/bitproof.h": "62bc1995e75e879288f4a3678964d78b613a4f6a06c70dca8191305b5579540f",
+            "s390/annotated/kernel-model-check.c": "851f6223a59a58d26ecf2628a39bbad58956801fdf2f273208668327454a2577"
+          },
+          "review_evidence": [
+            "s390/TARGETS.md",
+            "build/s390-pilot/tod-final/analysis.log",
+            "build/s390-pilot/tod-final/receipt.json"
+          ]
+        },
+        {
+          "plugin": "wp",
+          "message": "Missing RTE guards",
+          "severity": "warning",
+          "functions": [
+            "tod_to_ns"
+          ],
+          "reason": "The exact companion diagnostics for signed-overflow policy, alignment and indirect calls are individually reviewed. This leaf has no pointers, calls, signed arithmetic or division; its shifts have the constant valid count 9. Its full-domain exact scale, bound, termination, exit and frame properties prove under the checked unsigned arithmetic model. No missing guard in another function is waived.",
+          "file_hashes": {
+            "s390/annotated/tod.acsl.c": "26501343120968ee3866444a77239f41182fd68a13cf5b309e37a1a33d64105d",
+            "s390/annotated/bitproof.h": "62bc1995e75e879288f4a3678964d78b613a4f6a06c70dca8191305b5579540f",
+            "s390/annotated/kernel-model-check.c": "851f6223a59a58d26ecf2628a39bbad58956801fdf2f273208668327454a2577"
+          },
+          "review_evidence": [
+            "s390/TARGETS.md",
+            "build/s390-pilot/tod-final/analysis.log",
+            "build/s390-pilot/tod-final/receipt.json"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "calibration.s390.byte-order.eva",
+      "suite": "calibration",
+      "role": "calibration",
+      "profile": "s390x-gcc",
+      "source": "include/linux/unaligned.h",
+      "harness": "s390/annotated/unaligned.acsl.c",
+      "functions": [
+        "__get_unaligned_be24"
+      ],
+      "analysis": "eva",
+      "analysis_pipeline": {
+        "kind": "rte-eva"
+      },
+      "input_mode": "standalone",
+      "provenance": {
+        "mode": "functions"
+      },
+      "kernel_model_check": "s390/annotated/kernel-model-check.c",
+      "entry": "fragma_byte_order_calibration",
+      "project_functions": [
+        "fragma_byte_order_calibration"
+      ],
+      "required_properties": [
+        "decoded_be24",
+        "byte_order_REFUTED"
+      ],
+      "expected_invalid": [
+        "byte_order_REFUTED"
+      ],
+      "assumptions": [
+        "s390-pilot-types",
+        "s390-pilot-inline"
+      ],
+      "claims": [],
+      "caller_coverage": "not-applicable"
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "s390-pilot-types",
+      "kind": "type-model",
+      "files": [
+        "s390/annotated/unaligned.acsl.c",
+        "s390/annotated/kernel-model-check.c"
+      ],
+      "kernel_files": [
+        "include/linux/types.h",
+        "include/asm-generic/int-ll64.h",
+        "include/uapi/asm-generic/int-ll64.h",
+        "arch/s390/include/asm/types.h"
+      ],
+      "symbols": [
+        "u8",
+        "u32",
+        "u64"
+      ],
+      "scope": "Unsigned char/int/long long with 8/32/64 bits; byte pointers have alignment one. s390x-gcc configured profile only.",
+      "justification": "The kernel-model fixture checks exact GCC type compatibility and sizeof against real configured kernel headers; functions themselves pass pinned token-source gates. No external memory/function contracts are substituted.",
+      "review_status": "reviewed",
+      "implementation_proved": false,
+      "review_evidence": [
+        "s390/annotated/kernel-model-check.c",
+        "build/s390-pilot/kernel-model-2.json"
+      ]
+    },
+    {
+      "id": "s390-pilot-inline",
+      "kind": "frontend-model",
+      "files": [
+        "s390/annotated/unaligned.acsl.c",
+        "s390/annotated/tod.acsl.c",
+        "s390/annotated/kernel-model-check.c"
+      ],
+      "kernel_files": [
+        "include/linux/compiler_attributes.h",
+        "include/linux/compiler_types.h"
+      ],
+      "symbols": [
+        "inline",
+        "__always_inline"
+      ],
+      "scope": "Configured expansion of inline and __always_inline for these sequential leaf C helpers, including gnu_inline, unused, no_instrument_function and always_inline attributes.",
+      "justification": "Kernel-model fixture compares the fully expanded macro spellings against real selected kernel headers. Attributes affect linkage/inlining/instrumentation, while the listed leaf bodies contain no instrumentation, external calls or assembly. The Frama-C profile and its retained frontend diagnostics still govern analysis support.",
+      "review_status": "reviewed",
+      "implementation_proved": false,
+      "review_evidence": [
+        "s390/annotated/kernel-model-check.c",
+        "build/s390-pilot/kernel-model-2.json"
+      ]
+    },
+    {
+      "id": "s390-tod-unsigned-long",
+      "kind": "type-model",
+      "files": [
+        "s390/annotated/tod.acsl.c",
+        "s390/annotated/kernel-model-check.c"
+      ],
+      "kernel_files": [
+        "arch/s390/include/asm/timex.h"
+      ],
+      "symbols": [
+        "tod_to_ns",
+        "unsigned long"
+      ],
+      "scope": "Configured s390x-gcc z13, 64-bit unsigned-long input/result and every input in [0,2^64-1].",
+      "justification": "The exact original signature/body passes the pinned source gate. The real configured kernel-header fixture verifies unsigned-long width and helper signature; the independently calibrated generated machine description supplies the same type. No extra input bound or external function contract is assumed.",
+      "review_status": "reviewed",
+      "implementation_proved": false,
+      "review_evidence": [
+        "build/s390-pilot/tod-final/receipt.json",
+        "build/profile-checks/s390x-gcc-configured/profile.json"
+      ]
+    },
+    {
+      "id": "s390-byte24-types",
+      "kind": "type-model",
+      "files": [
+        "s390/annotated/unaligned.verified.c",
+        "s390/annotated/kernel-model-check.c"
+      ],
+      "kernel_files": [
+        "include/linux/types.h",
+        "include/asm-generic/int-ll64.h",
+        "include/uapi/asm-generic/int-ll64.h",
+        "arch/s390/include/asm/types.h"
+      ],
+      "symbols": [
+        "u8",
+        "u32",
+        "u64"
+      ],
+      "scope": "Configured s390x-gcc z13: exact u8/u32/u64 aliases and byte alignment for the four selected 24-bit helpers and two project round-trip witnesses; stores accept all u32 values.",
+      "justification": "The fresh genuine configured kernel-header fixture checks exact GCC type compatibility, widths and byte alignment; all retained kernel helper bodies/declarators still match pinned source. The selected 24-bit graph has 82 ordinary WP goals and 70 dependency rows Valid. There are no substituted external contracts or strengthened domains.",
+      "review_status": "reviewed",
+      "implementation_proved": false,
+      "review_evidence": [
+        "s390/annotated/byte-verification.md",
+        "build/s390-pilot/byte24-final-2/receipt.json",
+        "build/profile-checks/s390x-gcc-configured/profile.json"
+      ]
+    },
+    {
+      "id": "s390-byte24-frontend",
+      "kind": "frontend-model",
+      "files": [
+        "s390/annotated/unaligned.verified.c",
+        "s390/annotated/kernel-model-check.c"
+      ],
+      "kernel_files": [
+        "include/linux/compiler_attributes.h",
+        "include/linux/compiler_types.h"
+      ],
+      "symbols": [
+        "inline"
+      ],
+      "scope": "Configured inline expansion for the four sequential 24-bit helpers; direct calls from the two project round-trip witnesses only. No 48-bit proof completion is claimed.",
+      "justification": "The fresh genuine configured kernel-header fixture checks the effective macro expansion and signatures. The ignored GNU inline linkage attribute is scoped by an exact diagnostic review tied to source, strategy, build, machine, preprocessing and toolchain identities. The independent project-only false calibration remains in the original harness, outside this proof-only call graph.",
+      "review_status": "reviewed",
+      "implementation_proved": false,
+      "review_evidence": [
+        "s390/annotated/byte-verification.md",
+        "build/s390-pilot/byte24-final-2/receipt.json",
+        "build/profile-checks/s390x-gcc-configured/profile.json"
+      ]
+    },
+    {
+      "id": "s390-byte48-types",
+      "kind": "type-model",
+      "files": [
+        "s390/annotated/unaligned48.verified.c",
+        "s390/annotated/kernel-model-check.c"
+      ],
+      "kernel_files": [
+        "include/linux/types.h",
+        "include/asm-generic/int-ll64.h",
+        "include/uapi/asm-generic/int-ll64.h",
+        "arch/s390/include/asm/types.h"
+      ],
+      "symbols": [
+        "u8",
+        "u64",
+        "int"
+      ],
+      "scope": "Configured s390x-gcc z13: u8 is unsigned8, u64 is unsigned64 long long, int has width32, byte alignment is one. The two selected 48-bit helpers and project witness accept the entire specified u64/valid-six-byte domains.",
+      "justification": "The fresh genuine configured kernel-header fixture checks alias compatibility, widths, byte alignment and original signatures; the compiler-generated machine calibration checks the same integer widths. Every retained kernel body/declarator passes pinned source identity. Signed promoted-byte shifts and subsequent unsigned64 conversions are proved within range, with no external contract or stronger domain assumed.",
+      "review_status": "reviewed",
+      "implementation_proved": false,
+      "review_evidence": [
+        "s390/annotated/byte48-verification.md",
+        "build/s390-pilot/byte48-final/receipt.json",
+        "build/profile-checks/s390x-gcc-configured/profile.json"
+      ]
+    },
+    {
+      "id": "s390-byte48-frontend",
+      "kind": "frontend-model",
+      "files": [
+        "s390/annotated/unaligned48.verified.c",
+        "s390/annotated/kernel-model-check.c"
+      ],
+      "kernel_files": [
+        "include/linux/compiler_attributes.h",
+        "include/linux/compiler_types.h"
+      ],
+      "symbols": [
+        "inline"
+      ],
+      "scope": "Configured inline expansion for the two sequential 48-bit helpers and direct calls from one selected project round-trip witness. Unselected 24-bit functions are not certified by this target.",
+      "justification": "The fresh genuine configured kernel-header fixture checks effective inline spelling and selected signatures. The single ignored GNU inline diagnostic, printed at an earlier unselected definition using the same macro, is explicitly reviewed with source/strategy/model/build/preprocessing/toolchain identities. The independent false calibration remains unchanged in the original harness and outside this proof-only graph.",
+      "review_status": "reviewed",
+      "implementation_proved": false,
+      "review_evidence": [
+        "s390/annotated/byte48-verification.md",
+        "build/s390-pilot/byte48-final/receipt.json",
+        "build/profile-checks/s390x-gcc-configured/profile.json"
+      ]
+    }
+  ]
+}

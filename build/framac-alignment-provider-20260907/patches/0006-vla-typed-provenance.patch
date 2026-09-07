@@ -1,0 +1,294 @@
+--- a/src/kernel_internals/typing/cabs2cil.ml
++++ b/src/kernel_internals/typing/cabs2cil.ml
+@@ -2425,6 +2425,51 @@
+ (* Maps local variables that are variable sized arrays to the expression that
+  * denotes their length *)
+ let varSizeArrays : exp IH.t = IH.create 17
++
++(* Private typing provenance, never an emitted second object. The original
++   varinfo retains its typed array, frozen bound, location and original
++   declaration alignment. The key is the final lowered variable's vid. *)
++let varSizeArrayOrigins : varinfo IH.t = IH.create 17
++
++let var_size_array_origin source e =
++  if not (Machine.clang_u32_alignment_policy ()) then None
++  else match (stripParen source).expr_node, e.enode with
++    (* Do not recover an array from a comma/cast/conditional which C already
++       decayed, even when normalization leaves the same pointer Lval. *)
++    | Cabs.VARIABLE _, Lval (Var vi, NoOffset) ->
++      IH.find_opt varSizeArrayOrigins vi.vid
++    | _ -> None
++
++let source_has_comma_decay source =
++  match (stripParen source).expr_node with
++  | Cabs.COMMA (_ :: _ :: _) -> true
++  | _ -> false
++
++let mentions_var_size_array e =
++  let found = ref false in
++  let visitor = object
++    inherit Cil.nopCilVisitor
++    method! vvrbl vi =
++      if IH.mem varSizeArrayOrigins vi.vid then found := true;
++      SkipChildren
++  end in
++  ignore (Cil.visitCilExpr visitor e);
++  !found
++
++(* Unlike Cil.is_variably_modified_type, also inspect pointer targets. Such
++   locals require a different lowering; do not accidentally accept them as
++   ordinary pointers after evaluating a dynamic declarator bound. *)
++let rec has_variable_array_type t =
++  match Ast_types.unroll_node t with
++  | TArray (element, length) ->
++    Option.fold ~none:false ~some:(fun e -> not (Cil.isConstant e)) length ||
++    has_variable_array_type element
++  | TPtr t -> has_variable_array_type t
++  | TFun (result, args, _) ->
++    has_variable_array_type result ||
++    Option.fold ~none:false ~some:
++      (List.exists (fun (_, t, _) -> has_variable_array_type t)) args
++  | _ -> false
+ 
+ (**** EXP actions ***)
+ type expAction =
+@@ -4465,8 +4510,18 @@
+       res
+ 
+     | [Cabs.TtypeofE e] ->
+-      let (_, s, _, t) =
++      let (_, s, operand, t) =
+         doExp (ghost_local_env ghost) CNoConst e AExpLeaveArrayFun
++      in
++      let t = match var_size_array_origin e operand with
++        | Some original -> original.vtype
++        | None ->
++          if Machine.clang_u32_alignment_policy () &&
++             mentions_var_size_array operand &&
++             not (source_has_comma_decay e) then
++            Kernel.abort ~current:true
++              "unsupported typeof expression involving a lowered VLA";
++          t
+       in
+       clean_up_chunk_locals s;
+       t
+@@ -4494,6 +4549,7 @@
+     ~(kind:var_decl_kind)
+     ?(isgenerated=false)
+     ?(referenced=false)
++    ?array_length
+     (ldecl : location)
+     (bt, sto, alignas, inline, attrs)
+     (n,ndt,a)
+@@ -4502,9 +4558,10 @@
+   let isformal = kind = `FormalDecl in
+   let vtype, nattr =
+     doType ghost (kind:>type_context) (Ast_attributes.AttrName false)
+-      ~allowVarSizeArrays:isformal
+-      (* For locals we handle var-sized arrays before makeVarInfoCabs;
+-         Hence, at this point only formals can have a VLA type *)
++      ?array_length
++      ~allowVarSizeArrays:(isformal || Option.is_some array_length)
++      (* The private local path types the original array once, before its
++         separate pointer lowering. Legacy locals still arrive lowered. *)
+       bt (Cabs.PARENTYPE(attrs, ndt, a))
+   in
+   let vtype =
+@@ -4579,13 +4636,67 @@
+ and makeVarSizeVarInfo ghost (ldecl : location)
+     spec_res
+     (n,ndt,a)
+-  : varinfo * chunk * exp * bool =
++  : varinfo * chunk * exp * bool * varinfo option =
+   let kind = `LocalDecl in
+-  if not (Machine.msvcMode ()) then
++  if Machine.clang_u32_alignment_policy () then begin
++    let bounds = ref empty in
++    let array_length expression =
++      let reads, se, length, typ =
++        doExp (ghost_local_env ghost) CMayConst expression (AExp None)
++      in
++      if not (Ast_types.is_integral typ) then
++        Kernel.abort ~current:true "VLA bound does not have an integral type";
++      if isEmpty se && Cil.isConstant length then length
++      else begin
++        (* Freeze even a pure variable read, and keep the original integer
++           kind. A side-effecting bound is typed/evaluated exactly once. *)
++        let saved = newTempVar ~ghost ldecl "saved VLA bound" false typ in
++        saved.vdefined <- true;
++        let se =
++          local_var_chunk se saved +++
++          (Cil.mkStmtOneInstr ~ghost ~valid_sid
++             (Set(Cil.var saved, length, ldecl)), [], [], reads)
++        in
++        bounds := !bounds @@@ (se, ghost);
++        Cil.new_exp ~loc:ldecl (Lval (Cil.var saved))
++      end
++    in
++    let vi =
++      makeVarInfoCabs ~ghost ~kind ~array_length ldecl spec_res (n,ndt,a)
++    in
++    if not (has_variable_array_type vi.vtype) then begin
++      if isNotEmpty !bounds then
++        Kernel.abort ~current:true
++          "unsupported evaluated array bound without an outer VLA object";
++      vi, empty, Cil.zero ~loc:ldecl, false, None
++    end else match Ast_types.unroll_node vi.vtype with
++      | TArray (element, Some length)
++        when not (has_variable_array_type element) ->
++        (* solveAlignas has already checked the genuine array type. A
++           stricter allocation request needs an aligned allocator model;
++           inert/ignored or <= natural requests need no such extension. *)
++        let natural = Cil.bytesAlignOf element in
++        let required = max (Cil.bytesAlignOf vi.vtype)
++            (Cil.bytesAlignOfVarinfo vi) in
++        if required > natural then
++          Kernel.abort ~current:true
++            "unsupported VLA allocation alignment %d exceeds natural element alignment %d"
++            required natural;
++        let original = Cil.copyVarinfo vi vi.vname in
++        (* These are array requests, not requests on the synthetic pointer.
++           Keep them unchanged on [original], used by alignment and typeof. *)
++        Cil.update_var_type vi (mk_tptr element);
++        vi.vattr <- Ast_attributes.drop "aligned" vi.vattr;
++        vi.valignas <- None;
++        vi, !bounds, length, true, Some original
++      | _ ->
++        Kernel.abort ~current:true
++          "unsupported VLA shape: only an outer variable dimension with fixed-size elements is modeled"
++  end else if not (Machine.msvcMode ()) then
+     match isVariableSizedArray ghost ndt with
+     | None ->
+       makeVarInfoCabs ~ghost ~kind ldecl spec_res (n,ndt,a),
+-      empty, Cil.zero ~loc:ldecl, false
++      empty, Cil.zero ~loc:ldecl, false, None
+     | Some (ndt', se, len) ->
+       (* In this case, we have changed the type from VLA to pointer: add the
+          qualifier to the elements. *)
+@@ -4594,10 +4705,10 @@
+           (t, sto , alignas, inline , ("ghost", []) :: attrs)
+         | normal -> normal
+       in
+-      makeVarInfoCabs ~ghost ~kind ldecl spec_res (n,ndt',a), se, len, true
++      makeVarInfoCabs ~ghost ~kind ldecl spec_res (n,ndt',a), se, len, true, None
+   else
+     makeVarInfoCabs ~ghost ~kind ldecl spec_res (n,ndt,a),
+-    empty, Cil.zero ~loc:ldecl, false
++    empty, Cil.zero ~loc:ldecl, false, None
+ 
+ and doAttr ghost (a: Cabs.attribute) : attribute list =
+   (* Strip the leading and trailing underscore *)
+@@ -4726,6 +4837,7 @@
+                                                   * typedef *)
+     ?(allowZeroSizeArrays=false)
+     ?(allowVarSizeArrays=false)
++    ?array_length
+     (bt: typ)                    (* The base type *)
+     (dt: Cabs.decl_type)
+   (* Returns the new type and the accumulated name (or type attribute
+@@ -4850,7 +4962,10 @@
+           (* Check that len is a constant expression.
+              We used to also cast the length to int here, but that's
+              theoretically too restrictive on 64-bit machines. *)
+-          let len' = doPureExp (ghost_local_env ghost) len in
++          let len' = match array_length with
++            | None -> doPureExp (ghost_local_env ghost) len
++            | Some type_length -> type_length len
++          in
+           if not (Ast_types.is_integral (Cil.typeOf len')) then
+             Kernel.error ~once:true ~current:true
+               "Array length %a does not have an integral type."
+@@ -5859,8 +5974,16 @@
+       in
+       fail_if_incompatible_sizeof ~ensure_complete:false "sizeof()" lvt;
+       let scope_chunk = drop_chunk "sizeof" se e e' in
++      let comma_decay = Machine.clang_u32_alignment_policy () &&
++          source_has_comma_decay e in
++      if Machine.clang_u32_alignment_policy () &&
++         mentions_var_size_array e' &&
++         Option.is_none (var_size_array_origin e e') && not comma_decay then
++        Kernel.abort ~current:true
++          "unsupported compound sizeof expression involving a lowered VLA";
+       let size =
+-        match e'.enode with
++        if comma_decay then Cil.new_exp ~loc (SizeOfE e')
++        else match e'.enode with
+         (* Maybe we are taking the sizeof a variable-sized array *)
+         | Lval (Var vi, NoOffset) -> begin
+             try
+@@ -5898,8 +6021,36 @@
+ 
+         | _ -> e'
+       in
+-      finishExp [] scope_chunk (Cil.new_exp ~loc (AlignOfE(e'', i)))
+-        (Machine.sizeof_type ())
++      let alignment =
++        if Machine.clang_u32_alignment_policy () && source_has_comma_decay e then
++          if i = `GCC then
++            (* A genuine comma operator decays its last array operand. Its
++               result has no declaration alignment to inherit, even when the
++               normalized CIL operand is the same variable Lval. *)
++            Cil.new_exp ~loc (AlignOf (lvt, i))
++          else Kernel.abort ~current:true
++              "unsupported C11 expression alignment of a comma expression"
++        else match var_size_array_origin e e'' with
++        | Some original ->
++          if i <> `GCC then
++            Kernel.abort ~current:true
++              "unsupported C11 expression alignment of a VLA";
++          let operand = Cil.new_exp ~loc (Lval (Cil.var original)) in
++          let folded = Cil.constFold true
++              (Cil.new_exp ~loc (AlignOfE (operand, i))) in
++          begin match folded.enode with
++            | Const (CInt64 _) -> folded
++            | _ -> Kernel.abort ~current:true
++                "unsupported nonconstant original VLA alignment"
++          end
++        | None ->
++          if Machine.clang_u32_alignment_policy () &&
++             mentions_var_size_array e'' then
++            Kernel.abort ~current:true
++              "unsupported compound alignment expression involving a lowered VLA";
++          Cil.new_exp ~loc (AlignOfE (e'', i))
++      in
++      finishExp [] scope_chunk alignment (Machine.sizeof_type ())
+ 
+     (* In cparser, the types used as arguments of certain builtins are converted
+        to casts so that they can be represented as expressions. The following
+@@ -6105,6 +6256,13 @@
+             in
+             match e'.enode with
+             | Lval x | CastE(_, {enode = Lval x}) | StartOf x ->
++              if Machine.clang_u32_alignment_policy () then begin
++                match x with
++                | Var vi, NoOffset when IH.mem varSizeArrayOrigins vi.vid ->
++                  Kernel.abort ~current:true
++                    "unsupported address of an original VLA object"
++                | _ -> ()
++              end;
+               (* Recover type qualifiers that were dropped by dropQualifiers
+                  when the l-value was created *)
+               let tres = match e'.enode with
+@@ -8937,11 +9095,13 @@
+   | _ ->
+     (* Make a variable of potentially variable size. If se0 <> empty then
+      * it is a variable size variable *)
+-    let vi,se0,len,isvarsize =
++    let vi,se0,len,isvarsize,original =
+       makeVarSizeVarInfo ghost loc specs (n, ndt, a) in
+ 
+     checkArray inite vi;
+     let vi = alphaConvertVarAndAddToEnv true vi in        (* Replace vi *)
++    Option.iter (fun origin ->
++        IH.add varSizeArrayOrigins vi.vid origin) original;
+     if isvarsize then begin
+       let free = vla_free_fun () in
+       let destructor = AStr free.vname in
+@@ -9301,6 +9461,7 @@
+       ignore (Cabsvisit.visitCabsBlock (new gatherLabelsClass) body);
+ 
+       IH.clear varSizeArrays;
++      IH.clear varSizeArrayOrigins;
+ 
+       (* Enter all the function's labels into the alpha conversion table *)
+       ignore (Cabsvisit.visitCabsBlock (new registerLabelsVisitor) body);

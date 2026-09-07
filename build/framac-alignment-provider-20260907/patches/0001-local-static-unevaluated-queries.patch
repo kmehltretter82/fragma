@@ -1,0 +1,68 @@
+--- a/src/kernel_internals/typing/cabs2cil.ml
++++ b/src/kernel_internals/typing/cabs2cil.ml
+@@ -199,6 +199,24 @@
+ 
+ class check_no_locals = object
+   inherit Cil.nopCilVisitor
++  method! vexpr e =
++    let unevaluated =
++      match e.enode with
++      | SizeOfE operand ->
++        not (Cil.is_variably_modified_type (Cil.typeOf operand))
++      | AlignOfE _ -> true
++      | _ -> false
++    in
++    if unevaluated then begin
++      (* Static locals are hoisted. Keep no out-of-scope operand in their
++         initializer, but pass the complete query (including declaration
++         alignment) to the constant folder. A nonconstant sizeof must still
++         expose its evaluated local/VLA references to the check below. *)
++      let folded = Cil.constFold true e in
++      match folded.enode with
++      | Const (CInt64 _) -> ChangeTo folded
++      | _ -> DoChildren
++    end else DoChildren
+   method! vlval (h,_) =
+     (match h with
+      | Var v ->
+@@ -214,17 +232,20 @@
+   let rec aux i =
+     match i with
+     | SingleInit e ->
+-      ignore (Cil.visitCilExpr (new check_no_locals) e)
++      SingleInit (Cil.visitCilExpr (new check_no_locals) e)
+     | CompoundInit (ct, initl) ->
+-      Cil.foldLeftCompound ~implicit:false
+-        ~doinit:(fun _off' i' _ () -> aux i')
+-        ~ct:ct
+-        ~initl:initl
+-        ~acc:()
++      let initl =
++        Cil.foldLeftCompound ~implicit:false
++          ~doinit:(fun off i _ acc -> (off, aux i) :: acc)
++          ~ct:ct
++          ~initl:initl
++          ~acc:[]
++      in
++      CompoundInit (ct, List.rev initl)
+   in
+   match i with
+-  | CInit i -> aux i
+-  | StrInit _ -> ()
++  | CInit i -> CInit (aux i)
++  | StrInit _ -> i
+ 
+ (* ---------- source error message handling ------------- *)
+ let cabslu s =
+@@ -8794,8 +8815,9 @@
+           Cil.update_var_type vi et;
+         if isNotEmpty se then
+           Kernel.error ~once:true ~current:true "global static initializer";
+-        (* Check that no locals are referred by the initializer *)
+-        check_no_locals_in_initializer ie';
++        (* Resolve constant unevaluated queries before hoisting, and reject
++           any remaining evaluated local references in the initializer. *)
++        let ie' = check_no_locals_in_initializer ie' in
+         (* Maybe the initializer refers to the function itself.
+            Push a prototype for the function, just in case. *)
+         cabsPushGlobal

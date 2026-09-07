@@ -1,0 +1,12 @@
+--- a/src/kernel_internals/typing/cabs2cil.ml
++++ b/src/kernel_internals/typing/cabs2cil.ml
+@@ -4669,7 +4669,8 @@
+         let se =
+           local_var_chunk se saved +++
+           (Cil.mkStmtOneInstr ~ghost ~valid_sid
+-             (Set(Cil.var saved, length, ldecl)), [], [], reads)
++             (Local_init (saved, AssignInit (SingleInit length), ldecl)),
++           [], [Cil.var saved], reads)
+         in
+         bounds := !bounds @@@ (se, ghost);
+         Cil.new_exp ~loc:ldecl (Lval (Cil.var saved))

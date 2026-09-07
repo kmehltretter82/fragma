@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+  "roster_source": "git ls-tree -d --name-only REV:arch",
+  "architectures": [
+    {"id":"alpha","kernel_arch":"alpha","subarch":null,"aliases":[],"baseline_profile":"alpha-gcc","compiler_target":"alpha-linux-gnu","variants":["LP64 little-endian"],"wave":"remaining"},
+    {"id":"arc","kernel_arch":"arc","subarch":null,"aliases":["arcv2"],"baseline_profile":"arc-gcc","compiler_target":"arc-linux-gnu","variants":["32-bit little-endian","32-bit big-endian"],"wave":"remaining"},
+    {"id":"arm","kernel_arch":"arm","subarch":null,"aliases":["armv7","armv6"],"baseline_profile":"arm-gcc","compiler_target":"arm-linux-gnueabi","variants":["32-bit little-endian","32-bit big-endian"],"wave":"broader"},
+    {"id":"arm64","kernel_arch":"arm64","subarch":null,"aliases":["aarch64"],"baseline_profile":"arm64-gcc","compiler_target":"aarch64-linux-gnu","variants":["LP64 little-endian","LP64 big-endian"],"wave":"existing"},
+    {"id":"csky","kernel_arch":"csky","subarch":null,"aliases":[],"baseline_profile":"csky-gcc","compiler_target":"csky-linux-gnuabiv2","variants":["32-bit ABI v2 little-endian"],"wave":"remaining"},
+    {"id":"hexagon","kernel_arch":"hexagon","subarch":null,"aliases":[],"baseline_profile":"hexagon-clang","compiler_target":"hexagon-unknown-linux-musl","variants":["32-bit little-endian"],"wave":"remaining"},
+    {"id":"loongarch","kernel_arch":"loongarch","subarch":null,"aliases":["loongarch64"],"baseline_profile":"loongarch64-gcc","compiler_target":"loongarch64-linux-gnu","variants":["LP64 little-endian"],"wave":"broader"},
+    {"id":"m68k","kernel_arch":"m68k","subarch":null,"aliases":["coldfire"],"baseline_profile":"m68k-gcc","compiler_target":"m68k-linux-gnu","variants":["32-bit big-endian MMU","32-bit big-endian no-MMU"],"wave":"remaining"},
+    {"id":"microblaze","kernel_arch":"microblaze","subarch":null,"aliases":[],"baseline_profile":"microblaze-gcc","compiler_target":"microblaze-linux-gnu","variants":["32-bit big-endian","32-bit little-endian"],"wave":"remaining"},
+    {"id":"mips","kernel_arch":"mips","subarch":null,"aliases":["mipsel","mips64","mips64el"],"baseline_profile":"mips-gcc","compiler_target":"mips-linux-gnu","variants":["32-bit big-endian","32-bit little-endian","64-bit big-endian","64-bit little-endian"],"wave":"broader"},
+    {"id":"nios2","kernel_arch":"nios2","subarch":null,"aliases":[],"baseline_profile":"nios2-gcc","compiler_target":"nios2-linux-gnu","variants":["32-bit little-endian"],"wave":"remaining"},
+    {"id":"openrisc","kernel_arch":"openrisc","subarch":null,"aliases":["or1k"],"baseline_profile":"openrisc-gcc","compiler_target":"or1k-linux-gnu","variants":["32-bit big-endian"],"wave":"remaining"},
+    {"id":"parisc","kernel_arch":"parisc","subarch":null,"aliases":["hppa","hppa64"],"baseline_profile":"parisc-gcc","compiler_target":"hppa-linux-gnu","variants":["32-bit big-endian","64-bit big-endian"],"wave":"remaining"},
+    {"id":"powerpc","kernel_arch":"powerpc","subarch":null,"aliases":["ppc","ppc64","ppc64le"],"baseline_profile":"powerpc32-gcc","compiler_target":"powerpc-linux-gnu","variants":["32-bit big-endian","64-bit big-endian ELFv1/ELFv2","64-bit little-endian ELFv2"],"wave":"broader"},
+    {"id":"riscv","kernel_arch":"riscv","subarch":null,"aliases":["riscv32","riscv64"],"baseline_profile":"riscv64-gcc","compiler_target":"riscv64-linux-gnu","variants":["RV64 LP64 little-endian","RV32 ILP32 little-endian"],"wave":"existing"},
+    {"id":"s390","kernel_arch":"s390","subarch":null,"aliases":["s390x"],"baseline_profile":"s390x-gcc","compiler_target":"s390x-linux-gnu","variants":["64-bit big-endian"],"wave":"pilot"},
+    {"id":"sh","kernel_arch":"sh","subarch":null,"aliases":["sh4"],"baseline_profile":"sh-gcc","compiler_target":"sh4-linux-gnu","variants":["32-bit little-endian","32-bit big-endian"],"wave":"remaining"},
+    {"id":"sparc","kernel_arch":"sparc","subarch":null,"aliases":["sparc64"],"baseline_profile":"sparc64-gcc","compiler_target":"sparc64-linux-gnu","variants":["64-bit big-endian","32-bit big-endian"],"wave":"broader"},
+    {"id":"um","kernel_arch":"um","subarch":"x86_64","aliases":["uml"],"baseline_profile":"um-x86_64-gcc","compiler_target":"x86_64-linux-gnu","variants":["SUBARCH=x86_64 hosted kernel","SUBARCH=i386 hosted kernel"],"wave":"hosted"},
+    {"id":"x86","kernel_arch":"x86","subarch":null,"aliases":["x86_64","amd64","i386"],"baseline_profile":"x86_64-gcc","compiler_target":"x86_64-linux-gnu","variants":["64-bit little-endian","32-bit little-endian"],"wave":"existing"},
+    {"id":"xtensa","kernel_arch":"xtensa","subarch":null,"aliases":[],"baseline_profile":"xtensa-gcc","compiler_target":"xtensa-linux-gnu","variants":["32-bit configurable core, ABI and byte order require port-specific selection"],"wave":"remaining"}
+  ],
+  "variant_status": "Every listed additional variant is planned, not a supported profile. User compatibility ABIs are outside these kernel ABI profiles."
+}

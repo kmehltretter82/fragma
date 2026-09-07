@@ -1,0 +1,44 @@
+======================================================================
+ERROR: test_optional_validator_rechecks_current_inputs_and_rejects_tampering (test_native_sensitivity.NativeSensitivityTests.test_optional_validator_rechecks_current_inputs_and_rejects_tampering)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/karl/linux-work/fragma/tests/test_native_sensitivity.py", line 237, in test_optional_validator_rechecks_current_inputs_and_rejects_tampering
+    envelope = validate(target)
+  File "/home/karl/linux-work/fragma/tests/test_native_sensitivity.py", line 234, in validate
+    return validate_native_receipt(ROOT, kernel, target, revision, actual_model, build, receipt)
+  File "/home/karl/linux-work/fragma/fragma/native_sensitivity.py", line 500, in validate_native_receipt
+    track(item["path"], item["sha256"])
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/karl/linux-work/fragma/fragma/native_sensitivity.py", line 492, in track
+    raise NativeError("native input/artifact changed: " + str(filename))
+fragma.native_sensitivity.NativeError: native input/artifact changed: /home/karl/linux-work/fragma/fragma/inputs.py
+
+======================================================================
+ERROR: test_current_receipt_and_contradictory_metadata_mutations (test_s390_sensitivity.S390SensitivityTests.test_current_receipt_and_contradictory_metadata_mutations)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/karl/linux-work/fragma/tests/test_s390_sensitivity.py", line 167, in test_current_receipt_and_contradictory_metadata_mutations
+    accepted = validate()
+  File "/home/karl/linux-work/fragma/tests/test_s390_sensitivity.py", line 165, in validate
+    return native.validate_native_receipt(ROOT, kernel, self.target, self.revision, model, build, path)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/karl/linux-work/fragma/fragma/s390_sensitivity.py", line 643, in validate_native_receipt
+    raise S390Error("current reconstructed evidence differs: " + name)
+fragma.s390_sensitivity.S390Error: current reconstructed evidence differs: bindings
+
+======================================================================
+FAIL: test_optional_actual_native_receipt_and_outputs (test_native_sensitivity.NativeSensitivityTests.test_optional_actual_native_receipt_and_outputs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/karl/linux-work/fragma/tests/test_native_sensitivity.py", line 211, in test_optional_actual_native_receipt_and_outputs
+    self.assertEqual(sha256(Path(item["path"])), item["sha256"], item["path"])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '4725b53cbbf788ef0991a1e757df58b6c06f3328b5e7d74cb36c5ab908fe1d86' != '6a94585ee011d20b87a1494d78c3e0dad5a53eed68eca72f8a34327945b1d176'
+- 4725b53cbbf788ef0991a1e757df58b6c06f3328b5e7d74cb36c5ab908fe1d86
++ 6a94585ee011d20b87a1494d78c3e0dad5a53eed68eca72f8a34327945b1d176
+ : /home/karl/linux-work/fragma/fragma/inputs.py
+
+----------------------------------------------------------------------
+Ran 438 tests in 12.606s
+
+FAILED (failures=1, errors=2)

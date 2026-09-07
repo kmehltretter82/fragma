@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+  "profile": "s390x-gcc",
+  "target_id": "calibration.s390.byte-order.eva",
+  "harness": "s390/annotated/unaligned.acsl.c",
+  "harness_sha256": "c7f262f5b49bec09dbd4739240b1a1f4a7297951beb4ff3b4a6d597a3dfa344f",
+  "entry": "fragma_byte_order_calibration",
+  "properties": [
+    {"name": "decoded_be24", "acsl": "value == 0x123456", "expected": true},
+    {"name": "byte_order_REFUTED", "acsl": "value == 0x563412", "expected": false}
+  ],
+  "state": {"kind": "state", "value": 1193046, "bytes": [18, 52, 86]},
+  "native_layout": {"kind": "native-layout", "bits": 64, "byte_order": "big", "word": 16909060, "bytes": [1, 2, 3, 4]},
+  "review": "Only this frozen, valid three-byte input and these side-effect-free scalar predicates are translated. False observation is specification sensitivity, never kernel-defect evidence. Native integer byte order is observed separately using volatile accesses in the hosted observer."
+}

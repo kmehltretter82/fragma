@@ -1,0 +1,6 @@
+/* Keep the hosted observer's libc from resolving to unrelated kernel strings.
+ * This changes ELF export visibility, not selected kernel instruction bytes.
+ */
+{
+    local: *;
+};

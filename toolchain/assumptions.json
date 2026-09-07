@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "assumptions": [
+    {
+      "id": "toolchain-proof-engine-soundness",
+      "kind": "trusted-toolchain",
+      "files": ["toolchain/lock.json", "toolchain/opam-switch.export", "toolchain/opam-switch.complete.export"],
+      "scope": "Every result produced by the pinned Frama-C, Why3, Qed, and external prover binaries.",
+      "justification": "Executable versions/hashes, complete package sets, runtime libraries and installed analysis data are inventoried. The verification engines themselves are trusted; this project does not prove their implementations sound.",
+      "review_status": "reviewed-assumption",
+      "implementation_proved": false
+    },
+    {
+      "id": "toolchain-cvc5-driver-compatibility",
+      "kind": "solver-driver-model",
+      "files": ["toolchain/why3.conf", "toolchain/prover-calibration.mlw", "toolchain/prover-calibration.reference.json"],
+      "scope": "Only goals discharged using CVC5 1.3.4 through Why3 1.8.2's cvc5 driver.",
+      "justification": "Why3 automatic detection expects the older CVC5 banner and versions 1.0–1.2. Explicit configuration names the actual binary. A bounded true/false integer calibration passed, but complete compatibility across all Why3 constructs has not been reviewed. The installed driver and every imported support file are hashed in the runtime receipt.",
+      "driver_relative_path": "share/why3/drivers/cvc5.drv",
+      "reference_driver_sha256": "ba50713ad3d438933602e3edbfa79e847e5c05a4e14bbed519dee42f515c127f",
+      "review_status": "pending",
+      "implementation_proved": false
+    },
+    {
+      "id": "toolchain-native-runtime",
+      "kind": "trusted-host-runtime",
+      "files": ["toolchain/lock.json", "toolchain/graphviz-artifacts.json", "toolchain/setup.py"],
+      "scope": "Host execution of analyzers and native builds; independent from the kernel target's ABI model.",
+      "justification": "Compiler versions, actual executable/native-library hashes, pinned GMP sources and bootstrap artifacts are recorded. The host operating system and all native build prerequisites are not supplied as a hermetic image. The isolated Graphviz extraction is used only for the required dot version check, not a claim that graph rendering plugins are complete.",
+      "review_status": "reviewed-assumption",
+      "implementation_proved": false
+    }
+  ]
+}

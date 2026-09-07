@@ -1,0 +1,1307 @@
+{
+  "schema_version": 1,
+  "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+  "targets": [
+    {
+      "functions": [
+        "__get_unaligned_be24",
+        "__get_unaligned_le24",
+        "__put_unaligned_be24",
+        "__put_unaligned_le24"
+      ],
+      "analysis_functions": [
+        "__get_unaligned_be24",
+        "__get_unaligned_le24",
+        "__put_unaligned_be24",
+        "__put_unaligned_le24",
+        "fragma_roundtrip_be24",
+        "fragma_roundtrip_le24"
+      ],
+      "project_functions": [
+        "fragma_roundtrip_be24",
+        "fragma_roundtrip_le24"
+      ],
+      "required_properties": [
+        "get_unaligned_be24_ensures_decoded_value",
+        "get_unaligned_be24_ensures_decoded_range",
+        "get_unaligned_le24_ensures_decoded_value",
+        "get_unaligned_le24_ensures_decoded_range",
+        "put_unaligned_be24_ensures_byte_0",
+        "put_unaligned_be24_ensures_byte_1",
+        "put_unaligned_be24_ensures_byte_2",
+        "put_unaligned_le24_ensures_byte_0",
+        "put_unaligned_le24_ensures_byte_1",
+        "put_unaligned_le24_ensures_byte_2",
+        "fragma_roundtrip_be24_ensures_roundtrip",
+        "fragma_roundtrip_le24_ensures_roundtrip"
+      ],
+      "claims": [
+        "runtime-safety",
+        "functional",
+        "termination",
+        "encode-decode-roundtrip"
+      ],
+      "caller_coverage": "project-witnesses-require-proof; kernel-callers-unverified",
+      "wp_strategy": "fragma_byte_decompose",
+      "wp_strategy_provers": [
+        "alt-ergo",
+        "z3"
+      ],
+      "wp_auto_depth": 64,
+      "wp_smoke_timeout": 2,
+      "role": "proof",
+      "analysis": "wp",
+      "input_mode": "standalone",
+      "provenance": {
+        "mode": "functions"
+      },
+      "source": "include/linux/unaligned.h",
+      "harness": "common/annotated/unaligned24.verified.c",
+      "kernel_model_check": "common/annotated/kernel-model-check.c",
+      "wp_strategy_file": "common/annotated/byteproof.h",
+      "require_smoke": true,
+      "reviewed_smoke": [],
+      "id": "common.unaligned24.arm64",
+      "compiler_calibration": {
+        "kind": "common24-fixed22",
+        "source": "common/annotated/compiler-calibration.c"
+      },
+      "suite": "extended",
+      "profile": "arm64-gcc",
+      "frontend_policy": {
+        "schema_version": 1,
+        "kind": "common24-inline",
+        "variant": "no-instrument"
+      },
+      "assumptions": [
+        "common24-wave2-types",
+        "common24-wave2-frontend"
+      ],
+      "reviewed_warnings": [
+        {
+          "plugin": "kernel:attrs:unknown",
+          "message": "Ignoring unknown attribute: __gnu_inline__",
+          "severity": "warning",
+          "functions": [
+            "__get_unaligned_be24",
+            "__get_unaligned_le24",
+            "__put_unaligned_be24",
+            "__put_unaligned_le24",
+            "fragma_roundtrip_be24",
+            "fragma_roundtrip_le24"
+          ],
+          "reason": "Exact genuine inline spelling is preserved for the four static byte helpers and checked by the positive fixture and wrong-inline control. This review covers the sequential C abstraction and direct project-witness calls only, not linkage, instrumentation, timing or emitted instructions.",
+          "file_hashes": {
+            "common/annotated/unaligned24.verified.c": "8d107e0e195c1ebfd7142f03e0ab3564e864fa7bc952d0e4fc94b18373e948fd",
+            "common/annotated/kernel-model-check.c": "860b5d09ec735ea48f67e8480d40af8bfd00db494cb01b247ac2eb33dbf49a9d",
+            "common/annotated/byteproof.h": "9a9c584c56d36329f866e060500d5d64557c63ffc538cf9551fe073b94d53017",
+            "common/annotated/inline-policy.h": "12c7cbf03ddb8d3cebbbb09aee714c761c75b80c0724fcb72c57210c07ef9041",
+            "common/annotated/compiler-calibration.c": "84a5ffce5e314761a57769837f13550323d4bfbaa7e9126cecf70a029fac157d",
+            "common/REVIEW-WAVE2-20260906.md": "d364bba4615da18391c8ac88e4f0ca71146bc9c6e98ab131da89bbda03cbd0dc",
+            "common/REVIEW-WAVE3-20260906.md": "29fddafd98049516d3c086d366740374b793dd7d066b0575c799a3684d4ce201"
+          },
+          "review_evidence": [
+            "common/REVIEW-WAVE2-20260906.md",
+            "results/common24-wave2-initial-20260906/common.unaligned24.arm64/analysis.log",
+            "results/common24-wave2-initial-20260906/common.unaligned24.arm64/wp.json",
+            "results/common24-wave2-initial-20260906/common.unaligned24.arm64/properties.tsv",
+            "results/common24-wave2-initial-20260906/common.unaligned24.arm64/audit.json",
+            "results/common24-wave2-initial-20260906/common.unaligned24.arm64/compiler-calibration/receipt.json",
+            "results/common24-wave2-initial-20260906/common.unaligned24.arm64/compiler-controls/receipt.json",
+            "common/REVIEW-WAVE3-20260906.md"
+          ],
+          "reviewed_by": "Codex AI assistant; independent AI operation/parser review by pointer_audit; not a human approval",
+          "file": "common/annotated/unaligned24.verified.c",
+          "line": 23
+        },
+        {
+          "plugin": "wp",
+          "message": "Skipped RTE guards: unaligned pointers (\\aligned not supported)",
+          "severity": "warning",
+          "functions": [
+            "__get_unaligned_be24",
+            "__get_unaligned_le24",
+            "__put_unaligned_be24",
+            "__put_unaligned_le24",
+            "fragma_roundtrip_be24",
+            "fragma_roundtrip_le24"
+          ],
+          "reason": "All selected memory operations dereference u8, checked against genuine headers to have alignment one. The unchanged domains require exactly three readable/writable bytes; no word access or pointer cast occurs. All selected memory-access and pointer-formation obligations remain mandatory.",
+          "file_hashes": {
+            "common/annotated/unaligned24.verified.c": "8d107e0e195c1ebfd7142f03e0ab3564e864fa7bc952d0e4fc94b18373e948fd",
+            "common/annotated/kernel-model-check.c": "860b5d09ec735ea48f67e8480d40af8bfd00db494cb01b247ac2eb33dbf49a9d",
+            "common/annotated/byteproof.h": "9a9c584c56d36329f866e060500d5d64557c63ffc538cf9551fe073b94d53017",
+            "common/annotated/inline-policy.h": "12c7cbf03ddb8d3cebbbb09aee714c761c75b80c0724fcb72c57210c07ef9041",
+            "common/annotated/compiler-calibration.c": "84a5ffce5e314761a57769837f13550323d4bfbaa7e9126cecf70a029fac157d",
+            "common/REVIEW-WAVE2-20260906.md": "d364bba4615da18391c8ac88e4f0ca71146bc9c6e98ab131da89bbda03cbd0dc",
+            "common/REVIEW-WAVE3-20260906.md": "29fddafd98049516d3c086d366740374b793dd7d066b0575c799a3684d4ce201"
+          },
+          "review_evidence": [
+            "common/REVIEW-WAVE2-20260906.md",
+            "results/common24-wave2-initial-20260906/common.unaligned24.arm64/analysis.log",
+            "results/common24-wave2-initial-20260906/common.unaligned24.arm64/wp.json",
+            "results/common24-wave2-initial-20260906/common.unaligned24.arm64/properties.tsv",
+            "results/common24-wave2-initial-20260906/common.unaligned24.arm64/audit.json",
+            "results/common24-wave2-initial-20260906/common.unaligned24.arm64/compiler-calibration/receipt.json",
+            "results/common24-wave2-initial-20260906/common.unaligned24.arm64/compiler-controls/receipt.json",
+            "common/REVIEW-WAVE3-20260906.md"
+          ],
+          "reviewed_by": "Codex AI assistant; independent AI operation/parser review by pointer_audit; not a human approval"
+        },
+        {
+          "plugin": "wp",
+          "message": "Skipped RTE guards: invalid function pointer calls (\\valid_function not supported)",
+          "severity": "warning",
+          "functions": [
+            "__get_unaligned_be24",
+            "__get_unaligned_le24",
+            "__put_unaligned_be24",
+            "__put_unaligned_le24",
+            "fragma_roundtrip_be24",
+            "fragma_roundtrip_le24"
+          ],
+          "reason": "The six bodies contain exactly four direct witness calls and no indirect call. Their four precondition instances remain required proof dependencies. The compiler-only fixture's function-pointer typedefs check signatures and are never called.",
+          "file_hashes": {
+            "common/annotated/unaligned24.verified.c": "8d107e0e195c1ebfd7142f03e0ab3564e864fa7bc952d0e4fc94b18373e948fd",
+            "common/annotated/kernel-model-check.c": "860b5d09ec735ea48f67e8480d40af8bfd00db494cb01b247ac2eb33dbf49a9d",
+            "common/annotated/byteproof.h": "9a9c584c56d36329f866e060500d5d64557c63ffc538cf9551fe073b94d53017",
+            "common/annotated/inline-policy.h": "12c7cbf03ddb8d3cebbbb09aee714c761c75b80c0724fcb72c57210c07ef9041",
+            "common/annotated/compiler-calibration.c": "84a5ffce5e314761a57769837f13550323d4bfbaa7e9126cecf70a029fac157d",
+            "common/REVIEW-WAVE2-20260906.md": "d364bba4615da18391c8ac88e4f0ca71146bc9c6e98ab131da89bbda03cbd0dc",
+            "common/REVIEW-WAVE3-20260906.md": "29fddafd98049516d3c086d366740374b793dd7d066b0575c799a3684d4ce201"
+          },
+          "review_evidence": [
+            "common/REVIEW-WAVE2-20260906.md",
+            "results/common24-wave2-initial-20260906/common.unaligned24.arm64/analysis.log",
+            "results/common24-wave2-initial-20260906/common.unaligned24.arm64/wp.json",
+            "results/common24-wave2-initial-20260906/common.unaligned24.arm64/properties.tsv",
+            "results/common24-wave2-initial-20260906/common.unaligned24.arm64/audit.json",
+            "results/common24-wave2-initial-20260906/common.unaligned24.arm64/compiler-calibration/receipt.json",
+            "results/common24-wave2-initial-20260906/common.unaligned24.arm64/compiler-controls/receipt.json",
+            "common/REVIEW-WAVE3-20260906.md"
+          ],
+          "reviewed_by": "Codex AI assistant; independent AI operation/parser review by pointer_audit; not a human approval"
+        },
+        {
+          "plugin": "wp",
+          "message": "-wp-rte can annotate signed overflow because -warn-signed-overflow is not set",
+          "severity": "warning",
+          "functions": [
+            "__get_unaligned_be24",
+            "__get_unaligned_le24",
+            "__put_unaligned_be24",
+            "__put_unaligned_le24",
+            "fragma_roundtrip_be24",
+            "fragma_roundtrip_le24"
+          ],
+          "reason": "Over the complete three-byte domain, promoted bytes are 0..255, the largest C shift is 16711680 and the combined getter value is at most 16777215, within the genuine 32-bit signed-int range. Writer shifts are unsigned and masked stores are 0..255 for every u32. Fixed C shift counts 8/16 and annotation count 24 are below 32. This source/range review does not claim that a disabled overflow guard was generated.",
+          "file_hashes": {
+            "common/annotated/unaligned24.verified.c": "8d107e0e195c1ebfd7142f03e0ab3564e864fa7bc952d0e4fc94b18373e948fd",
+            "common/annotated/kernel-model-check.c": "860b5d09ec735ea48f67e8480d40af8bfd00db494cb01b247ac2eb33dbf49a9d",
+            "common/annotated/byteproof.h": "9a9c584c56d36329f866e060500d5d64557c63ffc538cf9551fe073b94d53017",
+            "common/annotated/inline-policy.h": "12c7cbf03ddb8d3cebbbb09aee714c761c75b80c0724fcb72c57210c07ef9041",
+            "common/annotated/compiler-calibration.c": "84a5ffce5e314761a57769837f13550323d4bfbaa7e9126cecf70a029fac157d",
+            "common/REVIEW-WAVE2-20260906.md": "d364bba4615da18391c8ac88e4f0ca71146bc9c6e98ab131da89bbda03cbd0dc",
+            "common/REVIEW-WAVE3-20260906.md": "29fddafd98049516d3c086d366740374b793dd7d066b0575c799a3684d4ce201"
+          },
+          "review_evidence": [
+            "common/REVIEW-WAVE2-20260906.md",
+            "results/common24-wave2-initial-20260906/common.unaligned24.arm64/analysis.log",
+            "results/common24-wave2-initial-20260906/common.unaligned24.arm64/wp.json",
+            "results/common24-wave2-initial-20260906/common.unaligned24.arm64/properties.tsv",
+            "results/common24-wave2-initial-20260906/common.unaligned24.arm64/audit.json",
+            "results/common24-wave2-initial-20260906/common.unaligned24.arm64/compiler-calibration/receipt.json",
+            "results/common24-wave2-initial-20260906/common.unaligned24.arm64/compiler-controls/receipt.json",
+            "common/REVIEW-WAVE3-20260906.md"
+          ],
+          "reviewed_by": "Codex AI assistant; independent AI operation/parser review by pointer_audit; not a human approval"
+        },
+        {
+          "plugin": "wp",
+          "message": "Missing RTE guards",
+          "severity": "warning",
+          "functions": [
+            "__get_unaligned_be24",
+            "__get_unaligned_le24",
+            "__put_unaligned_be24",
+            "__put_unaligned_le24",
+            "fragma_roundtrip_be24",
+            "fragma_roundtrip_le24"
+          ],
+          "reason": "Review is based on all six source bodies, byte alignment one, complete-domain arithmetic ranges, no indirect calls, initialized witness arrays, and mandatory access/pointer/shift/direct-call proof inventory. Frama-C's missing-status list excludes alignment and indirect-call categories; explicitly disabled arithmetic settings can mark status missing and cfgGenerator reports the earlier snapshot. No missing obligation is waived and no smoke consistency proof is inferred.",
+          "file_hashes": {
+            "common/annotated/unaligned24.verified.c": "8d107e0e195c1ebfd7142f03e0ab3564e864fa7bc952d0e4fc94b18373e948fd",
+            "common/annotated/kernel-model-check.c": "860b5d09ec735ea48f67e8480d40af8bfd00db494cb01b247ac2eb33dbf49a9d",
+            "common/annotated/byteproof.h": "9a9c584c56d36329f866e060500d5d64557c63ffc538cf9551fe073b94d53017",
+            "common/annotated/inline-policy.h": "12c7cbf03ddb8d3cebbbb09aee714c761c75b80c0724fcb72c57210c07ef9041",
+            "common/annotated/compiler-calibration.c": "84a5ffce5e314761a57769837f13550323d4bfbaa7e9126cecf70a029fac157d",
+            "common/REVIEW-WAVE2-20260906.md": "d364bba4615da18391c8ac88e4f0ca71146bc9c6e98ab131da89bbda03cbd0dc",
+            "common/REVIEW-WAVE3-20260906.md": "29fddafd98049516d3c086d366740374b793dd7d066b0575c799a3684d4ce201"
+          },
+          "review_evidence": [
+            "common/REVIEW-WAVE2-20260906.md",
+            "results/common24-wave2-initial-20260906/common.unaligned24.arm64/analysis.log",
+            "results/common24-wave2-initial-20260906/common.unaligned24.arm64/wp.json",
+            "results/common24-wave2-initial-20260906/common.unaligned24.arm64/properties.tsv",
+            "results/common24-wave2-initial-20260906/common.unaligned24.arm64/audit.json",
+            "results/common24-wave2-initial-20260906/common.unaligned24.arm64/compiler-calibration/receipt.json",
+            "results/common24-wave2-initial-20260906/common.unaligned24.arm64/compiler-controls/receipt.json",
+            "common/REVIEW-WAVE3-20260906.md"
+          ],
+          "reviewed_by": "Codex AI assistant; independent AI operation/parser review by pointer_audit; not a human approval"
+        }
+      ],
+      "review_context": {
+        "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+        "profile": "arm64-gcc",
+        "toolchain_lock_sha256": "0d3557b20e4a0ed16e6a4fe8622aa3ecd1572b9b30d490c7c69b4be82d7f47cb",
+        "analysis": {
+          "wp_model": "Typed",
+          "arithmetic_flags": [
+            "-no-warn-signed-overflow",
+            "-no-warn-unsigned-overflow",
+            "-no-warn-signed-downcast",
+            "-no-warn-unsigned-downcast",
+            "-no-warn-right-shift-negative"
+          ],
+          "runtime_checks": {
+            "pointer_formation": "object-or-null"
+          }
+        },
+        "analysis_pipeline": {
+          "kind": "wp-rte",
+          "functions": [
+            "__get_unaligned_be24",
+            "__get_unaligned_le24",
+            "__put_unaligned_be24",
+            "__put_unaligned_le24",
+            "fragma_roundtrip_be24",
+            "fragma_roundtrip_le24"
+          ]
+        },
+        "preprocessing": {
+          "cpp_command": "/usr/bin/aarch64-linux-gnu-gcc -mgeneral-regs-only -mlittle-endian -std=gnu11 -funsigned-char -fshort-wchar -fno-strict-overflow -fno-strict-aliasing -ffreestanding -nostdinc -D__KERNEL__ -DFRAGMA_COMMON24_INLINE_POLICY=1 -E -C",
+          "annotations": "Frama-C native -pp-annot with target compiler",
+          "input_mode": "standalone",
+          "extra_args": [
+            "-std=gnu11"
+          ],
+          "frontend_policy": {
+            "schema_version": 1,
+            "kind": "common24-inline",
+            "variant": "no-instrument"
+          }
+        },
+        "proof_search": {
+          "wp_strategy": "fragma_byte_decompose",
+          "wp_strategy_file": "common/annotated/byteproof.h",
+          "wp_strategy_provers": [
+            "alt-ergo",
+            "z3"
+          ],
+          "wp_auto_depth": 64,
+          "wp_smoke_timeout": 2
+        },
+        "compiler_calibration": {
+          "kind": "fragma-common24-compiler-sensitivity",
+          "setting": {
+            "kind": "common24-fixed22",
+            "source": "common/annotated/compiler-calibration.c"
+          },
+          "environment_policy": "common24-compiler-clean-v1",
+          "cases": [
+            "decode_be",
+            "decode_le",
+            "store_be_0",
+            "store_be_1",
+            "store_be_2",
+            "store_le_0",
+            "store_le_1",
+            "store_le_2",
+            "roundtrip_be",
+            "roundtrip_le",
+            "maximum_be_0",
+            "maximum_be_1",
+            "maximum_be_2",
+            "maximum_roundtrip",
+            "discarded_le_0",
+            "discarded_le_1",
+            "discarded_le_2",
+            "discarded_roundtrip",
+            "memory_0",
+            "memory_1",
+            "memory_2",
+            "memory_3"
+          ],
+          "fixture_controls": [
+            "wrong-type",
+            "wrong-inline"
+          ]
+        },
+        "file_hashes": {
+          "common/annotated/unaligned24.verified.c": "8d107e0e195c1ebfd7142f03e0ab3564e864fa7bc952d0e4fc94b18373e948fd",
+          "common/annotated/kernel-model-check.c": "860b5d09ec735ea48f67e8480d40af8bfd00db494cb01b247ac2eb33dbf49a9d",
+          "common/annotated/byteproof.h": "9a9c584c56d36329f866e060500d5d64557c63ffc538cf9551fe073b94d53017",
+          "fragma/analysis_policy.py": "b674caa823c2e703ae81e4972967ac5ce8b6a8b34b6f5203e9b39e2b4dd618ff",
+          "fragma/common24.py": "f8d768a0f64b7f9202936cc0df84a5e36f5787be092971cca2feadc49c28edcd",
+          "common/annotated/inline-policy.h": "12c7cbf03ddb8d3cebbbb09aee714c761c75b80c0724fcb72c57210c07ef9041",
+          "fragma/frontend_policy.py": "d17c86c778455e75556723374b1027f8d60fb78552f524282efec91c1b974a47",
+          "fragma/elf.py": "f77fddcb23cc862393a7f25db4992e925c2f822d1456ec0ffd7ca60ed4102531",
+          "common/annotated/compiler-calibration.c": "84a5ffce5e314761a57769837f13550323d4bfbaa7e9126cecf70a029fac157d",
+          "fragma/common24_calibration.py": "490fe3d10bdcc7a5d50c8ac94760921ab60710fc1ffbcf8462624ce464ffbe3b",
+          "fragma/common24_controls.py": "56baf8033db846979b8f16267d8a96cf1af5857f7f117bd0935d30d8dfb83a43",
+          "build/sources/linux-b9b3e33b70b71/include/linux/unaligned.h": "877cc68addf72f84834a7da87c09fc54b86cb383d6a3d93f2a97a16e751458ce",
+          "build/sources/linux-b9b3e33b70b71/include/linux/types.h": "b12aab0f1569ba0dd6843839aa15515a414c171d3fedd583c9aa835a81b4561b",
+          "build/sources/linux-b9b3e33b70b71/include/linux/compiler_types.h": "879a8d3fe36bcf8b7b4a6de88c17f8297599d9aea5cd9d9336bb87dd4902e535",
+          "build/sources/linux-b9b3e33b70b71/include/linux/compiler_attributes.h": "04eed061289a2cd0c88591e581238276443ab31420c6a83471af7e59db3612d0",
+          "build/kernel/arm64-gcc/fragma-build.json": "4cc98700c1f3de49c41f6ff246a1018117610ebc8ce45b0c42256fe56f875628",
+          "results/common24-wave2-initial-20260906/profile-arm64-gcc/arm64-gcc.yaml": "7a71dd718d73fd497a24a7484ea5d147cb2ea5927fe8c09e0e07148bc85d29fa",
+          "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/kernel_internals/typing/cabs2cil.ml": "624907038cda23f5a12555760173271b198c9219cf1828611a362506bdd20e79",
+          "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/wp/cfgGenerator.ml": "79ab312d242ce736240b666e48f10e8a14fe7e6ce599b03256e415d911b1c680",
+          "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/wp/doc/manual/wp_intro.tex": "c82570b40446b7608cd76c802f4e8128d78a6a6045438f1cd939b64d627a52e2",
+          "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/wp/doc/manual/wp_plugin.tex": "1f0a292e7dcd86110cafe19196080a25a80e7706a1cebdebee4ab63fb0c9c78a",
+          "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/wp/wpRTE.ml": "965ef16094a23b6ce6efd849820ee818843d94d079bbe9e00c02374084d4c030",
+          "common/REVIEW-WAVE2-20260906.md": "d364bba4615da18391c8ac88e4f0ca71146bc9c6e98ab131da89bbda03cbd0dc",
+          "build/common24-wave2-initial-audit-20260906/PARSER-DELTA.md": "568473b2eedcbf9382a00de5413f77582e790d77331fb5c591d4fb67961bbd68",
+          "results/tests-common24-wave2-symbols-20260906.log": "eb5cf52f498831f5a82c65d2834906cd72a7797923ebb650ddf713c794df248f",
+          "build/common24-wave2-riscv-audit-20260906/check.py": "a36b843107c6e1b88cef6983cee0882d3233b4dbad1c091f9f7caac75d6e1228",
+          "build/common24-wave2-riscv-audit-20260906/audit-1.json": "2b802b9ed267948fce11e0f0d54839103d4f0207ab81862829202ec92fbedab0",
+          "results/common24-wave2-initial-20260906/common.unaligned24.arm64/analysis.log": "aeb8fc2551123376218b9076a9cffa871046e085de2cac892261e3d76fed0717",
+          "results/common24-wave2-initial-20260906/common.unaligned24.arm64/wp.json": "f100a0a7080246c1a16ad13d32f2ef63c640ba3d4166ade0e407d18144cba232",
+          "results/common24-wave2-initial-20260906/common.unaligned24.arm64/properties.tsv": "19f31c29c14aaef9e322b03908712c051c0e97522adbcade95efe1f2da595149",
+          "results/common24-wave2-initial-20260906/common.unaligned24.arm64/audit.json": "226386654efb5a79aa805654465cafd6c0b0f98a13bbc093b6957ced7bc500d4",
+          "results/common24-wave2-initial-20260906/common.unaligned24.arm64/compiler-calibration/receipt.json": "426192653408e0d74e5b1e70d7b0306f4d581373e35127a10c1ccdcd57768e9f",
+          "results/common24-wave2-initial-20260906/common.unaligned24.arm64/compiler-controls/receipt.json": "5d4a0f0d559e4be60bc52a0d9b6099dd5d801caa03170ae4ee7da24b90b52586",
+          "common/REVIEW-WAVE3-20260906.md": "29fddafd98049516d3c086d366740374b793dd7d066b0575c799a3684d4ce201",
+          "tests/test_elf_alpha.py": "f2b143076c2cf64f2fb876e91dd4873e91929366975d2280bdd36b6dd190cf0d",
+          "tests/test_common24_size_optimization.py": "1a9160d266c77f097567e877ec53f49e9a2565e25cbb75c65b8cdc870c126c9f",
+          "build/common24-wave3-compiler-audit-20260906/REPORT.md": "eeccdba5a12f226d2da704480b92107a3eb4b686343ef6053389149b54735d34",
+          "build/common24-wave3-compiler-audit-20260906/PRECHANGE-CAPTURE.md": "94709379e0ac3d1a0406ff540914f2b75ab7b55a61b858e9e1127a77feda6a27",
+          "build/common24-wave3-compiler-audit-20260906/audit-1.json": "eceb69fae9525ee1dece9c0be22bf96541015079d92bb8583d7b8df1935fbf49",
+          "build/common24-wave3-compiler-audit-20260906/check.py": "ae01b01d98eb39dbd1b35fc894a6228aa6e1144516dbed7067077bbb51fd08ea",
+          "build/common24-wave3-initial-audit-20260906/REPORT.md": "9c9a18afc73a8cfa3bc7fff97ae463e2b541016445369e7140f79d87edad987d",
+          "build/common24-wave3-initial-audit-20260906/REVIEW-NOTES.md": "1f35bc73eb248211da3eece9e72bd84389cbb03c553aa9dd890c1ab7fe3d41e4",
+          "build/common24-wave3-initial-audit-20260906/audit-2.json": "20fb1c37f72c8d9eb9b240d37db39639f64e8365bec44557125a32613fb1c4b0",
+          "build/common24-wave3-initial-audit-20260906/check-v2.py": "1f32eb85e4e10c503bf86fb2359f68a40082b18b6f4c6de06cea4b9d52c4a64c",
+          "results/tests-common24-wave3-pending-20260906.log": "e57481171381ebea03da2d80383f600db2b02fcb36c65229d96f5bce9d7b2b5d"
+        },
+        "reviewed_by": "Codex AI assistant; independent AI operation/parser review by pointer_audit; not a human approval",
+        "reviewed_at": "2026-09-06",
+        "review_evidence": [
+          "common/REVIEW-WAVE2-20260906.md",
+          "build/common24-wave2-initial-audit-20260906/PARSER-DELTA.md",
+          "results/tests-common24-wave2-symbols-20260906.log",
+          "build/common24-wave2-riscv-audit-20260906/check.py",
+          "build/common24-wave2-riscv-audit-20260906/audit-1.json",
+          "results/common24-wave2-initial-20260906/common.unaligned24.arm64/analysis.log",
+          "results/common24-wave2-initial-20260906/common.unaligned24.arm64/wp.json",
+          "results/common24-wave2-initial-20260906/common.unaligned24.arm64/properties.tsv",
+          "results/common24-wave2-initial-20260906/common.unaligned24.arm64/audit.json",
+          "results/common24-wave2-initial-20260906/common.unaligned24.arm64/compiler-calibration/receipt.json",
+          "results/common24-wave2-initial-20260906/common.unaligned24.arm64/compiler-controls/receipt.json",
+          "common/REVIEW-WAVE3-20260906.md",
+          "tests/test_elf_alpha.py",
+          "tests/test_common24_size_optimization.py",
+          "build/common24-wave3-compiler-audit-20260906/REPORT.md",
+          "build/common24-wave3-compiler-audit-20260906/PRECHANGE-CAPTURE.md",
+          "build/common24-wave3-compiler-audit-20260906/audit-1.json",
+          "build/common24-wave3-compiler-audit-20260906/check.py",
+          "build/common24-wave3-initial-audit-20260906/REPORT.md",
+          "build/common24-wave3-initial-audit-20260906/REVIEW-NOTES.md",
+          "build/common24-wave3-initial-audit-20260906/audit-2.json",
+          "build/common24-wave3-initial-audit-20260906/check-v2.py",
+          "results/tests-common24-wave3-pending-20260906.log"
+        ]
+      }
+    },
+    {
+      "functions": [
+        "__get_unaligned_be24",
+        "__get_unaligned_le24",
+        "__put_unaligned_be24",
+        "__put_unaligned_le24"
+      ],
+      "analysis_functions": [
+        "__get_unaligned_be24",
+        "__get_unaligned_le24",
+        "__put_unaligned_be24",
+        "__put_unaligned_le24",
+        "fragma_roundtrip_be24",
+        "fragma_roundtrip_le24"
+      ],
+      "project_functions": [
+        "fragma_roundtrip_be24",
+        "fragma_roundtrip_le24"
+      ],
+      "required_properties": [
+        "get_unaligned_be24_ensures_decoded_value",
+        "get_unaligned_be24_ensures_decoded_range",
+        "get_unaligned_le24_ensures_decoded_value",
+        "get_unaligned_le24_ensures_decoded_range",
+        "put_unaligned_be24_ensures_byte_0",
+        "put_unaligned_be24_ensures_byte_1",
+        "put_unaligned_be24_ensures_byte_2",
+        "put_unaligned_le24_ensures_byte_0",
+        "put_unaligned_le24_ensures_byte_1",
+        "put_unaligned_le24_ensures_byte_2",
+        "fragma_roundtrip_be24_ensures_roundtrip",
+        "fragma_roundtrip_le24_ensures_roundtrip"
+      ],
+      "claims": [
+        "runtime-safety",
+        "functional",
+        "termination",
+        "encode-decode-roundtrip"
+      ],
+      "caller_coverage": "project-witnesses-require-proof; kernel-callers-unverified",
+      "wp_strategy": "fragma_byte_decompose",
+      "wp_strategy_provers": [
+        "alt-ergo",
+        "z3"
+      ],
+      "wp_auto_depth": 64,
+      "wp_smoke_timeout": 2,
+      "role": "proof",
+      "analysis": "wp",
+      "input_mode": "standalone",
+      "provenance": {
+        "mode": "functions"
+      },
+      "source": "include/linux/unaligned.h",
+      "harness": "common/annotated/unaligned24.verified.c",
+      "kernel_model_check": "common/annotated/kernel-model-check.c",
+      "wp_strategy_file": "common/annotated/byteproof.h",
+      "require_smoke": true,
+      "reviewed_smoke": [],
+      "id": "common.unaligned24.riscv64",
+      "compiler_calibration": {
+        "kind": "common24-fixed22",
+        "source": "common/annotated/compiler-calibration.c"
+      },
+      "suite": "extended",
+      "profile": "riscv64-gcc",
+      "frontend_policy": {
+        "schema_version": 1,
+        "kind": "common24-inline",
+        "variant": "no-instrument"
+      },
+      "assumptions": [
+        "common24-wave2-types",
+        "common24-wave2-frontend"
+      ],
+      "reviewed_warnings": [
+        {
+          "plugin": "kernel:attrs:unknown",
+          "message": "Ignoring unknown attribute: __gnu_inline__",
+          "severity": "warning",
+          "functions": [
+            "__get_unaligned_be24",
+            "__get_unaligned_le24",
+            "__put_unaligned_be24",
+            "__put_unaligned_le24",
+            "fragma_roundtrip_be24",
+            "fragma_roundtrip_le24"
+          ],
+          "reason": "Exact genuine inline spelling is preserved for the four static byte helpers and checked by the positive fixture and wrong-inline control. This review covers the sequential C abstraction and direct project-witness calls only, not linkage, instrumentation, timing or emitted instructions.",
+          "file_hashes": {
+            "common/annotated/unaligned24.verified.c": "8d107e0e195c1ebfd7142f03e0ab3564e864fa7bc952d0e4fc94b18373e948fd",
+            "common/annotated/kernel-model-check.c": "860b5d09ec735ea48f67e8480d40af8bfd00db494cb01b247ac2eb33dbf49a9d",
+            "common/annotated/byteproof.h": "9a9c584c56d36329f866e060500d5d64557c63ffc538cf9551fe073b94d53017",
+            "common/annotated/inline-policy.h": "12c7cbf03ddb8d3cebbbb09aee714c761c75b80c0724fcb72c57210c07ef9041",
+            "common/annotated/compiler-calibration.c": "84a5ffce5e314761a57769837f13550323d4bfbaa7e9126cecf70a029fac157d",
+            "common/REVIEW-WAVE2-20260906.md": "d364bba4615da18391c8ac88e4f0ca71146bc9c6e98ab131da89bbda03cbd0dc",
+            "common/REVIEW-WAVE3-20260906.md": "29fddafd98049516d3c086d366740374b793dd7d066b0575c799a3684d4ce201"
+          },
+          "review_evidence": [
+            "common/REVIEW-WAVE2-20260906.md",
+            "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/analysis.log",
+            "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/wp.json",
+            "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/properties.tsv",
+            "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/audit.json",
+            "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/compiler-calibration/receipt.json",
+            "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/compiler-controls/receipt.json",
+            "common/REVIEW-WAVE3-20260906.md"
+          ],
+          "reviewed_by": "Codex AI assistant; independent AI operation/parser review by pointer_audit; not a human approval",
+          "file": "common/annotated/unaligned24.verified.c",
+          "line": 23
+        },
+        {
+          "plugin": "wp",
+          "message": "Skipped RTE guards: unaligned pointers (\\aligned not supported)",
+          "severity": "warning",
+          "functions": [
+            "__get_unaligned_be24",
+            "__get_unaligned_le24",
+            "__put_unaligned_be24",
+            "__put_unaligned_le24",
+            "fragma_roundtrip_be24",
+            "fragma_roundtrip_le24"
+          ],
+          "reason": "All selected memory operations dereference u8, checked against genuine headers to have alignment one. The unchanged domains require exactly three readable/writable bytes; no word access or pointer cast occurs. All selected memory-access and pointer-formation obligations remain mandatory.",
+          "file_hashes": {
+            "common/annotated/unaligned24.verified.c": "8d107e0e195c1ebfd7142f03e0ab3564e864fa7bc952d0e4fc94b18373e948fd",
+            "common/annotated/kernel-model-check.c": "860b5d09ec735ea48f67e8480d40af8bfd00db494cb01b247ac2eb33dbf49a9d",
+            "common/annotated/byteproof.h": "9a9c584c56d36329f866e060500d5d64557c63ffc538cf9551fe073b94d53017",
+            "common/annotated/inline-policy.h": "12c7cbf03ddb8d3cebbbb09aee714c761c75b80c0724fcb72c57210c07ef9041",
+            "common/annotated/compiler-calibration.c": "84a5ffce5e314761a57769837f13550323d4bfbaa7e9126cecf70a029fac157d",
+            "common/REVIEW-WAVE2-20260906.md": "d364bba4615da18391c8ac88e4f0ca71146bc9c6e98ab131da89bbda03cbd0dc",
+            "common/REVIEW-WAVE3-20260906.md": "29fddafd98049516d3c086d366740374b793dd7d066b0575c799a3684d4ce201"
+          },
+          "review_evidence": [
+            "common/REVIEW-WAVE2-20260906.md",
+            "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/analysis.log",
+            "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/wp.json",
+            "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/properties.tsv",
+            "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/audit.json",
+            "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/compiler-calibration/receipt.json",
+            "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/compiler-controls/receipt.json",
+            "common/REVIEW-WAVE3-20260906.md"
+          ],
+          "reviewed_by": "Codex AI assistant; independent AI operation/parser review by pointer_audit; not a human approval"
+        },
+        {
+          "plugin": "wp",
+          "message": "Skipped RTE guards: invalid function pointer calls (\\valid_function not supported)",
+          "severity": "warning",
+          "functions": [
+            "__get_unaligned_be24",
+            "__get_unaligned_le24",
+            "__put_unaligned_be24",
+            "__put_unaligned_le24",
+            "fragma_roundtrip_be24",
+            "fragma_roundtrip_le24"
+          ],
+          "reason": "The six bodies contain exactly four direct witness calls and no indirect call. Their four precondition instances remain required proof dependencies. The compiler-only fixture's function-pointer typedefs check signatures and are never called.",
+          "file_hashes": {
+            "common/annotated/unaligned24.verified.c": "8d107e0e195c1ebfd7142f03e0ab3564e864fa7bc952d0e4fc94b18373e948fd",
+            "common/annotated/kernel-model-check.c": "860b5d09ec735ea48f67e8480d40af8bfd00db494cb01b247ac2eb33dbf49a9d",
+            "common/annotated/byteproof.h": "9a9c584c56d36329f866e060500d5d64557c63ffc538cf9551fe073b94d53017",
+            "common/annotated/inline-policy.h": "12c7cbf03ddb8d3cebbbb09aee714c761c75b80c0724fcb72c57210c07ef9041",
+            "common/annotated/compiler-calibration.c": "84a5ffce5e314761a57769837f13550323d4bfbaa7e9126cecf70a029fac157d",
+            "common/REVIEW-WAVE2-20260906.md": "d364bba4615da18391c8ac88e4f0ca71146bc9c6e98ab131da89bbda03cbd0dc",
+            "common/REVIEW-WAVE3-20260906.md": "29fddafd98049516d3c086d366740374b793dd7d066b0575c799a3684d4ce201"
+          },
+          "review_evidence": [
+            "common/REVIEW-WAVE2-20260906.md",
+            "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/analysis.log",
+            "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/wp.json",
+            "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/properties.tsv",
+            "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/audit.json",
+            "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/compiler-calibration/receipt.json",
+            "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/compiler-controls/receipt.json",
+            "common/REVIEW-WAVE3-20260906.md"
+          ],
+          "reviewed_by": "Codex AI assistant; independent AI operation/parser review by pointer_audit; not a human approval"
+        },
+        {
+          "plugin": "wp",
+          "message": "-wp-rte can annotate signed overflow because -warn-signed-overflow is not set",
+          "severity": "warning",
+          "functions": [
+            "__get_unaligned_be24",
+            "__get_unaligned_le24",
+            "__put_unaligned_be24",
+            "__put_unaligned_le24",
+            "fragma_roundtrip_be24",
+            "fragma_roundtrip_le24"
+          ],
+          "reason": "Over the complete three-byte domain, promoted bytes are 0..255, the largest C shift is 16711680 and the combined getter value is at most 16777215, within the genuine 32-bit signed-int range. Writer shifts are unsigned and masked stores are 0..255 for every u32. Fixed C shift counts 8/16 and annotation count 24 are below 32. This source/range review does not claim that a disabled overflow guard was generated.",
+          "file_hashes": {
+            "common/annotated/unaligned24.verified.c": "8d107e0e195c1ebfd7142f03e0ab3564e864fa7bc952d0e4fc94b18373e948fd",
+            "common/annotated/kernel-model-check.c": "860b5d09ec735ea48f67e8480d40af8bfd00db494cb01b247ac2eb33dbf49a9d",
+            "common/annotated/byteproof.h": "9a9c584c56d36329f866e060500d5d64557c63ffc538cf9551fe073b94d53017",
+            "common/annotated/inline-policy.h": "12c7cbf03ddb8d3cebbbb09aee714c761c75b80c0724fcb72c57210c07ef9041",
+            "common/annotated/compiler-calibration.c": "84a5ffce5e314761a57769837f13550323d4bfbaa7e9126cecf70a029fac157d",
+            "common/REVIEW-WAVE2-20260906.md": "d364bba4615da18391c8ac88e4f0ca71146bc9c6e98ab131da89bbda03cbd0dc",
+            "common/REVIEW-WAVE3-20260906.md": "29fddafd98049516d3c086d366740374b793dd7d066b0575c799a3684d4ce201"
+          },
+          "review_evidence": [
+            "common/REVIEW-WAVE2-20260906.md",
+            "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/analysis.log",
+            "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/wp.json",
+            "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/properties.tsv",
+            "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/audit.json",
+            "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/compiler-calibration/receipt.json",
+            "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/compiler-controls/receipt.json",
+            "common/REVIEW-WAVE3-20260906.md"
+          ],
+          "reviewed_by": "Codex AI assistant; independent AI operation/parser review by pointer_audit; not a human approval"
+        },
+        {
+          "plugin": "wp",
+          "message": "Missing RTE guards",
+          "severity": "warning",
+          "functions": [
+            "__get_unaligned_be24",
+            "__get_unaligned_le24",
+            "__put_unaligned_be24",
+            "__put_unaligned_le24",
+            "fragma_roundtrip_be24",
+            "fragma_roundtrip_le24"
+          ],
+          "reason": "Review is based on all six source bodies, byte alignment one, complete-domain arithmetic ranges, no indirect calls, initialized witness arrays, and mandatory access/pointer/shift/direct-call proof inventory. Frama-C's missing-status list excludes alignment and indirect-call categories; explicitly disabled arithmetic settings can mark status missing and cfgGenerator reports the earlier snapshot. No missing obligation is waived and no smoke consistency proof is inferred.",
+          "file_hashes": {
+            "common/annotated/unaligned24.verified.c": "8d107e0e195c1ebfd7142f03e0ab3564e864fa7bc952d0e4fc94b18373e948fd",
+            "common/annotated/kernel-model-check.c": "860b5d09ec735ea48f67e8480d40af8bfd00db494cb01b247ac2eb33dbf49a9d",
+            "common/annotated/byteproof.h": "9a9c584c56d36329f866e060500d5d64557c63ffc538cf9551fe073b94d53017",
+            "common/annotated/inline-policy.h": "12c7cbf03ddb8d3cebbbb09aee714c761c75b80c0724fcb72c57210c07ef9041",
+            "common/annotated/compiler-calibration.c": "84a5ffce5e314761a57769837f13550323d4bfbaa7e9126cecf70a029fac157d",
+            "common/REVIEW-WAVE2-20260906.md": "d364bba4615da18391c8ac88e4f0ca71146bc9c6e98ab131da89bbda03cbd0dc",
+            "common/REVIEW-WAVE3-20260906.md": "29fddafd98049516d3c086d366740374b793dd7d066b0575c799a3684d4ce201"
+          },
+          "review_evidence": [
+            "common/REVIEW-WAVE2-20260906.md",
+            "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/analysis.log",
+            "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/wp.json",
+            "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/properties.tsv",
+            "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/audit.json",
+            "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/compiler-calibration/receipt.json",
+            "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/compiler-controls/receipt.json",
+            "common/REVIEW-WAVE3-20260906.md"
+          ],
+          "reviewed_by": "Codex AI assistant; independent AI operation/parser review by pointer_audit; not a human approval"
+        }
+      ],
+      "review_context": {
+        "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+        "profile": "riscv64-gcc",
+        "toolchain_lock_sha256": "0d3557b20e4a0ed16e6a4fe8622aa3ecd1572b9b30d490c7c69b4be82d7f47cb",
+        "analysis": {
+          "wp_model": "Typed",
+          "arithmetic_flags": [
+            "-no-warn-signed-overflow",
+            "-no-warn-unsigned-overflow",
+            "-no-warn-signed-downcast",
+            "-no-warn-unsigned-downcast",
+            "-no-warn-right-shift-negative"
+          ],
+          "runtime_checks": {
+            "pointer_formation": "object-or-null"
+          }
+        },
+        "analysis_pipeline": {
+          "kind": "wp-rte",
+          "functions": [
+            "__get_unaligned_be24",
+            "__get_unaligned_le24",
+            "__put_unaligned_be24",
+            "__put_unaligned_le24",
+            "fragma_roundtrip_be24",
+            "fragma_roundtrip_le24"
+          ]
+        },
+        "preprocessing": {
+          "cpp_command": "/usr/bin/riscv64-linux-gnu-gcc -march=rv64imac -mabi=lp64 -mno-save-restore -std=gnu11 -funsigned-char -fshort-wchar -fno-strict-overflow -fno-strict-aliasing -ffreestanding -nostdinc -D__KERNEL__ -DFRAGMA_COMMON24_INLINE_POLICY=1 -E -C",
+          "annotations": "Frama-C native -pp-annot with target compiler",
+          "input_mode": "standalone",
+          "extra_args": [
+            "-std=gnu11"
+          ],
+          "frontend_policy": {
+            "schema_version": 1,
+            "kind": "common24-inline",
+            "variant": "no-instrument"
+          }
+        },
+        "proof_search": {
+          "wp_strategy": "fragma_byte_decompose",
+          "wp_strategy_file": "common/annotated/byteproof.h",
+          "wp_strategy_provers": [
+            "alt-ergo",
+            "z3"
+          ],
+          "wp_auto_depth": 64,
+          "wp_smoke_timeout": 2
+        },
+        "compiler_calibration": {
+          "kind": "fragma-common24-compiler-sensitivity",
+          "setting": {
+            "kind": "common24-fixed22",
+            "source": "common/annotated/compiler-calibration.c"
+          },
+          "environment_policy": "common24-compiler-clean-v1",
+          "cases": [
+            "decode_be",
+            "decode_le",
+            "store_be_0",
+            "store_be_1",
+            "store_be_2",
+            "store_le_0",
+            "store_le_1",
+            "store_le_2",
+            "roundtrip_be",
+            "roundtrip_le",
+            "maximum_be_0",
+            "maximum_be_1",
+            "maximum_be_2",
+            "maximum_roundtrip",
+            "discarded_le_0",
+            "discarded_le_1",
+            "discarded_le_2",
+            "discarded_roundtrip",
+            "memory_0",
+            "memory_1",
+            "memory_2",
+            "memory_3"
+          ],
+          "fixture_controls": [
+            "wrong-type",
+            "wrong-inline"
+          ]
+        },
+        "file_hashes": {
+          "common/annotated/unaligned24.verified.c": "8d107e0e195c1ebfd7142f03e0ab3564e864fa7bc952d0e4fc94b18373e948fd",
+          "common/annotated/kernel-model-check.c": "860b5d09ec735ea48f67e8480d40af8bfd00db494cb01b247ac2eb33dbf49a9d",
+          "common/annotated/byteproof.h": "9a9c584c56d36329f866e060500d5d64557c63ffc538cf9551fe073b94d53017",
+          "fragma/analysis_policy.py": "b674caa823c2e703ae81e4972967ac5ce8b6a8b34b6f5203e9b39e2b4dd618ff",
+          "fragma/common24.py": "f8d768a0f64b7f9202936cc0df84a5e36f5787be092971cca2feadc49c28edcd",
+          "common/annotated/inline-policy.h": "12c7cbf03ddb8d3cebbbb09aee714c761c75b80c0724fcb72c57210c07ef9041",
+          "fragma/frontend_policy.py": "d17c86c778455e75556723374b1027f8d60fb78552f524282efec91c1b974a47",
+          "fragma/elf.py": "f77fddcb23cc862393a7f25db4992e925c2f822d1456ec0ffd7ca60ed4102531",
+          "common/annotated/compiler-calibration.c": "84a5ffce5e314761a57769837f13550323d4bfbaa7e9126cecf70a029fac157d",
+          "fragma/common24_calibration.py": "490fe3d10bdcc7a5d50c8ac94760921ab60710fc1ffbcf8462624ce464ffbe3b",
+          "fragma/common24_controls.py": "56baf8033db846979b8f16267d8a96cf1af5857f7f117bd0935d30d8dfb83a43",
+          "build/sources/linux-b9b3e33b70b71/include/linux/unaligned.h": "877cc68addf72f84834a7da87c09fc54b86cb383d6a3d93f2a97a16e751458ce",
+          "build/sources/linux-b9b3e33b70b71/include/linux/types.h": "b12aab0f1569ba0dd6843839aa15515a414c171d3fedd583c9aa835a81b4561b",
+          "build/sources/linux-b9b3e33b70b71/include/linux/compiler_types.h": "879a8d3fe36bcf8b7b4a6de88c17f8297599d9aea5cd9d9336bb87dd4902e535",
+          "build/sources/linux-b9b3e33b70b71/include/linux/compiler_attributes.h": "04eed061289a2cd0c88591e581238276443ab31420c6a83471af7e59db3612d0",
+          "build/kernel/riscv64-gcc/fragma-build.json": "43f9e4d56e3b12175cbe4dde8e608c0a2a8fb90c979573672b6a0b4707313e4a",
+          "results/common24-wave2-riscv-symbols-20260906/profile-riscv64-gcc/riscv64-gcc.yaml": "d8db6139b59c7af73a895f38366113d19c0a9165bd2376817b89c081abac393e",
+          "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/kernel_internals/typing/cabs2cil.ml": "624907038cda23f5a12555760173271b198c9219cf1828611a362506bdd20e79",
+          "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/wp/cfgGenerator.ml": "79ab312d242ce736240b666e48f10e8a14fe7e6ce599b03256e415d911b1c680",
+          "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/wp/doc/manual/wp_intro.tex": "c82570b40446b7608cd76c802f4e8128d78a6a6045438f1cd939b64d627a52e2",
+          "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/wp/doc/manual/wp_plugin.tex": "1f0a292e7dcd86110cafe19196080a25a80e7706a1cebdebee4ab63fb0c9c78a",
+          "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/wp/wpRTE.ml": "965ef16094a23b6ce6efd849820ee818843d94d079bbe9e00c02374084d4c030",
+          "common/REVIEW-WAVE2-20260906.md": "d364bba4615da18391c8ac88e4f0ca71146bc9c6e98ab131da89bbda03cbd0dc",
+          "build/common24-wave2-initial-audit-20260906/PARSER-DELTA.md": "568473b2eedcbf9382a00de5413f77582e790d77331fb5c591d4fb67961bbd68",
+          "results/tests-common24-wave2-symbols-20260906.log": "eb5cf52f498831f5a82c65d2834906cd72a7797923ebb650ddf713c794df248f",
+          "build/common24-wave2-riscv-audit-20260906/check.py": "a36b843107c6e1b88cef6983cee0882d3233b4dbad1c091f9f7caac75d6e1228",
+          "build/common24-wave2-riscv-audit-20260906/audit-1.json": "2b802b9ed267948fce11e0f0d54839103d4f0207ab81862829202ec92fbedab0",
+          "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/analysis.log": "46f2110e05461bc635bd7906fa9e830781fad97b0ba045bd378e1da82bceb561",
+          "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/wp.json": "ebb4e6d6cdf9bb7e7428f1dd7ac397f8e524837ed45ffa2037dafd935c1cffe6",
+          "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/properties.tsv": "19f31c29c14aaef9e322b03908712c051c0e97522adbcade95efe1f2da595149",
+          "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/audit.json": "226386654efb5a79aa805654465cafd6c0b0f98a13bbc093b6957ced7bc500d4",
+          "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/compiler-calibration/receipt.json": "998b8cab0dfd163d213733e1b28da85074091ebd2507087461d0dbbbc9b496fb",
+          "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/compiler-controls/receipt.json": "3ae7376d10d9a3cc8718dc0c1fb897e8ac7f7786be5568bfc4a7fb087dd1d2b4",
+          "common/REVIEW-WAVE3-20260906.md": "29fddafd98049516d3c086d366740374b793dd7d066b0575c799a3684d4ce201",
+          "tests/test_elf_alpha.py": "f2b143076c2cf64f2fb876e91dd4873e91929366975d2280bdd36b6dd190cf0d",
+          "tests/test_common24_size_optimization.py": "1a9160d266c77f097567e877ec53f49e9a2565e25cbb75c65b8cdc870c126c9f",
+          "build/common24-wave3-compiler-audit-20260906/REPORT.md": "eeccdba5a12f226d2da704480b92107a3eb4b686343ef6053389149b54735d34",
+          "build/common24-wave3-compiler-audit-20260906/PRECHANGE-CAPTURE.md": "94709379e0ac3d1a0406ff540914f2b75ab7b55a61b858e9e1127a77feda6a27",
+          "build/common24-wave3-compiler-audit-20260906/audit-1.json": "eceb69fae9525ee1dece9c0be22bf96541015079d92bb8583d7b8df1935fbf49",
+          "build/common24-wave3-compiler-audit-20260906/check.py": "ae01b01d98eb39dbd1b35fc894a6228aa6e1144516dbed7067077bbb51fd08ea",
+          "build/common24-wave3-initial-audit-20260906/REPORT.md": "9c9a18afc73a8cfa3bc7fff97ae463e2b541016445369e7140f79d87edad987d",
+          "build/common24-wave3-initial-audit-20260906/REVIEW-NOTES.md": "1f35bc73eb248211da3eece9e72bd84389cbb03c553aa9dd890c1ab7fe3d41e4",
+          "build/common24-wave3-initial-audit-20260906/audit-2.json": "20fb1c37f72c8d9eb9b240d37db39639f64e8365bec44557125a32613fb1c4b0",
+          "build/common24-wave3-initial-audit-20260906/check-v2.py": "1f32eb85e4e10c503bf86fb2359f68a40082b18b6f4c6de06cea4b9d52c4a64c",
+          "results/tests-common24-wave3-pending-20260906.log": "e57481171381ebea03da2d80383f600db2b02fcb36c65229d96f5bce9d7b2b5d"
+        },
+        "reviewed_by": "Codex AI assistant; independent AI operation/parser review by pointer_audit; not a human approval",
+        "reviewed_at": "2026-09-06",
+        "review_evidence": [
+          "common/REVIEW-WAVE2-20260906.md",
+          "build/common24-wave2-initial-audit-20260906/PARSER-DELTA.md",
+          "results/tests-common24-wave2-symbols-20260906.log",
+          "build/common24-wave2-riscv-audit-20260906/check.py",
+          "build/common24-wave2-riscv-audit-20260906/audit-1.json",
+          "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/analysis.log",
+          "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/wp.json",
+          "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/properties.tsv",
+          "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/audit.json",
+          "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/compiler-calibration/receipt.json",
+          "results/common24-wave2-riscv-symbols-20260906/common.unaligned24.riscv64/compiler-controls/receipt.json",
+          "common/REVIEW-WAVE3-20260906.md",
+          "tests/test_elf_alpha.py",
+          "tests/test_common24_size_optimization.py",
+          "build/common24-wave3-compiler-audit-20260906/REPORT.md",
+          "build/common24-wave3-compiler-audit-20260906/PRECHANGE-CAPTURE.md",
+          "build/common24-wave3-compiler-audit-20260906/audit-1.json",
+          "build/common24-wave3-compiler-audit-20260906/check.py",
+          "build/common24-wave3-initial-audit-20260906/REPORT.md",
+          "build/common24-wave3-initial-audit-20260906/REVIEW-NOTES.md",
+          "build/common24-wave3-initial-audit-20260906/audit-2.json",
+          "build/common24-wave3-initial-audit-20260906/check-v2.py",
+          "results/tests-common24-wave3-pending-20260906.log"
+        ]
+      }
+    },
+    {
+      "functions": [
+        "__get_unaligned_be24",
+        "__get_unaligned_le24",
+        "__put_unaligned_be24",
+        "__put_unaligned_le24"
+      ],
+      "analysis_functions": [
+        "__get_unaligned_be24",
+        "__get_unaligned_le24",
+        "__put_unaligned_be24",
+        "__put_unaligned_le24",
+        "fragma_roundtrip_be24",
+        "fragma_roundtrip_le24"
+      ],
+      "project_functions": [
+        "fragma_roundtrip_be24",
+        "fragma_roundtrip_le24"
+      ],
+      "required_properties": [
+        "get_unaligned_be24_ensures_decoded_value",
+        "get_unaligned_be24_ensures_decoded_range",
+        "get_unaligned_le24_ensures_decoded_value",
+        "get_unaligned_le24_ensures_decoded_range",
+        "put_unaligned_be24_ensures_byte_0",
+        "put_unaligned_be24_ensures_byte_1",
+        "put_unaligned_be24_ensures_byte_2",
+        "put_unaligned_le24_ensures_byte_0",
+        "put_unaligned_le24_ensures_byte_1",
+        "put_unaligned_le24_ensures_byte_2",
+        "fragma_roundtrip_be24_ensures_roundtrip",
+        "fragma_roundtrip_le24_ensures_roundtrip"
+      ],
+      "claims": [
+        "runtime-safety",
+        "functional",
+        "termination",
+        "encode-decode-roundtrip"
+      ],
+      "caller_coverage": "project-witnesses-require-proof; kernel-callers-unverified",
+      "wp_strategy": "fragma_byte_decompose",
+      "wp_strategy_provers": [
+        "alt-ergo",
+        "z3"
+      ],
+      "wp_auto_depth": 64,
+      "wp_smoke_timeout": 2,
+      "role": "proof",
+      "analysis": "wp",
+      "input_mode": "standalone",
+      "provenance": {
+        "mode": "functions"
+      },
+      "source": "include/linux/unaligned.h",
+      "harness": "common/annotated/unaligned24.verified.c",
+      "kernel_model_check": "common/annotated/kernel-model-check.c",
+      "wp_strategy_file": "common/annotated/byteproof.h",
+      "require_smoke": true,
+      "reviewed_smoke": [],
+      "id": "common.unaligned24.sh",
+      "compiler_calibration": {
+        "kind": "common24-fixed22",
+        "source": "common/annotated/compiler-calibration.c"
+      },
+      "suite": "extended",
+      "profile": "sh-gcc",
+      "frontend_policy": {
+        "schema_version": 1,
+        "kind": "common24-inline",
+        "variant": "no-instrument"
+      },
+      "assumptions": [
+        "common24-wave2-types",
+        "common24-wave2-frontend"
+      ],
+      "reviewed_warnings": [
+        {
+          "plugin": "kernel:attrs:unknown",
+          "message": "Ignoring unknown attribute: __gnu_inline__",
+          "severity": "warning",
+          "functions": [
+            "__get_unaligned_be24",
+            "__get_unaligned_le24",
+            "__put_unaligned_be24",
+            "__put_unaligned_le24",
+            "fragma_roundtrip_be24",
+            "fragma_roundtrip_le24"
+          ],
+          "reason": "Exact genuine inline spelling is preserved for the four static byte helpers and checked by the positive fixture and wrong-inline control. This review covers the sequential C abstraction and direct project-witness calls only, not linkage, instrumentation, timing or emitted instructions.",
+          "file_hashes": {
+            "common/annotated/unaligned24.verified.c": "8d107e0e195c1ebfd7142f03e0ab3564e864fa7bc952d0e4fc94b18373e948fd",
+            "common/annotated/kernel-model-check.c": "860b5d09ec735ea48f67e8480d40af8bfd00db494cb01b247ac2eb33dbf49a9d",
+            "common/annotated/byteproof.h": "9a9c584c56d36329f866e060500d5d64557c63ffc538cf9551fe073b94d53017",
+            "common/annotated/inline-policy.h": "12c7cbf03ddb8d3cebbbb09aee714c761c75b80c0724fcb72c57210c07ef9041",
+            "common/annotated/compiler-calibration.c": "84a5ffce5e314761a57769837f13550323d4bfbaa7e9126cecf70a029fac157d",
+            "common/REVIEW-WAVE2-20260906.md": "d364bba4615da18391c8ac88e4f0ca71146bc9c6e98ab131da89bbda03cbd0dc",
+            "common/REVIEW-WAVE3-20260906.md": "29fddafd98049516d3c086d366740374b793dd7d066b0575c799a3684d4ce201"
+          },
+          "review_evidence": [
+            "common/REVIEW-WAVE2-20260906.md",
+            "results/common24-wave2-initial-20260906/common.unaligned24.sh/analysis.log",
+            "results/common24-wave2-initial-20260906/common.unaligned24.sh/wp.json",
+            "results/common24-wave2-initial-20260906/common.unaligned24.sh/properties.tsv",
+            "results/common24-wave2-initial-20260906/common.unaligned24.sh/audit.json",
+            "results/common24-wave2-initial-20260906/common.unaligned24.sh/compiler-calibration/receipt.json",
+            "results/common24-wave2-initial-20260906/common.unaligned24.sh/compiler-controls/receipt.json",
+            "common/REVIEW-WAVE3-20260906.md"
+          ],
+          "reviewed_by": "Codex AI assistant; independent AI operation/parser review by pointer_audit; not a human approval",
+          "file": "common/annotated/unaligned24.verified.c",
+          "line": 23
+        },
+        {
+          "plugin": "wp",
+          "message": "Skipped RTE guards: unaligned pointers (\\aligned not supported)",
+          "severity": "warning",
+          "functions": [
+            "__get_unaligned_be24",
+            "__get_unaligned_le24",
+            "__put_unaligned_be24",
+            "__put_unaligned_le24",
+            "fragma_roundtrip_be24",
+            "fragma_roundtrip_le24"
+          ],
+          "reason": "All selected memory operations dereference u8, checked against genuine headers to have alignment one. The unchanged domains require exactly three readable/writable bytes; no word access or pointer cast occurs. All selected memory-access and pointer-formation obligations remain mandatory.",
+          "file_hashes": {
+            "common/annotated/unaligned24.verified.c": "8d107e0e195c1ebfd7142f03e0ab3564e864fa7bc952d0e4fc94b18373e948fd",
+            "common/annotated/kernel-model-check.c": "860b5d09ec735ea48f67e8480d40af8bfd00db494cb01b247ac2eb33dbf49a9d",
+            "common/annotated/byteproof.h": "9a9c584c56d36329f866e060500d5d64557c63ffc538cf9551fe073b94d53017",
+            "common/annotated/inline-policy.h": "12c7cbf03ddb8d3cebbbb09aee714c761c75b80c0724fcb72c57210c07ef9041",
+            "common/annotated/compiler-calibration.c": "84a5ffce5e314761a57769837f13550323d4bfbaa7e9126cecf70a029fac157d",
+            "common/REVIEW-WAVE2-20260906.md": "d364bba4615da18391c8ac88e4f0ca71146bc9c6e98ab131da89bbda03cbd0dc",
+            "common/REVIEW-WAVE3-20260906.md": "29fddafd98049516d3c086d366740374b793dd7d066b0575c799a3684d4ce201"
+          },
+          "review_evidence": [
+            "common/REVIEW-WAVE2-20260906.md",
+            "results/common24-wave2-initial-20260906/common.unaligned24.sh/analysis.log",
+            "results/common24-wave2-initial-20260906/common.unaligned24.sh/wp.json",
+            "results/common24-wave2-initial-20260906/common.unaligned24.sh/properties.tsv",
+            "results/common24-wave2-initial-20260906/common.unaligned24.sh/audit.json",
+            "results/common24-wave2-initial-20260906/common.unaligned24.sh/compiler-calibration/receipt.json",
+            "results/common24-wave2-initial-20260906/common.unaligned24.sh/compiler-controls/receipt.json",
+            "common/REVIEW-WAVE3-20260906.md"
+          ],
+          "reviewed_by": "Codex AI assistant; independent AI operation/parser review by pointer_audit; not a human approval"
+        },
+        {
+          "plugin": "wp",
+          "message": "Skipped RTE guards: invalid function pointer calls (\\valid_function not supported)",
+          "severity": "warning",
+          "functions": [
+            "__get_unaligned_be24",
+            "__get_unaligned_le24",
+            "__put_unaligned_be24",
+            "__put_unaligned_le24",
+            "fragma_roundtrip_be24",
+            "fragma_roundtrip_le24"
+          ],
+          "reason": "The six bodies contain exactly four direct witness calls and no indirect call. Their four precondition instances remain required proof dependencies. The compiler-only fixture's function-pointer typedefs check signatures and are never called.",
+          "file_hashes": {
+            "common/annotated/unaligned24.verified.c": "8d107e0e195c1ebfd7142f03e0ab3564e864fa7bc952d0e4fc94b18373e948fd",
+            "common/annotated/kernel-model-check.c": "860b5d09ec735ea48f67e8480d40af8bfd00db494cb01b247ac2eb33dbf49a9d",
+            "common/annotated/byteproof.h": "9a9c584c56d36329f866e060500d5d64557c63ffc538cf9551fe073b94d53017",
+            "common/annotated/inline-policy.h": "12c7cbf03ddb8d3cebbbb09aee714c761c75b80c0724fcb72c57210c07ef9041",
+            "common/annotated/compiler-calibration.c": "84a5ffce5e314761a57769837f13550323d4bfbaa7e9126cecf70a029fac157d",
+            "common/REVIEW-WAVE2-20260906.md": "d364bba4615da18391c8ac88e4f0ca71146bc9c6e98ab131da89bbda03cbd0dc",
+            "common/REVIEW-WAVE3-20260906.md": "29fddafd98049516d3c086d366740374b793dd7d066b0575c799a3684d4ce201"
+          },
+          "review_evidence": [
+            "common/REVIEW-WAVE2-20260906.md",
+            "results/common24-wave2-initial-20260906/common.unaligned24.sh/analysis.log",
+            "results/common24-wave2-initial-20260906/common.unaligned24.sh/wp.json",
+            "results/common24-wave2-initial-20260906/common.unaligned24.sh/properties.tsv",
+            "results/common24-wave2-initial-20260906/common.unaligned24.sh/audit.json",
+            "results/common24-wave2-initial-20260906/common.unaligned24.sh/compiler-calibration/receipt.json",
+            "results/common24-wave2-initial-20260906/common.unaligned24.sh/compiler-controls/receipt.json",
+            "common/REVIEW-WAVE3-20260906.md"
+          ],
+          "reviewed_by": "Codex AI assistant; independent AI operation/parser review by pointer_audit; not a human approval"
+        },
+        {
+          "plugin": "wp",
+          "message": "-wp-rte can annotate signed overflow because -warn-signed-overflow is not set",
+          "severity": "warning",
+          "functions": [
+            "__get_unaligned_be24",
+            "__get_unaligned_le24",
+            "__put_unaligned_be24",
+            "__put_unaligned_le24",
+            "fragma_roundtrip_be24",
+            "fragma_roundtrip_le24"
+          ],
+          "reason": "Over the complete three-byte domain, promoted bytes are 0..255, the largest C shift is 16711680 and the combined getter value is at most 16777215, within the genuine 32-bit signed-int range. Writer shifts are unsigned and masked stores are 0..255 for every u32. Fixed C shift counts 8/16 and annotation count 24 are below 32. This source/range review does not claim that a disabled overflow guard was generated.",
+          "file_hashes": {
+            "common/annotated/unaligned24.verified.c": "8d107e0e195c1ebfd7142f03e0ab3564e864fa7bc952d0e4fc94b18373e948fd",
+            "common/annotated/kernel-model-check.c": "860b5d09ec735ea48f67e8480d40af8bfd00db494cb01b247ac2eb33dbf49a9d",
+            "common/annotated/byteproof.h": "9a9c584c56d36329f866e060500d5d64557c63ffc538cf9551fe073b94d53017",
+            "common/annotated/inline-policy.h": "12c7cbf03ddb8d3cebbbb09aee714c761c75b80c0724fcb72c57210c07ef9041",
+            "common/annotated/compiler-calibration.c": "84a5ffce5e314761a57769837f13550323d4bfbaa7e9126cecf70a029fac157d",
+            "common/REVIEW-WAVE2-20260906.md": "d364bba4615da18391c8ac88e4f0ca71146bc9c6e98ab131da89bbda03cbd0dc",
+            "common/REVIEW-WAVE3-20260906.md": "29fddafd98049516d3c086d366740374b793dd7d066b0575c799a3684d4ce201"
+          },
+          "review_evidence": [
+            "common/REVIEW-WAVE2-20260906.md",
+            "results/common24-wave2-initial-20260906/common.unaligned24.sh/analysis.log",
+            "results/common24-wave2-initial-20260906/common.unaligned24.sh/wp.json",
+            "results/common24-wave2-initial-20260906/common.unaligned24.sh/properties.tsv",
+            "results/common24-wave2-initial-20260906/common.unaligned24.sh/audit.json",
+            "results/common24-wave2-initial-20260906/common.unaligned24.sh/compiler-calibration/receipt.json",
+            "results/common24-wave2-initial-20260906/common.unaligned24.sh/compiler-controls/receipt.json",
+            "common/REVIEW-WAVE3-20260906.md"
+          ],
+          "reviewed_by": "Codex AI assistant; independent AI operation/parser review by pointer_audit; not a human approval"
+        },
+        {
+          "plugin": "wp",
+          "message": "Missing RTE guards",
+          "severity": "warning",
+          "functions": [
+            "__get_unaligned_be24",
+            "__get_unaligned_le24",
+            "__put_unaligned_be24",
+            "__put_unaligned_le24",
+            "fragma_roundtrip_be24",
+            "fragma_roundtrip_le24"
+          ],
+          "reason": "Review is based on all six source bodies, byte alignment one, complete-domain arithmetic ranges, no indirect calls, initialized witness arrays, and mandatory access/pointer/shift/direct-call proof inventory. Frama-C's missing-status list excludes alignment and indirect-call categories; explicitly disabled arithmetic settings can mark status missing and cfgGenerator reports the earlier snapshot. No missing obligation is waived and no smoke consistency proof is inferred.",
+          "file_hashes": {
+            "common/annotated/unaligned24.verified.c": "8d107e0e195c1ebfd7142f03e0ab3564e864fa7bc952d0e4fc94b18373e948fd",
+            "common/annotated/kernel-model-check.c": "860b5d09ec735ea48f67e8480d40af8bfd00db494cb01b247ac2eb33dbf49a9d",
+            "common/annotated/byteproof.h": "9a9c584c56d36329f866e060500d5d64557c63ffc538cf9551fe073b94d53017",
+            "common/annotated/inline-policy.h": "12c7cbf03ddb8d3cebbbb09aee714c761c75b80c0724fcb72c57210c07ef9041",
+            "common/annotated/compiler-calibration.c": "84a5ffce5e314761a57769837f13550323d4bfbaa7e9126cecf70a029fac157d",
+            "common/REVIEW-WAVE2-20260906.md": "d364bba4615da18391c8ac88e4f0ca71146bc9c6e98ab131da89bbda03cbd0dc",
+            "common/REVIEW-WAVE3-20260906.md": "29fddafd98049516d3c086d366740374b793dd7d066b0575c799a3684d4ce201"
+          },
+          "review_evidence": [
+            "common/REVIEW-WAVE2-20260906.md",
+            "results/common24-wave2-initial-20260906/common.unaligned24.sh/analysis.log",
+            "results/common24-wave2-initial-20260906/common.unaligned24.sh/wp.json",
+            "results/common24-wave2-initial-20260906/common.unaligned24.sh/properties.tsv",
+            "results/common24-wave2-initial-20260906/common.unaligned24.sh/audit.json",
+            "results/common24-wave2-initial-20260906/common.unaligned24.sh/compiler-calibration/receipt.json",
+            "results/common24-wave2-initial-20260906/common.unaligned24.sh/compiler-controls/receipt.json",
+            "common/REVIEW-WAVE3-20260906.md"
+          ],
+          "reviewed_by": "Codex AI assistant; independent AI operation/parser review by pointer_audit; not a human approval"
+        }
+      ],
+      "review_context": {
+        "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+        "profile": "sh-gcc",
+        "toolchain_lock_sha256": "0d3557b20e4a0ed16e6a4fe8622aa3ecd1572b9b30d490c7c69b4be82d7f47cb",
+        "analysis": {
+          "wp_model": "Typed",
+          "arithmetic_flags": [
+            "-no-warn-signed-overflow",
+            "-no-warn-unsigned-overflow",
+            "-no-warn-signed-downcast",
+            "-no-warn-unsigned-downcast",
+            "-no-warn-right-shift-negative"
+          ],
+          "runtime_checks": {
+            "pointer_formation": "object-or-null"
+          }
+        },
+        "analysis_pipeline": {
+          "kind": "wp-rte",
+          "functions": [
+            "__get_unaligned_be24",
+            "__get_unaligned_le24",
+            "__put_unaligned_be24",
+            "__put_unaligned_le24",
+            "fragma_roundtrip_be24",
+            "fragma_roundtrip_le24"
+          ]
+        },
+        "preprocessing": {
+          "cpp_command": "/usr/bin/sh4-linux-gnu-gcc -m4 -m4-nofpu -m4a -m4a-nofpu -ml -std=gnu11 -funsigned-char -fshort-wchar -fno-strict-overflow -fno-strict-aliasing -ffreestanding -nostdinc -D__KERNEL__ -DFRAGMA_COMMON24_INLINE_POLICY=1 -E -C",
+          "annotations": "Frama-C native -pp-annot with target compiler",
+          "input_mode": "standalone",
+          "extra_args": [
+            "-std=gnu11"
+          ],
+          "frontend_policy": {
+            "schema_version": 1,
+            "kind": "common24-inline",
+            "variant": "no-instrument"
+          }
+        },
+        "proof_search": {
+          "wp_strategy": "fragma_byte_decompose",
+          "wp_strategy_file": "common/annotated/byteproof.h",
+          "wp_strategy_provers": [
+            "alt-ergo",
+            "z3"
+          ],
+          "wp_auto_depth": 64,
+          "wp_smoke_timeout": 2
+        },
+        "compiler_calibration": {
+          "kind": "fragma-common24-compiler-sensitivity",
+          "setting": {
+            "kind": "common24-fixed22",
+            "source": "common/annotated/compiler-calibration.c"
+          },
+          "environment_policy": "common24-compiler-clean-v1",
+          "cases": [
+            "decode_be",
+            "decode_le",
+            "store_be_0",
+            "store_be_1",
+            "store_be_2",
+            "store_le_0",
+            "store_le_1",
+            "store_le_2",
+            "roundtrip_be",
+            "roundtrip_le",
+            "maximum_be_0",
+            "maximum_be_1",
+            "maximum_be_2",
+            "maximum_roundtrip",
+            "discarded_le_0",
+            "discarded_le_1",
+            "discarded_le_2",
+            "discarded_roundtrip",
+            "memory_0",
+            "memory_1",
+            "memory_2",
+            "memory_3"
+          ],
+          "fixture_controls": [
+            "wrong-type",
+            "wrong-inline"
+          ]
+        },
+        "file_hashes": {
+          "common/annotated/unaligned24.verified.c": "8d107e0e195c1ebfd7142f03e0ab3564e864fa7bc952d0e4fc94b18373e948fd",
+          "common/annotated/kernel-model-check.c": "860b5d09ec735ea48f67e8480d40af8bfd00db494cb01b247ac2eb33dbf49a9d",
+          "common/annotated/byteproof.h": "9a9c584c56d36329f866e060500d5d64557c63ffc538cf9551fe073b94d53017",
+          "fragma/analysis_policy.py": "b674caa823c2e703ae81e4972967ac5ce8b6a8b34b6f5203e9b39e2b4dd618ff",
+          "fragma/common24.py": "f8d768a0f64b7f9202936cc0df84a5e36f5787be092971cca2feadc49c28edcd",
+          "common/annotated/inline-policy.h": "12c7cbf03ddb8d3cebbbb09aee714c761c75b80c0724fcb72c57210c07ef9041",
+          "fragma/frontend_policy.py": "d17c86c778455e75556723374b1027f8d60fb78552f524282efec91c1b974a47",
+          "fragma/elf.py": "f77fddcb23cc862393a7f25db4992e925c2f822d1456ec0ffd7ca60ed4102531",
+          "common/annotated/compiler-calibration.c": "84a5ffce5e314761a57769837f13550323d4bfbaa7e9126cecf70a029fac157d",
+          "fragma/common24_calibration.py": "490fe3d10bdcc7a5d50c8ac94760921ab60710fc1ffbcf8462624ce464ffbe3b",
+          "fragma/common24_controls.py": "56baf8033db846979b8f16267d8a96cf1af5857f7f117bd0935d30d8dfb83a43",
+          "build/sources/linux-b9b3e33b70b71/include/linux/unaligned.h": "877cc68addf72f84834a7da87c09fc54b86cb383d6a3d93f2a97a16e751458ce",
+          "build/sources/linux-b9b3e33b70b71/include/linux/types.h": "b12aab0f1569ba0dd6843839aa15515a414c171d3fedd583c9aa835a81b4561b",
+          "build/sources/linux-b9b3e33b70b71/include/linux/compiler_types.h": "879a8d3fe36bcf8b7b4a6de88c17f8297599d9aea5cd9d9336bb87dd4902e535",
+          "build/sources/linux-b9b3e33b70b71/include/linux/compiler_attributes.h": "04eed061289a2cd0c88591e581238276443ab31420c6a83471af7e59db3612d0",
+          "build/kernel/sh-gcc/fragma-build.json": "2b0678cd4659f533048871425060c9050298441bc7e1f171af8654348689ceaa",
+          "results/common24-wave2-initial-20260906/profile-sh-gcc/sh-gcc.yaml": "f025d06628d3e0ad68598280abd2d843fd00cd271f256a90a9c5f4ed8f9b0441",
+          "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/kernel_internals/typing/cabs2cil.ml": "624907038cda23f5a12555760173271b198c9219cf1828611a362506bdd20e79",
+          "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/wp/cfgGenerator.ml": "79ab312d242ce736240b666e48f10e8a14fe7e6ce599b03256e415d911b1c680",
+          "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/wp/doc/manual/wp_intro.tex": "c82570b40446b7608cd76c802f4e8128d78a6a6045438f1cd939b64d627a52e2",
+          "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/wp/doc/manual/wp_plugin.tex": "1f0a292e7dcd86110cafe19196080a25a80e7706a1cebdebee4ab63fb0c9c78a",
+          "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/wp/wpRTE.ml": "965ef16094a23b6ce6efd849820ee818843d94d079bbe9e00c02374084d4c030",
+          "common/REVIEW-WAVE2-20260906.md": "d364bba4615da18391c8ac88e4f0ca71146bc9c6e98ab131da89bbda03cbd0dc",
+          "build/common24-wave2-initial-audit-20260906/PARSER-DELTA.md": "568473b2eedcbf9382a00de5413f77582e790d77331fb5c591d4fb67961bbd68",
+          "results/tests-common24-wave2-symbols-20260906.log": "eb5cf52f498831f5a82c65d2834906cd72a7797923ebb650ddf713c794df248f",
+          "build/common24-wave2-riscv-audit-20260906/check.py": "a36b843107c6e1b88cef6983cee0882d3233b4dbad1c091f9f7caac75d6e1228",
+          "build/common24-wave2-riscv-audit-20260906/audit-1.json": "2b802b9ed267948fce11e0f0d54839103d4f0207ab81862829202ec92fbedab0",
+          "results/common24-wave2-initial-20260906/common.unaligned24.sh/analysis.log": "0127dcda3f1069f010ad29cd9cd9c3bbeab64832258823be8741e1365921c702",
+          "results/common24-wave2-initial-20260906/common.unaligned24.sh/wp.json": "0a6e7de64fa35aeb3328001d12cbf044bea11de2f2836b33158b657f730496fe",
+          "results/common24-wave2-initial-20260906/common.unaligned24.sh/properties.tsv": "19f31c29c14aaef9e322b03908712c051c0e97522adbcade95efe1f2da595149",
+          "results/common24-wave2-initial-20260906/common.unaligned24.sh/audit.json": "226386654efb5a79aa805654465cafd6c0b0f98a13bbc093b6957ced7bc500d4",
+          "results/common24-wave2-initial-20260906/common.unaligned24.sh/compiler-calibration/receipt.json": "cbc0136b66b7bb09b374a5f187b1719e91b47a909414be6a706919e93d000633",
+          "results/common24-wave2-initial-20260906/common.unaligned24.sh/compiler-controls/receipt.json": "215d750d9b9d0a83ceafd068ad5e25806d4fe8b8f487344c8c4e180ff2109897",
+          "common/REVIEW-WAVE3-20260906.md": "29fddafd98049516d3c086d366740374b793dd7d066b0575c799a3684d4ce201",
+          "tests/test_elf_alpha.py": "f2b143076c2cf64f2fb876e91dd4873e91929366975d2280bdd36b6dd190cf0d",
+          "tests/test_common24_size_optimization.py": "1a9160d266c77f097567e877ec53f49e9a2565e25cbb75c65b8cdc870c126c9f",
+          "build/common24-wave3-compiler-audit-20260906/REPORT.md": "eeccdba5a12f226d2da704480b92107a3eb4b686343ef6053389149b54735d34",
+          "build/common24-wave3-compiler-audit-20260906/PRECHANGE-CAPTURE.md": "94709379e0ac3d1a0406ff540914f2b75ab7b55a61b858e9e1127a77feda6a27",
+          "build/common24-wave3-compiler-audit-20260906/audit-1.json": "eceb69fae9525ee1dece9c0be22bf96541015079d92bb8583d7b8df1935fbf49",
+          "build/common24-wave3-compiler-audit-20260906/check.py": "ae01b01d98eb39dbd1b35fc894a6228aa6e1144516dbed7067077bbb51fd08ea",
+          "build/common24-wave3-initial-audit-20260906/REPORT.md": "9c9a18afc73a8cfa3bc7fff97ae463e2b541016445369e7140f79d87edad987d",
+          "build/common24-wave3-initial-audit-20260906/REVIEW-NOTES.md": "1f35bc73eb248211da3eece9e72bd84389cbb03c553aa9dd890c1ab7fe3d41e4",
+          "build/common24-wave3-initial-audit-20260906/audit-2.json": "20fb1c37f72c8d9eb9b240d37db39639f64e8365bec44557125a32613fb1c4b0",
+          "build/common24-wave3-initial-audit-20260906/check-v2.py": "1f32eb85e4e10c503bf86fb2359f68a40082b18b6f4c6de06cea4b9d52c4a64c",
+          "results/tests-common24-wave3-pending-20260906.log": "e57481171381ebea03da2d80383f600db2b02fcb36c65229d96f5bce9d7b2b5d"
+        },
+        "reviewed_by": "Codex AI assistant; independent AI operation/parser review by pointer_audit; not a human approval",
+        "reviewed_at": "2026-09-06",
+        "review_evidence": [
+          "common/REVIEW-WAVE2-20260906.md",
+          "build/common24-wave2-initial-audit-20260906/PARSER-DELTA.md",
+          "results/tests-common24-wave2-symbols-20260906.log",
+          "build/common24-wave2-riscv-audit-20260906/check.py",
+          "build/common24-wave2-riscv-audit-20260906/audit-1.json",
+          "results/common24-wave2-initial-20260906/common.unaligned24.sh/analysis.log",
+          "results/common24-wave2-initial-20260906/common.unaligned24.sh/wp.json",
+          "results/common24-wave2-initial-20260906/common.unaligned24.sh/properties.tsv",
+          "results/common24-wave2-initial-20260906/common.unaligned24.sh/audit.json",
+          "results/common24-wave2-initial-20260906/common.unaligned24.sh/compiler-calibration/receipt.json",
+          "results/common24-wave2-initial-20260906/common.unaligned24.sh/compiler-controls/receipt.json",
+          "common/REVIEW-WAVE3-20260906.md",
+          "tests/test_elf_alpha.py",
+          "tests/test_common24_size_optimization.py",
+          "build/common24-wave3-compiler-audit-20260906/REPORT.md",
+          "build/common24-wave3-compiler-audit-20260906/PRECHANGE-CAPTURE.md",
+          "build/common24-wave3-compiler-audit-20260906/audit-1.json",
+          "build/common24-wave3-compiler-audit-20260906/check.py",
+          "build/common24-wave3-initial-audit-20260906/REPORT.md",
+          "build/common24-wave3-initial-audit-20260906/REVIEW-NOTES.md",
+          "build/common24-wave3-initial-audit-20260906/audit-2.json",
+          "build/common24-wave3-initial-audit-20260906/check-v2.py",
+          "results/tests-common24-wave3-pending-20260906.log"
+        ]
+      }
+    }
+  ],
+  "assumptions": [
+    {
+      "kind": "type-model",
+      "files": [
+        "common/annotated/unaligned24.verified.c",
+        "common/annotated/kernel-model-check.c"
+      ],
+      "kernel_files": [
+        "include/linux/types.h",
+        "include/linux/unaligned.h"
+      ],
+      "symbols": [
+        "u8",
+        "u32"
+      ],
+      "scope": "Exactly four explicit-byte 24-bit helpers and two project round trips under arm64-gcc, riscv64-gcc and sh-gcc; independently checked genuine unsigned-char/u32 types, int promotion range, byte alignment and signatures.",
+      "implementation_proved": false,
+      "id": "common24-wave2-types",
+      "review_status": "reviewed-assumption",
+      "justification": "Scoped AI review in common/REVIEW-WAVE2-20260906.md covers the complete operation domains, profile-specific LP64 versus ILP32 types, genuine frontend spelling and source-derived compiler assertion identities. Implementations remain unproved. Fresh current model, source, genuine-header controls, compiler calibration, actual frontend and complete proof/dependency gates remain mandatory for each normal run. No first-wave approval, runtime or ISA result, L2/L3 level, kernel-caller coverage or smoke waiver is inherited.",
+      "reviewed_profiles": [
+        "arm64-gcc",
+        "riscv64-gcc",
+        "sh-gcc"
+      ],
+      "reviewed_by": "Codex AI assistant; independent AI operation/parser review by pointer_audit; not a human approval",
+      "reviewed_at": "2026-09-06",
+      "review_evidence": [
+        "common/REVIEW-WAVE2-20260906.md",
+        "build/common24-wave2-riscv-audit-20260906/audit-1.json"
+      ]
+    },
+    {
+      "kind": "frontend-model",
+      "files": [
+        "common/annotated/unaligned24.verified.c",
+        "common/annotated/inline-policy.h",
+        "common/annotated/kernel-model-check.c",
+        "fragma/frontend_policy.py"
+      ],
+      "kernel_files": [
+        "include/linux/compiler_attributes.h",
+        "include/linux/compiler_types.h"
+      ],
+      "symbols": [
+        "inline"
+      ],
+      "scope": "Explicit target-local no-instrument inline spelling for the four selected static C helpers and two direct project round trips under arm64-gcc, riscv64-gcc and sh-gcc only.",
+      "implementation_proved": false,
+      "id": "common24-wave2-frontend",
+      "review_status": "reviewed-assumption",
+      "justification": "Scoped AI review in common/REVIEW-WAVE2-20260906.md covers the complete operation domains, profile-specific LP64 versus ILP32 types, genuine frontend spelling and source-derived compiler assertion identities. Implementations remain unproved. Fresh current model, source, genuine-header controls, compiler calibration, actual frontend and complete proof/dependency gates remain mandatory for each normal run. No first-wave approval, runtime or ISA result, L2/L3 level, kernel-caller coverage or smoke waiver is inherited.",
+      "reviewed_profiles": [
+        "arm64-gcc",
+        "riscv64-gcc",
+        "sh-gcc"
+      ],
+      "reviewed_by": "Codex AI assistant; independent AI operation/parser review by pointer_audit; not a human approval",
+      "reviewed_at": "2026-09-06",
+      "review_evidence": [
+        "common/REVIEW-WAVE2-20260906.md",
+        "build/common24-wave2-riscv-audit-20260906/audit-1.json"
+      ]
+    }
+  ]
+}

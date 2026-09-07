@@ -1,0 +1,154 @@
+/* SPDX-License-Identifier: GPL-2.0 */
+/*
+ * Six unchanged explicit-byte C helpers from include/linux/unaligned.h,
+ * Linux b9b3e33b70b71e516930117e21de3ad2a7723747.
+ *
+ * Model inventory: u8/u32/u64 are unsigned char/int/long long, respectively,
+ * from include/asm-generic/int-ll64.h and its uapi counterpart. The inline
+ * expansion below matches the selected configured kernel's compiler_types.h;
+ * kernel-model-check.c checks it against those real headers. No external
+ * function contracts, alignment substitutions, or assembly are used. Each byte
+ * pointer needs only byte alignment and the stated extent.
+ * The s390x compiler-derived machine model is checked separately by the suite.
+ * Explicit-byte encoding is independent of native integer byte order; the
+ * profile's separate compiled/EVA layout calibration checks native big endian.
+ */
+#define inline inline __attribute__((__gnu_inline__)) __attribute__((__unused__)) __attribute__((__no_instrument_function__))
+typedef unsigned char u8;
+typedef unsigned int u32;
+typedef unsigned long long u64;
+#include "bitproof.h"
+
+/*@ requires readable: \valid_read(p + (0 .. 2));
+    terminates \true;
+    assigns \nothing;
+    ensures decoded_value: \result == 65536 * (integer)p[0] + 256 * (integer)p[1] + p[2];
+    ensures decoded_range: \result <= 16777215;
+ */
+static inline u32 __get_unaligned_be24(const u8 *p)
+{
+	return p[0] << 16 | p[1] << 8 | p[2];
+}
+
+/*@ requires readable: \valid_read(p + (0 .. 2));
+    terminates \true;
+    assigns \nothing;
+    ensures decoded_value: \result == (integer)p[0] + 256 * (integer)p[1] + 65536 * (integer)p[2];
+    ensures decoded_range: \result <= 16777215;
+ */
+static inline u32 __get_unaligned_le24(const u8 *p)
+{
+	return p[0] | p[1] << 8 | p[2] << 16;
+}
+
+/*@ requires writable: \valid(p + (0 .. 2));
+    terminates \true;
+    assigns p[0 .. 2];
+    ensures byte_0: \at(p,Pre)[0] == (val / 65536) % 256;
+    ensures byte_1: \at(p,Pre)[1] == (val / 256) % 256;
+    ensures byte_2: \at(p,Pre)[2] == val % 256;
+ */
+static inline void __put_unaligned_be24(const u32 val, u8 *p)
+{
+	*p++ = (val >> 16) & 0xff;
+	*p++ = (val >> 8) & 0xff;
+	*p++ = val & 0xff;
+}
+
+/*@ requires writable: \valid(p + (0 .. 2));
+    terminates \true;
+    assigns p[0 .. 2];
+    ensures byte_0: \at(p,Pre)[0] == val % 256;
+    ensures byte_1: \at(p,Pre)[1] == (val / 256) % 256;
+    ensures byte_2: \at(p,Pre)[2] == (val / 65536) % 256;
+ */
+static inline void __put_unaligned_le24(const u32 val, u8 *p)
+{
+	*p++ = val & 0xff;
+	*p++ = (val >> 8) & 0xff;
+	*p++ = (val >> 16) & 0xff;
+}
+
+/*@ requires writable: \valid(p + (0 .. 5));
+    terminates \true;
+    assigns p[0 .. 5];
+    ensures byte_0: \at(p,Pre)[0] == (val / 1099511627776) % 256;
+    ensures byte_1: \at(p,Pre)[1] == (val / 4294967296) % 256;
+    ensures byte_2: \at(p,Pre)[2] == (val / 16777216) % 256;
+    ensures byte_3: \at(p,Pre)[3] == (val / 65536) % 256;
+    ensures byte_4: \at(p,Pre)[4] == (val / 256) % 256;
+    ensures byte_5: \at(p,Pre)[5] == val % 256;
+ */
+static inline void __put_unaligned_be48(const u64 val, u8 *p)
+{
+	*p++ = (val >> 40) & 0xff;
+	*p++ = (val >> 32) & 0xff;
+	*p++ = (val >> 24) & 0xff;
+	*p++ = (val >> 16) & 0xff;
+	*p++ = (val >> 8) & 0xff;
+	*p++ = val & 0xff;
+}
+
+/*@ requires readable: \valid_read(p + (0 .. 5));
+    terminates \true;
+    assigns \nothing;
+    ensures decoded_value: \result ==
+      1099511627776 * (integer)p[0] + 4294967296 * (integer)p[1] +
+      16777216 * (integer)p[2] + 65536 * (integer)p[3] + 256 * (integer)p[4] + p[5];
+    ensures decoded_range: \result <= 281474976710655;
+ */
+static inline u64 __get_unaligned_be48(const u8 *p)
+{
+	return (u64)p[0] << 40 | (u64)p[1] << 32 | (u64)p[2] << 24 |
+		p[3] << 16 | p[4] << 8 | p[5];
+}
+
+/* These proof witnesses are project code, not additional kernel functions.
+ * Their calls discharge the helpers' readable/writable preconditions, and their
+ * results depend on the separately proved decoder/encoder functional contracts.
+ */
+
+/*@ terminates \true;
+    assigns \nothing;
+    ensures roundtrip: \result == val % 16777216;
+ */
+u32 fragma_roundtrip_be24(u32 val)
+{
+	u8 bytes[3];
+	__put_unaligned_be24(val, bytes);
+	return __get_unaligned_be24(bytes);
+}
+
+/*@ terminates \true;
+    assigns \nothing;
+    ensures roundtrip: \result == val % 16777216;
+ */
+u32 fragma_roundtrip_le24(u32 val)
+{
+	u8 bytes[3];
+	__put_unaligned_le24(val, bytes);
+	return __get_unaligned_le24(bytes);
+}
+
+/*@ terminates \true;
+    assigns \nothing;
+    ensures roundtrip: \result == val % 281474976710656;
+ */
+u64 fragma_roundtrip_be48(u64 val)
+{
+	u8 bytes[6];
+	__put_unaligned_be48(val, bytes);
+	return __get_unaligned_be48(bytes);
+}
+
+/* Independent, concrete contract calibration. The final assertion is
+ * deliberately false and is required to be classified invalid by EVA; this
+ * entry must be selected separately from the ordinary WP proof targets.
+ */
+void fragma_byte_order_calibration(void)
+{
+	u8 bytes[3] = {0x12, 0x34, 0x56};
+	u32 value = __get_unaligned_be24(bytes);
+	/*@ assert decoded_be24: value == 0x123456; */
+	/*@ assert byte_order_REFUTED: value == 0x563412; */
+}

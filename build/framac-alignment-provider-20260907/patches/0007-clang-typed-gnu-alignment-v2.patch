@@ -1,0 +1,215 @@
+--- a/src/kernel_internals/typing/cabs2cil.ml
++++ b/src/kernel_internals/typing/cabs2cil.ml
+@@ -4180,6 +4180,11 @@
+    a struct-returning call. *)
+ let contains_temp_subarray = ref false
+ 
++(* Temporary source-typing recursion guard. Unlike a numeric cache, this is
++   restored on every return/exception and never survives the request conversion.
++   Distinct nested attribute expressions remain allowed. *)
++let active_typed_alignment_requests : Cabs.expression list ref = ref []
++
+ let rec doSpecList loc ghost
+     (* This string will be part of the names for anonymous structs and enums *)
+     (suggestedAnonName: string)
+@@ -4725,6 +4730,13 @@
+   | ("__attribute__", []) -> []  (* An empty list of gcc attributes *)
+   | (s, el) ->
+ 
++    let reject_reserved_alignment_marker name =
++      if Machine.clang_u32_alignment_policy () &&
++         String.trim_underscores name = "fc_clang_typed_alignment_request"
++      then Kernel.abort ~current:true
++          "reserved internal GNU alignment provenance is not a source attribute"
++    in
++
+     (* If [check] is [true], attribute name will be stripped and registered if
+        unknown. *)
+     let rec attrOfExp
+@@ -4733,6 +4745,7 @@
+       let loc = a.expr_loc in
+       match a.expr_node with
+       | Cabs.VARIABLE n ->
++        reject_reserved_alignment_marker n;
+         let n' = if check then check_attribute_name n else n in
+         ACons(n', [])
+       | Cabs.CONSTANT (Cabs.CONST_STRING s) -> AStr s
+@@ -4747,8 +4760,13 @@
+       | Cabs.CONSTANT (Cabs.CONST_FLOAT str) ->
+         ACons ("__fc_float", [AStr str])
+       | Cabs.CALL({expr_node = Cabs.VARIABLE n}, args, []) -> begin
++          reject_reserved_alignment_marker n;
+           let n' = if check then check_attribute_name n else n in
+-          let ae' = List.map ae args in
++          let ae' =
++            if check && n' = "aligned" && Machine.clang_u32_alignment_policy ()
++            then typed_alignment_args args
++            else List.map ae args
++          in
+           ACons(n', ae')
+         end
+       | Cabs.EXPR_SIZEOF e -> ASizeOfE (ae e)
+@@ -4780,7 +4798,82 @@
+           "cabs2cil: invalid expression in attribute: %a"
+           Cprint.print_expression a
+ 
+-    and ae (e: Cabs.expression) = attrOfExp ~check:false e in
++    and ae (e: Cabs.expression) = attrOfExp ~check:false e
++
++    and typed_alignment_args args =
++      match args with
++      | [] -> []
++      | [{ expr_node = Cabs.CONSTANT (Cabs.CONST_INT _); _ } as arg] ->
++        (* A literal already uses Cil.parseIntExpRes. Keep its established
++           AInt/printing path, including the unchanged context fixtures. *)
++        [ae arg]
++      | [arg] ->
++        let previous = !active_typed_alignment_requests in
++        if List.exists (fun active -> active == arg) previous then
++          Kernel.abort ~current:true
++            "recursive source expression in GNU aligned attribute: %a"
++            Cprint.print_expression arg;
++        active_typed_alignment_requests := arg :: previous;
++        Fun.protect
++          ~finally:(fun () -> active_typed_alignment_requests := previous)
++          (fun () ->
++             let open Current_loc.Operators in
++             let<> UpdatedCurrentLoc = arg.expr_loc in
++             (* Type the ORIGINAL Cabs expression before attrOfExp drops the
++                integer kinds. Do not mathematically evaluate ABinOp/AUnOp.
++                In particular unsigned 0xffffffffU + 1 must fold to zero. *)
++             let reads, effects, typed, typ =
++               doExp (ghost_local_env ghost) CConst arg (AExp None)
++             in
++             if reads <> [] || isNotEmpty effects then
++               Kernel.abort ~current:true
++                 "GNU aligned(%a) is not an effect-free integer constant expression"
++                 Cprint.print_expression arg;
++             if not (Ast_types.is_integral typ) then
++               Kernel.abort ~current:true
++                 "GNU aligned(%a) does not have an integral type"
++                 Cprint.print_expression arg;
++             let folded = Cil.constFold true typed in
++             let requested =
++               match Cil.constFoldToInt ~machdep:true folded with
++               | Some requested -> requested
++               | None ->
++                 Kernel.abort ~current:true
++                   "GNU aligned(%a) does not fold to a target-C integer constant"
++                   Cprint.print_expression arg
++             in
++             let kind =
++               match Ast_types.unroll_skel (Cil.typeOf folded) with
++               | TInt kind -> kind
++               | TEnum info -> info.ekind
++               | _ -> Kernel.abort ~current:true
++                   "GNU aligned(%a) lost its integral result type"
++                   Cprint.print_expression arg
++             in
++             (* These are validity checks on the typed result, not an
++                alternative evaluator. Preserve the original request in the
++                diagnostic, including zero after unsigned arithmetic. *)
++             if Z.sign requested <= 0 ||
++                not (Z.is_zero (Z.logand requested (Z.pred requested))) then
++               Kernel.abort ~current:true
++                 "GNU aligned(%a) evaluates to %a; alignment must be a positive power of two"
++                 Cprint.print_expression arg Z.pretty requested;
++             if Z.gt requested (Z.shift_left Z.one 32) then
++               Kernel.abort ~current:true
++                 "GNU aligned(%a) evaluates to %a; requested alignment exceeds 2^32 bytes"
++                 Cprint.print_expression arg Z.pretty requested;
++             ignore (Cil.effectiveAlignment ~c11:false requested);
++             (* This private node retains checked result-kind provenance and
++                original expression text. ASizeOf is only a type carrier in
++                this exact marker; consumers never evaluate it as sizeof.
++                The printer emits the ORIGINAL byte number, not its cache
++                contribution and not potentially out-of-scope local names. *)
++             let original = Format.asprintf "%a" Cprint.print_expression arg in
++             [ACons ("__fc_clang_typed_alignment_request",
++                     [AInt requested; ASizeOf (Cil_const.mk_tint kind); AStr original])])
++      | _ -> Kernel.abort ~current:true
++          "GNU aligned attribute expects at most one argument"
++    in
+ 
+     (* Sometimes we need to convert attrarg into attr *)
+     let arg2attrs = function
+@@ -4797,8 +4890,16 @@
+       fold_attrs (attrOfExp ~check:true) el
+     else if s = "__declspec" then
+       fold_attrs (attrOfExp ~check:false) el
+-    else
+-      [(check_attribute_name s, List.map (attrOfExp ~check:false) el)]
++    else begin
++      reject_reserved_alignment_marker s;
++      let name = check_attribute_name s in
++      let args =
++        if name = "aligned" && Machine.clang_u32_alignment_policy ()
++        then typed_alignment_args el
++        else List.map (attrOfExp ~check:false) el
++      in
++      [(name, args)]
++    end
+ 
+ and doAttributes (ghost:bool) (al: Cabs.attribute list) : attributes =
+   let attrs = List.fold_left (fun acc a ->
+--- a/src/kernel_services/ast_queries/cil.ml
++++ b/src/kernel_services/ast_queries/cil.ml
+@@ -3334,6 +3334,17 @@
+    Literal values and typed queries remain representable without that loss. *)
+ and integerOfAlignmentAttrparam a =
+   match a with
++  | ACons ("__fc_clang_typed_alignment_request",
++           [AInt requested; ASizeOf { tnode = TInt kind; tattr = [] }; AStr original])
++    when Machine.clang_u32_alignment_policy () && original <> "" ->
++    if not (fitsInInt kind requested) then
++      Kernel.abort ~current:true
++        "typed GNU alignment request is outside its recorded target integer kind";
++    ignore (effectiveAlignment ~c11:false requested);
++    Some requested
++  | ACons ("__fc_clang_typed_alignment_request", _) ->
++    Kernel.abort ~current:true
++      "invalid or inactive typed GNU alignment provenance"
+   | AInt n -> Some n
+   | ASizeOf _ | AAlignOf _ when not !ignoreAlignmentAttrs ->
+     ignoreAlignmentAttrs := true;
+--- a/src/kernel_services/ast_queries/cil.mli
++++ b/src/kernel_services/ast_queries/cil.mli
+@@ -1952,11 +1952,15 @@
+     This helper does not alter source expressions or attributes. *)
+ val effectiveAlignment: c11:bool -> Z.t -> int option
+ 
+-(** Read a literal alignment parameter or fold a typed sizeof/alignof query.
+-    Returns [None] for arithmetic and other forms whose target C integer
+-    kinds have been lost by conversion to attribute parameters. Recursive
+-    queries are not silently interpreted with ignored alignment attributes.
+-    This is deliberately narrower than {!intOfAttrparam}. *)
++(** Read a literal alignment parameter, a checked private typed-request
++    provenance node, or fold a typed sizeof/alignof query. The private node
++    carries the original byte value, its integral result type, and original
++    Cabs text; it is only valid with the explicit Clang policy and is
++    revalidated before use. It never stores the effective cache contribution.
++    Returns [None] for untyped arithmetic and other forms whose target C
++    integer kinds have been lost by conversion to attribute parameters.
++    Recursive queries are not silently interpreted with ignored alignment
++    attributes. This is deliberately narrower than {!intOfAttrparam}. *)
+ val integerOfAlignmentAttrparam: attrparam -> Z.t option
+ 
+ (** The minimum alignment (in bytes) for a type. This function is
+--- a/src/kernel_services/ast_printing/cil_printer.ml
++++ b/src/kernel_services/ast_printing/cil_printer.ml
+@@ -2291,6 +2291,15 @@
+     match a with
+     | AInt n -> fprintf fmt "%a" Z.pretty n
+     | AStr s -> fprintf fmt "\"%s\"" (Escape.escape_string s)
++    | ACons ("__fc_clang_typed_alignment_request", _) ->
++      (* Preserve the original byte-valued request for print/reparse. The
++         retained source text is diagnostic provenance, not raw C to inject
++         here: it may refer to a local name whose declaration was hoisted. *)
++      begin match Cil.integerOfAlignmentAttrparam a with
++        | Some requested -> fprintf fmt "%a" Z.pretty requested
++        | None -> Kernel.abort ~current:true
++            "cannot print unchecked typed GNU alignment provenance"
++      end
+     | ACons(s, []) -> fprintf fmt "%s" s
+     | ACons("__fc_assign", [a1; a2]) ->
+       fprintf fmt "%a=%a"

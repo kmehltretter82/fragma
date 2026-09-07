@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "kind": "unittest-regression-reproduction",
+  "status": "passed",
+  "cwd": "/home/karl/linux-work/fragma",
+  "command": {
+    "argv": [
+      "env",
+      "-i",
+      "PATH=/usr/bin:/bin",
+      "LANG=C.UTF-8",
+      "PYTHONDONTWRITEBYTECODE=1",
+      "FRAGMA_TOOLCHAIN_PREFIX=/home/karl/linux-work/fragma/toolchain/verified-prefix",
+      "FRAGMA_KERNEL_TREE=/home/karl/linux-work/linux",
+      "FRAGMA_POINTER_AUDIT_RESULTS=/home/karl/linux-work/fragma/build/pointer-formation-review",
+      "FRAGMA_POINTER_BUILTIN_RESULTS=/home/karl/linux-work/fragma/results/pointer-policy-non-s390-20260906",
+      "FRAGMA_REPLAY_PROJECT=/home/karl/linux-work/fragma",
+      "FRAGMA_STRING_NATIVE_RESULTS=/home/karl/linux-work/fragma/build/string-sensitivity/native-9",
+      "FRAGMA_S390_NATIVE_RESULTS=/home/karl/linux-work/fragma/build/s390-sensitivity/native-5",
+      "FRAGMA_RISCV_PROOF_RESULTS=/home/karl/linux-work/fragma/build/riscv-verified/proof-work/all-fields-5",
+      "FRAGMA_UM_PROFILE_RESULTS=/home/karl/linux-work/fragma/build/profile-checks/pointer-policy-final-20260906/um-x86_64-gcc",
+      "FRAGMA_ARM64_CPUID_RESULTS=/home/karl/linux-work/fragma/results/pointer-policy-final-ci-20260906/suite/arm64.cpuid",
+      "FRAGMA_STRING_SENSITIVITY_RESULTS=/home/karl/linux-work/fragma/build/string-sensitivity/baseline-3",
+      "FRAGMA_COMMON24_READBACK=/home/karl/linux-work/fragma/build/common-byte-calibration-work/run-2",
+      "FRAGMA_COMMON24_CONTROLS_READBACK=/home/karl/linux-work/fragma/build/common-byte-port-work/fixture-1",
+      "FRAGMA_COMMON24_NEXT_PROFILE_MODELS=/home/karl/linux-work/fragma/build/profile-checks/pointer-policy-final-20260906",
+      "FRAGMA_COMMON24_CONTEXT_RESULTS=/home/karl/linux-work/fragma/results/common24-integration-20260906",
+      "FRAGMA_COMMON24_CONTEXT_KERNEL=/home/karl/linux-work/linux",
+      "FRAGMA_COMMON24_ASSERTION_RESULTS=/home/karl/linux-work/fragma/results/common24-wave2-initial-20260906",
+      "FRAGMA_COMMON24_ELF_EVIDENCE=/home/karl/linux-work/fragma/build/common-byte-calibration-work/run-2",
+      "FRAGMA_COMMON24_ALPHA_ELF_EVIDENCE=/home/karl/linux-work/fragma/build/common24-wave3-compiler-work/initial-1/common.unaligned24.alpha",
+      "FRAGMA_COMMON24_ALPHA_LEGACY_EVIDENCE=/home/karl/linux-work/fragma/results/common24-six-reviewed-20260906",
+      "FRAGMA_COMMON24_SIZE_RECEIPTS=[\"/home/karl/linux-work/fragma/build/common24-wave3-compiler-work/corrected-1/common.unaligned24.x86_64/compiler-calibration/receipt.json\",\"/home/karl/linux-work/fragma/build/common24-wave3-compiler-work/corrected-1/common.unaligned24.um-x86_64/compiler-calibration/receipt.json\"]",
+      "python3",
+      "-"
+    ],
+    "stdin": "import hashlib\nimport json\nfrom pathlib import Path\nimport unittest\n\npath = Path('results/tests-clang-model-interface-20260906.log')\nwith path.open('x') as stream:\n    suite = unittest.defaultTestLoader.discover('tests')\n    result = unittest.TextTestRunner(stream=stream, verbosity=2).run(suite)\nprint(json.dumps({'tests': result.testsRun, 'failures': len(result.failures),\n                  'errors': len(result.errors), 'skips': len(result.skipped),\n                  'passed': result.wasSuccessful(), 'log': str(path.resolve()),\n                  'sha256': hashlib.sha256(path.read_bytes()).hexdigest()}, indent=2), flush=True)\nraise SystemExit(0 if result.wasSuccessful() else 1)\n",
+    "environment_policy": "env -i clears the inherited environment; only the explicit assignments in argv are supplied.",
+    "discovery": "unittest.defaultTestLoader.discover('tests')",
+    "runner": "unittest.TextTestRunner(stream=stream, verbosity=2)",
+    "log_open_mode": "x",
+    "reproduction_note": "These are the actual argv, stdin and working directory. To run again, change only the log path in stdin to a new unused filename; the recorded log is intentionally protected by exclusive creation. Do not overwrite or relabel this completed run."
+  },
+  "result": {
+    "exit_code": 0,
+    "tests": 690,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "seconds_reported_by_unittest": 75.666,
+    "passed": true
+  },
+  "log": {
+    "path": "/home/karl/linux-work/fragma/results/tests-clang-model-interface-20260906.log",
+    "sha256": "140b1a527ccdf6cb0675cfb2571a74b35db203848f5b4a546892b32b0377cde9"
+  },
+  "new_test_inputs": [
+    {
+      "path": "/home/karl/linux-work/fragma/tests/test_profiles_clang.py",
+      "sha256": "99071d3638c939fda7086345cbb999a6d4ac23fb591cd963bab58cd956959ffa",
+      "tests": 27
+    },
+    {
+      "path": "/home/karl/linux-work/fragma/tests/test_toolchain_clang.py",
+      "sha256": "f45c85ace3a95b38c290d06f0cea90b31f5056e497f73ada0ee47c16be93bf59",
+      "tests": 16
+    }
+  ],
+  "execution_boundaries": {
+    "retained_evidence": "The explicitly selected native, compiler, profile, analyzer and proof receipts are read back and validated. Their generating commands and target programs are not reexecuted by these tests.",
+    "other_test_processes": "Existing tests include read-only Git operations, isolated temporary Git fixtures, inert executable/environment probes and bounded Python timeout/interruption checks. They are not real target compiler, analyzer or native-harness runs.",
+    "historical_fault_trap_oob_harnesses_executed": false,
+    "real_compiler_or_analyzer_runs": false,
+    "target_or_native_harness_execution": false,
+    "downloads_or_installations": false,
+    "production_or_test_fixes_during_run": false,
+    "support_level_awarded": false,
+    "existing_build_tests": "All external commands and LLVM validators in test_build.py are mocked; temporary compiler files are inert path/hash fixtures. test_llvm_build.py mocks metadata subprocesses, forbids unmocked Popen, and reads synthetic data-only ELF containers and command receipts.",
+    "new_clang_tests": "test_profiles_clang.py mocks every subprocess, toolchain probe and LLVM build validator with inert identity fixtures; the synthetic candidate pipeline stops before generator invocation and has no machine-description or passing model result. test_toolchain_clang.py mocks metadata subprocesses, forbids unmocked Popen and reads only synthetic resource trees, aliases and receipts.",
+    "separate_concurrent_work": "A separate root-owned benign GCC model renewal is not part of this regression command, its subprocess tree, or this sidecar's result count."
+  },
+  "limitations": "This sidecar records the explicit regression invocation and its retained outcome, not a hermetic package inventory or tamper-resistant attestation. No package versions are inferred. A future rerun validates its then-current source and evidence identities and may legitimately differ. The listed frozen hashes cover the two changed production providers and two new test modules, not an independently captured whole-repository or all-runtime dependency closure.",
+  "previous_invocation_input": {
+    "path": "/home/karl/linux-work/fragma/results/tests-hexagon-llvm-build-20260906.json",
+    "sha256": "5adca7d9aa960212f4eb612fa5010ceb9cba5d67e90cd5f0b46f0c2f1b7267c1"
+  },
+  "frozen_production_inputs": [
+    {
+      "path": "/home/karl/linux-work/fragma/fragma/profiles.py",
+      "sha256": "e2e7c6a25a1f457cd5685e78b14eb515d45ca6e8e3b5d75eadd3de043cd3e8bb"
+    },
+    {
+      "path": "/home/karl/linux-work/fragma/fragma/toolchain.py",
+      "sha256": "c8e8998c06e6ec8877827adcfe85d4b9e353e292795a5fb88944db07b26fa444"
+    }
+  ],
+  "frozen_input_readback": "All four listed production/new-test file hashes were checked before invocation and again after terminal completion; unchanged."
+}
