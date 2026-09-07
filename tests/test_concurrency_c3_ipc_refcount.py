@@ -41,17 +41,34 @@ class ConcurrencyC3IpcRefcountTests(unittest.TestCase):
                 "arm64-ipc-refcount-c3",
                 "riscv64-ipc-refcount-c3",
                 "s390x-ipc-refcount-c3",
+                "arm32-ipc-refcount-c3",
+                "powerpc32-smp-ipc-refcount-c3",
+                "sh-smp-ipc-refcount-c3",
+                "alpha-smp-ipc-refcount-c3",
             ],
         )
         self.assertEqual(
             [profile["arch"] for profile in profiles],
-            ["x86_64", "arm64", "riscv", "s390"],
+            ["x86_64", "arm64", "riscv", "s390", "arm", "powerpc",
+             "sh", "alpha"],
         )
         self.assertEqual(profiles[0]["configuration"]["base_recipe"],
                          "x86_64_defconfig")
         self.assertTrue(all(
             profile["configuration"]["finalize_recipe"] == "olddefconfig"
             for profile in profiles
+        ))
+        self.assertTrue(all(
+            profile["execution_scope"] == "smp-multicpu"
+            for profile in profiles
+        ))
+        self.assertEqual(
+            profiles[-1]["configuration"]["mutations"],
+            [{"symbol": "SMP", "operation": "enable"}],
+        )
+        self.assertTrue(all(
+            profile["configuration"]["mutations"] == []
+            for profile in profiles[:-1]
         ))
         self.assertTrue(all(
             profile["required_config"]["CONFIG_SYSVIPC"] == "y"
@@ -83,6 +100,14 @@ class ConcurrencyC3IpcRefcountTests(unittest.TestCase):
         self.assertIn("lr.w\t", tokens["riscv64-ipc-refcount-c3"])
         self.assertIn("laa\t", tokens["s390x-ipc-refcount-c3"])
         self.assertIn("cs\t", tokens["s390x-ipc-refcount-c3"])
+        self.assertIn("ldrex\t", tokens["arm32-ipc-refcount-c3"])
+        self.assertIn("strex", tokens["arm32-ipc-refcount-c3"])
+        self.assertIn("lwarx", tokens["powerpc32-smp-ipc-refcount-c3"])
+        self.assertIn("stwcx.", tokens["powerpc32-smp-ipc-refcount-c3"])
+        self.assertIn("movli.l\t", tokens["sh-smp-ipc-refcount-c3"])
+        self.assertIn("movco.l\t", tokens["sh-smp-ipc-refcount-c3"])
+        self.assertIn("ldl_l\t", tokens["alpha-smp-ipc-refcount-c3"])
+        self.assertIn("stl_c\t", tokens["alpha-smp-ipc-refcount-c3"])
 
     def test_declared_source_and_model_hashes_are_current(self):
         manifest = concurrency_c3_ipc_refcount.load_manifest(ROOT)
@@ -180,6 +205,26 @@ class ConcurrencyC3IpcRefcountTests(unittest.TestCase):
             ):
                 concurrency_c3_ipc_refcount.load_manifest(ROOT)
 
+    def test_architecture_exclusion_cannot_lag_profile_inventory(self):
+        manifest = concurrency_c3_ipc_refcount.load_manifest(ROOT)
+        changed = deepcopy(manifest)
+        changed["property"]["exclusions"] = [
+            item.replace(
+                "eight configured SMP x86-64, arm64, riscv64, s390x, ARM32, "
+                "PowerPC32, SuperH and Alpha",
+                "configured SMP x86-64, arm64, riscv64 and s390x",
+            )
+            for item in changed["property"]["exclusions"]
+        ]
+        with mock.patch.object(
+            concurrency_c3_ipc_refcount, "_strict_json", return_value=changed
+        ):
+            with self.assertRaisesRegex(
+                concurrency_c3_ipc_refcount.ConcurrencyC3IpcRefcountError,
+                "architecture exclusion does not match",
+            ):
+                concurrency_c3_ipc_refcount.load_manifest(ROOT)
+
     def test_function_symbol_parser_is_exact(self):
         text = (
             "0000000000000010 g     F .text\t0000000000000020 ipc_rcu_getref\n"
@@ -197,6 +242,41 @@ class ConcurrencyC3IpcRefcountTests(unittest.TestCase):
                     "section": ".text", "value": "0000000000000030", "size": 64,
                 },
             },
+        )
+
+    def test_function_symbol_parser_handles_elf32_and_alpha_other_field(self):
+        elf32 = (
+            "00000bc8 g     F .text\t0000006c ipc_rcu_getref\n"
+            "00000c34 g     F .text\t00000054 ipc_rcu_putref\n"
+        )
+        self.assertEqual(
+            concurrency_c3_ipc_refcount._function_symbols(
+                elf32, {"ipc_rcu_getref", "ipc_rcu_putref"}, 8
+            )["ipc_rcu_getref"],
+            {"section": ".text", "value": "00000bc8", "size": 108},
+        )
+        alpha = (
+            "0000000000000f90 g     F .text\t00000000000000a8 0x88 "
+            "ipc_rcu_getref\n"
+        )
+        self.assertEqual(
+            concurrency_c3_ipc_refcount._function_symbols(
+                alpha, {"ipc_rcu_getref"}
+            )["ipc_rcu_getref"],
+            {"section": ".text", "value": "0000000000000f90", "size": 168},
+        )
+
+    def test_diagnostic_classifier_rejects_jobserver_and_unlisted_warnings(self):
+        process = {
+            "stdout": "make[4]: warning: jobserver unavailable: using -j1\n",
+            "stderr": "<stdin>:10:2: warning: sample [-Wcpp]\n",
+        }
+        self.assertEqual(
+            concurrency_c3_ipc_refcount._diagnostic_lines(process),
+            [
+                "make[4]: warning: jobserver unavailable: using -j1",
+                "<stdin>:10:2: warning: sample [-Wcpp]",
+            ],
         )
 
     def test_build_directory_escape_is_rejected(self):

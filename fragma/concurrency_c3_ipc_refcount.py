@@ -105,7 +105,127 @@ _PROFILE_SPECS = {
             "CONFIG_CC_IS_GCC": "y",
         },
     },
+    "arm32-ipc-refcount-c3": {
+        "arch": "arm",
+        "cross_compile": "/usr/bin/arm-linux-gnueabi-",
+        "base_recipe": "multi_v7_defconfig",
+        "compiler": "/usr/bin/arm-linux-gnueabi-gcc",
+        "compiler_target": "arm-linux-gnueabi",
+        "objdump": "/usr/bin/arm-linux-gnueabi-objdump",
+        "elf": [1, 1, 40],
+        "required_config": {
+            "CONFIG_ARM": "y",
+            "CONFIG_CPU_V7": "y",
+            "CONFIG_AEABI": "y",
+            "CONFIG_CPU_LITTLE_ENDIAN": "y",
+            "CONFIG_CPU_BIG_ENDIAN": "n",
+            "CONFIG_SMP": "y",
+            "CONFIG_SYSVIPC": "y",
+            "CONFIG_TREE_RCU": "y",
+            "CONFIG_PREEMPT_RCU": "absent",
+            "CONFIG_RCU_EXPERT": "n",
+            "CONFIG_KCSAN": "absent",
+            "CONFIG_CC_IS_GCC": "y",
+        },
+    },
+    "powerpc32-smp-ipc-refcount-c3": {
+        "arch": "powerpc",
+        "cross_compile": "/usr/bin/powerpc-linux-gnu-",
+        "base_recipe": "chrp32_defconfig",
+        "compiler": "/usr/bin/powerpc-linux-gnu-gcc",
+        "compiler_target": "powerpc-linux-gnu",
+        "objdump": "/usr/bin/powerpc-linux-gnu-objdump",
+        "elf": [1, 2, 20],
+        "required_config": {
+            "CONFIG_PPC": "y",
+            "CONFIG_PPC32": "y",
+            "CONFIG_PPC64": "n",
+            "CONFIG_CPU_BIG_ENDIAN": "y",
+            "CONFIG_SMP": "y",
+            "CONFIG_SYSVIPC": "y",
+            "CONFIG_TREE_RCU": "y",
+            "CONFIG_PREEMPT_RCU": "absent",
+            "CONFIG_RCU_EXPERT": "n",
+            "CONFIG_KCSAN": "n",
+            "CONFIG_CC_IS_GCC": "y",
+        },
+    },
+    "sh-smp-ipc-refcount-c3": {
+        "arch": "sh",
+        "cross_compile": "/usr/bin/sh4-linux-gnu-",
+        "base_recipe": "shx3_defconfig",
+        "compiler": "/usr/bin/sh4-linux-gnu-gcc",
+        "compiler_target": "sh4-linux-gnu",
+        "objdump": "/usr/bin/sh4-linux-gnu-objdump",
+        "elf": [1, 1, 42],
+        "required_config": {
+            "CONFIG_SUPERH": "y",
+            "CONFIG_CPU_SH4": "y",
+            "CONFIG_CPU_SH4A": "y",
+            "CONFIG_CPU_SUBTYPE_SHX3": "y",
+            "CONFIG_CPU_LITTLE_ENDIAN": "y",
+            "CONFIG_CPU_BIG_ENDIAN": "n",
+            "CONFIG_SMP": "y",
+            "CONFIG_SYSVIPC": "y",
+            "CONFIG_TREE_RCU": "y",
+            "CONFIG_PREEMPT_RCU": "y",
+            "CONFIG_RCU_EXPERT": "n",
+            "CONFIG_KCSAN": "absent",
+            "CONFIG_CC_IS_GCC": "y",
+        },
+    },
+    "alpha-smp-ipc-refcount-c3": {
+        "arch": "alpha",
+        "cross_compile": "/usr/bin/alpha-linux-gnu-",
+        "base_recipe": "defconfig",
+        "mutations": [{"symbol": "SMP", "operation": "enable"}],
+        "compiler": "/usr/bin/alpha-linux-gnu-gcc",
+        "compiler_target": "alpha-linux-gnu",
+        "objdump": "/usr/bin/alpha-linux-gnu-objdump",
+        "elf": [2, 1, 36902],
+        "required_config": {
+            "CONFIG_ALPHA": "y",
+            "CONFIG_ALPHA_GENERIC": "y",
+            "CONFIG_64BIT": "y",
+            "CONFIG_SMP": "y",
+            "CONFIG_SYSVIPC": "y",
+            "CONFIG_TREE_RCU": "y",
+            "CONFIG_PREEMPT_RCU": "absent",
+            "CONFIG_RCU_EXPERT": "n",
+            "CONFIG_KCSAN": "absent",
+            "CONFIG_CC_IS_GCC": "y",
+        },
+    },
 }
+
+
+_EMPTY_BUILD_DIAGNOSTICS = {
+    "base-config": [],
+    "config-mutation": [],
+    "finalize-config": [],
+    "object": [],
+}
+
+
+_PROFILE_DIAGNOSTICS = {
+    profile_id: {
+        **_EMPTY_BUILD_DIAGNOSTICS,
+        **({
+            "object": [
+                "<stdin>:1519:2: warning: #warning syscall clone3 not implemented [-Wcpp]"
+            ],
+        } if profile_id == "sh-smp-ipc-refcount-c3" else {}),
+    }
+    for profile_id in _PROFILE_SPECS
+}
+
+
+_ARCHITECTURE_EXCLUSION = (
+    "No architecture implementation other than the eight configured SMP "
+    "x86-64, arm64, riscv64, s390x, ARM32, PowerPC32, SuperH and Alpha "
+    "profiles is accepted by this source-linked pilot; every other "
+    "architecture remains outside the claim."
+)
 
 
 def _strict_json(path: Path) -> Any:
@@ -218,8 +338,9 @@ def _validate_expected(expected: Any, case_id: str) -> None:
 def _validate_profile(root: Path, profile: Any, expected_id: str) -> None:
     if not isinstance(profile, dict) or set(profile) != {
         "id", "arch", "cross_compile", "jobs", "build_directory", "config",
-        "config_sha256", "configuration", "required_config", "make",
-        "compiler", "objdump", "configured_compile",
+        "config_sha256", "execution_scope", "configuration",
+        "required_config", "allowed_diagnostics", "make", "compiler",
+        "objdump", "configured_compile",
     }:
         raise ConcurrencyC3IpcRefcountError("IPC build profile is not exact")
     spec = _PROFILE_SPECS[expected_id]
@@ -232,6 +353,10 @@ def _validate_profile(root: Path, profile: Any, expected_id: str) -> None:
     ):
         raise ConcurrencyC3IpcRefcountError(
             f"unexpected IPC build profile {expected_id}"
+        )
+    if profile["execution_scope"] != "smp-multicpu":
+        raise ConcurrencyC3IpcRefcountError(
+            f"unexpected execution scope for {expected_id}"
         )
     expected_build = f"build/kernel/{expected_id}"
     build_directory = _declared_path(
@@ -255,6 +380,7 @@ def _validate_profile(root: Path, profile: Any, expected_id: str) -> None:
     _digest(profile["config_sha256"], f"{expected_id} config identity")
     if profile["configuration"] != {
         "base_recipe": spec["base_recipe"],
+        "mutations": spec.get("mutations", []),
         "finalize_recipe": "olddefconfig",
     }:
         raise ConcurrencyC3IpcRefcountError(
@@ -263,6 +389,10 @@ def _validate_profile(root: Path, profile: Any, expected_id: str) -> None:
     if profile["required_config"] != spec["required_config"]:
         raise ConcurrencyC3IpcRefcountError(
             f"IPC config requirements are not exact for {expected_id}"
+        )
+    if profile["allowed_diagnostics"] != _PROFILE_DIAGNOSTICS[expected_id]:
+        raise ConcurrencyC3IpcRefcountError(
+            f"IPC diagnostic allowlist is not exact for {expected_id}"
         )
     for tool_name in ("make", "compiler", "objdump"):
         _validate_tool(profile[tool_name], f"{expected_id} {tool_name}",
@@ -329,12 +459,15 @@ def _validate_profile(root: Path, profile: Any, expected_id: str) -> None:
         raise ConcurrencyC3IpcRefcountError(
             f"configured function inventory is not exact for {expected_id}"
         )
+    address_digits = 8 if compile_record["elf_class"] == 1 else 16
     for name, function in functions.items():
         if (
             not isinstance(function, dict)
             or set(function) != {"section", "value", "size", "disassembly_order"}
             or function["section"] != ".text"
-            or not re.fullmatch(r"[0-9a-f]{16}", function["value"])
+            or not re.fullmatch(
+                rf"[0-9a-f]{{{address_digits}}}", function["value"]
+            )
             or type(function["size"]) is not int
             or function["size"] < 1
         ):
@@ -361,7 +494,7 @@ def load_manifest(root: Path) -> dict[str, Any]:
             "schema_version", "id", "kernel", "baseline", "profiles",
             "property", "model",
         }
-        or manifest["schema_version"] != 2
+        or manifest["schema_version"] != 3
         or manifest["id"] != "linux-ipc-refcount-lifetime-multiarch-c3"
     ):
         raise ConcurrencyC3IpcRefcountError("unsupported IPC refcount C3 schema")
@@ -383,7 +516,7 @@ def load_manifest(root: Path) -> dict[str, Any]:
             "source receipt is outside kernel source"
         ) from exc
     identities = kernel["source_identities"]
-    if not isinstance(identities, dict) or len(identities) != 27:
+    if not isinstance(identities, dict) or len(identities) != 43:
         raise ConcurrencyC3IpcRefcountError(
             "IPC refcount source identity set is not exact"
         )
@@ -443,7 +576,12 @@ def load_manifest(root: Path) -> dict[str, Any]:
         "implementation_argument",
     ):
         _nonempty(prop[key], f"property {key}")
-    exclusions = " ".join(_strings(prop["exclusions"], "property exclusions")).lower()
+    exclusion_items = _strings(prop["exclusions"], "property exclusions")
+    if _ARCHITECTURE_EXCLUSION not in exclusion_items:
+        raise ConcurrencyC3IpcRefcountError(
+            "IPC property architecture exclusion does not match its profiles"
+        )
+    exclusions = " ".join(exclusion_items).lower()
     for boundary in (
         "caller-locking", "third refcount update", "rcu grace", "saturation",
         "control-dependency", "detecting control", "architecture", "progress",
@@ -554,12 +692,20 @@ def _function_source(path: Path, function: str) -> str:
         raise ConcurrencyC3IpcRefcountError(str(exc)) from exc
 
 
-def _function_symbols(value: str, names: set[str]) -> dict[str, dict[str, Any]]:
+def _function_symbols(
+    value: str, names: set[str], address_digits: int = 16
+) -> dict[str, dict[str, Any]]:
+    if address_digits not in (8, 16):
+        raise ConcurrencyC3IpcRefcountError(
+            "function symbol address width must be 8 or 16"
+        )
     found: dict[str, dict[str, Any]] = {}
     pattern = re.compile(
-        r"^(?P<value>[0-9a-f]{16})\s+g\s+F\s+"
+        rf"^(?P<value>[0-9a-f]{{{address_digits}}})\s+g\s+F\s+"
         r"(?P<section>\.[A-Za-z0-9_.]+)\s+"
-        r"(?P<size>[0-9a-f]{16})\s+(?P<name>[A-Za-z_][A-Za-z0-9_]*)$",
+        rf"(?P<size>[0-9a-f]{{{address_digits}}})"
+        r"(?:\s+0x[0-9a-f]+)?\s+"
+        r"(?P<name>[A-Za-z_][A-Za-z0-9_]*)$",
         re.MULTILINE,
     )
     for match in pattern.finditer(value):
@@ -575,6 +721,22 @@ def _function_symbols(value: str, names: set[str]) -> dict[str, dict[str, Any]]:
                 "size": int(match.group("size"), 16),
             }
     return found
+
+
+def _diagnostic_lines(process: dict[str, Any]) -> list[str]:
+    """Return stable compiler/make diagnostics without treating chatter as one."""
+    selected: list[str] = []
+    for stream in (process["stdout"], process["stderr"]):
+        for line in stream.splitlines():
+            stripped = line.strip()
+            lowered = stripped.lower()
+            if (
+                re.search(r"(?:^|:\s)(?:warning|error):", lowered)
+                or "jobserver" in lowered
+                or "file exists" in lowered
+            ):
+                selected.append(stripped)
+    return selected
 
 
 def _semantic_checks(
@@ -627,6 +789,10 @@ def _semantic_checks(
                "Caller must guarantee locking." in contract),
         _check("IPC source initializes refcount to one", True,
                "refcount_set(&new->refcount, 1);" in source),
+        _check("architecture exclusion binds all selected SMP profiles",
+               _ARCHITECTURE_EXCLUSION,
+               next((item for item in prop["exclusions"]
+                     if "architecture implementation" in item.lower()), None)),
     ])
 
     checks.extend([
@@ -672,6 +838,9 @@ def _semantic_checks(
     ).read_text()
     x86_atomic = (source_root / "arch/x86/include/asm/atomic.h").read_text()
     x86_cmpxchg = (source_root / "arch/x86/include/asm/cmpxchg.h").read_text()
+    arm_atomic = (source_root / "arch/arm/include/asm/atomic.h").read_text()
+    arm_cmpxchg = (source_root / "arch/arm/include/asm/cmpxchg.h").read_text()
+    arm_barrier = (source_root / "arch/arm/include/asm/barrier.h").read_text()
     arm64_atomic = (source_root / "arch/arm64/include/asm/atomic.h").read_text()
     arm64_ll_sc = (
         source_root / "arch/arm64/include/asm/atomic_ll_sc.h"
@@ -700,6 +869,35 @@ def _semantic_checks(
     s390_barrier = (
         source_root / "arch/s390/include/asm/barrier.h"
     ).read_text()
+    powerpc_atomic = (
+        source_root / "arch/powerpc/include/asm/atomic.h"
+    ).read_text()
+    powerpc_cmpxchg = (
+        source_root / "arch/powerpc/include/asm/cmpxchg.h"
+    ).read_text()
+    powerpc_barrier = (
+        source_root / "arch/powerpc/include/asm/barrier.h"
+    ).read_text()
+    sh_atomic = (source_root / "arch/sh/include/asm/atomic.h").read_text()
+    sh_atomic_llsc = (
+        source_root / "arch/sh/include/asm/atomic-llsc.h"
+    ).read_text()
+    sh_cmpxchg = (source_root / "arch/sh/include/asm/cmpxchg.h").read_text()
+    sh_cmpxchg_llsc = (
+        source_root / "arch/sh/include/asm/cmpxchg-llsc.h"
+    ).read_text()
+    sh_barrier = (source_root / "arch/sh/include/asm/barrier.h").read_text()
+    alpha_atomic = (
+        source_root / "arch/alpha/include/asm/atomic.h"
+    ).read_text()
+    alpha_cmpxchg = (
+        source_root / "arch/alpha/include/asm/cmpxchg.h"
+    ).read_text()
+    alpha_barrier = (
+        source_root / "arch/alpha/include/asm/barrier.h"
+    ).read_text()
+    alpha_kconfig = (source_root / "arch/alpha/Kconfig").read_text()
+    config_script = (source_root / "scripts/config").read_text()
     barrier = (source_root / "include/asm-generic/barrier.h").read_text()
     model_def = (source_root / "tools/memory-model/linux-kernel.def").read_text()
     model_cat = (source_root / "tools/memory-model/linux-kernel.cat").read_text()
@@ -748,6 +946,30 @@ def _semantic_checks(
         _check("x86 xadd uses LOCK_PREFIX", True,
                "#define xadd(ptr, inc)\t\t__xadd((ptr), (inc), LOCK_PREFIX)"
                in x86_cmpxchg),
+        _check("ARM32 fetch-sub uses load/store exclusives", True,
+               _ordered(arm_atomic, [
+                   "#define ATOMIC_FETCH_OP(op, c_op, asm_op)",
+                   '"1:\tldrex\t%0, [%4]\\n"',
+                   '"\tstrex\t%2, %1, [%4]\\n"',
+                   "#define arch_atomic_fetch_sub_relaxed",
+                   "ATOMIC_OPS(sub, -=, sub)",
+               ])),
+        _check("ARM32 relaxed compare/exchange uses exclusives", True,
+               _ordered(arm_atomic, [
+                   "static inline int arch_atomic_cmpxchg_relaxed",
+                   '"ldrex\t%1, [%3]\\n"',
+                   '"strexeq %0, %5, [%3]\\n"',
+                   "#define arch_atomic_cmpxchg_relaxed",
+               ])),
+        _check("ARM32 generic cmpxchg offers exclusive word path", True,
+               _ordered(arm_cmpxchg, [
+                   "case 4:",
+                   '"\tldrex\t%1, [%2]\\n"',
+                   '"\tstrexeq %0, %4, [%2]\\n"',
+               ])),
+        _check("ARM32 acquire-after-control maps to DMB", True,
+               "#define __smp_rmb()\t__smp_mb()" in arm_barrier and
+               "#define __smp_mb()\tdmb(ish)" in arm_barrier),
         _check("arm64 atomic wrapper selects LSE or LL/SC", True,
                _ordered(arm64_lse, [
                    "#define __lse_ll_sc_body(op, ...)",
@@ -831,6 +1053,81 @@ def _semantic_checks(
         _check("s390 acquire-after-control is a compiler barrier", True,
                "#define __smp_rmb()\t__rmb()" in s390_barrier and
                "#define __rmb()\t\tbarrier()" in s390_barrier),
+        _check("PowerPC32 fetch-sub uses reservation RMW", True,
+               _ordered(powerpc_atomic, [
+                   "#define ATOMIC_FETCH_OP_RELAXED(op, asm_op, suffix, sign",
+                   '"1:\tlwarx\t%0,0,%4',
+                   '"\tstwcx.\t%1,0,%4\\n"',
+                   "ATOMIC_OPS(sub, sub, \"c\", I, \"xer\")",
+                   "#define arch_atomic_fetch_sub_relaxed",
+               ])),
+        _check("PowerPC32 relaxed cmpxchg uses reservation RMW", True,
+               _ordered(powerpc_cmpxchg, [
+                   "__cmpxchg_u32_relaxed(u32 *p",
+                   '"1:\tlwarx\t%0,0,%2',
+                   '"\tstwcx.\t%4,0,%2\\n"',
+               ])),
+        _check("PowerPC32 acquire-after-control maps to LWSYNC", True,
+               "#define __smp_rmb()\t__lwsync()" in powerpc_barrier),
+        _check("SuperH profile selects SH4A LL/SC atomics", True,
+               _ordered(sh_atomic, [
+                   "#elif defined(CONFIG_CPU_SH4A)",
+                   "#include <asm/atomic-llsc.h>",
+               ])),
+        _check("SuperH fetch-sub uses MOVLI/MOVCO", True,
+               _ordered(sh_atomic_llsc, [
+                   "#define ATOMIC_FETCH_OP(op)",
+                   '"1:\tmovli.l @%3, %0',
+                   '"\tmovco.l\t%0, @%3',
+                   '"\tsynco',
+                   "ATOMIC_OPS(sub)",
+                   "#define arch_atomic_fetch_sub",
+               ])),
+        _check("SuperH profile selects LL/SC cmpxchg", True,
+               _ordered(sh_cmpxchg, [
+                   "#elif defined(CONFIG_CPU_SH4A)",
+                   "#include <asm/cmpxchg-llsc.h>",
+               ]) and _ordered(sh_cmpxchg_llsc, [
+                   "__cmpxchg_u32(volatile u32 *m",
+                   '"movli.l\t@%2, %0',
+                   '"movco.l\t%0, @%2',
+                   '"synco',
+               ])),
+        _check("SuperH acquire-after-control maps to SYNCO", True,
+               '#define mb()\t\t__asm__ __volatile__ ("synco"' in sh_barrier and
+               "#define rmb()\t\tmb()" in sh_barrier),
+        _check("Alpha fetch-sub uses locked load/store", True,
+               _ordered(alpha_atomic, [
+                   "#define ATOMIC_FETCH_OP(op, asm_op)",
+                   '"1:\tldl_l %2,%1\\n"',
+                   '"\tstl_c %0,%1\\n"',
+                   "smp_mb();",
+                   "ATOMIC_OPS(sub)",
+                   "#define arch_atomic_fetch_sub_relaxed",
+               ])),
+        _check("Alpha cmpxchg is fully ordered locked load/store", True,
+               _ordered(alpha_cmpxchg, [
+                   "____cmpxchg_u32(volatile int *m",
+                   '"1:\tldl_l %0,%5\\n"',
+                   '"\tstl_c %1,%2\\n"',
+                   "#define arch_cmpxchg(ptr, o, n)",
+                   "smp_mb();",
+                   "____cmpxchg((ptr)",
+                   "smp_mb();",
+               ])),
+        _check("Alpha SMP barriers emit MB", True,
+               _ordered(alpha_barrier, [
+                   "#ifdef CONFIG_SMP",
+                   '#define __ASM_SMP_MB\t"\\tmb\\n"',
+               ])),
+        _check("Alpha generic platform permits SMP mutation", True,
+               _ordered(alpha_kconfig, [
+                   "config SMP",
+                   "depends on ALPHA_SABLE || ALPHA_RAWHIDE || ALPHA_DP264",
+                   "ALPHA_GENERIC",
+               ])),
+        _check("kernel config helper provides explicit enable operation", True,
+               "--enable|-e)" in config_script),
         _check("generic acquire-after-control is explicit", True,
                "#define smp_acquire__after_ctrl_dep()\t\tsmp_rmb()" in barrier),
         _check("LKMM defines release fetch-sub", True,
@@ -964,21 +1261,53 @@ def _run_profile(
         common_make.append(f"CROSS_COMPILE={profile['cross_compile']}")
     common_make.append(f"CC={profile['compiler']['binary']}")
     configuration = profile["configuration"]
-    build_steps = [
-        ("base-config", [*common_make, configuration["base_recipe"]]),
-        ("finalize-config", [*common_make, configuration["finalize_recipe"]]),
-    ]
-    for name, argv in build_steps:
+    build_diagnostics: dict[str, dict[str, Any]] = {}
+
+    def run_build_step(
+        name: str, argv: list[str], diagnostic_class: str, *, label: str | None = None
+    ) -> dict[str, Any]:
         directory = build_output / name
         directory.mkdir()
         process = concurrency_c3_lkmm._run(argv, root, timeout)
         concurrency_c3_lkmm._write_process(directory, argv, root, process)
+        observed = _diagnostic_lines(process)
+        allowed = profile["allowed_diagnostics"][diagnostic_class]
+        unexpected = [line for line in observed if line not in allowed]
+        build_diagnostics[name] = {
+            "class": diagnostic_class,
+            "allowed": allowed,
+            "observed": observed,
+            "unexpected": unexpected,
+        }
+        check_label = label or name
         checks.extend([
-            profile_check(f"{name} timed out", False, process["timed_out"]),
-            profile_check(f"{name} exit", 0, process["returncode"]),
+            profile_check(f"{check_label} timed out", False, process["timed_out"]),
+            profile_check(f"{check_label} exit", 0, process["returncode"]),
+            profile_check(f"{check_label} undeclared diagnostics", [], unexpected),
         ])
+        return process
 
+    run_build_step(
+        "base-config", [*common_make, configuration["base_recipe"]],
+        "base-config",
+    )
     config_path = _declared_path(root, profile["config"], f"{profile_id} config")
+    config_script = source_root / "scripts/config"
+    for index, mutation in enumerate(configuration["mutations"], start=1):
+        operation = mutation["operation"]
+        symbol = mutation["symbol"]
+        run_build_step(
+            f"config-mutation-{index:02d}-{symbol.lower()}",
+            [str(config_script), "--file", str(config_path),
+             f"--{operation}", symbol],
+            "config-mutation",
+            label=f"config mutation {index}: {symbol}={operation}",
+        )
+    run_build_step(
+        "finalize-config", [*common_make, configuration["finalize_recipe"]],
+        "finalize-config",
+    )
+
     config_exists = config_path.is_file() and not config_path.is_symlink()
     config_hash = _sha256(config_path) if config_exists else None
     checks.extend([
@@ -995,19 +1324,10 @@ def _run_profile(
         ))
 
     compile_record = profile["configured_compile"]
-    object_directory = build_output / "object"
-    object_directory.mkdir()
     object_argv = [*common_make, f"-j{profile['jobs']}", compile_record["target"]]
-    object_process = concurrency_c3_lkmm._run(object_argv, root, timeout)
-    concurrency_c3_lkmm._write_process(
-        object_directory, object_argv, root, object_process
+    object_process = run_build_step(
+        "object", object_argv, "object", label="configured object build"
     )
-    checks.extend([
-        profile_check("configured object build timed out", False,
-                      object_process["timed_out"]),
-        profile_check("configured object build exit", 0,
-                      object_process["returncode"]),
-    ])
     object_path = _declared_path(
         root, compile_record["object"], f"{profile_id} configured object"
     )
@@ -1088,7 +1408,8 @@ def _run_profile(
         for name, function in compile_record["functions"].items()
     }
     observed_symbols = _function_symbols(
-        symbols_process["stdout"], set(compile_record["functions"])
+        symbols_process["stdout"], set(compile_record["functions"]),
+        8 if compile_record["elf_class"] == 1 else 16,
     )
     checks.append(profile_check(
         "configured function symbols", expected_symbols, observed_symbols
@@ -1105,6 +1426,8 @@ def _run_profile(
         "configured_config_sha256": config_hash,
         "configured_functions": observed_symbols,
         "disassembly_mode": "target-objdump-per-function",
+        "execution_scope": profile["execution_scope"],
+        "build_diagnostics": build_diagnostics,
         "checks": checks,
         "accepted": all(item["passed"] for item in checks),
     }
@@ -1123,13 +1446,14 @@ def render_summary(result: dict[str, Any]) -> str:
         f"Checked architecture mappings: **{result['architecture_mapping_count']}**",
         f"LKMM functional cases: **{len(result['cases'])}**",
         "",
-        "| Architecture profile | Kernel ARCH | Object | Gate |",
-        "|---|---|---|---|",
+        "| Architecture profile | Kernel ARCH | Scope | Object | Gate |",
+        "|---|---|---|---|---|",
     ]
     for profile in result["profiles"]:
         elf = profile["configured_object"]
         lines.append(
             f"| `{profile['id']}` | `{profile['arch']}` | "
+            f"`{profile['execution_scope']}` | "
             f"ELF{(elf.get('class') or 0) * 32}, machine {elf.get('machine')} | "
             f"{'PASS' if profile['accepted'] else 'FAIL'} |"
         )
@@ -1157,8 +1481,9 @@ def render_summary(result: dict[str, Any]) -> str:
         "resurrect zero and reports `Sometimes` (1/1).",
         "",
         "The gate pins the IPC helper and locking contract, refcount implementation,",
-        "LKMM RMW axiom, and configured x86-64, arm64, riscv64, and s390x",
-        "objects. Each mapping pins both function symbols and target disassembly,",
+        "LKMM RMW axiom, and eight configured SMP profiles: x86-64, arm64,",
+        "riscv64, s390x, ARM32, PowerPC32, SuperH, and Alpha.",
+        "Each mapping pins both function symbols and target disassembly,",
         "including alternative atomic paths where the architecture emits them.",
         "The caller-locking prerequisite is assumed. Callback execution and RCU",
         "grace periods are not modeled.",
@@ -1353,7 +1678,7 @@ def run_c3_ipc_refcount(
     _json(output / "input-identities.json", identities)
     _json(output / "source-model-evidence.json", source_model_evidence)
     result = {
-        "schema_version": 2,
+        "schema_version": 3,
         "kind": "ipc-refcount-c3-lifetime-functional-multiarch-pilot",
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "target": manifest["id"],
@@ -1392,7 +1717,7 @@ def run_c3_ipc_refcount(
         "c3_stage_complete": False,
         "remaining_c3": [
             "Any separately justified progress property",
-            "Implementation mappings for Linux architectures beyond x86-64, arm64, riscv64, and s390x",
+            "Implementation mappings for Linux architectures beyond x86-64, arm64, riscv64, s390x, ARM32, PowerPC32, SuperH, and Alpha",
             "Broader lock-free functional protocol coverage",
         ],
         "call_rcu_modeled": False,

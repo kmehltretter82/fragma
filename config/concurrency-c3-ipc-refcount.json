@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "id": "linux-ipc-refcount-lifetime-multiarch-c3",
   "kernel": {
     "revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
@@ -31,6 +31,22 @@
       "build/sources/linux-b9b3e33b70b71/arch/s390/include/asm/atomic_ops.h": "60253e41689c785bd151b53ab1f7c1a2f82213af23392a985e0d361e8fb4e1d7",
       "build/sources/linux-b9b3e33b70b71/arch/s390/include/asm/cmpxchg.h": "2ba71db92fff82e39830c36a7068921f0029bdd9b2db907eb39d94ac01f9f4da",
       "build/sources/linux-b9b3e33b70b71/arch/s390/include/asm/barrier.h": "fc147b7409686eb35f3c5e018badceadf74b63bbd173be8efff52ba2706dd733",
+      "build/sources/linux-b9b3e33b70b71/arch/arm/include/asm/atomic.h": "8191608ff79d06b5e09936d0eeac489d2b2dd1d6b407991f5ce43e1f459eff32",
+      "build/sources/linux-b9b3e33b70b71/arch/arm/include/asm/cmpxchg.h": "0ddc11af75f4d242d33f4da6469f76bb1c033c5a0ea39d66f4090ccb99789e03",
+      "build/sources/linux-b9b3e33b70b71/arch/arm/include/asm/barrier.h": "81af4951183749c6918dee9f6dbb5b2493e6eb2e5122ba8d9f2a0f9ab8692a55",
+      "build/sources/linux-b9b3e33b70b71/arch/powerpc/include/asm/atomic.h": "c725e0ef6590cf0598ed7255d8ccbacc72a1ec94cf639f74777104ae2c89185f",
+      "build/sources/linux-b9b3e33b70b71/arch/powerpc/include/asm/cmpxchg.h": "03edecfa8aa92d80708e26608803f719d2ad2cce2bc0dd37ac2e9dff8b2235a8",
+      "build/sources/linux-b9b3e33b70b71/arch/powerpc/include/asm/barrier.h": "8bb93932f2d9a52b67f276eca573b203b7803ee9cee2230b53af299cb85d5bec",
+      "build/sources/linux-b9b3e33b70b71/arch/sh/include/asm/atomic.h": "c3925b56718fcc0fd63398e5c106fddf18e718e25161105efa2158dc49460884",
+      "build/sources/linux-b9b3e33b70b71/arch/sh/include/asm/atomic-llsc.h": "393ffefd4a87e9c10a3090608d308d5d93524e4186e84bc5d9e879bacdb7f085",
+      "build/sources/linux-b9b3e33b70b71/arch/sh/include/asm/cmpxchg.h": "bb0f53e58d12918ecf90d50db9d72dd71c95725e55b59de6f627404ba8cf4633",
+      "build/sources/linux-b9b3e33b70b71/arch/sh/include/asm/cmpxchg-llsc.h": "0012886f91acac1840e83d60ee6fc136031fd094f1da9d979b9fe3b627efb240",
+      "build/sources/linux-b9b3e33b70b71/arch/sh/include/asm/barrier.h": "b23d724a473e091db004993c6a03a8313c8c3cc642f5555742e9f5fcb92bf073",
+      "build/sources/linux-b9b3e33b70b71/arch/alpha/include/asm/atomic.h": "fb2eab784adb702a92f31a05d4b7d9df3c8ada4035f1590b70631398ea90e688",
+      "build/sources/linux-b9b3e33b70b71/arch/alpha/include/asm/cmpxchg.h": "adf371620fb04a0a14ca1770f94f52d3fc851fb718ae8d86c2f8f889662c497e",
+      "build/sources/linux-b9b3e33b70b71/arch/alpha/include/asm/barrier.h": "3b1866060325fa59945a1e9872f0f0f41d816d4a05650c4a74226d79be5cacff",
+      "build/sources/linux-b9b3e33b70b71/arch/alpha/Kconfig": "6fba21503c4e3b90ad7c70cb0981ec9d4203547808b4f68e53f6cef06afd8062",
+      "build/sources/linux-b9b3e33b70b71/scripts/config": "a05f1a7669fd88820761bbeb1c3f321cc4c48e65624f9ae39572f58c264f1e85",
       "build/sources/linux-b9b3e33b70b71/include/asm-generic/barrier.h": "72ccf9fddb2f4f34161641eb4af082b6d01a2b256ad0bf80770858aecbdcf410",
       "build/sources/linux-b9b3e33b70b71/tools/memory-model/linux-kernel.def": "a04911d85fd86f5dbcf8ed436c7a2570fcc615f768c0c19b0a101f6212d2504c",
       "build/sources/linux-b9b3e33b70b71/tools/memory-model/linux-kernel.cat": "250207709250d308e0a0a6f391c4eda0bbf4876cbc55eccbfbcd495676a179be"
@@ -50,8 +66,10 @@
     "build_directory": "build/kernel/x86_64-ipc-refcount-c3",
     "config": "build/kernel/x86_64-ipc-refcount-c3/.config",
     "config_sha256": "c1d909f833602f5d8fb7fba52322c1f411c44fe4e41a44b52ac5d897e3f3033e",
+    "execution_scope": "smp-multicpu",
     "configuration": {
       "base_recipe": "x86_64_defconfig",
+      "mutations": [],
       "finalize_recipe": "olddefconfig"
     },
     "required_config": {
@@ -64,6 +82,12 @@
       "CONFIG_RCU_EXPERT": "n",
       "CONFIG_KCSAN": "n",
       "CONFIG_CC_IS_GCC": "y"
+    },
+    "allowed_diagnostics": {
+      "base-config": [],
+      "config-mutation": [],
+      "finalize-config": [],
+      "object": []
     },
     "make": {
       "binary": "/usr/bin/make",
@@ -140,8 +164,10 @@
     "build_directory": "build/kernel/arm64-ipc-refcount-c3",
     "config": "build/kernel/arm64-ipc-refcount-c3/.config",
     "config_sha256": "d28c867e07d4ade1ce14ea23b0b45707fde9459c526d492e0cdec042bcbf0219",
+    "execution_scope": "smp-multicpu",
     "configuration": {
       "base_recipe": "defconfig",
+      "mutations": [],
       "finalize_recipe": "olddefconfig"
     },
     "required_config": {
@@ -154,6 +180,12 @@
       "CONFIG_RCU_EXPERT": "n",
       "CONFIG_KCSAN": "absent",
       "CONFIG_CC_IS_GCC": "y"
+    },
+    "allowed_diagnostics": {
+      "base-config": [],
+      "config-mutation": [],
+      "finalize-config": [],
+      "object": []
     },
     "make": {
       "binary": "/usr/bin/make",
@@ -234,8 +266,10 @@
     "build_directory": "build/kernel/riscv64-ipc-refcount-c3",
     "config": "build/kernel/riscv64-ipc-refcount-c3/.config",
     "config_sha256": "fe92d0e05bc9be603ec62108f63b02ac7fbf2e20f08789903525fdea8f58f19b",
+    "execution_scope": "smp-multicpu",
     "configuration": {
       "base_recipe": "defconfig",
+      "mutations": [],
       "finalize_recipe": "olddefconfig"
     },
     "required_config": {
@@ -249,6 +283,12 @@
       "CONFIG_RCU_EXPERT": "n",
       "CONFIG_KCSAN": "absent",
       "CONFIG_CC_IS_GCC": "y"
+    },
+    "allowed_diagnostics": {
+      "base-config": [],
+      "config-mutation": [],
+      "finalize-config": [],
+      "object": []
     },
     "make": {
       "binary": "/usr/bin/make",
@@ -329,8 +369,10 @@
     "build_directory": "build/kernel/s390x-ipc-refcount-c3",
     "config": "build/kernel/s390x-ipc-refcount-c3/.config",
     "config_sha256": "a7676e53663ef8a496f2da61cd36b0ef67e62420d3fa50d233aa146cef155d01",
+    "execution_scope": "smp-multicpu",
     "configuration": {
       "base_recipe": "defconfig",
+      "mutations": [],
       "finalize_recipe": "olddefconfig"
     },
     "required_config": {
@@ -345,6 +387,12 @@
       "CONFIG_RCU_EXPERT": "n",
       "CONFIG_KCSAN": "n",
       "CONFIG_CC_IS_GCC": "y"
+    },
+    "allowed_diagnostics": {
+      "base-config": [],
+      "config-mutation": [],
+      "finalize-config": [],
+      "object": []
     },
     "make": {
       "binary": "/usr/bin/make",
@@ -415,6 +463,429 @@
         }
       }
     }
+  },
+  {
+    "id": "arm32-ipc-refcount-c3",
+    "arch": "arm",
+    "cross_compile": "/usr/bin/arm-linux-gnueabi-",
+    "jobs": 8,
+    "build_directory": "build/kernel/arm32-ipc-refcount-c3",
+    "config": "build/kernel/arm32-ipc-refcount-c3/.config",
+    "config_sha256": "9001027fc1668165f240e4012d7a0505953839ac85c128d15ab8e39daaf0b412",
+    "execution_scope": "smp-multicpu",
+    "configuration": {
+      "base_recipe": "multi_v7_defconfig",
+      "mutations": [],
+      "finalize_recipe": "olddefconfig"
+    },
+    "required_config": {
+      "CONFIG_ARM": "y",
+      "CONFIG_CPU_V7": "y",
+      "CONFIG_AEABI": "y",
+      "CONFIG_CPU_LITTLE_ENDIAN": "y",
+      "CONFIG_CPU_BIG_ENDIAN": "n",
+      "CONFIG_SMP": "y",
+      "CONFIG_SYSVIPC": "y",
+      "CONFIG_TREE_RCU": "y",
+      "CONFIG_PREEMPT_RCU": "absent",
+      "CONFIG_RCU_EXPERT": "n",
+      "CONFIG_KCSAN": "absent",
+      "CONFIG_CC_IS_GCC": "y"
+    },
+    "allowed_diagnostics": {
+      "base-config": [],
+      "config-mutation": [],
+      "finalize-config": [],
+      "object": []
+    },
+    "make": {
+      "binary": "/usr/bin/make",
+      "realpath": "/usr/bin/make",
+      "sha256": "27c9f6d806aee15882b01c2c61848f7aa75caa14bc7b6f608ba422f9e46a7d49",
+      "version_line": "GNU Make 4.4.1"
+    },
+    "compiler": {
+      "binary": "/usr/bin/arm-linux-gnueabi-gcc",
+      "realpath": "/usr/bin/arm-linux-gnueabi-gcc-15",
+      "sha256": "b417460992a88c2df65d82f82c6af452210d25e8def84d35701393063afd30bd",
+      "version_line": "arm-linux-gnueabi-gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+      "target": "arm-linux-gnueabi"
+    },
+    "objdump": {
+      "binary": "/usr/bin/arm-linux-gnueabi-objdump",
+      "realpath": "/usr/bin/arm-linux-gnueabi-objdump",
+      "sha256": "d37181d5d57396634f1548ac67bb95415b9c8cb8c0a3396340ff048c4085cd2d",
+      "version_line": "GNU objdump (GNU Binutils for Ubuntu) 2.46"
+    },
+    "configured_compile": {
+      "target": "ipc/util.o",
+      "object": "build/kernel/arm32-ipc-refcount-c3/ipc/util.o",
+      "command_file": "build/kernel/arm32-ipc-refcount-c3/ipc/.util.o.cmd",
+      "object_sha256": "17f07ba07cdcdaafe3eb4c9f65c872acf3bba7cc697acc8df7dec419059e4b20",
+      "command_sha256": "ebab24efed964ebcc4d097d9884724dcc04d47ac86913ea67b2f5ea78ca25c79",
+      "elf_class": 1,
+      "elf_data": 1,
+      "elf_machine": 40,
+      "required_command_tokens": [
+        "/usr/bin/arm-linux-gnueabi-gcc",
+        "-D__KERNEL__",
+        "-mlittle-endian",
+        "-D__LINUX_ARM_ARCH__=7",
+        "-std=gnu11",
+        "-mabi=aapcs-linux",
+        "-marm",
+        "-march=armv7-a",
+        "-msoft-float",
+        "-O2",
+        "-fno-allow-store-data-races",
+        "ipc/util.o",
+        "ipc/util.c"
+      ],
+      "functions": {
+        "ipc_rcu_getref": {
+          "section": ".text",
+          "value": "00000bc8",
+          "size": 108,
+          "disassembly_order": [
+            "<ipc_rcu_getref>:",
+            "cmp\tr0, #0",
+            "ldrex\tr12, [r3]",
+            "strexeq\tr1, r2, [r3]",
+            "R_ARM_CALL\trefcount_warn_saturate"
+          ]
+        },
+        "ipc_rcu_putref": {
+          "section": ".text",
+          "value": "00000c34",
+          "size": 84,
+          "disassembly_order": [
+            "<ipc_rcu_putref>:",
+            "dmb\tish",
+            "ldrex\tr2, [r3]",
+            "strex\tlr, ip, [r3]",
+            "cmp\tr2, #1",
+            "R_ARM_JUMP24\tcall_rcu"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": "powerpc32-smp-ipc-refcount-c3",
+    "arch": "powerpc",
+    "cross_compile": "/usr/bin/powerpc-linux-gnu-",
+    "jobs": 8,
+    "build_directory": "build/kernel/powerpc32-smp-ipc-refcount-c3",
+    "config": "build/kernel/powerpc32-smp-ipc-refcount-c3/.config",
+    "config_sha256": "2ce33c1da81f6882148455cd62c55ecb5a7f8ebe83a11b0ba452ed3cc50ec1e7",
+    "execution_scope": "smp-multicpu",
+    "configuration": {
+      "base_recipe": "chrp32_defconfig",
+      "mutations": [],
+      "finalize_recipe": "olddefconfig"
+    },
+    "required_config": {
+      "CONFIG_PPC": "y",
+      "CONFIG_PPC32": "y",
+      "CONFIG_PPC64": "n",
+      "CONFIG_CPU_BIG_ENDIAN": "y",
+      "CONFIG_SMP": "y",
+      "CONFIG_SYSVIPC": "y",
+      "CONFIG_TREE_RCU": "y",
+      "CONFIG_PREEMPT_RCU": "absent",
+      "CONFIG_RCU_EXPERT": "n",
+      "CONFIG_KCSAN": "n",
+      "CONFIG_CC_IS_GCC": "y"
+    },
+    "allowed_diagnostics": {
+      "base-config": [],
+      "config-mutation": [],
+      "finalize-config": [],
+      "object": []
+    },
+    "make": {
+      "binary": "/usr/bin/make",
+      "realpath": "/usr/bin/make",
+      "sha256": "27c9f6d806aee15882b01c2c61848f7aa75caa14bc7b6f608ba422f9e46a7d49",
+      "version_line": "GNU Make 4.4.1"
+    },
+    "compiler": {
+      "binary": "/usr/bin/powerpc-linux-gnu-gcc",
+      "realpath": "/usr/bin/powerpc-linux-gnu-gcc-15",
+      "sha256": "ff435633e9d6087fa654443fea45a94dd9c4edfcbe691d10158b802a0c3cc363",
+      "version_line": "powerpc-linux-gnu-gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+      "target": "powerpc-linux-gnu"
+    },
+    "objdump": {
+      "binary": "/usr/bin/powerpc-linux-gnu-objdump",
+      "realpath": "/usr/bin/powerpc-linux-gnu-objdump",
+      "sha256": "98cf195e4d82c381b77076acba20a7deba5d31c304c220f762eacf292e9ab79d",
+      "version_line": "GNU objdump (GNU Binutils for Ubuntu) 2.46"
+    },
+    "configured_compile": {
+      "target": "ipc/util.o",
+      "object": "build/kernel/powerpc32-smp-ipc-refcount-c3/ipc/util.o",
+      "command_file": "build/kernel/powerpc32-smp-ipc-refcount-c3/ipc/.util.o.cmd",
+      "object_sha256": "68021ae57fdbf7ce71efe35877ca5d98fdd09fe7160e7f0e1486bd82a469fad3",
+      "command_sha256": "ca3a010757d7d2f25c024848454e5387a4148623cc75b9bc7e19d49dcca17898",
+      "elf_class": 1,
+      "elf_data": 2,
+      "elf_machine": 20,
+      "required_command_tokens": [
+        "/usr/bin/powerpc-linux-gnu-gcc",
+        "-D__KERNEL__",
+        "-mbig-endian",
+        "-m32",
+        "-std=gnu11",
+        "-mcpu=powerpc",
+        "-O2",
+        "-fno-allow-store-data-races",
+        "ipc/util.o",
+        "ipc/util.c"
+      ],
+      "functions": {
+        "ipc_rcu_getref": {
+          "section": ".text",
+          "value": "00001178",
+          "size": 132,
+          "disassembly_order": [
+            "<ipc_rcu_getref>:",
+            "cmpwi   r9,0",
+            "lwarx   r7,0,r10",
+            "stwcx.  r8,0,r10",
+            "R_PPC_REL24\trefcount_warn_saturate"
+          ]
+        },
+        "ipc_rcu_putref": {
+          "section": ".text",
+          "value": "000011fc",
+          "size": 84,
+          "disassembly_order": [
+            "<ipc_rcu_putref>:",
+            "hwsync",
+            "lwarx   r10,0,r3",
+            "stwcx.  r8,0,r3",
+            "cmpwi   r10,1",
+            "R_PPC_REL24\tcall_rcu"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": "sh-smp-ipc-refcount-c3",
+    "arch": "sh",
+    "cross_compile": "/usr/bin/sh4-linux-gnu-",
+    "jobs": 8,
+    "build_directory": "build/kernel/sh-smp-ipc-refcount-c3",
+    "config": "build/kernel/sh-smp-ipc-refcount-c3/.config",
+    "config_sha256": "e53d91d1ed9b63b39c7abf0a3c9711c88c0ef0ffb30d17309720098cd9538047",
+    "execution_scope": "smp-multicpu",
+    "configuration": {
+      "base_recipe": "shx3_defconfig",
+      "mutations": [],
+      "finalize_recipe": "olddefconfig"
+    },
+    "required_config": {
+      "CONFIG_SUPERH": "y",
+      "CONFIG_CPU_SH4": "y",
+      "CONFIG_CPU_SH4A": "y",
+      "CONFIG_CPU_SUBTYPE_SHX3": "y",
+      "CONFIG_CPU_LITTLE_ENDIAN": "y",
+      "CONFIG_CPU_BIG_ENDIAN": "n",
+      "CONFIG_SMP": "y",
+      "CONFIG_SYSVIPC": "y",
+      "CONFIG_TREE_RCU": "y",
+      "CONFIG_PREEMPT_RCU": "y",
+      "CONFIG_RCU_EXPERT": "n",
+      "CONFIG_KCSAN": "absent",
+      "CONFIG_CC_IS_GCC": "y"
+    },
+    "allowed_diagnostics": {
+      "base-config": [],
+      "config-mutation": [],
+      "finalize-config": [],
+      "object": [
+        "<stdin>:1519:2: warning: #warning syscall clone3 not implemented [-Wcpp]"
+      ]
+    },
+    "make": {
+      "binary": "/usr/bin/make",
+      "realpath": "/usr/bin/make",
+      "sha256": "27c9f6d806aee15882b01c2c61848f7aa75caa14bc7b6f608ba422f9e46a7d49",
+      "version_line": "GNU Make 4.4.1"
+    },
+    "compiler": {
+      "binary": "/usr/bin/sh4-linux-gnu-gcc",
+      "realpath": "/usr/bin/sh4-linux-gnu-gcc-15",
+      "sha256": "df27248ebba071edec01891da2a3f7e197b6e30676f5c2ccd42eab505537f353",
+      "version_line": "sh4-linux-gnu-gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+      "target": "sh4-linux-gnu"
+    },
+    "objdump": {
+      "binary": "/usr/bin/sh4-linux-gnu-objdump",
+      "realpath": "/usr/bin/sh4-linux-gnu-objdump",
+      "sha256": "17474854a45fcd1f6a600e7eac6f471abe96cc0c8a7a11844bded0d9ac2b74b9",
+      "version_line": "GNU objdump (GNU Binutils for Ubuntu) 2.46"
+    },
+    "configured_compile": {
+      "target": "ipc/util.o",
+      "object": "build/kernel/sh-smp-ipc-refcount-c3/ipc/util.o",
+      "command_file": "build/kernel/sh-smp-ipc-refcount-c3/ipc/.util.o.cmd",
+      "object_sha256": "b1fef80ad64b4fdd77542c261c027a05d260b90d92ff53b8454665f8a8084791",
+      "command_sha256": "6d0f4cdc9fa830f144698d6fd6fea07c4e9d529495ae28dfd273117bb9947d01",
+      "elf_class": 1,
+      "elf_data": 1,
+      "elf_machine": 42,
+      "required_command_tokens": [
+        "/usr/bin/sh4-linux-gnu-gcc",
+        "-D__KERNEL__",
+        "-std=gnu11",
+        "-m4",
+        "-m4a",
+        "-ml",
+        "-Wa,-isa=sh4a-up",
+        "-O2",
+        "-fno-allow-store-data-races",
+        "ipc/util.o",
+        "ipc/util.c"
+      ],
+      "functions": {
+        "ipc_rcu_getref": {
+          "section": ".text",
+          "value": "00000c1c",
+          "size": 80,
+          "disassembly_order": [
+            "<ipc_rcu_getref>:",
+            "tst\tr1,r1",
+            "movli.l\t@r3,r0",
+            "movco.l\tr0,@r3",
+            "synco",
+            "R_SH_DIR32\trefcount_warn_saturate"
+          ]
+        },
+        "ipc_rcu_putref": {
+          "section": ".text",
+          "value": "00000c6c",
+          "size": 84,
+          "disassembly_order": [
+            "<ipc_rcu_putref>:",
+            "movli.l\t@r1,r0",
+            "movco.l\tr0,@r1",
+            "synco",
+            "cmp/eq\t#1,r0",
+            "R_SH_DIR32\tcall_rcu"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": "alpha-smp-ipc-refcount-c3",
+    "arch": "alpha",
+    "cross_compile": "/usr/bin/alpha-linux-gnu-",
+    "jobs": 8,
+    "build_directory": "build/kernel/alpha-smp-ipc-refcount-c3",
+    "config": "build/kernel/alpha-smp-ipc-refcount-c3/.config",
+    "config_sha256": "21d6b92b20bfb82d67380adc6624e767aeacd54be1bec0950e3ccca309816902",
+    "execution_scope": "smp-multicpu",
+    "configuration": {
+      "base_recipe": "defconfig",
+      "mutations": [
+        {
+          "symbol": "SMP",
+          "operation": "enable"
+        }
+      ],
+      "finalize_recipe": "olddefconfig"
+    },
+    "required_config": {
+      "CONFIG_ALPHA": "y",
+      "CONFIG_ALPHA_GENERIC": "y",
+      "CONFIG_64BIT": "y",
+      "CONFIG_SMP": "y",
+      "CONFIG_SYSVIPC": "y",
+      "CONFIG_TREE_RCU": "y",
+      "CONFIG_PREEMPT_RCU": "absent",
+      "CONFIG_RCU_EXPERT": "n",
+      "CONFIG_KCSAN": "absent",
+      "CONFIG_CC_IS_GCC": "y"
+    },
+    "allowed_diagnostics": {
+      "base-config": [],
+      "config-mutation": [],
+      "finalize-config": [],
+      "object": []
+    },
+    "make": {
+      "binary": "/usr/bin/make",
+      "realpath": "/usr/bin/make",
+      "sha256": "27c9f6d806aee15882b01c2c61848f7aa75caa14bc7b6f608ba422f9e46a7d49",
+      "version_line": "GNU Make 4.4.1"
+    },
+    "compiler": {
+      "binary": "/usr/bin/alpha-linux-gnu-gcc",
+      "realpath": "/usr/bin/alpha-linux-gnu-gcc-15",
+      "sha256": "498e83234f815b51d56d7bdad9605c54313e41f40700d0c3c4da7a75944125c3",
+      "version_line": "alpha-linux-gnu-gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+      "target": "alpha-linux-gnu"
+    },
+    "objdump": {
+      "binary": "/usr/bin/alpha-linux-gnu-objdump",
+      "realpath": "/usr/bin/alpha-linux-gnu-objdump",
+      "sha256": "7ff2a14d9131d29f719c2d022880e5c90bf786551749316c3c9c214178dc48b8",
+      "version_line": "GNU objdump (GNU Binutils for Ubuntu) 2.46"
+    },
+    "configured_compile": {
+      "target": "ipc/util.o",
+      "object": "build/kernel/alpha-smp-ipc-refcount-c3/ipc/util.o",
+      "command_file": "build/kernel/alpha-smp-ipc-refcount-c3/ipc/.util.o.cmd",
+      "object_sha256": "cb63e40524cedb288279cb14d469a7a851046dead44dda22d45be8066c8986b5",
+      "command_sha256": "8b288c9b4da9bb4cf575b49992c542e31c285dd264db6d90f6434ad640ae180c",
+      "elf_class": 2,
+      "elf_data": 1,
+      "elf_machine": 36902,
+      "required_command_tokens": [
+        "/usr/bin/alpha-linux-gnu-gcc",
+        "-D__KERNEL__",
+        "-std=gnu11",
+        "-mno-fp-regs",
+        "-mcpu=ev56",
+        "-mtune=ev6",
+        "-Wa,-mev6",
+        "-O2",
+        "-fno-allow-store-data-races",
+        "ipc/util.o",
+        "ipc/util.c"
+      ],
+      "functions": {
+        "ipc_rcu_getref": {
+          "section": ".text",
+          "value": "0000000000000f90",
+          "size": 168,
+          "disassembly_order": [
+            "<ipc_rcu_getref>:",
+            "mb",
+            "ldl_l\tt2,0(a0)",
+            "stl_c\tt3,0(a0)",
+            "ELF_LITERAL\trefcount_warn_saturate"
+          ]
+        },
+        "ipc_rcu_putref": {
+          "section": ".text",
+          "value": "0000000000001040",
+          "size": 164,
+          "disassembly_order": [
+            "<ipc_rcu_putref>:",
+            "mb",
+            "ldl_l\tt0,80(a0)",
+            "stl_c\tt1,80(a0)",
+            "cmpeq\tt0,0x1,t1",
+            "ELF_LITERAL\tcall_rcu"
+          ]
+        }
+      }
+    }
   }
   ],
   "property": {
@@ -432,7 +903,7 @@
     "stability_argument": "The pinned IPC contract requires caller locking; the property assumes that prerequisite keeps ptr and its refcount storage valid for both selected operations.",
     "lifetime_argument": "The final decrement schedules RCU destruction only when refcount_dec_and_test() observes the 1-to-0 transition; refcount_inc_not_zero() cannot acquire a reference from zero.",
     "model_argument": "With initial value one and exactly one competing get, the refcount get loop can succeed only in its first compare/exchange from 1 to 2; a failed compare means the sole decrement already installed zero, so the single relaxed cmpxchg is behaviorally exact for this outcome.",
-    "implementation_argument": "The pinned LKMM treats the selected updates as indivisible RMWs. Configured x86-64, arm64, riscv64 and s390x objects preserve that implementation shape through their native atomic compare/exchange and fetch-sub paths before the final-put call_rcu branch; emitted alternatives are checked rather than collapsed.",
+    "implementation_argument": "The pinned LKMM treats the selected updates as indivisible RMWs. Configured x86-64, arm64, riscv64, s390x, ARM32, PowerPC32, SuperH and Alpha SMP objects preserve that implementation shape through their native atomic compare/exchange and fetch-sub paths before the final-put call_rcu branch; emitted alternatives are checked rather than collapsed.",
     "exclusions": [
       "The caller-locking and pointer-stability prerequisite is assumed, not proved; an attempt through already reclaimed storage is outside the property.",
       "The initial refcount is exactly one, there is one selected get and one selected put, and no third refcount update is modeled.",
@@ -440,7 +911,7 @@
       "Saturation, overflow, underflow, warning paths and values outside zero, one and two are excluded.",
       "The acquire-after-control-dependency orders later destruction work but cannot change the selected same-refcount mutual-success outcome, so cross-object ordering is not claimed.",
       "The unsafe resurrection case is a detecting control and is permanently ineligible as verification evidence.",
-      "No architecture implementation other than the configured SMP x86-64, arm64, riscv64 and s390x profiles is accepted by this source-linked pilot; every other architecture remains outside the claim.",
+      "No architecture implementation other than the eight configured SMP x86-64, arm64, riscv64, s390x, ARM32, PowerPC32, SuperH and Alpha profiles is accepted by this source-linked pilot; every other architecture remains outside the claim.",
       "No progress, fairness, retry bound, lock-freedom, wait-freedom, whole-IPC correctness, whole-RCU correctness or whole-kernel race-freedom property is claimed."
     ]
   },
