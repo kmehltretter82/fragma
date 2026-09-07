@@ -8,11 +8,11 @@
   },
   "base": {
     "target": "linux-ipc-refcount-lifetime-multiarch-c3",
-    "schema_version": 5,
-    "evidence_checks": 848,
-    "input_identity_count": 77,
-    "raw_artifact_count": 331,
-    "architecture_mapping_count": 9,
+    "schema_version": 6,
+    "evidence_checks": 937,
+    "input_identity_count": 85,
+    "raw_artifact_count": 363,
+    "architecture_mapping_count": 10,
     "kernel_verification_count": 2,
     "progress_kernel_verification_count": 1,
     "progress_implementation_mapping_count": 3,
@@ -284,12 +284,43 @@
       "verification_candidate": false,
       "decision": "not_promoted",
       "blocking_reason": "The selected LDL_L/STL_C compare/exchange retries through a compiler subsection trampoline after conditional-store failure without a profile-bound finite failure guarantee."
+    },
+    {
+      "id": "loongarch64-clang-ipc-refcount-c3",
+      "architecture": "loongarch64",
+      "implementation_kind": "llsc_get_with_native_amo_put",
+      "source_checks": [
+        {
+          "path": "build/sources/linux-b9b3e33b70b71/arch/loongarch/include/asm/cmpxchg.h",
+          "sha256": "d4379ee53c45ad865983f292e4b9ba3fc8a6a556a0ef8d2fb3eb098eabe2bdf6",
+          "ordered_tokens": [
+            "#define __cmpxchg_asm(ld, st, m, old, new)",
+            "1:\t\" ld",
+            "bne\t%0, %z3, 2f",
+            "st \"\t$t0",
+            "beqz\t$t0, 1b",
+            "return __cmpxchg_asm(\"ll.w\", \"sc.w\""
+          ]
+        }
+      ],
+      "disassembly_order": [
+        "<ipc_rcu_getref>:",
+        "ll.w\t$a2, $a0, 0",
+        "bne\t$a2, $a1",
+        "sc.w\t$t0, $a0, 0",
+        "beqz\t$t0, -16",
+        "dbar\t1792",
+        "bnez\t$a3, -52"
+      ],
+      "verification_candidate": false,
+      "decision": "not_promoted",
+      "blocking_reason": "The selected LoongArch LL.W/SC.W get compare/exchange retries after conditional-store failure without a profile-bound finite failure guarantee; the AMO final-decrement path does not establish get-loop progress."
     }
   ],
   "exclusions": [
     "No LL/SC profile is promoted to a kernel progress property by this capability audit.",
     "The hypothetical two-failure bound is diagnostic only and is not asserted of any CPU, emulator, compiler output or kernel configuration.",
-    "Native LSE and Zacas subpaths do not promote their mixed runtime-selectable ARM64 and RISC-V profiles while an unaccepted LL/SC path remains possible.",
+    "Native LSE and Zacas subpaths do not promote their mixed runtime-selectable ARM64 and RISC-V profiles while an unaccepted LL/SC path remains possible; the LoongArch final-put AMO likewise does not promote its LL/SC get path.",
     "No scheduler fairness, unbounded lock-free progress, wait-freedom, interrupt/NMI progress, RCU progress or whole-kernel liveness is claimed."
   ]
 }

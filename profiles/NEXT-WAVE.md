@@ -16,6 +16,13 @@ Clang 21.1.8 is present at `/usr/bin/clang` (resolved to
 Its unflagged reported target is x86-64, not evidence of a configured Hexagon
 profile. No kernel object or model was generated in this readiness check.
 
+The later C3 IPC work now has one deliberately narrower exception to that
+historical readiness result: a genuine `loongson64_defconfig` SMP
+`ipc/util.o` is accepted as a source/compiler/disassembly mapping through the
+explicit Clang/LLVM 21.1.8 target route. This does not provide generated
+Frama-C target headers, machine-model calibration, L1, L2 or a general
+LoongArch profile, so LoongArch remains in this architecture-support queue.
+
 The subsequent [LLVM metadata assessment](../build/llvm-readiness-20260906/REPORT.md)
 confirms the installed compiler, linker and LLVM utility suite at version
 21.1.8. Explicit target and empty-input macro queries succeed for the four
@@ -59,7 +66,7 @@ include the following useful candidates:
 | Candidate | Kernel target argument | Additional work |
 | --- | --- | --- |
 | Hexagon | `hexagon-linux-musl` | Compiler/build/header identities, full candidate generation and source-derived compiler/analyzer layout agreement exist. Resolve extended-alignment mismatch, integrate the profile route, then pass genuine-kernel L1/L2; requested/observed triples remain separately bound. |
-| LoongArch | `loongarch64-linux-gnusf` | Add a distinct LLVM profile rather than relabeling the planned GCC profile; check ABI/configuration against generated headers. |
+| LoongArch | `loongarch64-linux-gnusf` | The distinct LLVM C3 IPC object mapping is now checked. Keep it separate from the planned GCC profile; add generated-header ABI/model calibration and genuine L1/L2 before general activation. |
 | MIPS | `mipsel-linux-gnu` | Keep word size and endian selection as actual configuration inputs, not inferred solely from this triple. |
 | Sparc64 | `sparc64-linux-gnu` | The documented LLVM route also needs external GNU assembler support; that cross-prefix is missing locally. |
 

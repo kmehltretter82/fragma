@@ -54,7 +54,7 @@ split once-access control permits the lost update; a separate pair distinguishes
 fully ordered and relaxed increment-return operations. This also verifies
 correct selected code rather than finding a defect. The subsequent
 [System V IPC refcount lifetime/progress pilot](docs/CONCURRENCY-C3-REFCOUNT-20260907.md)
-passes 848/848 checks and accepts two separately bounded properties. The
+passes 937/937 checks and accepts two separately bounded properties. The
 lifetime property says that, from an initial sole reference, the
 locking-stabilized final put cannot schedule RCU destruction while the
 concurrent get-unless-zero also succeeds. Its unsafe unconditional-increment
@@ -63,27 +63,34 @@ progress property checks all 340 declared interference schedules and establishes
 termination within four strong-CAS attempts after at most three observations
 and quiescence. Its stale-expected, spurious-failure and unbounded-interference
 controls expose the omitted behaviors.
-The same real `ipc/util.o` mapping now passes on nine configured SMP builds:
+The same real `ipc/util.o` mapping now passes on ten configured SMP builds:
 x86-64, arm64, riscv64, big-endian s390x, ARMv7, big-endian PowerPC32, SuperH
-and Alpha, plus UML x86-64. The UML profile separately binds `ARCH=um`,
+and Alpha, LoongArch64 and UML x86-64. LoongArch64 uses the pinned Clang/LLVM
+21.1.8 target route and produces a genuine ELF64 machine-258 object. The UML
+profile separately binds `ARCH=um`,
 `SUBARCH=x86_64`, an SMP config mutation, its x86-header route and its own
 object. Native atomic paths, emitted alternatives, ELF32/ELF64 symbols and build
-diagnostics are checked per architecture. The lifetime mapping covers all nine;
+diagnostics are checked per architecture. The lifetime mapping covers all ten;
 the progress implementation mapping is limited to the checked native/UML x86-64
 `CMPXCHG` and s390x `CS` paths and makes no LL/SC-liveness claim. The subsequent
 [LL/SC capability audit](docs/CONCURRENCY-C3-LLSC-PROGRESS-20260907.md) passes
-505/505 checks after revalidating the fresh 848-check IPC base. It checks pinned
+556/556 checks after revalidating the fresh 937-check IPC base. It checks pinned
 documentation, source and complete-object retry paths for ARM64, RISC-V, ARM32,
-PowerPC32, SuperH and Alpha, but promotes zero properties and zero mappings.
+PowerPC32, SuperH, Alpha and LoongArch64, but promotes zero properties and zero
+mappings. LoongArch's AMO final decrement does not establish progress for its
+LL/SC get retry.
 Its 120-schedule finite diagnostic is explicitly hypothetical; an unbounded
 conditional-store-failure control detects a one-state retry cycle. This is a
 completed admission evaluation, not LL/SC progress verification or a new bug.
+The [LoongArch mapping handoff](docs/CONCURRENCY-C3-LOONGARCH-20260907.md)
+records its exact Clang/LLVM/configuration/object boundary and the remaining
+general machine-model work.
 The available m68k profile is UP only and was deliberately not promoted into
 the SMP claim. Unbounded progress, architecture-backed LL/SC liveness, broader
 lockless lifetime behavior and remaining architecture mappings keep C3
 incomplete. Further Hexagon work remains parked; these
-additions do not change architecture/profile or the main 25-target suite
-acceptance counts.
+additions do not activate a general Frama-C LoongArch machine profile or change
+the main 25-target suite acceptance counts.
 
 The IPC CLI addition was followed by current-input renewal of the C0 result,
 C1 audit and dependency-specific stale control, both C2 pilots, the C3 LKMM
@@ -94,24 +101,26 @@ in `c0-...-09`, `c1-...-05`, `c1-stale-control-...-06`, `c2-...-08`,
 rejects exactly seven pthread-dependent cases while preserving the two
 builtins-only cases. A direct readback finds no input identity drift in those
 positive receipts, the preceding `c3-ipc-refcount-...-03` lifetime pilot or the
-current `c3-ipc-refcount-...-10` receipt. The accepted eight-profile predecessor
+current `c3-ipc-refcount-...-11` receipt. The accepted eight-profile predecessor
 is `c3-ipc-refcount-...-06`; run `-07` added the ninth UML mapping, `-08` added
 bounded x86 progress, `-09` added the separately checked s390 `CS` path, and
-`-10` renews all 848 gates after the LL/SC CLI addition. LL/SC audit run `-01`
+`-10` renews all 848 gates after the LL/SC CLI addition. Run `-11` adds the
+distinct LLVM LoongArch64 mapping and reruns the full ten-profile base, passing
+937/937 with 85 inputs and 363 retained artifacts. LL/SC audit run `-01`
 failed closed at 484/486 because of a wrong tree pin and the correctly stale
 base CLI identity; run `-02` uses the corrected pin and fresh `-10` base and
 passes 486/486; final review then found that the live object identity was only
 recorded rather than compared with the base receipt. Run `-03` adds all twelve
 object hash/size gates plus seven exact base-semantic gates and passes 505/505.
-Current run `-04` adds direct identities for both reused helper modules and
-retains the same 505/505 result. Run
-`-04` is retained as a 736/738 failed matcher attempt caused only by PowerPC
-objdump whitespace, and
-the mechanically green `-05` is superseded because final readback caught its
-stale four-profile exclusion sentence.
+Run `-04` adds direct identities for both reused helper modules and retains the
+same 505/505 result. Current run `-05` revalidates the enlarged base, assesses
+the seventh LoongArch LL/SC get path and passes 556/556 with zero promotion.
+The earlier IPC run `-04` is retained as a 736/738 failed matcher attempt caused
+only by PowerPC objdump whitespace, and IPC run `-05` is superseded because
+final readback caught its stale four-profile exclusion sentence.
 
-All [1,000 project tests](results/tests-concurrency-c3-llsc-final-20260907.log)
-pass in the LL/SC-audit tree, with 20 conditional skips. The
+All [1,000 project tests](results/tests-concurrency-c3-loongarch-final-20260907.log)
+pass after the LoongArch extension, with 20 conditional skips. The
 IPC/refcount module has 22 focused tests, including exact profile inventory,
 ELF32/Alpha symbol parsing, diagnostic classification, native atomic-disassembly
 requirements, exhaustive progress outcomes and fail-closed scope controls. Ten
@@ -390,7 +399,7 @@ a proof of the whole kernel or automatic verification of every caller.
 | RISC-V encoders | Current source/model/proof gates for seven helpers and five project witnesses: 119 ordinary goals, 119 dependencies and 47 postconditions. | Helper-specific calibration, kernel callers and a documented encoder L2 scope. |
 | ARM64 scalar extraction | Current runtime-safety gates for two cpuid helpers: six ordinary goals and ten selected dependencies with genuine-header checks. | Add functional contracts/calibration and verify kernel callers. |
 | Kernel bug review | RV32 `load_unaligned_zeropad()` wrong result dynamically reproduced in QEMU; identical-config A/B passes after a two-line fix; send-ready patch and exact evidence audit. | Human submission decision, then upstream review/revision; broaden review without treating alarms as bugs. |
-| Concurrency | C0/C1 infrastructure, limited C2 mutex/IRQ pilots, a 92-check LKMM baseline, a 135-check release/acquire pilot, a 162-check atomic/RMW pilot and an 848-check IPC refcount lifetime/progress pilot are accepted. Six narrow kernel concurrency properties now exist: two access-protection claims, trace tgid-map publication ordering, module-statistics no-lost-update atomicity, IPC final-put/get-unless-zero exclusion with nine checked SMP mappings, and bounded-quiescent strong-CAS retry progress with native/UML x86-64 and s390x mappings. A separate 505-check audit evaluates all six existing LL/SC-bearing profiles and promotes none. | C3 architecture-backed unbounded/LL/SC progress, broader lockless lifetime behavior and remaining architecture mappings; then C4 RCU. Broader IRQ classes, functional protocols and the preserved unlocked HDQ accesses remain open. |
+| Concurrency | C0/C1 infrastructure, limited C2 mutex/IRQ pilots, a 92-check LKMM baseline, a 135-check release/acquire pilot, a 162-check atomic/RMW pilot and a 937-check IPC refcount lifetime/progress pilot are accepted. Six narrow kernel concurrency properties now exist: two access-protection claims, trace tgid-map publication ordering, module-statistics no-lost-update atomicity, IPC final-put/get-unless-zero exclusion with ten checked SMP mappings, and bounded-quiescent strong-CAS retry progress with native/UML x86-64 and s390x mappings. A separate 556-check audit evaluates all seven existing LL/SC-bearing profiles and promotes none. | C3 architecture-backed unbounded/LL/SC progress, broader lockless lifetime behavior and remaining architecture mappings; then C4 RCU. Broader IRQ classes, functional protocols and the preserved unlocked HDQ accesses remain open. |
 
 The registry's 24 distinct kernel functions reach the plan's initial numerical
 range, not its proof/coverage acceptance. The current report has 18 functions
@@ -645,10 +654,10 @@ No blanket system-package command is required for continuing the current work.
 The bounded review, RV32 A/B handoff, limited C2 pilot, C3 LKMM baseline,
 source-linked release/acquire pilot, atomic/RMW pilot and IPC refcount
 lifetime/bounded-progress pilot are complete at their narrow boundaries. The
-six-profile LL/SC admission evaluation is also complete, with zero promotion.
+seven-profile LL/SC admission evaluation is also complete, with zero promotion.
 Immediate choices are human review/submission of the patch and further C3
 protocol work or architecture-backed progress evidence.
-Mappings for architectures outside the refcount pilot's nine-profile set,
+Mappings for architectures outside the refcount pilot's ten-profile set,
 interrupt classes and functional protocols remain explicit extensions
 rather than inherited claims. The later
 milestones are still open backlog; Hexagon stays

@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class ConcurrencyC3LlscProgressTests(unittest.TestCase):
-    def test_manifest_has_six_fail_closed_profile_assessments(self):
+    def test_manifest_has_seven_fail_closed_profile_assessments(self):
         manifest = concurrency_c3_llsc_progress.load_manifest(ROOT)
         self.assertEqual(
             [profile["id"] for profile in manifest["profiles"]],
@@ -23,6 +23,7 @@ class ConcurrencyC3LlscProgressTests(unittest.TestCase):
                 "powerpc32-smp-ipc-refcount-c3",
                 "sh-smp-ipc-refcount-c3",
                 "alpha-smp-ipc-refcount-c3",
+                "loongarch64-clang-ipc-refcount-c3",
             ],
         )
         self.assertTrue(all(
@@ -48,7 +49,7 @@ class ConcurrencyC3LlscProgressTests(unittest.TestCase):
         excluded = " ".join(manifest["exclusions"]).lower()
         for boundary in (
             "no ll/sc profile", "hypothetical", "native lse", "zacas",
-            "scheduler fairness", "wait-freedom", "rcu progress",
+            "loongarch", "scheduler fairness", "wait-freedom", "rcu progress",
             "whole-kernel",
         ):
             with self.subTest(boundary=boundary):

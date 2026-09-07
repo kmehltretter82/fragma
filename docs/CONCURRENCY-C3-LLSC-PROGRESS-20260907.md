@@ -1,17 +1,18 @@
 # C3 LL/SC progress capability audit — 2026-09-07
 
-Status: accepted as a fail-closed capability evaluation of six existing IPC
+Status: accepted as a fail-closed capability evaluation of seven existing IPC
 implementation profiles. It accepts **zero** new kernel progress properties and
 promotes **zero** LL/SC mappings. C3 remains incomplete.
 
 The accepted evidence is
-[`results/concurrency-c3-llsc-progress-20260907-04`](../results/concurrency-c3-llsc-progress-20260907-04/SUMMARY.md).
-All 505 checks pass. The receipt binds 18 direct inputs, retains 27 raw audit
-artifacts, and independently revalidates all 77 inputs and 331 raw artifacts of
+[`results/concurrency-c3-llsc-progress-20260907-05`](../results/concurrency-c3-llsc-progress-20260907-05/SUMMARY.md).
+All 556 checks pass. The receipt binds 19 direct inputs, retains 31 raw audit
+artifacts, and independently revalidates all 85 inputs and 363 raw artifacts of
 the fresh
-[`concurrency-c3-ipc-refcount-20260907-10`](../results/concurrency-c3-ipc-refcount-20260907-10/SUMMARY.md)
+[`concurrency-c3-ipc-refcount-20260907-11`](../results/concurrency-c3-ipc-refcount-20260907-11/SUMMARY.md)
 base. A separate readback of the accepted LL/SC receipt found no mismatch across
-its 45 direct input and retained-artifact records.
+its 50 direct input and retained-artifact records; the same readback found no
+mismatch across the base receipt's 448 records.
 
 This is a useful negative result. The existing bounded strong-CAS source model
 does not automatically establish machine-level progress on implementations that
@@ -41,12 +42,15 @@ The audit checks source order and freshly disassembles the complete configured
 | PowerPC32 | `lwarx`/`stwcx.` loop | not promoted |
 | SuperH | `movli.l`/`movco.l` loop | not promoted |
 | Alpha | `ldl_l`/`stl_c` loop through a cold subsection trampoline | not promoted |
+| LoongArch64 | `ll.w`/`sc.w` get loop; separate AMO final decrement | not promoted |
 
 ARM64 and RISC-V are mixed profiles: a native-CAS subpath cannot promote the
 whole configured object while a runtime-selectable LL/SC alternative remains.
-The other four selected objects directly contain LL/SC retries. None of the six
-profile records supplies a finite architecture-backed store-conditional failure
-bound. Alpha is intentionally checked with full-object disassembly because its
+ARM32, PowerPC32, SuperH and Alpha directly contain LL/SC retries. LoongArch64's
+selected get also directly retries `ll.w`/`sc.w`; its `amadd_db.w` final-put path
+does not supply a bound for that get loop. None of the seven profile records
+supplies a finite architecture-backed store-conditional failure bound. Alpha is
+intentionally checked with full-object disassembly because its
 failed-`stl_c` edge branches outside the reported function extent to a compiler
 subsection trampoline and then back into `ipc_rcu_getref()`.
 
@@ -76,7 +80,7 @@ bound from being mistaken for unbounded progress evidence.
 
 Accepted:
 
-- all six existing LL/SC-bearing IPC profiles received a source and emitted-
+- all seven existing LL/SC-bearing IPC profiles received a source and emitted-
   control-flow capability assessment;
 - their current admission decision is `not_promoted`;
 - the artificial finite diagnostic and unbounded-failure control have their
@@ -93,7 +97,8 @@ Not accepted:
   progress, interrupt/NMI progress, RCU progress or whole-kernel liveness; or
 - a Linux bug. The checked production code is not classified as defective.
 
-The audit uses pinned kernel source, configured object files, GNU disassemblers
+The audit uses pinned kernel source, configured object files, target-specific
+GNU/LLVM disassemblers
 and a small exhaustive finite-state diagnostic. It is complementary to the
 Mthread+Eva capability work; it is not a new Mthread model or a claim that
 Mthread supplies architecture memory-order or reservation-progress semantics.
@@ -109,15 +114,17 @@ the base readback rule was not used as a shortcut. Run `-02` then passed 486/486
 but final evidence review found that each live object identity was recorded
 without comparing it to the object accepted by the base. Run `-03` adds
 twelve object hash/size comparisons and seven exact base-semantic gates, passing
-505/505. Final run `-04` directly binds the two reused process/artifact helper
-modules in addition to their upstream-receipt identities; it also passes 505/505
-and is current. The conclusion did not change.
+505/505. Run `-04` directly binds the two reused process/artifact helper modules
+in addition to their upstream-receipt identities; it also passes 505/505 at the
+former six-profile scope. Current run `-05` consumes the fresh schema-6,
+ten-profile IPC base, adds LoongArch source/object control flow and passes
+556/556. The conclusion remains zero progress promotion.
 
 Ten focused tests cover exact profile inventory, source/document identities,
 finite and cyclic outcomes, promotion rejection, fresh full-object disassembly,
 path traversal, result-directory symlinks, output non-overwrite, timeout typing
 and zero-promotion summary wording. The full project run passes
-[1,000 tests](../results/tests-concurrency-c3-llsc-final-20260907.log),
+[1,000 tests](../results/tests-concurrency-c3-loongarch-final-20260907.log),
 with 20 existing conditional skips.
 
 No package was installed, no `sudo` command was used, no module was loaded and
@@ -141,4 +148,4 @@ LL/SC runtime alternatives where configuration and CPU selection permit it,
 bind relevant architecture guarantees or reviewed kernel backoff mechanisms,
 and add detecting controls for every adopted premise. Separately, C3 still needs
 broader lockless functional/lifetime protocols, mappings outside the current
-nine-profile IPC set and ultimately explicit RCU grace-period/reclamation work.
+ten-profile IPC set and ultimately explicit RCU grace-period/reclamation work.

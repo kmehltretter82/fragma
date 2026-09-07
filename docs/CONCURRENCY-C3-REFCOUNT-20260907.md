@@ -1,15 +1,15 @@
 # C3 System V IPC refcount lifetime and bounded-progress pilot — 2026-09-07
 
-Status: accepted for one narrow production lifetime decision with nine
+Status: accepted for one narrow production lifetime decision with ten
 configured SMP implementation mappings and one separate bounded progress
 property with three single-instruction-CAS implementation mappings; C3 remains
 incomplete.
 
 The current standalone evidence is
-[`results/concurrency-c3-ipc-refcount-20260907-10`](../results/concurrency-c3-ipc-refcount-20260907-10/SUMMARY.md).
-It passes all 848 gates, accepts two separately bounded source-linked kernel
-properties, and accepts nine lifetime plus three progress implementation mappings.
-The receipt pins 77 input identities and retains 331 raw artifacts. It found no
+[`results/concurrency-c3-ipc-refcount-20260907-11`](../results/concurrency-c3-ipc-refcount-20260907-11/SUMMARY.md).
+It passes all 937 gates, accepts two separately bounded source-linked kernel
+properties, and accepts ten lifetime plus three progress implementation mappings.
+The receipt pins 85 input identities and retains 363 raw artifacts. It found no
 new Linux defect: the selected IPC code uses the refcount API correctly.
 
 The preceding `-01` run passed the same model, source, build and outcome gates.
@@ -39,6 +39,9 @@ comparison operand, real `CS` instruction and mismatch retry branch.
 Run `-10` is a full current-input renewal after the separate LL/SC audit added
 its CLI entry. It preserves the same 848/848 outcomes, 77 input identities,
 331 raw artifacts, nine lifetime mappings and three bounded-progress mappings.
+Run `-11` adds a tenth, distinct LoongArch64 mapping through the kernel's
+target-aware Clang/LLVM 21.1.8 route. It reruns every earlier profile and passes
+937/937; independent readback matches all 85 inputs and 363 retained artifacts.
 
 ## Accepted lifetime property
 
@@ -125,7 +128,7 @@ expected register from `EAX` on mismatch and branch back to the source retry.
 The s390 object lowers the 32-bit operation to one `CS`; its in/out comparison
 operand receives the observed word on mismatch before the condition-code branch
 returns to the zero check. All three exact objects and disassemblies are checked
-by the same build gate. The other six lifetime profiles use
+by the same build gate. The other seven lifetime profiles use
 architecture-dependent operations, including LL/SC loops; this pilot does not
 establish their machine-level progress.
 
@@ -141,13 +144,16 @@ The source gate pins and rechecks:
   1-to-0 test and acquire-after-control operation;
 - the kernel refcount ordering documentation;
 - the instrumented atomic API, generic fallback, LKMM RMW atomicity axiom, and
-  x86-64, arm64, RISC-V, s390, ARM32, PowerPC32, SuperH and Alpha
-  atomic/cmpxchg/barrier implementation files, plus UML's SMP Kconfig,
+  x86-64, arm64, RISC-V, s390, ARM32, PowerPC32, SuperH, Alpha and LoongArch
+  atomic/cmpxchg/barrier implementation files, the pinned LoongArch Clang target
+  selection, plus UML's SMP Kconfig,
   `SUBARCH`-to-x86 header route and UML x86 barrier implementation;
 - the System V IPC Kconfig/Makefile selection and actual configured objects.
 
-Nine dedicated SMP builds compile the real `ipc/util.o`, not a project wrapper.
-All use GCC 15.2.0 and GNU binutils 2.46 already present on the machine.
+Ten dedicated SMP builds compile the real `ipc/util.o`, not a project wrapper.
+Nine use GCC 15.2.0 and GNU binutils 2.46 already present on the machine. The
+tenth uses the explicit Clang/LLVM 21.1.8 LoongArch target route; it does not
+relabel or activate the separately planned general LoongArch GCC/Frama-C profile.
 
 | Profile | ELF | Config SHA-256 | Object SHA-256 | Checked lowering |
 | --- | --- | --- | --- | --- |
@@ -159,12 +165,17 @@ All use GCC 15.2.0 and GNU binutils 2.46 already present on the machine.
 | PowerPC32 CHRP | 32-bit BE, machine 20 | `2ce33c1da81f6882148455cd62c55ecb5a7f8ebe83a11b0ba452ed3cc50ec1e7` | `68021ae57fdbf7ce71efe35877ca5d98fdd09fe7160e7f0e1486bd82a469fad3` | get and put `lwarx`/`stwcx.`; put `hwsync` |
 | SuperH SH-X3 | 32-bit LE, machine 42 | `e53d91d1ed9b63b39c7abf0a3c9711c88c0ef0ffb30d17309720098cd9538047` | `b1fef80ad64b4fdd77542c261c027a05d260b90d92ff53b8454665f8a8084791` | get and put `movli.l`/`movco.l`; `synco` |
 | Alpha generic SMP | 64-bit LE, machine 36902 | `21d6b92b20bfb82d67380adc6624e767aeacd54be1bec0950e3ccca309816902` | `cb63e40524cedb288279cb14d469a7a851046dead44dda22d45be8066c8986b5` | get and put `ldl_l`/`stl_c`; `mb` |
+| LoongArch64 | 64-bit LE, machine 258 | `61662dbfd894d861f1a31bc1f9fdaafd4e74c34297a57ce583c3e8686e6c066e` | `dfaec38ff50e09786c0b50fcada8fe33c0d76e1b432bc4624eb79b018921d96a` | get `ll.w`/`sc.w`; put `amadd_db.w`, then `dbar 21`; Clang target `loongarch64-linux-gnusf` |
 | UML x86-64 SMP | 64-bit LE, machine 62 | `d1152890f190eca30f4d27785da89871dd2d95c2378ed5b479114aa29e8ca2d1` | `fdecff20215771537646f5604c476691260b94d44d70020ff350220de2a34c31` | explicit x86 header route; get `lock cmpxchg`; put `lock xadd`, then `lfence` |
 
 Every profile pins both global function symbols and the `call_rcu` relocation.
 The arm64 and RISC-V objects contain runtime-selected alternative atomic paths;
 the gate requires both visible paths rather than pretending the object contains
-only one. The builds run sequentially so their make jobservers and output trees
+only one. Schema 6 makes per-profile Kbuild assignments, compiler target-query
+arguments and the disassembler's named-symbol option explicit. Thus LoongArch
+uses `LLVM=1 LLVM_IAS=1`, queries Clang with its target argument, and uses
+LLVM objdump's `--disassemble-symbols` spelling; the nine GNU profiles retain
+their original commands. The builds run sequentially so their make jobservers and output trees
 cannot interfere. Raw commands, stdout/stderr, model results, source/model facts,
 identities and artifact hashes are retained in the local evidence directory.
 The runner now classifies build warnings, errors, jobserver messages and
@@ -189,12 +200,12 @@ not accept unbounded progress, scheduler fairness, wait-freedom, general
 lock-freedom or LL/SC implementation liveness.
 
 The implementation mapping is limited to x86-64, arm64, riscv64, s390x, ARM32,
-PowerPC32, SuperH, Alpha and UML x86-64, all under the exact SMP configurations
+PowerPC32, SuperH, Alpha, LoongArch64 and UML x86-64, all under the exact SMP configurations
 above. The architecture-independent refcount contract and LKMM result do not
 activate any other architecture without its source/macro/compiler/object
 evidence. The progress implementation mapping is narrower still: native/UML
 x86-64 and s390x only. The subsequent
-[six-profile LL/SC capability audit](CONCURRENCY-C3-LLSC-PROGRESS-20260907.md)
+[seven-profile LL/SC capability audit](CONCURRENCY-C3-LLSC-PROGRESS-20260907.md)
 completes the present-evidence admission evaluation and promotes none; it does
 not establish an architecture failure bound. C3 still needs architecture-backed
 unbounded/LL/SC progress where supportable, mappings for the remaining Linux
@@ -207,7 +218,7 @@ a separately worded local task/interrupt claim or a non-concurrency compiler
 mapping, but not this profile's `smp-multicpu` label.
 
 The post-expansion project regression run passes
-[1,000 tests](../results/tests-concurrency-c3-llsc-final-20260907.log),
+[1,000 tests](../results/tests-concurrency-c3-loongarch-final-20260907.log),
 with 20 conditional skips; all 22 focused IPC/refcount tests and all ten focused
 LL/SC capability tests pass.
 

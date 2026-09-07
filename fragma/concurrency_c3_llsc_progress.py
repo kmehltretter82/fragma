@@ -28,6 +28,9 @@ _PROFILE_SCOPE = {
     "alpha-smp-ipc-refcount-c3": (
         "alpha", "llsc_only_selected_object_with_trampoline",
     ),
+    "loongarch64-clang-ipc-refcount-c3": (
+        "loongarch64", "llsc_get_with_native_amo_put",
+    ),
 }
 
 _PROFILE_IDS = list(_PROFILE_SCOPE)
@@ -36,6 +39,7 @@ _ALLOWED_KINDS = {
     "runtime_dual_native_cas_llsc",
     "llsc_only_selected_object",
     "llsc_only_selected_object_with_trampoline",
+    "llsc_get_with_native_amo_put",
 }
 
 
@@ -100,11 +104,11 @@ def load_manifest(root: Path) -> dict[str, Any]:
         raise ConcurrencyC3LlscProgressError("LL/SC base requirements are not exact")
     if (
         base["target"] != "linux-ipc-refcount-lifetime-multiarch-c3"
-        or base["schema_version"] != 5
-        or base["evidence_checks"] != 848
-        or base["input_identity_count"] != 77
-        or base["raw_artifact_count"] != 331
-        or base["architecture_mapping_count"] != 9
+        or base["schema_version"] != 6
+        or base["evidence_checks"] != 937
+        or base["input_identity_count"] != 85
+        or base["raw_artifact_count"] != 363
+        or base["architecture_mapping_count"] != 10
         or base["kernel_verification_count"] != 2
         or base["progress_kernel_verification_count"] != 1
         or base["progress_implementation_mapping_count"] != 3
@@ -220,7 +224,8 @@ def load_manifest(root: Path) -> dict[str, Any]:
     exclusions = " ".join(_strings(manifest["exclusions"], "LL/SC exclusions")).lower()
     for boundary in (
         "no ll/sc profile", "hypothetical", "native lse", "zacas",
-        "scheduler fairness", "wait-freedom", "rcu progress", "whole-kernel",
+        "loongarch", "scheduler fairness", "wait-freedom", "rcu progress",
+        "whole-kernel",
     ):
         if boundary not in exclusions:
             raise ConcurrencyC3LlscProgressError(
@@ -482,6 +487,8 @@ def render_summary(result: dict[str, Any]) -> str:
         "ARM64 and RISC-V contain runtime-selectable native-CAS and LL/SC paths.",
         "ARM32, PowerPC32, SuperH and Alpha expose direct LL/SC retry paths; Alpha's",
         "cold retry edge is checked through its emitted subsection trampoline.",
+        "LoongArch64 combines an AMO final decrement with an LL/SC get retry; the",
+        "single-instruction put path does not supply a bound for the get loop.",
         "No profile is promoted merely because its lifetime mapping passes.",
         "",
         "No scheduler fairness, wait-freedom, unbounded lock-free progress, RCU",
@@ -495,7 +502,7 @@ def render_summary(result: dict[str, Any]) -> str:
 def audit_llsc_progress(
     root: Path, base_result: Path, output: Path, timeout: int = 120
 ) -> dict[str, Any]:
-    """Audit six LL/SC mappings without promoting an unproved progress claim."""
+    """Audit seven LL/SC mappings without promoting an unproved progress claim."""
     root = root.resolve()
     manifest = load_manifest(root)
     output = output if output.is_absolute() else root / output

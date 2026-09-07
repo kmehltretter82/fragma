@@ -264,6 +264,35 @@ _PROFILE_SPECS = {
             "CONFIG_CC_IS_GCC": "y",
         },
     },
+    "loongarch64-clang-ipc-refcount-c3": {
+        "arch": "loongarch",
+        "subarch": None,
+        "cross_compile": None,
+        "make_assignments": ["LLVM=1", "LLVM_IAS=1"],
+        "base_recipe": "loongson64_defconfig",
+        "compiler": "/usr/bin/clang",
+        "compiler_target": "loongarch64-unknown-linux-gnusf",
+        "compiler_target_args": ["--target=loongarch64-linux-gnusf"],
+        "objdump": "/usr/bin/llvm-objdump",
+        "disassemble_symbol_option": "--disassemble-symbols",
+        "elf": [2, 1, 258],
+        "required_config": {
+            "CONFIG_LOONGARCH": "y",
+            "CONFIG_64BIT": "y",
+            "CONFIG_MACH_LOONGSON64": "y",
+            "CONFIG_SMP": "y",
+            "CONFIG_SYSVIPC": "y",
+            "CONFIG_TREE_RCU": "y",
+            "CONFIG_PREEMPT_RCU": "y",
+            "CONFIG_RCU_EXPERT": "n",
+            "CONFIG_KCSAN": "absent",
+            "CONFIG_CPU_HAS_AMO": "y",
+            "CONFIG_AS_HAS_SCQ_EXTENSION": "y",
+            "CONFIG_LTO_NONE": "y",
+            "CONFIG_CC_IS_GCC": "absent",
+            "CONFIG_CC_IS_CLANG": "y",
+        },
+    },
     "um-x86_64-smp-ipc-refcount-c3": {
         "arch": "um",
         "subarch": "x86_64",
@@ -314,9 +343,9 @@ _PROFILE_DIAGNOSTICS = {
 
 
 _ARCHITECTURE_EXCLUSION = (
-    "No architecture implementation other than the nine configured SMP "
-    "x86-64, arm64, riscv64, s390x, ARM32, PowerPC32, SuperH, Alpha and "
-    "UML x86-64 "
+    "No architecture implementation other than the ten configured SMP "
+    "x86-64, arm64, riscv64, s390x, ARM32, PowerPC32, SuperH, Alpha, "
+    "LoongArch64 and UML x86-64 "
     "profiles is accepted by this source-linked pilot; every other "
     "architecture remains outside the claim."
 )
@@ -393,10 +422,18 @@ def _declared_path(root: Path, value: Any, role: str) -> Path:
     return path
 
 
-def _validate_tool(record: Any, name: str, *, target: bool = False) -> None:
+def _validate_tool(
+    record: Any,
+    name: str,
+    *,
+    target: bool = False,
+    disassembler: bool = False,
+) -> None:
     keys = {"binary", "realpath", "sha256", "version_line"}
     if target:
-        keys.add("target")
+        keys.update(("target", "target_args"))
+    if disassembler:
+        keys.add("disassemble_symbol_option")
     if not isinstance(record, dict) or set(record) != keys:
         raise ConcurrencyC3IpcRefcountError(f"{name} tool record is not exact")
     for key in ("binary", "realpath"):
@@ -407,6 +444,21 @@ def _validate_tool(record: Any, name: str, *, target: bool = False) -> None:
     _nonempty(record["version_line"], f"{name} version")
     if target:
         _nonempty(record["target"], f"{name} target")
+        args = record["target_args"]
+        if not isinstance(args, list) or not all(
+            isinstance(item, str) and item and not re.search(r"[\x00\r\n]", item)
+            for item in args
+        ):
+            raise ConcurrencyC3IpcRefcountError(
+                f"{name} target arguments must be an exact string list"
+            )
+    if disassembler:
+        if record["disassemble_symbol_option"] not in {
+            "--disassemble", "--disassemble-symbols",
+        }:
+            raise ConcurrencyC3IpcRefcountError(
+                f"{name} symbol option is unsupported"
+            )
 
 
 def _validate_expected(expected: Any, case_id: str) -> None:
@@ -511,7 +563,8 @@ def _validate_progress(progress: Any) -> None:
 
 def _validate_profile(root: Path, profile: Any, expected_id: str) -> None:
     if not isinstance(profile, dict) or set(profile) != {
-        "id", "arch", "subarch", "cross_compile", "jobs", "build_directory",
+        "id", "arch", "subarch", "cross_compile", "make_assignments",
+        "jobs", "build_directory",
         "config", "config_sha256", "execution_scope", "configuration",
         "required_config", "allowed_diagnostics", "make", "compiler",
         "objdump", "configured_compile",
@@ -523,6 +576,7 @@ def _validate_profile(root: Path, profile: Any, expected_id: str) -> None:
         or profile["arch"] != spec["arch"]
         or profile["subarch"] != spec["subarch"]
         or profile["cross_compile"] != spec["cross_compile"]
+        or profile["make_assignments"] != spec.get("make_assignments", [])
         or type(profile["jobs"]) is not int
         or not 1 <= profile["jobs"] <= 256
     ):
@@ -570,13 +624,20 @@ def _validate_profile(root: Path, profile: Any, expected_id: str) -> None:
             f"IPC diagnostic allowlist is not exact for {expected_id}"
         )
     for tool_name in ("make", "compiler", "objdump"):
-        _validate_tool(profile[tool_name], f"{expected_id} {tool_name}",
-                       target=tool_name == "compiler")
+        _validate_tool(
+            profile[tool_name], f"{expected_id} {tool_name}",
+            target=tool_name == "compiler",
+            disassembler=tool_name == "objdump",
+        )
     if (
         profile["make"]["binary"] != "/usr/bin/make"
         or profile["compiler"]["binary"] != spec["compiler"]
         or profile["compiler"]["target"] != spec["compiler_target"]
+        or profile["compiler"]["target_args"]
+        != spec.get("compiler_target_args", [])
         or profile["objdump"]["binary"] != spec["objdump"]
+        or profile["objdump"]["disassemble_symbol_option"]
+        != spec.get("disassemble_symbol_option", "--disassemble")
     ):
         raise ConcurrencyC3IpcRefcountError(
             f"unexpected tool mapping for {expected_id}"
@@ -669,7 +730,7 @@ def load_manifest(root: Path) -> dict[str, Any]:
             "schema_version", "id", "kernel", "baseline", "profiles",
             "property", "progress", "model",
         }
-        or manifest["schema_version"] != 5
+        or manifest["schema_version"] != 6
         or manifest["id"] != "linux-ipc-refcount-lifetime-multiarch-c3"
     ):
         raise ConcurrencyC3IpcRefcountError("unsupported IPC refcount C3 schema")
@@ -691,7 +752,7 @@ def load_manifest(root: Path) -> dict[str, Any]:
             "source receipt is outside kernel source"
         ) from exc
     identities = kernel["source_identities"]
-    if not isinstance(identities, dict) or len(identities) != 47:
+    if not isinstance(identities, dict) or len(identities) != 53:
         raise ConcurrencyC3IpcRefcountError(
             "IPC refcount source identity set is not exact"
         )
@@ -1407,6 +1468,20 @@ def _semantic_checks(
         source_root / "arch/alpha/include/asm/barrier.h"
     ).read_text()
     alpha_kconfig = (source_root / "arch/alpha/Kconfig").read_text()
+    loongarch_atomic = (
+        source_root / "arch/loongarch/include/asm/atomic.h"
+    ).read_text()
+    loongarch_atomic_amo = (
+        source_root / "arch/loongarch/include/asm/atomic-amo.h"
+    ).read_text()
+    loongarch_cmpxchg = (
+        source_root / "arch/loongarch/include/asm/cmpxchg.h"
+    ).read_text()
+    loongarch_barrier = (
+        source_root / "arch/loongarch/include/asm/barrier.h"
+    ).read_text()
+    loongarch_kconfig = (source_root / "arch/loongarch/Kconfig").read_text()
+    clang_makefile = (source_root / "scripts/Makefile.clang").read_text()
     um_kconfig = (source_root / "arch/um/Kconfig").read_text()
     um_makefile = (source_root / "arch/um/Makefile").read_text()
     um_x86_kconfig = (source_root / "arch/x86/um/Kconfig").read_text()
@@ -1642,6 +1717,47 @@ def _semantic_checks(
                    "depends on ALPHA_SABLE || ALPHA_RAWHIDE || ALPHA_DP264",
                    "ALPHA_GENERIC",
                ])),
+        _check("LoongArch Clang route pins the kernel target triple", True,
+               "CLANG_TARGET_FLAGS_loongarch\t:= loongarch64-linux-gnusf"
+               in clang_makefile),
+        _check("LoongArch profile selects AMO atomics", True,
+               _ordered(loongarch_atomic, [
+                   "#ifdef CONFIG_CPU_HAS_AMO",
+                   "#include <asm/atomic-amo.h>",
+                   "#else",
+                   "#include <asm/atomic-llsc.h>",
+               ])),
+        _check("LoongArch fetch-sub uses the AMADD implementation", True,
+               _ordered(loongarch_atomic_amo, [
+                   "#define ATOMIC_FETCH_OP(op, I, asm_op, mb, suffix)",
+                   '"am"#asm_op#mb".w"',
+                   "ATOMIC_OPS(sub, -i, add, +)",
+                   "#define arch_atomic_fetch_sub_release",
+               ])),
+        _check("LoongArch compare/exchange uses an LL/SC retry", True,
+               _ordered(loongarch_cmpxchg, [
+                   "#define __cmpxchg_asm(ld, st, m, old, new)",
+                   '"1:\t" ld',
+                   '"\tbne\t%0, %z3, 2f',
+                   '"\t" st',
+                   '"\tbeqz\t$t0, 1b',
+                   'return __cmpxchg_asm("ll.w", "sc.w"',
+               ])),
+        _check("LoongArch SMP LL/SC and read barriers are explicit", True,
+               _ordered(loongarch_barrier, [
+                   "#define __smp_rmb()\to_rsync()",
+                   "#ifdef CONFIG_SMP",
+                   "#define __WEAK_LLSC_MB",
+                   '"\tdbar 0x700',
+               ])),
+        _check("LoongArch 64-bit configuration enables SMP and AMO", True,
+               _ordered(loongarch_kconfig, [
+                   "config 64BIT",
+                   "config SMP",
+                   "depends on 64BIT",
+                   "config CPU_HAS_AMO",
+                   "default 64BIT",
+               ])),
         _check("UML x86-64 explicitly supports SMP", True,
                _ordered(um_kconfig, [
                    "config UML_SUBARCH_SUPPORTS_SMP",
@@ -1734,7 +1850,11 @@ def _run_profile(
     tool_commands = {
         "make-version": [profile["make"]["binary"], "--version"],
         "compiler-version": [profile["compiler"]["binary"], "--version"],
-        "compiler-target": [profile["compiler"]["binary"], "-dumpmachine"],
+        "compiler-target": [
+            profile["compiler"]["binary"],
+            *profile["compiler"]["target_args"],
+            "-dumpmachine",
+        ],
         "objdump-version": [profile["objdump"]["binary"], "--version"],
     }
     for name, argv in tool_commands.items():
@@ -1797,6 +1917,7 @@ def _run_profile(
         common_make.append(f"SUBARCH={profile['subarch']}")
     if profile["cross_compile"] is not None:
         common_make.append(f"CROSS_COMPILE={profile['cross_compile']}")
+    common_make.extend(profile["make_assignments"])
     common_make.append(f"CC={profile['compiler']['binary']}")
     configuration = profile["configuration"]
     build_diagnostics: dict[str, dict[str, Any]] = {}
@@ -1912,7 +2033,8 @@ def _run_profile(
         directory.mkdir()
         argv = [
             profile["objdump"]["binary"], "-dr", "--no-show-raw-insn",
-            f"--disassemble={name}", str(object_path),
+            f"{profile['objdump']['disassemble_symbol_option']}={name}",
+            str(object_path),
         ]
         process = concurrency_c3_lkmm._run(argv, root, timeout)
         concurrency_c3_lkmm._write_process(directory, argv, root, process)
@@ -1961,6 +2083,7 @@ def _run_profile(
         "arch": profile["arch"],
         "subarch": profile["subarch"],
         "cross_compile": profile["cross_compile"],
+        "make_assignments": profile["make_assignments"],
         "configured_object": elf,
         "configured_config_sha256": config_hash,
         "configured_functions": observed_symbols,
@@ -2052,8 +2175,9 @@ def render_summary(result: dict[str, Any]) -> str:
         "separately expose one-state and two-state cycles.",
         "",
         "The gate pins the IPC helper and locking contract, refcount implementation,",
-        "LKMM RMW axiom, and nine configured SMP profiles: x86-64, arm64,",
-        "riscv64, s390x, ARM32, PowerPC32, SuperH, Alpha, and UML x86-64.",
+        "LKMM RMW axiom, and ten configured SMP profiles: x86-64, arm64,",
+        "riscv64, s390x, ARM32, PowerPC32, SuperH, Alpha, LoongArch64, and",
+        "UML x86-64.",
         "Each mapping pins both function symbols and target disassembly,",
         "including alternative atomic paths where the architecture emits them.",
         "The bounded progress mapping is limited to native x86-64, s390x, and",
@@ -2257,7 +2381,7 @@ def run_c3_ipc_refcount(
     _json(output / "input-identities.json", identities)
     _json(output / "source-model-evidence.json", source_model_evidence)
     result = {
-        "schema_version": 5,
+        "schema_version": 6,
         "kind": "ipc-refcount-c3-lifetime-progress-multiarch-pilot",
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "target": manifest["id"],
@@ -2303,7 +2427,7 @@ def run_c3_ipc_refcount(
         "c3_stage_complete": False,
         "remaining_c3": [
             "Unbounded progress, scheduler fairness, wait-freedom and LL/SC implementation liveness",
-            "Implementation mappings for Linux architectures beyond x86-64, arm64, riscv64, s390x, ARM32, PowerPC32, SuperH, Alpha, and UML x86-64",
+            "Implementation mappings for Linux architectures beyond x86-64, arm64, riscv64, s390x, ARM32, PowerPC32, SuperH, Alpha, LoongArch64, and UML x86-64",
             "Broader lock-free functional protocol coverage",
         ],
         "call_rcu_modeled": False,
