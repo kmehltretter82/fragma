@@ -6,7 +6,7 @@ property with three single-instruction-CAS implementation mappings; C3 remains
 incomplete.
 
 The current standalone evidence is
-[`results/concurrency-c3-ipc-refcount-20260907-09`](../results/concurrency-c3-ipc-refcount-20260907-09/SUMMARY.md).
+[`results/concurrency-c3-ipc-refcount-20260907-10`](../results/concurrency-c3-ipc-refcount-20260907-10/SUMMARY.md).
 It passes all 848 gates, accepts two separately bounded source-linked kernel
 properties, and accepts nine lifetime plus three progress implementation mappings.
 The receipt pins 77 input identities and retains 331 raw artifacts. It found no
@@ -36,6 +36,9 @@ separate finite-state progress property, three detecting controls and exact
 native/UML x86-64 retry-loop mappings.
 Run `-09` adds s390 only after checking its strong try-CAS source macro, in/out
 comparison operand, real `CS` instruction and mismatch retry branch.
+Run `-10` is a full current-input renewal after the separate LL/SC audit added
+its CLI entry. It preserves the same 848/848 outcomes, 77 input identities,
+331 raw artifacts, nine lifetime mappings and three bounded-progress mappings.
 
 ## Accepted lifetime property
 
@@ -190,8 +193,12 @@ PowerPC32, SuperH, Alpha and UML x86-64, all under the exact SMP configurations
 above. The architecture-independent refcount contract and LKMM result do not
 activate any other architecture without its source/macro/compiler/object
 evidence. The progress implementation mapping is narrower still: native/UML
-x86-64 and s390x only. C3 still needs unbounded/LL/SC progress evaluation, mappings for the
-remaining Linux architectures and broader lockless protocol coverage. C4 remains
+x86-64 and s390x only. The subsequent
+[six-profile LL/SC capability audit](CONCURRENCY-C3-LLSC-PROGRESS-20260907.md)
+completes the present-evidence admission evaluation and promotes none; it does
+not establish an architecture failure bound. C3 still needs architecture-backed
+unbounded/LL/SC progress where supportable, mappings for the remaining Linux
+architectures and broader lockless protocol coverage. C4 remains
 responsible for explicit RCU grace-period and reclamation reasoning.
 
 The available m68k `virt_defconfig` is UP-only, so its successful exploratory
@@ -200,8 +207,9 @@ a separately worded local task/interrupt claim or a non-concurrency compiler
 mapping, but not this profile's `smp-multicpu` label.
 
 The post-expansion project regression run passes
-[990 tests](../results/tests-concurrency-c3-s390-progress-20260907.log),
-with 20 pre-existing conditional skips; all 22 focused IPC/refcount tests pass.
+[1,000 tests](../results/tests-concurrency-c3-llsc-final-20260907.log),
+with 20 conditional skips; all 22 focused IPC/refcount tests and all ten focused
+LL/SC capability tests pass.
 
 Reproduce with:
 

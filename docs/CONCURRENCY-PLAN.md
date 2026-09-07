@@ -14,7 +14,11 @@ builds: x86-64, arm64, riscv64, s390x, ARM32, PowerPC32, SuperH, Alpha and
 UML x86-64. The same pilot now adds a separately scoped bounded-quiescent
 progress property for the strong-CAS get retry loop, mapped only to native/UML
 x86-64 and s390x and guarded by three nontermination controls.
-Unbounded progress, scheduler fairness, LL/SC implementation liveness, broader
+A subsequent fail-closed audit evaluates the other six LL/SC-bearing profiles'
+source and complete-object retry paths. Its 505 checks pass, but it promotes
+zero progress properties or implementation mappings because no profile supplies
+a finite reservation-failure guarantee. Unbounded progress, scheduler fairness,
+architecture-backed LL/SC implementation liveness, broader
 lockless lifetime, remaining architecture mappings and C4 remain open.
 See the [C0 evidence record](CONCURRENCY-C0-20260907.md) and
 [C1 evidence record](CONCURRENCY-C1-20260907.md), followed by the
@@ -23,7 +27,8 @@ See the [C0 evidence record](CONCURRENCY-C0-20260907.md) and
 the [LKMM capability baseline](CONCURRENCY-C3-LKMM-20260907.md) and the
 [trace tgid-map source pilot](CONCURRENCY-C3-TRACE-20260907.md), followed by the
 [module-statistics atomic/RMW pilot](CONCURRENCY-C3-ATOMIC-20260907.md) and the
-[System V IPC refcount lifetime/progress pilot](CONCURRENCY-C3-REFCOUNT-20260907.md).
+[System V IPC refcount lifetime/progress pilot](CONCURRENCY-C3-REFCOUNT-20260907.md),
+then the [LL/SC capability audit](CONCURRENCY-C3-LLSC-PROGRESS-20260907.md).
 Parent goal: [execute PLAN.md](../PLAN.md). This work does not replace the
 remaining sequential-suite, architecture or coverage requirements.
 
@@ -179,14 +184,21 @@ see the [IRQ scope record](CONCURRENCY-C2-IRQ-20260907.md).
   the retry path to native/UML x86-64 and s390x objects. Three controls
   demonstrate the stale-expected, spurious-failure and unbounded-interference
   exclusions.
+- [x] Evaluate whether the six remaining IPC implementation profiles can soundly
+  inherit that progress claim. The LL/SC capability audit checks pinned kernel
+  documentation, implementation source and fresh full-object disassembly for
+  ARM64, RISC-V, ARM32, PowerPC32, SuperH and Alpha. It promotes none. Its
+  hypothetical two-failure bound remains ineligible, while the unbounded-failure
+  control exposes a one-state retry cycle.
 - [ ] Broaden functional/lifetime coverage beyond the first refcount handshake,
-  and evaluate unbounded progress plus architecture-specific LL/SC liveness.
-  A mutex-oriented race analysis cannot supply these claims implicitly.
+  and establish architecture-backed unbounded or LL/SC progress where supportable.
+  A finite cutoff, passing lifetime map or mutex-oriented race analysis cannot
+  supply these claims implicitly.
 
 Acceptance: the supported ordering/atomic cases have independent semantic
 calibrations, explicit source-to-model links and retained results. Unmodeled
-ordering, unbounded/LL/SC progress or architecture guarantees remain outstanding
-requirements.
+ordering, architecture-backed unbounded/LL/SC progress or architecture
+guarantees remain outstanding requirements.
 
 C3 partial decision: the
 [92-check capability baseline](../results/concurrency-c3-lkmm-20260907-05/SUMMARY.md)
@@ -202,7 +214,7 @@ accepts one production no-lost-update property for two selected concurrent
 `failed_load_modules` increments. Its split once-access control permits the lost
 update, while a separate ordered/relaxed return-value pair calibrates ordering.
 The subsequent
-[848-check IPC refcount pilot](../results/concurrency-c3-ipc-refcount-20260907-09/SUMMARY.md)
+[848-check IPC refcount pilot](../results/concurrency-c3-ipc-refcount-20260907-10/SUMMARY.md)
 accepts one lifetime-sensitive functional property: under the contract's
 caller-locking prerequisite and from the sole reference, `ipc_rcu_putref()`
 cannot schedule RCU destruction while concurrent `ipc_rcu_getref()` succeeds.
@@ -217,10 +229,18 @@ PowerPC32, SuperH, Alpha and UML x86-64 profiles. The UML result has its own `AR
 evidence. Only native/UML x86-64 and s390x are accepted as progress implementation
 mappings; LL/SC progress on the other six profiles is not inferred. The
 available m68k build remains outside this SMP claim.
+A separate
+[505-check LL/SC capability audit](../results/concurrency-c3-llsc-progress-20260907-04/SUMMARY.md)
+revalidates the complete fresh IPC receipt and checks implementation source plus
+full-object retry control flow for those six profiles. It promotes none. Its
+hypothetical 120-schedule bounded diagnostic is permanently ineligible, and a
+one-state unbounded conditional-store-failure cycle acts as the detecting
+control. This completes the present-evidence admission evaluation, not an
+LL/SC progress property.
 All three source pilots verify correct selected code; none found a new defect or
 completes C3.
-Unbounded progress, LL/SC liveness, broader lockless lifetime behavior and
-mappings for remaining architectures remain open.
+Unbounded progress, architecture-backed LL/SC liveness, broader lockless
+lifetime behavior and mappings for remaining architectures remain open.
 
 ## C4 — Extend to RCU and maintain honest combined coverage
 
@@ -247,8 +267,9 @@ its required model or validation evidence.
 
 The bounded static review and limited C0-C2 pilot are complete. Continue C3
 from its accepted LKMM baseline, release/acquire, atomic/RMW and multiarchitecture
-IPC refcount lifetime/bounded-progress pilot: broader lockless protocols,
-unbounded and LL/SC progress, and remaining architecture mappings come next,
+IPC refcount lifetime/bounded-progress pilot and completed six-profile LL/SC
+admission audit: broader lockless protocols, architecture-backed unbounded or
+LL/SC progress, and remaining architecture mappings come next,
 followed by C4 RCU/lifetime/combined coverage.
 Broader interrupt and functional-protocol extensions remain visible backlog and
 need not wait for every architecture port or all sequential proofs.

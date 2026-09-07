@@ -7,9 +7,9 @@ from pathlib import Path
 
 from . import (build, concurrency, concurrency_c2, concurrency_c2_irq,
                concurrency_c3_ipc_refcount, concurrency_c3_lkmm,
-               concurrency_c3_module_stats, concurrency_c3_trace,
-               concurrency_evidence, profiles, rv32_zeropad, sources, suite,
-               toolchain)
+               concurrency_c3_llsc_progress, concurrency_c3_module_stats,
+               concurrency_c3_trace, concurrency_evidence, profiles,
+               rv32_zeropad, sources, suite, toolchain)
 
 
 def replay_roots(values, project):
@@ -113,6 +113,22 @@ def main(argv=None):
         "--timeout", type=int, default=120,
         help="wall-clock limit in seconds for each build/provider invocation",
     )
+    c3_llsc = sub.add_parser(
+        "concurrency-c3-llsc-progress",
+        help="audit LL/SC progress capability without promoting unproved guarantees",
+    )
+    c3_llsc.add_argument(
+        "--ipc-result", type=Path, required=True,
+        help="accepted local C3 IPC refcount evidence directory",
+    )
+    c3_llsc.add_argument(
+        "--output", type=Path,
+        help="new LL/SC capability evidence directory; never overwritten",
+    )
+    c3_llsc.add_argument(
+        "--timeout", type=int, default=120,
+        help="wall-clock limit in seconds for each disassembler invocation",
+    )
     rv32 = sub.add_parser(
         "rv32-zeropad-audit",
         help="audit the retained RV32 load_unaligned_zeropad A/B evidence",
@@ -197,6 +213,13 @@ def main(argv=None):
             output = args.output or concurrency_c3_ipc_refcount.default_output(root)
             result = concurrency_c3_ipc_refcount.run_c3_ipc_refcount(
                 root, output, args.timeout
+            )
+            print(f"{'passed' if result['accepted'] else 'failed'}: {output}")
+            return 0 if result["accepted"] else 1
+        if args.command == "concurrency-c3-llsc-progress":
+            output = args.output or concurrency_c3_llsc_progress.default_output(root)
+            result = concurrency_c3_llsc_progress.audit_llsc_progress(
+                root, args.ipc_result, output, args.timeout
             )
             print(f"{'passed' if result['accepted'] else 'failed'}: {output}")
             return 0 if result["accepted"] else 1

@@ -1,0 +1,295 @@
+{
+  "schema_version": 1,
+  "id": "linux-ipc-refcount-llsc-progress-capability-c3",
+  "kernel": {
+    "revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+    "git_tree": "054b6818c409ab20ae89b1031a1a7c358f673d87",
+    "source_root": "build/sources/linux-b9b3e33b70b71"
+  },
+  "base": {
+    "target": "linux-ipc-refcount-lifetime-multiarch-c3",
+    "schema_version": 5,
+    "evidence_checks": 848,
+    "input_identity_count": 77,
+    "raw_artifact_count": 331,
+    "architecture_mapping_count": 9,
+    "kernel_verification_count": 2,
+    "progress_kernel_verification_count": 1,
+    "progress_implementation_mapping_count": 3,
+    "progress_implementation_profiles": [
+      "x86_64-ipc-refcount-c3",
+      "s390x-ipc-refcount-c3",
+      "um-x86_64-smp-ipc-refcount-c3"
+    ]
+  },
+  "documentation": {
+    "path": "build/sources/linux-b9b3e33b70b71/Documentation/atomic_t.txt",
+    "sha256": "717673f723f57ea07ca03d919e2a21e8fc2ce8c8808d3a1c6a9c36ae79885fe0",
+    "required_order": [
+      "FORWARD PROGRESS",
+      "Specifically 'simple' cmpxchg() loops are expected",
+      "this is not evident on LL/SC architectures",
+      "such a guarantee does not",
+      "transfer to cmpxchg() implemented using LL/SC",
+      "However, even the forward branch from the failed compare can cause the LL/SC",
+      "there is no guarantee what so ever the cacheline",
+      "Even native CAS architectures can fail to provide forward progress",
+      "exponential backoff loops"
+    ]
+  },
+  "conditional_diagnostic": {
+    "kind": "bounded_store_conditional_failure_diagnostic",
+    "verification_candidate": false,
+    "premise": "Hypothetically bound every matching LL/SC compare/exchange invocation to at most two failed store-conditionals; no selected Linux profile establishes this premise.",
+    "source_cas_attempts": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "max_store_conditional_failures_per_cas": 2,
+    "expected": {
+      "finite_schedules": 120,
+      "max_source_cas_attempts": 4,
+      "max_store_conditional_attempts": 12,
+      "max_store_conditional_failures": 8,
+      "nonterminating": 0
+    },
+    "unbounded_failure_control": {
+      "role": "required_nontermination_control",
+      "verification_candidate": false,
+      "expected": {
+        "cycle_found": true,
+        "cycle_length": 1,
+        "state": {
+          "refs": 1,
+          "expected": 1,
+          "reservation": "lost"
+        }
+      }
+    }
+  },
+  "profiles": [
+    {
+      "id": "arm64-ipc-refcount-c3",
+      "architecture": "arm64",
+      "implementation_kind": "runtime_dual_native_cas_llsc",
+      "source_checks": [
+        {
+          "path": "build/sources/linux-b9b3e33b70b71/arch/arm64/include/asm/lse.h",
+          "sha256": "13a2a66a622ebcd4406bffad86c0f3df9e6dad488b91ec6501edcb490d31c6db",
+          "ordered_tokens": [
+            "#define __lse_ll_sc_body(op, ...)",
+            "alternative_has_cap_likely(ARM64_HAS_LSE_ATOMICS)",
+            "__lse_##op(__VA_ARGS__)",
+            "__ll_sc_##op(__VA_ARGS__)"
+          ]
+        },
+        {
+          "path": "build/sources/linux-b9b3e33b70b71/arch/arm64/include/asm/atomic_ll_sc.h",
+          "sha256": "12c0b4606f2247319ac82ef25c5127225fd4f80079591e33962882d1d33c59e8",
+          "ordered_tokens": [
+            "__ll_sc__cmpxchg_case_##name##sz",
+            "1:\tld",
+            "eor",
+            "cbnz",
+            "st",
+            "xr",
+            "cbnz\t%w[tmp], 1b",
+            "return oldval;"
+          ]
+        },
+        {
+          "path": "build/sources/linux-b9b3e33b70b71/arch/arm64/include/asm/atomic_lse.h",
+          "sha256": "a31e91facc36f8cadf7e0bbcbd2a8302d9e75a5d2536602aa3e8b461cde1b1e1",
+          "ordered_tokens": [
+            "__lse__cmpxchg_case_##name##sz",
+            "cas",
+            "[old] \"+r\" (old)",
+            "return old;"
+          ]
+        }
+      ],
+      "disassembly_order": [
+        "<ipc_rcu_getref>:",
+        "cas\tw3, w1, [x4]",
+        "ldxr\tw3, [x4]",
+        "eor\tw5, w3, w0",
+        "stxr\tw5, w1, [x4]",
+        "cbnz\tw5, e9c <ipc_rcu_getref+0x3c>",
+        "mov\tw2, w3",
+        "b\te68 <ipc_rcu_getref+0x8>"
+      ],
+      "verification_candidate": false,
+      "decision": "not_promoted",
+      "blocking_reason": "The configured object contains both an LSE CAS path and an LL/SC retry path selected by CPU capability; the profile is without an established finite exclusive-store failure bound."
+    },
+    {
+      "id": "riscv64-ipc-refcount-c3",
+      "architecture": "riscv64",
+      "implementation_kind": "runtime_dual_native_cas_llsc",
+      "source_checks": [
+        {
+          "path": "build/sources/linux-b9b3e33b70b71/arch/riscv/include/asm/cmpxchg.h",
+          "sha256": "e531073ca1500c8a761f833c79f55a2ceb6e87521b3218885c5255552e4da45d",
+          "ordered_tokens": [
+            "IS_ENABLED(CONFIG_RISCV_ISA_ZACAS)",
+            "riscv_has_extension_unlikely(RISCV_ISA_EXT_ZACAS)",
+            "amocas",
+            "0:\tlr.w",
+            "bne",
+            "sc.w",
+            "bnez %1, 0b",
+            "#define arch_cmpxchg_relaxed"
+          ]
+        }
+      ],
+      "disassembly_order": [
+        "<ipc_rcu_getref>:",
+        "lr.w\ta4,(a0)",
+        "sc.w\ta2,a3,(a0)",
+        "bnez\ta2,dda <.L0^B1>",
+        "amocas.w\ta4,a3,(a0)",
+        "mv\ta5,a4",
+        "j\tdd0 <.L304>"
+      ],
+      "verification_candidate": false,
+      "decision": "not_promoted",
+      "blocking_reason": "The configured object contains both a Zacas AMOCAS path and an LR/SC retry path selected at runtime; the profile is without an established finite store-conditional failure bound."
+    },
+    {
+      "id": "arm32-ipc-refcount-c3",
+      "architecture": "arm32",
+      "implementation_kind": "llsc_only_selected_object",
+      "source_checks": [
+        {
+          "path": "build/sources/linux-b9b3e33b70b71/arch/arm/include/asm/cmpxchg.h",
+          "sha256": "0ddc11af75f4d242d33f4da6469f76bb1c033c5a0ea39d66f4090ccb99789e03",
+          "ordered_tokens": [
+            "case 4:",
+            "do {",
+            "ldrex",
+            "teq",
+            "strexeq",
+            "} while (res);",
+            "return oldval;"
+          ]
+        }
+      ],
+      "disassembly_order": [
+        "<ipc_rcu_getref>:",
+        "ldrex\tr12, [r3]",
+        "teq\tip, r0",
+        "strexeq\tr1, r2, [r3]",
+        "bne\tbe0 <ipc_rcu_getref+0x18>",
+        "mov\tr0, ip",
+        "bne\tbd8 <ipc_rcu_getref+0x10>"
+      ],
+      "verification_candidate": false,
+      "decision": "not_promoted",
+      "blocking_reason": "The selected LDREX/STREX compare/exchange retries after exclusive-store failure without a profile-bound finite failure guarantee."
+    },
+    {
+      "id": "powerpc32-smp-ipc-refcount-c3",
+      "architecture": "powerpc32",
+      "implementation_kind": "llsc_only_selected_object",
+      "source_checks": [
+        {
+          "path": "build/sources/linux-b9b3e33b70b71/arch/powerpc/include/asm/cmpxchg.h",
+          "sha256": "03edecfa8aa92d80708e26608803f719d2ad2cce2bc0dd37ac2e9dff8b2235a8",
+          "ordered_tokens": [
+            "__cmpxchg_u32_relaxed",
+            "1:\tlwarx",
+            "cmpw",
+            "bne-\t2f",
+            "stwcx.",
+            "bne-\t1b",
+            "return prev;"
+          ]
+        }
+      ],
+      "disassembly_order": [
+        "<ipc_rcu_getref>:",
+        "lwarx   r7,0,r10",
+        "cmpw    r7,r9",
+        "stwcx.  r8,0,r10",
+        "bne     118c <ipc_rcu_getref+0x14>",
+        "mr      r9,r7",
+        "b       1180 <ipc_rcu_getref+0x8>"
+      ],
+      "verification_candidate": false,
+      "decision": "not_promoted",
+      "blocking_reason": "The selected LWARX/STWCX compare/exchange retries after reservation loss without a profile-bound finite failure guarantee."
+    },
+    {
+      "id": "sh-smp-ipc-refcount-c3",
+      "architecture": "superh",
+      "implementation_kind": "llsc_only_selected_object",
+      "source_checks": [
+        {
+          "path": "build/sources/linux-b9b3e33b70b71/arch/sh/include/asm/cmpxchg-llsc.h",
+          "sha256": "0012886f91acac1840e83d60ee6fc136031fd094f1da9d979b9fe3b627efb240",
+          "ordered_tokens": [
+            "__cmpxchg_u32",
+            "movli.l",
+            "cmp/eq",
+            "movco.l",
+            "bf\t\t1b",
+            "synco",
+            "return retval;"
+          ]
+        }
+      ],
+      "disassembly_order": [
+        "<ipc_rcu_getref>:",
+        "movli.l\t@r3,r0",
+        "cmp/eq\tr7,r1",
+        "movco.l\tr0,@r3",
+        "bf\tc30 <ipc_rcu_getref+0x14>",
+        "mov\tr7,r1"
+      ],
+      "verification_candidate": false,
+      "decision": "not_promoted",
+      "blocking_reason": "The selected MOVLI/MOVCO compare/exchange retries after conditional-store failure without a profile-bound finite failure guarantee."
+    },
+    {
+      "id": "alpha-smp-ipc-refcount-c3",
+      "architecture": "alpha",
+      "implementation_kind": "llsc_only_selected_object_with_trampoline",
+      "source_checks": [
+        {
+          "path": "build/sources/linux-b9b3e33b70b71/arch/alpha/include/asm/cmpxchg.h",
+          "sha256": "adf371620fb04a0a14ca1770f94f52d3fc851fb718ae8d86c2f8f889662c497e",
+          "ordered_tokens": [
+            "____cmpxchg_u32",
+            "1:\tldl_l",
+            "cmpeq",
+            "stl_c",
+            "beq %1,3f",
+            ".subsection 2",
+            "3:\tbr 1b",
+            "return prev;"
+          ]
+        }
+      ],
+      "disassembly_order": [
+        "<ipc_rcu_getref>:",
+        "ldl_l\tt2,0(a0)",
+        "stl_c\tt3,0(a0)",
+        "beq\tt3,1984 <ipc_seq_pid_ns+0x34>",
+        "mov\tt2,t0",
+        "br\tfb0 <ipc_rcu_getref+0x20>",
+        "1984:\tbr\tfbc <ipc_rcu_getref+0x2c>"
+      ],
+      "verification_candidate": false,
+      "decision": "not_promoted",
+      "blocking_reason": "The selected LDL_L/STL_C compare/exchange retries through a compiler subsection trampoline after conditional-store failure without a profile-bound finite failure guarantee."
+    }
+  ],
+  "exclusions": [
+    "No LL/SC profile is promoted to a kernel progress property by this capability audit.",
+    "The hypothetical two-failure bound is diagnostic only and is not asserted of any CPU, emulator, compiler output or kernel configuration.",
+    "Native LSE and Zacas subpaths do not promote their mixed runtime-selectable ARM64 and RISC-V profiles while an unaccepted LL/SC path remains possible.",
+    "No scheduler fairness, unbounded lock-free progress, wait-freedom, interrupt/NMI progress, RCU progress or whole-kernel liveness is claimed."
+  ]
+}

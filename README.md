@@ -71,11 +71,19 @@ and UML x86-64, including emitted alternative atomic paths and UML's explicit
 UP-only exploratory m68k object is not promoted into this claim. The lifetime
 implementation map covers all nine profiles; the progress mapping is
 deliberately limited to native x86-64, s390x and UML x86-64 objects whose
-single-instruction `CMPXCHG`/`CS` retry paths are checked. These checks confirm bounded production
+single-instruction `CMPXCHG`/`CS` retry paths are checked. The subsequent
+[LL/SC progress capability audit](docs/CONCURRENCY-C3-LLSC-PROGRESS-20260907.md)
+passes 505/505 gates over the other six profiles' source and complete-object
+control flow. It promotes none: ARM64 and RISC-V retain runtime-selectable
+LL/SC alternatives, while ARM32, PowerPC32, SuperH and Alpha expose direct
+reservation loops with no established finite conditional-store failure bound.
+Its 120-schedule bounded diagnostic remains permanently ineligible, and an
+unbounded-failure control detects a one-state retry cycle. These checks confirm
+bounded production
 weak-memory/atomic reasoning, not a new defect or general concurrency support.
-Unbounded progress, scheduler fairness, wait-freedom, LL/SC liveness, remaining
-architecture mappings, broader lockless protocols, IRQ/NMI classes and explicit
-RCU grace-period reasoning remain open.
+Unbounded progress, scheduler fairness, wait-freedom, architecture-backed LL/SC
+guarantees, remaining architecture mappings, broader lockless protocols,
+IRQ/NMI classes and explicit RCU grace-period reasoning remain open.
 The [renewed s390x pilot](s390/L2-RENEWAL-20260907.md) establishes scoped L2 support
 for seven C helpers. The [freshly renewed common24 baselines](common/L2-CLANG-RENEWAL-20260907.md)
 cover four helpers on ARM32, PowerPC32, m68k, ARM64, RISC-V64, SH, Alpha,
@@ -93,7 +101,7 @@ The new entry point is `python3 -m fragma` (`list`, `preflight`, `snapshot`,
 `prepare`, `run`, `compare`, `coverage`, `concurrency-c0`, `concurrency-c1`,
 `concurrency-c2`, `concurrency-c2-irq`, `concurrency-c3-lkmm`,
 `concurrency-c3-trace`, `concurrency-c3-module-stats`,
-`concurrency-c3-ipc-refcount`,
+`concurrency-c3-ipc-refcount`, `concurrency-c3-llsc-progress`,
 `rv32-zeropad-audit`). See
 [toolchain setup](docs/toolchain.md) and
 [architecture profiles](profiles/README.md). Verification never installs
