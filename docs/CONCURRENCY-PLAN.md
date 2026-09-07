@@ -12,8 +12,8 @@ System V IPC final-put/get-unless-zero lifetime property and an unsafe
 zero-resurrection control. Its implementation map covers nine configured SMP
 builds: x86-64, arm64, riscv64, s390x, ARM32, PowerPC32, SuperH, Alpha and
 UML x86-64. The same pilot now adds a separately scoped bounded-quiescent
-progress property for the strong-CAS get retry loop, mapped only to native and
-UML x86-64 and guarded by three nontermination controls.
+progress property for the strong-CAS get retry loop, mapped only to native/UML
+x86-64 and s390x and guarded by three nontermination controls.
 Unbounded progress, scheduler fairness, LL/SC implementation liveness, broader
 lockless lifetime, remaining architecture mappings and C4 remain open.
 See the [C0 evidence record](CONCURRENCY-C0-20260907.md) and
@@ -176,8 +176,9 @@ see the [IRQ scope record](CONCURRENCY-C2-IRQ-20260907.md).
 - [x] State and check one bounded progress guarantee separately. The IPC pilot
   exhaustively enumerates 340 finite interference schedules, proves termination
   within four CAS attempts under quiescence and strong-CAS semantics, and maps
-  the retry path to native/UML x86-64 objects. Three controls demonstrate the
-  stale-expected, spurious-failure and unbounded-interference exclusions.
+  the retry path to native/UML x86-64 and s390x objects. Three controls
+  demonstrate the stale-expected, spurious-failure and unbounded-interference
+  exclusions.
 - [ ] Broaden functional/lifetime coverage beyond the first refcount handshake,
   and evaluate unbounded progress plus architecture-specific LL/SC liveness.
   A mutex-oriented race analysis cannot supply these claims implicitly.
@@ -201,7 +202,7 @@ accepts one production no-lost-update property for two selected concurrent
 `failed_load_modules` increments. Its split once-access control permits the lost
 update, while a separate ordered/relaxed return-value pair calibrates ordering.
 The subsequent
-[845-check IPC refcount pilot](../results/concurrency-c3-ipc-refcount-20260907-08/SUMMARY.md)
+[848-check IPC refcount pilot](../results/concurrency-c3-ipc-refcount-20260907-09/SUMMARY.md)
 accepts one lifetime-sensitive functional property: under the contract's
 caller-locking prerequisite and from the sole reference, `ipc_rcu_putref()`
 cannot schedule RCU destruction while concurrent `ipc_rcu_getref()` succeeds.
@@ -213,8 +214,8 @@ controls expose the boundaries. Its real `ipc/util.o` lifetime map passes for
 configured SMP x86-64, arm64, riscv64, big-endian s390x, ARM32, big-endian
 PowerPC32, SuperH, Alpha and UML x86-64 profiles. The UML result has its own `ARCH=um`,
 `SUBARCH=x86_64`, SMP config and object rather than inheriting native x86
-evidence. Only native and UML x86-64 are accepted as progress implementation
-mappings; LL/SC progress on the other seven profiles is not inferred. The
+evidence. Only native/UML x86-64 and s390x are accepted as progress implementation
+mappings; LL/SC progress on the other six profiles is not inferred. The
 available m68k build remains outside this SMP claim.
 All three source pilots verify correct selected code; none found a new defect or
 completes C3.

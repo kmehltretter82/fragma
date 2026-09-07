@@ -443,6 +443,7 @@ def _validate_progress(progress: Any) -> None:
         or progress["selected_caller"] != "ipc_rcu_getref"
         or progress["implementation_profiles"] != [
             "x86_64-ipc-refcount-c3",
+            "s390x-ipc-refcount-c3",
             "um-x86_64-smp-ipc-refcount-c3",
         ]
     ):
@@ -470,7 +471,7 @@ def _validate_progress(progress: Any) -> None:
     for required in (
         "caller-locking", "storage valid", "scheduled", "strong",
         "non-spurious", "updates old", "three", "saturation",
-        "x86 cmpxchg", "hardware failure",
+        "x86 cmpxchg", "s390 cs", "comparison operand", "hardware failure",
     ):
         if required not in assumptions:
             raise ConcurrencyC3IpcRefcountError(
@@ -1124,6 +1125,7 @@ def _run_progress_model(
         source_root / "include/linux/atomic/atomic-arch-fallback.h"
     ).read_text()
     x86_cmpxchg = (source_root / "arch/x86/include/asm/cmpxchg.h").read_text()
+    s390_cmpxchg = (source_root / "arch/s390/include/asm/cmpxchg.h").read_text()
     checks.extend([
         _check("progress loop starts from one atomic read", 1,
                add_not_zero.count("int old = refcount_read(r);")),
@@ -1155,6 +1157,16 @@ def _run_progress_model(
                    "*_old = __old;",
                    "likely(success);",
                ])),
+        _check("s390 strong CAS uses one CS with an in/out expected operand", True,
+               _ordered(s390_cmpxchg, [
+                   "#ifdef __HAVE_ASM_FLAG_OUTPUTS__",
+                   "#define arch_try_cmpxchg(ptr, oldp, new)",
+                   "case 4:",
+                   '"\tcs\t%[__old],%[__new],%[__ptr]"',
+                   ': [__old] "+d" (*__oldp)',
+                   '"=@cc" (__cc)',
+                   "likely(__cc == 0);",
+               ])),
     ])
 
     result_profiles = {profile["id"]: profile for profile in profile_results}
@@ -1165,6 +1177,10 @@ def _run_progress_model(
         "x86_64-ipc-refcount-c3": [
             "lock cmpxchg", "mov    %eax,%edx",
             "jmp    bfe <ipc_rcu_getref+0xe>",
+        ],
+        "s390x-ipc-refcount-c3": [
+            "cs\t%r1,%r2,0(%r3)",
+            "jne\tf34 <ipc_rcu_getref+0x24>",
         ],
         "um-x86_64-smp-ipc-refcount-c3": [
             "lock cmpxchg", "mov    %eax,%ebx",
@@ -2040,6 +2056,8 @@ def render_summary(result: dict[str, Any]) -> str:
         "riscv64, s390x, ARM32, PowerPC32, SuperH, Alpha, and UML x86-64.",
         "Each mapping pins both function symbols and target disassembly,",
         "including alternative atomic paths where the architecture emits them.",
+        "The bounded progress mapping is limited to native x86-64, s390x, and",
+        "UML x86-64 objects with checked single-instruction CAS retry paths.",
         "The caller-locking prerequisite is assumed. Callback execution and RCU",
         "grace periods are not modeled.",
         "",

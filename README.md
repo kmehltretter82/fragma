@@ -55,7 +55,7 @@ concurrent `atomic_inc()` operations on `failed_load_modules` cannot collapse to
 one. Its split once-access control permits the lost update, and an independent
 pair distinguishes fully ordered from relaxed increment-return operations. The
 [System V IPC refcount pilot](docs/CONCURRENCY-C3-REFCOUNT-20260907.md) then
-passes 845/845 gates and accepts two separate properties. The lifetime property
+passes 848/848 gates and accepts two separate properties. The lifetime property
 says that, from the sole reference, `ipc_rcu_putref()` cannot schedule
 destruction while a concurrent, locking-stabilized `ipc_rcu_getref()` also
 succeeds; its unsafe unconditional-increment control exposes a zero-refcount
@@ -70,8 +70,8 @@ and UML x86-64, including emitted alternative atomic paths and UML's explicit
 `ARCH`/`SUBARCH` header route. All nine selected configurations are SMP; the
 UP-only exploratory m68k object is not promoted into this claim. The lifetime
 implementation map covers all nine profiles; the progress mapping is
-deliberately limited to native and UML x86-64 objects whose single-instruction
-`CMPXCHG` retry paths are checked. These checks confirm bounded production
+deliberately limited to native x86-64, s390x and UML x86-64 objects whose
+single-instruction `CMPXCHG`/`CS` retry paths are checked. These checks confirm bounded production
 weak-memory/atomic reasoning, not a new defect or general concurrency support.
 Unbounded progress, scheduler fairness, wait-freedom, LL/SC liveness, remaining
 architecture mappings, broader lockless protocols, IRQ/NMI classes and explicit

@@ -2,12 +2,13 @@
 
 Status: accepted for one narrow production lifetime decision with nine
 configured SMP implementation mappings and one separate bounded progress
-property with two x86-64 implementation mappings; C3 remains incomplete.
+property with three single-instruction-CAS implementation mappings; C3 remains
+incomplete.
 
 The current standalone evidence is
-[`results/concurrency-c3-ipc-refcount-20260907-08`](../results/concurrency-c3-ipc-refcount-20260907-08/SUMMARY.md).
-It passes all 845 gates, accepts two separately bounded source-linked kernel
-properties, and accepts nine lifetime plus two progress implementation mappings.
+[`results/concurrency-c3-ipc-refcount-20260907-09`](../results/concurrency-c3-ipc-refcount-20260907-09/SUMMARY.md).
+It passes all 848 gates, accepts two separately bounded source-linked kernel
+properties, and accepts nine lifetime plus three progress implementation mappings.
 The receipt pins 77 input identities and retains 331 raw artifacts. It found no
 new Linux defect: the selected IPC code uses the refcount API correctly.
 
@@ -33,6 +34,8 @@ explicit UML configuration, x86-header routing, symbol and disassembly gates.
 Run `-08` retains the lifetime result and all nine mappings, then adds the
 separate finite-state progress property, three detecting controls and exact
 native/UML x86-64 retry-loop mappings.
+Run `-09` adds s390 only after checking its strong try-CAS source macro, in/out
+comparison operand, real `CS` instruction and mismatch retry branch.
 
 ## Accepted lifetime property
 
@@ -90,7 +93,7 @@ cross-object ordering claim is inferred from its omission.
 ## Accepted bounded progress property
 
 The progress claim is separate from the lifetime model. For the selected native
-and UML x86-64 `ipc_rcu_getref()` implementations, assume that:
+x86-64, s390x and UML x86-64 `ipc_rcu_getref()` implementations, assume that:
 
 - the caller keeps the object and refcount storage valid;
 - the operation is scheduled for every modeled loop step and once after
@@ -116,10 +119,12 @@ general lock-free progress, scheduler fairness or global CPU forward progress.
 
 Both selected x86 objects lower the operation to a locked `CMPXCHG`, update the
 expected register from `EAX` on mismatch and branch back to the source retry.
-Their exact objects and disassembly are checked by the same build gate. The
-other seven lifetime profiles use architecture-dependent operations, including
-LL/SC loops on several targets; this pilot does not establish their machine-level
-progress.
+The s390 object lowers the 32-bit operation to one `CS`; its in/out comparison
+operand receives the observed word on mismatch before the condition-code branch
+returns to the zero check. All three exact objects and disassemblies are checked
+by the same build gate. The other six lifetime profiles use
+architecture-dependent operations, including LL/SC loops; this pilot does not
+establish their machine-level progress.
 
 ## Source and configured implementation gates
 
@@ -184,8 +189,8 @@ The implementation mapping is limited to x86-64, arm64, riscv64, s390x, ARM32,
 PowerPC32, SuperH, Alpha and UML x86-64, all under the exact SMP configurations
 above. The architecture-independent refcount contract and LKMM result do not
 activate any other architecture without its source/macro/compiler/object
-evidence. The progress implementation mapping is narrower still: native and UML
-x86-64 only. C3 still needs unbounded/LL/SC progress evaluation, mappings for the
+evidence. The progress implementation mapping is narrower still: native/UML
+x86-64 and s390x only. C3 still needs unbounded/LL/SC progress evaluation, mappings for the
 remaining Linux architectures and broader lockless protocol coverage. C4 remains
 responsible for explicit RCU grace-period and reclamation reasoning.
 
@@ -195,7 +200,7 @@ a separately worded local task/interrupt claim or a non-concurrency compiler
 mapping, but not this profile's `smp-multicpu` label.
 
 The post-expansion project regression run passes
-[990 tests](../results/tests-concurrency-c3-bounded-progress-20260907.log),
+[990 tests](../results/tests-concurrency-c3-s390-progress-20260907.log),
 with 20 pre-existing conditional skips; all 22 focused IPC/refcount tests pass.
 
 Reproduce with:

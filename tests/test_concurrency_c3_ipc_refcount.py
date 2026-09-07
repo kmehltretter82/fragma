@@ -119,7 +119,7 @@ class ConcurrencyC3IpcRefcountTests(unittest.TestCase):
         self.assertIn("lock xadd", tokens["um-x86_64-smp-ipc-refcount-c3"])
         self.assertIn("lfence", tokens["um-x86_64-smp-ipc-refcount-c3"])
 
-    def test_progress_claim_is_separate_bounded_and_x86_scoped(self):
+    def test_progress_claim_is_separate_bounded_and_single_cas_scoped(self):
         manifest = concurrency_c3_ipc_refcount.load_manifest(ROOT)
         progress = manifest["progress"]
         self.assertEqual(progress["kind"], "bounded_quiescent_retry_progress")
@@ -131,6 +131,7 @@ class ConcurrencyC3IpcRefcountTests(unittest.TestCase):
             progress["implementation_profiles"],
             [
                 "x86_64-ipc-refcount-c3",
+                "s390x-ipc-refcount-c3",
                 "um-x86_64-smp-ipc-refcount-c3",
             ],
         )
@@ -148,6 +149,9 @@ class ConcurrencyC3IpcRefcountTests(unittest.TestCase):
         ):
             with self.subTest(boundary=boundary):
                 self.assertIn(boundary, excluded)
+        assumptions = " ".join(progress["assumptions"]).lower()
+        self.assertIn("s390 cs", assumptions)
+        self.assertIn("comparison operand", assumptions)
 
     def test_progress_enumerator_and_controls_have_detecting_outcomes(self):
         progress = concurrency_c3_ipc_refcount.load_manifest(ROOT)["progress"]

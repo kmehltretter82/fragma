@@ -457,6 +457,7 @@
             "<ipc_rcu_getref>:",
             "cije\t%r1,0",
             "cs\t%r1,%r2,0(%r3)",
+            "jne\tf34 <ipc_rcu_getref+0x24>",
             "R_390_PLT32DBL\trefcount_warn_saturate"
           ]
         },
@@ -1043,12 +1044,13 @@
   },
   "progress": {
     "kind": "bounded_quiescent_retry_progress",
-    "claim": "For the selected x86-64 and UML x86-64 ipc_rcu_getref() implementations, if refcount_inc_not_zero() is scheduled through at most three interfering counter observations and once after interference quiesces, its strong-CAS source loop returns after at most four compare/exchange attempts; an initially or newly observed zero returns without resurrection.",
+    "claim": "For the selected native x86-64, s390x and UML x86-64 ipc_rcu_getref() implementations, if refcount_inc_not_zero() is scheduled through at most three interfering counter observations and once after interference quiesces, its strong-CAS source loop returns after at most four compare/exchange attempts; an initially or newly observed zero returns without resurrection.",
     "backend": "project-owned-exhaustive-finite-state-enumerator",
     "source_function": "__refcount_add_not_zero",
     "selected_caller": "ipc_rcu_getref",
     "implementation_profiles": [
       "x86_64-ipc-refcount-c3",
+      "s390x-ipc-refcount-c3",
       "um-x86_64-smp-ipc-refcount-c3"
     ],
     "domain": {
@@ -1079,12 +1081,12 @@
       "The selected operation is scheduled through every modeled loop step and once after the finite interference schedule quiesces; this is a bounded scheduling premise, not general fairness.",
       "atomic_try_cmpxchg_relaxed has the selected Linux strong, non-spurious compare/exchange semantics and updates old to the current counter on mismatch.",
       "At most three interference observations occur before quiescence; initial and interfering values remain in the explicit zero-through-three domain, and a successful terminal increment may produce four, so saturation and arithmetic overflow are unreachable.",
-      "Each selected x86 CMPXCHG instruction completes according to its architectural compare/exchange semantics; hardware failure and global machine liveness are not established by the C-source gate."
+      "Each selected x86 CMPXCHG or s390 CS instruction completes according to its architectural compare/exchange semantics, including loading the observed word into the s390 comparison operand on mismatch; hardware failure and global machine liveness are not established by the C-source gate."
     ],
     "exclusions": [
       "Unbounded interference and per-thread starvation are excluded; no wait-free or general lock-free guarantee is claimed.",
       "Spurious compare/exchange failure is excluded by the selected strong API semantics; weak CAS is not modeled.",
-      "LL/SC implementation progress and architectures beyond the two selected x86-64 objects are not accepted by this progress property.",
+      "LL/SC implementation progress and architectures beyond the selected native/UML x86-64 and s390x objects are not accepted by this progress property.",
       "Saturation, overflow, underflow, warning paths, RCU callback progress and allocator lifetime are outside the finite-state model.",
       "No general scheduler fairness, CPU forward-progress, whole-IPC, whole-RCU or whole-kernel liveness property is claimed."
     ],

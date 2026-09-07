@@ -54,7 +54,7 @@ split once-access control permits the lost update; a separate pair distinguishes
 fully ordered and relaxed increment-return operations. This also verifies
 correct selected code rather than finding a defect. The subsequent
 [System V IPC refcount lifetime/progress pilot](docs/CONCURRENCY-C3-REFCOUNT-20260907.md)
-passes 845/845 checks and accepts two separately bounded properties. The
+passes 848/848 checks and accepts two separately bounded properties. The
 lifetime property says that, from an initial sole reference, the
 locking-stabilized final put cannot schedule RCU destruction while the
 concurrent get-unless-zero also succeeds. Its unsafe unconditional-increment
@@ -70,7 +70,7 @@ and Alpha, plus UML x86-64. The UML profile separately binds `ARCH=um`,
 object. Native atomic paths, emitted alternatives, ELF32/ELF64 symbols and build
 diagnostics are checked per architecture. The lifetime mapping covers all nine;
 the progress implementation mapping is limited to the checked native/UML x86-64
-`CMPXCHG` paths and makes no LL/SC-liveness claim. This again verifies correct
+`CMPXCHG` and s390x `CS` paths and makes no LL/SC-liveness claim. This again verifies correct
 selected code rather than finding a defect. The available m68k profile is UP
 only and was deliberately not promoted into the SMP claim. Unbounded progress,
 LL/SC liveness, broader lockless lifetime behavior and remaining architecture
@@ -87,15 +87,16 @@ in `c0-...-09`, `c1-...-05`, `c1-stale-control-...-06`, `c2-...-08`,
 rejects exactly seven pthread-dependent cases while preserving the two
 builtins-only cases. A direct readback finds no input identity drift in those
 positive receipts, the preceding `c3-ipc-refcount-...-03` lifetime pilot or the
-current `c3-ipc-refcount-...-08` receipt. The accepted eight-profile predecessor
-is `c3-ipc-refcount-...-06`; run `-07` added the ninth UML mapping, and the
-current `-08` successor retains all nine while adding bounded progress. Run
+current `c3-ipc-refcount-...-09` receipt. The accepted eight-profile predecessor
+is `c3-ipc-refcount-...-06`; run `-07` added the ninth UML mapping, `-08` added
+bounded x86 progress, and the current `-09` successor adds the separately
+checked s390 `CS` path. Run
 `-04` is retained as a 736/738 failed matcher attempt caused only by PowerPC
 objdump whitespace, and
 the mechanically green `-05` is superseded because final readback caught its
 stale four-profile exclusion sentence.
 
-All [990 project tests](results/tests-concurrency-c3-bounded-progress-20260907.log)
+All [990 project tests](results/tests-concurrency-c3-s390-progress-20260907.log)
 pass in the bounded-progress tree, with 20 pre-existing conditional skips. The
 IPC/refcount module has 22 focused tests, including exact profile inventory,
 ELF32/Alpha symbol parsing, diagnostic classification, native atomic-disassembly
@@ -373,7 +374,7 @@ a proof of the whole kernel or automatic verification of every caller.
 | RISC-V encoders | Current source/model/proof gates for seven helpers and five project witnesses: 119 ordinary goals, 119 dependencies and 47 postconditions. | Helper-specific calibration, kernel callers and a documented encoder L2 scope. |
 | ARM64 scalar extraction | Current runtime-safety gates for two cpuid helpers: six ordinary goals and ten selected dependencies with genuine-header checks. | Add functional contracts/calibration and verify kernel callers. |
 | Kernel bug review | RV32 `load_unaligned_zeropad()` wrong result dynamically reproduced in QEMU; identical-config A/B passes after a two-line fix; send-ready patch and exact evidence audit. | Human submission decision, then upstream review/revision; broaden review without treating alarms as bugs. |
-| Concurrency | C0/C1 infrastructure, limited C2 mutex/IRQ pilots, a 92-check LKMM baseline, a 135-check release/acquire pilot, a 162-check atomic/RMW pilot and an 845-check IPC refcount lifetime/progress pilot are accepted. Six narrow kernel concurrency properties now exist: two access-protection claims, trace tgid-map publication ordering, module-statistics no-lost-update atomicity, IPC final-put/get-unless-zero exclusion with nine checked SMP mappings, and bounded-quiescent strong-CAS retry progress with native/UML x86-64 mappings. | C3 unbounded/LL/SC progress, broader lockless lifetime behavior and remaining architecture mappings; then C4 RCU. Broader IRQ classes, functional protocols and the preserved unlocked HDQ accesses remain open. |
+| Concurrency | C0/C1 infrastructure, limited C2 mutex/IRQ pilots, a 92-check LKMM baseline, a 135-check release/acquire pilot, a 162-check atomic/RMW pilot and an 848-check IPC refcount lifetime/progress pilot are accepted. Six narrow kernel concurrency properties now exist: two access-protection claims, trace tgid-map publication ordering, module-statistics no-lost-update atomicity, IPC final-put/get-unless-zero exclusion with nine checked SMP mappings, and bounded-quiescent strong-CAS retry progress with native/UML x86-64 and s390x mappings. | C3 unbounded/LL/SC progress, broader lockless lifetime behavior and remaining architecture mappings; then C4 RCU. Broader IRQ classes, functional protocols and the preserved unlocked HDQ accesses remain open. |
 
 The registry's 24 distinct kernel functions reach the plan's initial numerical
 range, not its proof/coverage acceptance. The current report has 18 functions

@@ -26,7 +26,7 @@ get-unless-zero, with an unsafe zero-resurrection control and configured SMP
 x86-64, arm64, riscv64, s390x, ARM32, PowerPC32, SuperH, Alpha and UML x86-64
 object mappings. A separate bounded progress property exhaustively checks the
 strong-CAS retry loop under finite interference and quiescence, with selected
-native/UML x86-64 implementation mappings and three nontermination controls.
+native/UML x86-64 and s390x implementation mappings and three nontermination controls.
 Unbounded progress, scheduler fairness, wait-freedom, LL/SC implementation
 liveness, broader lockless lifetime behavior, remaining architecture mappings,
 C4 and broader interrupt/functional semantics remain open. See the
@@ -317,8 +317,8 @@ nine SMP implementation mappings:
 x86-64, arm64, riscv64, s390x, ARM32, PowerPC32, SuperH, Alpha and UML x86-64.
 The UML mapping pins `ARCH=um`, `SUBARCH=x86_64` and its own SMP object rather
 than inheriting native x86 evidence. Progress implementation evidence is limited
-to the native and UML x86-64 objects; it does not infer LL/SC liveness for the
-other seven profiles. The atomic
+to the native/UML x86-64 and s390x objects; it does not infer LL/SC liveness for
+the other six profiles. The atomic
 pilot also adds an independent return-
 ordering A/B calibration; the IPC pilot's caller-locking prerequisite remains
 an assumption and it does not model RCU callbacks. These do not imply general
@@ -340,7 +340,7 @@ Unsupported features must be visible in coverage reports.
 | A0–A3. Architecture support | P1 for s390; P2 for later waves | 0–2; alongside 3–4 | Common port interface, s390 first, then every architecture in the pinned tree |
 | 3. Stronger specifications | P1 | 1 and 2 | Functional contracts and reusable proof components |
 | 4. Curated coverage expansion | P1 | 2 and 3 | A measured collection of 20–50 distinct functions |
-| C0–C4. Concurrency support | P1 active; C0-C2 limited pilots accepted; C3 LKMM release/acquire and atomic/RMW pilots plus IPC lifetime and bounded x86 strong-CAS progress properties accepted in narrow scopes | 1–2 for acceptance; independent of all-architecture completion | Continue unbounded/LL/SC progress, broader lockless lifetime and remaining architecture mappings, then explicit RCU capabilities |
+| C0–C4. Concurrency support | P1 active; C0-C2 limited pilots accepted; C3 LKMM release/acquire and atomic/RMW pilots plus IPC lifetime and bounded x86/s390 strong-CAS progress properties accepted in narrow scopes | 1–2 for acceptance; independent of all-architecture completion | Continue unbounded/LL/SC progress, broader lockless lifetime and remaining architecture mappings, then explicit RCU capabilities |
 | 5. Maintenance and performance | P2 | 2; use 4 for measurement | Incremental checks and a documented update workflow |
 
 Runner scaffolding and dependency pinning can start during phase 0. Accept a
@@ -654,18 +654,17 @@ all-architecture and additional ABI coverage remain open.
 - [x] Add a separately scoped bounded progress property for the IPC get retry
   loop. It enumerates finite interference prefixes, requires quiescence and
   strong non-spurious compare/exchange semantics, and maps only to the checked
-  native/UML x86-64 `CMPXCHG` paths. Its three controls preserve stale-expected,
-  spurious-failure and unbounded-interference cycles; no wait-free, general
-  lock-free or LL/SC implementation-progress claim is inferred.
+  native/UML x86-64 `CMPXCHG` and s390x `CS` paths. Its three controls preserve
+  stale-expected, spurious-failure and unbounded-interference cycles; no
+  wait-free, general lock-free or LL/SC implementation-progress claim is inferred.
 - [ ] Map the IPC lifetime property to further architectures only under a configuration
   capable of the claimed concurrency. Keep UP-only builds (currently the
   available m68k `virt_defconfig`) as compiler observations or give them a
   separately worded task/interrupt claim; never label them `smp-multicpu`.
-- [ ] Extend the progress implementation map separately. Start with architectures
-  whose selected compare/exchange completes as one architecturally specified
-  instruction, then add explicit reservation-loop and forward-progress reasoning
-  before admitting LL/SC profiles. A passing lifetime mapping alone is never
-  progress evidence.
+- [ ] Extend the progress implementation map separately beyond the accepted
+  x86-64 and s390 single-instruction paths. Add explicit reservation-loop and
+  forward-progress reasoning before admitting LL/SC profiles. A passing lifetime
+  mapping alone is never progress evidence.
 - [ ] Within each wave, choose order by toolchain availability, model readiness,
   and useful new ABI/layout coverage. Retain every planned architecture in the
   matrix even when it cannot yet progress.
