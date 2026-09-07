@@ -24,9 +24,12 @@ separate configured SMP x86-64 build. A further System V IPC refcount pilot
 accepts one bounded lifetime-sensitive functional property for final-put versus
 get-unless-zero, with an unsafe zero-resurrection control and configured SMP
 x86-64, arm64, riscv64, s390x, ARM32, PowerPC32, SuperH, Alpha and UML x86-64
-object mappings. Progress, broader lockless
-lifetime behavior, remaining architecture mappings, C4 and broader
-interrupt/functional semantics remain open. See the
+object mappings. A separate bounded progress property exhaustively checks the
+strong-CAS retry loop under finite interference and quiescence, with selected
+native/UML x86-64 implementation mappings and three nontermination controls.
+Unbounded progress, scheduler fairness, wait-freedom, LL/SC implementation
+liveness, broader lockless lifetime behavior, remaining architecture mappings,
+C4 and broader interrupt/functional semantics remain open. See the
 [C0 record](docs/CONCURRENCY-C0-20260907.md),
 [C1 record](docs/CONCURRENCY-C1-20260907.md),
 [C2 mutex record](docs/CONCURRENCY-C2-20260907.md),
@@ -308,16 +311,20 @@ accesses on a pinned SMP ARM profile, each with required negatives. It preserves
 the remote handler's unlocked status read outside the accepted claim. C3 adds
 four baseline LKMM calibrations plus narrowly source-linked trace publication,
 module-statistics atomicity, and IPC final-put/get-unless-zero lifetime
-properties. The IPC property has checked nine SMP implementation mappings:
+properties. The IPC pilot also accepts a separately bounded quiescent-progress
+property for the strong-CAS get retry loop. The lifetime property has checked
+nine SMP implementation mappings:
 x86-64, arm64, riscv64, s390x, ARM32, PowerPC32, SuperH, Alpha and UML x86-64.
 The UML mapping pins `ARCH=um`, `SUBARCH=x86_64` and its own SMP object rather
-than inheriting native x86 evidence. The atomic
+than inheriting native x86 evidence. Progress implementation evidence is limited
+to the native and UML x86-64 objects; it does not infer LL/SC liveness for the
+other seven profiles. The atomic
 pilot also adds an independent return-
 ordering A/B calibration; the IPC pilot's caller-locking prerequisite remains
 an assumption and it does not model RCU callbacks. These do not imply general
-weak-memory, atomic or lifetime support. Follow the remaining
-[C3-C4](docs/CONCURRENCY-PLAN.md) for progress, broader lockless lifetime,
-remaining architecture and RCU validation without waiting for
+weak-memory, atomic, lifetime or general progress support. Follow the remaining
+[C3-C4](docs/CONCURRENCY-PLAN.md) for unbounded/LL/SC progress, broader lockless
+lifetime, remaining architecture and RCU validation without waiting for
 all-architecture completion.
 Inline assembly, MMIO and whole-subsystem verification still require additional
 models.
@@ -333,7 +340,7 @@ Unsupported features must be visible in coverage reports.
 | A0–A3. Architecture support | P1 for s390; P2 for later waves | 0–2; alongside 3–4 | Common port interface, s390 first, then every architecture in the pinned tree |
 | 3. Stronger specifications | P1 | 1 and 2 | Functional contracts and reusable proof components |
 | 4. Curated coverage expansion | P1 | 2 and 3 | A measured collection of 20–50 distinct functions |
-| C0–C4. Concurrency support | P1 active; C0-C2 limited pilots accepted; C3 LKMM release/acquire and atomic/RMW pilots plus a nine-profile IPC refcount lifetime map accepted in narrow scopes | 1–2 for acceptance; independent of all-architecture completion | Continue progress, broader lockless lifetime and remaining architecture mappings, then explicit RCU capabilities |
+| C0–C4. Concurrency support | P1 active; C0-C2 limited pilots accepted; C3 LKMM release/acquire and atomic/RMW pilots plus IPC lifetime and bounded x86 strong-CAS progress properties accepted in narrow scopes | 1–2 for acceptance; independent of all-architecture completion | Continue unbounded/LL/SC progress, broader lockless lifetime and remaining architecture mappings, then explicit RCU capabilities |
 | 5. Maintenance and performance | P2 | 2; use 4 for measurement | Incremental checks and a documented update workflow |
 
 Runner scaffolding and dependency pinning can start during phase 0. Accept a
@@ -644,10 +651,21 @@ all-architecture and additional ABI coverage remain open.
   distinct `ARCH`, `SUBARCH`, SMP mutation and x86-header route. This is one
   shared property mapping, not an L2 architecture award or general proof-suite
   promotion.
-- [ ] Map the IPC property to further architectures only under a configuration
+- [x] Add a separately scoped bounded progress property for the IPC get retry
+  loop. It enumerates finite interference prefixes, requires quiescence and
+  strong non-spurious compare/exchange semantics, and maps only to the checked
+  native/UML x86-64 `CMPXCHG` paths. Its three controls preserve stale-expected,
+  spurious-failure and unbounded-interference cycles; no wait-free, general
+  lock-free or LL/SC implementation-progress claim is inferred.
+- [ ] Map the IPC lifetime property to further architectures only under a configuration
   capable of the claimed concurrency. Keep UP-only builds (currently the
   available m68k `virt_defconfig`) as compiler observations or give them a
   separately worded task/interrupt claim; never label them `smp-multicpu`.
+- [ ] Extend the progress implementation map separately. Start with architectures
+  whose selected compare/exchange completes as one architecturally specified
+  instruction, then add explicit reservation-loop and forward-progress reasoning
+  before admitting LL/SC profiles. A passing lifetime mapping alone is never
+  progress evidence.
 - [ ] Within each wave, choose order by toolchain availability, model readiness,
   and useful new ABI/layout coverage. Retain every planned architecture in the
   matrix even when it cannot yet progress.

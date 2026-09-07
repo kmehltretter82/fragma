@@ -1,5 +1,5 @@
 {
-  "schema_version": 4,
+  "schema_version": 5,
   "id": "linux-ipc-refcount-lifetime-multiarch-c3",
   "kernel": {
     "revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
@@ -143,7 +143,10 @@
             "test   %edx,%edx",
             "lock cmpxchg",
             "sete",
-            "refcount_warn_saturate"
+            "jne    c3b <ipc_rcu_getref+0x4b>",
+            "refcount_warn_saturate",
+            "mov    %eax,%edx",
+            "jmp    bfe <ipc_rcu_getref+0xe>"
           ]
         },
         "ipc_rcu_putref": {
@@ -988,8 +991,10 @@
             "<ipc_rcu_getref>:",
             "test   %ebx,%ebx",
             "lock cmpxchg",
+            "jne    9ec <ipc_rcu_getref+0x37>",
             "R_X86_64_64\trefcount_warn_saturate",
-            "mov    %eax,%ebx"
+            "mov    %eax,%ebx",
+            "jmp    9c9 <ipc_rcu_getref+0x14>"
           ]
         },
         "ipc_rcu_putref": {
@@ -1033,7 +1038,131 @@
       "The acquire-after-control-dependency orders later destruction work but cannot change the selected same-refcount mutual-success outcome, so cross-object ordering is not claimed.",
       "The unsafe resurrection case is a detecting control and is permanently ineligible as verification evidence.",
       "No architecture implementation other than the nine configured SMP x86-64, arm64, riscv64, s390x, ARM32, PowerPC32, SuperH, Alpha and UML x86-64 profiles is accepted by this source-linked pilot; every other architecture remains outside the claim.",
-      "No progress, fairness, retry bound, lock-freedom, wait-freedom, whole-IPC correctness, whole-RCU correctness or whole-kernel race-freedom property is claimed."
+      "The lifetime mutual-exclusion model itself claims no progress, fairness or retry bound; only the separate bounded-quiescent progress property below is eligible, and it does not establish general lock-freedom, wait-freedom, whole-IPC correctness, whole-RCU correctness or whole-kernel race freedom."
+    ]
+  },
+  "progress": {
+    "kind": "bounded_quiescent_retry_progress",
+    "claim": "For the selected x86-64 and UML x86-64 ipc_rcu_getref() implementations, if refcount_inc_not_zero() is scheduled through at most three interfering counter observations and once after interference quiesces, its strong-CAS source loop returns after at most four compare/exchange attempts; an initially or newly observed zero returns without resurrection.",
+    "backend": "project-owned-exhaustive-finite-state-enumerator",
+    "source_function": "__refcount_add_not_zero",
+    "selected_caller": "ipc_rcu_getref",
+    "implementation_profiles": [
+      "x86_64-ipc-refcount-c3",
+      "um-x86_64-smp-ipc-refcount-c3"
+    ],
+    "domain": {
+      "initial_values": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "interference_values": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "max_interference_observations": 3,
+      "increment": 1,
+      "max_cas_attempts": 4
+    },
+    "semantics": {
+      "loop_head_zero": "return false before compare/exchange",
+      "strong_cas_match": "atomically write expected plus increment and return true",
+      "strong_cas_mismatch": "leave the counter unchanged, update expected to the current counter and retry",
+      "quiescence": "after the finite interference schedule is exhausted, no further counter change occurs"
+    },
+    "assumptions": [
+      "The IPC caller-locking prerequisite keeps the selected object and refcount storage valid throughout the modeled retry operation.",
+      "The selected operation is scheduled through every modeled loop step and once after the finite interference schedule quiesces; this is a bounded scheduling premise, not general fairness.",
+      "atomic_try_cmpxchg_relaxed has the selected Linux strong, non-spurious compare/exchange semantics and updates old to the current counter on mismatch.",
+      "At most three interference observations occur before quiescence; initial and interfering values remain in the explicit zero-through-three domain, and a successful terminal increment may produce four, so saturation and arithmetic overflow are unreachable.",
+      "Each selected x86 CMPXCHG instruction completes according to its architectural compare/exchange semantics; hardware failure and global machine liveness are not established by the C-source gate."
+    ],
+    "exclusions": [
+      "Unbounded interference and per-thread starvation are excluded; no wait-free or general lock-free guarantee is claimed.",
+      "Spurious compare/exchange failure is excluded by the selected strong API semantics; weak CAS is not modeled.",
+      "LL/SC implementation progress and architectures beyond the two selected x86-64 objects are not accepted by this progress property.",
+      "Saturation, overflow, underflow, warning paths, RCU callback progress and allocator lifetime are outside the finite-state model.",
+      "No general scheduler fairness, CPU forward-progress, whole-IPC, whole-RCU or whole-kernel liveness property is claimed."
+    ],
+    "cases": [
+      {
+        "id": "bounded_quiescent_strong_cas",
+        "role": "verification_candidate",
+        "variant": "update_expected_on_mismatch",
+        "verification_candidate": true,
+        "control_for": null,
+        "expected": {
+          "total_schedules": 340,
+          "successful": 150,
+          "zero_exit": 190,
+          "nonterminating": 0,
+          "max_cas_attempts": 4,
+          "max_failures": 3
+        }
+      },
+      {
+        "id": "stale_expected_negative",
+        "role": "required_stale_expected_control",
+        "variant": "retain_stale_expected_on_mismatch",
+        "verification_candidate": false,
+        "control_for": "bounded_quiescent_strong_cas",
+        "expected": {
+          "total_schedules": 340,
+          "successful": 138,
+          "zero_exit": 85,
+          "nonterminating": 117,
+          "max_cas_attempts": 4,
+          "max_failures": 4
+        }
+      },
+      {
+        "id": "spurious_failure_negative",
+        "role": "required_spurious_failure_control",
+        "variant": "permit_spurious_failure_after_quiescence",
+        "verification_candidate": false,
+        "control_for": "bounded_quiescent_strong_cas",
+        "expected": {
+          "cycle_found": true,
+          "cycle_length": 1,
+          "state": {
+            "refs": 1,
+            "expected": 1
+          }
+        }
+      },
+      {
+        "id": "unbounded_interference_negative",
+        "role": "required_unbounded_interference_control",
+        "variant": "alternate_counter_forever",
+        "verification_candidate": false,
+        "control_for": "bounded_quiescent_strong_cas",
+        "expected": {
+          "cycle_found": true,
+          "cycle_length": 2,
+          "states": [
+            {
+              "refs": 1,
+              "expected": 1
+            },
+            {
+              "refs": 2,
+              "expected": 2
+            },
+            {
+              "refs": 1,
+              "expected": 1
+            }
+          ],
+          "interference": [
+            2,
+            1
+          ]
+        }
+      }
     ]
   },
   "model": {

@@ -11,9 +11,11 @@ return-ordering calibration on SMP x86-64. A third source pilot adds one bounded
 System V IPC final-put/get-unless-zero lifetime property and an unsafe
 zero-resurrection control. Its implementation map covers nine configured SMP
 builds: x86-64, arm64, riscv64, s390x, ARM32, PowerPC32, SuperH, Alpha and
-UML x86-64.
-Progress, broader lockless lifetime, remaining architecture mappings and C4
-remain open.
+UML x86-64. The same pilot now adds a separately scoped bounded-quiescent
+progress property for the strong-CAS get retry loop, mapped only to native and
+UML x86-64 and guarded by three nontermination controls.
+Unbounded progress, scheduler fairness, LL/SC implementation liveness, broader
+lockless lifetime, remaining architecture mappings and C4 remain open.
 See the [C0 evidence record](CONCURRENCY-C0-20260907.md) and
 [C1 evidence record](CONCURRENCY-C1-20260907.md), followed by the
 [C2 mutex pilot](CONCURRENCY-C2-20260907.md) and
@@ -21,7 +23,7 @@ See the [C0 evidence record](CONCURRENCY-C0-20260907.md) and
 the [LKMM capability baseline](CONCURRENCY-C3-LKMM-20260907.md) and the
 [trace tgid-map source pilot](CONCURRENCY-C3-TRACE-20260907.md), followed by the
 [module-statistics atomic/RMW pilot](CONCURRENCY-C3-ATOMIC-20260907.md) and the
-[System V IPC refcount lifetime pilot](CONCURRENCY-C3-REFCOUNT-20260907.md).
+[System V IPC refcount lifetime/progress pilot](CONCURRENCY-C3-REFCOUNT-20260907.md).
 Parent goal: [execute PLAN.md](../PLAN.md). This work does not replace the
 remaining sequential-suite, architecture or coverage requirements.
 
@@ -171,13 +173,19 @@ see the [IRQ scope record](CONCURRENCY-C2-IRQ-20260907.md).
   unsafe control. The IPC pilot checks the initially-one final-put versus
   get-unless-zero decision, assumes the source-required caller stabilization,
   and keeps RCU callback execution outside its claim.
-- [ ] State and check any claimed progress guarantee separately, and broaden
-  functional/lifetime coverage beyond the first refcount handshake. A
-  mutex-oriented race analysis cannot supply these claims implicitly.
+- [x] State and check one bounded progress guarantee separately. The IPC pilot
+  exhaustively enumerates 340 finite interference schedules, proves termination
+  within four CAS attempts under quiescence and strong-CAS semantics, and maps
+  the retry path to native/UML x86-64 objects. Three controls demonstrate the
+  stale-expected, spurious-failure and unbounded-interference exclusions.
+- [ ] Broaden functional/lifetime coverage beyond the first refcount handshake,
+  and evaluate unbounded progress plus architecture-specific LL/SC liveness.
+  A mutex-oriented race analysis cannot supply these claims implicitly.
 
 Acceptance: the supported ordering/atomic cases have independent semantic
 calibrations, explicit source-to-model links and retained results. Unmodeled
-ordering, progress or architecture guarantees remain outstanding requirements.
+ordering, unbounded/LL/SC progress or architecture guarantees remain outstanding
+requirements.
 
 C3 partial decision: the
 [92-check capability baseline](../results/concurrency-c3-lkmm-20260907-05/SUMMARY.md)
@@ -193,20 +201,25 @@ accepts one production no-lost-update property for two selected concurrent
 `failed_load_modules` increments. Its split once-access control permits the lost
 update, while a separate ordered/relaxed return-value pair calibrates ordering.
 The subsequent
-[822-check IPC refcount pilot](../results/concurrency-c3-ipc-refcount-20260907-07/SUMMARY.md)
+[845-check IPC refcount pilot](../results/concurrency-c3-ipc-refcount-20260907-08/SUMMARY.md)
 accepts one lifetime-sensitive functional property: under the contract's
 caller-locking prerequisite and from the sole reference, `ipc_rcu_putref()`
 cannot schedule RCU destruction while concurrent `ipc_rcu_getref()` succeeds.
 An unsafe unconditional-increment control exposes the zero-resurrection
-outcome. Its real `ipc/util.o` implementation map passes for configured SMP
-x86-64, arm64, riscv64, big-endian s390x, ARM32, big-endian PowerPC32, SuperH
-Alpha and UML x86-64 profiles. The UML result has its own `ARCH=um`,
+outcome. A separate property enumerates all 340 declared finite-interference
+schedules and establishes at-most-four-CAS termination after quiescence for the
+strong-CAS retry loop. Stale-expected, spurious-failure and unbounded-interference
+controls expose the boundaries. Its real `ipc/util.o` lifetime map passes for
+configured SMP x86-64, arm64, riscv64, big-endian s390x, ARM32, big-endian
+PowerPC32, SuperH, Alpha and UML x86-64 profiles. The UML result has its own `ARCH=um`,
 `SUBARCH=x86_64`, SMP config and object rather than inheriting native x86
-evidence. The available m68k build remains outside this SMP claim.
+evidence. Only native and UML x86-64 are accepted as progress implementation
+mappings; LL/SC progress on the other seven profiles is not inferred. The
+available m68k build remains outside this SMP claim.
 All three source pilots verify correct selected code; none found a new defect or
 completes C3.
-Progress, broader lockless lifetime behavior and mappings for remaining
-architectures remain open.
+Unbounded progress, LL/SC liveness, broader lockless lifetime behavior and
+mappings for remaining architectures remain open.
 
 ## C4 — Extend to RCU and maintain honest combined coverage
 
@@ -233,9 +246,9 @@ its required model or validation evidence.
 
 The bounded static review and limited C0-C2 pilot are complete. Continue C3
 from its accepted LKMM baseline, release/acquire, atomic/RMW and multiarchitecture
-IPC refcount lifetime pilots: separately justified progress, broader lockless
-protocols and remaining architecture mappings come next, followed by C4
-RCU/lifetime/combined coverage.
+IPC refcount lifetime/bounded-progress pilot: broader lockless protocols,
+unbounded and LL/SC progress, and remaining architecture mappings come next,
+followed by C4 RCU/lifetime/combined coverage.
 Broader interrupt and functional-protocol extensions remain visible backlog and
 need not wait for every architecture port or all sequential proofs.
 No system installation, running-kernel modification or new backend execution is

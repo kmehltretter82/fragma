@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+from itertools import product
 from pathlib import Path, PurePosixPath
 import re
 from typing import Any
@@ -18,6 +19,65 @@ class ConcurrencyC3IpcRefcountError(ValueError):
 _CASE_IDS = {
     "refcount_put_get_positive",
     "unconditional_resurrection_negative",
+}
+
+
+_PROGRESS_CASE_SPECS = {
+    "bounded_quiescent_strong_cas": {
+        "role": "verification_candidate",
+        "variant": "update_expected_on_mismatch",
+        "verification_candidate": True,
+        "control_for": None,
+        "expected": {
+            "total_schedules": 340,
+            "successful": 150,
+            "zero_exit": 190,
+            "nonterminating": 0,
+            "max_cas_attempts": 4,
+            "max_failures": 3,
+        },
+    },
+    "stale_expected_negative": {
+        "role": "required_stale_expected_control",
+        "variant": "retain_stale_expected_on_mismatch",
+        "verification_candidate": False,
+        "control_for": "bounded_quiescent_strong_cas",
+        "expected": {
+            "total_schedules": 340,
+            "successful": 138,
+            "zero_exit": 85,
+            "nonterminating": 117,
+            "max_cas_attempts": 4,
+            "max_failures": 4,
+        },
+    },
+    "spurious_failure_negative": {
+        "role": "required_spurious_failure_control",
+        "variant": "permit_spurious_failure_after_quiescence",
+        "verification_candidate": False,
+        "control_for": "bounded_quiescent_strong_cas",
+        "expected": {
+            "cycle_found": True,
+            "cycle_length": 1,
+            "state": {"refs": 1, "expected": 1},
+        },
+    },
+    "unbounded_interference_negative": {
+        "role": "required_unbounded_interference_control",
+        "variant": "alternate_counter_forever",
+        "verification_candidate": False,
+        "control_for": "bounded_quiescent_strong_cas",
+        "expected": {
+            "cycle_found": True,
+            "cycle_length": 2,
+            "states": [
+                {"refs": 1, "expected": 1},
+                {"refs": 2, "expected": 2},
+                {"refs": 1, "expected": 1},
+            ],
+            "interference": [2, 1],
+        },
+    },
 }
 
 
@@ -369,6 +429,85 @@ def _validate_expected(expected: Any, case_id: str) -> None:
     _digest(expected["hash"], f"{case_id} herd hash", 32)
 
 
+def _validate_progress(progress: Any) -> None:
+    if not isinstance(progress, dict) or set(progress) != {
+        "kind", "claim", "backend", "source_function", "selected_caller",
+        "implementation_profiles", "domain", "semantics", "assumptions",
+        "exclusions", "cases",
+    }:
+        raise ConcurrencyC3IpcRefcountError("IPC progress record is not exact")
+    if (
+        progress["kind"] != "bounded_quiescent_retry_progress"
+        or progress["backend"] != "project-owned-exhaustive-finite-state-enumerator"
+        or progress["source_function"] != "__refcount_add_not_zero"
+        or progress["selected_caller"] != "ipc_rcu_getref"
+        or progress["implementation_profiles"] != [
+            "x86_64-ipc-refcount-c3",
+            "um-x86_64-smp-ipc-refcount-c3",
+        ]
+    ):
+        raise ConcurrencyC3IpcRefcountError("unexpected IPC progress scope")
+    _nonempty(progress["claim"], "IPC progress claim")
+    if progress["domain"] != {
+        "initial_values": [0, 1, 2, 3],
+        "interference_values": [0, 1, 2, 3],
+        "max_interference_observations": 3,
+        "increment": 1,
+        "max_cas_attempts": 4,
+    }:
+        raise ConcurrencyC3IpcRefcountError("IPC progress domain is not exact")
+    semantics = progress["semantics"]
+    if not isinstance(semantics, dict) or set(semantics) != {
+        "loop_head_zero", "strong_cas_match", "strong_cas_mismatch",
+        "quiescence",
+    }:
+        raise ConcurrencyC3IpcRefcountError("IPC progress semantics are not exact")
+    for key, value in semantics.items():
+        _nonempty(value, f"IPC progress semantics {key}")
+    assumptions = " ".join(
+        _strings(progress["assumptions"], "IPC progress assumptions")
+    ).lower()
+    for required in (
+        "caller-locking", "storage valid", "scheduled", "strong",
+        "non-spurious", "updates old", "three", "saturation",
+        "x86 cmpxchg", "hardware failure",
+    ):
+        if required not in assumptions:
+            raise ConcurrencyC3IpcRefcountError(
+                f"IPC progress assumptions omit {required}"
+            )
+    exclusions = " ".join(
+        _strings(progress["exclusions"], "IPC progress exclusions")
+    ).lower()
+    for required in (
+        "unbounded interference", "wait-free", "spurious", "ll/sc",
+        "saturation", "scheduler fairness", "whole-kernel",
+    ):
+        if required not in exclusions:
+            raise ConcurrencyC3IpcRefcountError(
+                f"IPC progress exclusions omit {required}"
+            )
+    cases = progress["cases"]
+    expected_ids = list(_PROGRESS_CASE_SPECS)
+    if (
+        not isinstance(cases, list)
+        or [case.get("id") if isinstance(case, dict) else None for case in cases]
+        != expected_ids
+    ):
+        raise ConcurrencyC3IpcRefcountError("IPC progress case inventory is not exact")
+    for case in cases:
+        if set(case) != {
+            "id", "role", "variant", "verification_candidate", "control_for",
+            "expected",
+        }:
+            raise ConcurrencyC3IpcRefcountError("IPC progress case is not exact")
+        expected = _PROGRESS_CASE_SPECS[case["id"]]
+        if {key: case[key] for key in expected} != expected:
+            raise ConcurrencyC3IpcRefcountError(
+                f"IPC progress case {case['id']} cannot satisfy its evidence role"
+            )
+
+
 def _validate_profile(root: Path, profile: Any, expected_id: str) -> None:
     if not isinstance(profile, dict) or set(profile) != {
         "id", "arch", "subarch", "cross_compile", "jobs", "build_directory",
@@ -527,9 +666,9 @@ def load_manifest(root: Path) -> dict[str, Any]:
         not isinstance(manifest, dict)
         or set(manifest) != {
             "schema_version", "id", "kernel", "baseline", "profiles",
-            "property", "model",
+            "property", "progress", "model",
         }
-        or manifest["schema_version"] != 4
+        or manifest["schema_version"] != 5
         or manifest["id"] != "linux-ipc-refcount-lifetime-multiarch-c3"
     ):
         raise ConcurrencyC3IpcRefcountError("unsupported IPC refcount C3 schema")
@@ -626,6 +765,8 @@ def load_manifest(root: Path) -> dict[str, Any]:
             raise ConcurrencyC3IpcRefcountError(
                 f"IPC property omits {boundary} exclusion"
             )
+
+    _validate_progress(manifest["progress"])
 
     model = manifest["model"]
     if not isinstance(model, dict) or set(model) != {
@@ -756,6 +897,324 @@ def _function_symbols(
                 "size": int(match.group("size"), 16),
             }
     return found
+
+
+def _simulate_bounded_schedule(
+    initial: int,
+    schedule: tuple[int, ...],
+    *,
+    increment: int,
+    update_expected: bool,
+) -> dict[str, Any]:
+    """Execute one finite interference prefix followed by quiescence."""
+    refs = initial
+    expected = initial
+    attempts = 0
+    failures = 0
+    trace: list[dict[str, Any]] = [
+        {"event": "initial-read", "refs": refs, "expected": expected}
+    ]
+
+    def terminal(outcome: str) -> dict[str, Any]:
+        return {
+            "outcome": outcome,
+            "initial": initial,
+            "schedule": list(schedule),
+            "cas_attempts": attempts,
+            "cas_failures": failures,
+            "final_state": {"refs": refs, "expected": expected},
+            "trace": trace,
+        }
+
+    for observed in schedule:
+        if expected == 0:
+            trace.append({
+                "event": "zero-exit", "refs": refs, "expected": expected,
+            })
+            return terminal("zero_exit")
+        refs = observed
+        trace.append({
+            "event": "interference-observation",
+            "refs": refs,
+            "expected": expected,
+        })
+        attempts += 1
+        if refs == expected:
+            refs = expected + increment
+            trace.append({
+                "event": "cas-success", "refs": refs, "expected": expected,
+            })
+            return terminal("successful")
+        failures += 1
+        previous = expected
+        if update_expected:
+            expected = refs
+        trace.append({
+            "event": "cas-mismatch",
+            "refs": refs,
+            "expected_before": previous,
+            "expected_after": expected,
+        })
+
+    if expected == 0:
+        trace.append({
+            "event": "zero-exit-after-quiescence",
+            "refs": refs,
+            "expected": expected,
+        })
+        return terminal("zero_exit")
+    attempts += 1
+    if refs == expected:
+        refs = expected + increment
+        trace.append({
+            "event": "quiescent-cas-success",
+            "refs": refs,
+            "expected": expected,
+        })
+        return terminal("successful")
+    if update_expected:
+        raise ConcurrencyC3IpcRefcountError(
+            "updated expected value disagrees with quiescent counter"
+        )
+    failures += 1
+    trace.append({
+        "event": "quiescent-stale-expected-cycle",
+        "refs": refs,
+        "expected": expected,
+    })
+    return terminal("nonterminating")
+
+
+def _bounded_progress_aggregate(
+    domain: dict[str, Any], *, update_expected: bool
+) -> dict[str, Any]:
+    schedules = [
+        schedule
+        for length in range(domain["max_interference_observations"] + 1)
+        for schedule in product(domain["interference_values"], repeat=length)
+    ]
+    rows = [
+        _simulate_bounded_schedule(
+            initial,
+            schedule,
+            increment=domain["increment"],
+            update_expected=update_expected,
+        )
+        for initial in domain["initial_values"]
+        for schedule in schedules
+    ]
+    max_attempts = max(row["cas_attempts"] for row in rows)
+    max_failures = max(row["cas_failures"] for row in rows)
+    nonterminating = [row for row in rows if row["outcome"] == "nonterminating"]
+    return {
+        "total_schedules": len(rows),
+        "successful": sum(row["outcome"] == "successful" for row in rows),
+        "zero_exit": sum(row["outcome"] == "zero_exit" for row in rows),
+        "nonterminating": len(nonterminating),
+        "max_cas_attempts": max_attempts,
+        "max_failures": max_failures,
+        "max_attempt_witness": next(
+            row for row in rows if row["cas_attempts"] == max_attempts
+        ),
+        "nonterminating_witness": nonterminating[0] if nonterminating else None,
+    }
+
+
+def _progress_core(actual: dict[str, Any], expected: dict[str, Any]) -> dict[str, Any]:
+    return {key: actual.get(key) for key in expected}
+
+
+def _spurious_failure_cycle() -> dict[str, Any]:
+    before = {"refs": 1, "expected": 1}
+    # A spurious failure changes neither operand, so it returns to the same
+    # nonterminal loop head even after the environment has quiesced.
+    after = dict(before)
+    return {
+        "cycle_found": before == after,
+        "cycle_length": 1,
+        "state": after,
+        "trace": [
+            {"event": "loop-head", **before},
+            {"event": "spurious-cas-failure", **after},
+            {"event": "same-loop-head", **after},
+        ],
+    }
+
+
+def _unbounded_interference_cycle() -> dict[str, Any]:
+    refs = 1
+    expected = 1
+    states = [{"refs": refs, "expected": expected}]
+    interference = [2, 1]
+    trace: list[str] = []
+    for observed in interference:
+        refs = observed
+        if refs == expected:
+            raise ConcurrencyC3IpcRefcountError(
+                "unbounded-interference control unexpectedly permits CAS success"
+            )
+        previous = expected
+        expected = refs
+        states.append({"refs": refs, "expected": expected})
+        trace.append(
+            f"observe {refs}, fail expected {previous}, update expected to {expected}"
+        )
+    return {
+        "cycle_found": states[-1] == states[0],
+        "cycle_length": len(interference),
+        "states": states,
+        "interference": interference,
+        "trace": trace,
+    }
+
+
+def _run_progress_model(
+    root: Path,
+    manifest: dict[str, Any],
+    profile_results: list[dict[str, Any]],
+    output: Path,
+) -> dict[str, Any]:
+    progress = manifest["progress"]
+    domain = progress["domain"]
+    output.mkdir()
+    actual_by_id = {
+        "bounded_quiescent_strong_cas": _bounded_progress_aggregate(
+            domain, update_expected=True
+        ),
+        "stale_expected_negative": _bounded_progress_aggregate(
+            domain, update_expected=False
+        ),
+        "spurious_failure_negative": _spurious_failure_cycle(),
+        "unbounded_interference_negative": _unbounded_interference_cycle(),
+    }
+    checks: list[dict[str, Any]] = []
+    case_results: list[dict[str, Any]] = []
+    for case in progress["cases"]:
+        actual = actual_by_id[case["id"]]
+        case_checks = [
+            _check(
+                f"progress {case['id']}: expected result",
+                case["expected"],
+                _progress_core(actual, case["expected"]),
+            ),
+            _check(
+                f"progress {case['id']}: verification eligibility",
+                case["id"] == "bounded_quiescent_strong_cas",
+                case["verification_candidate"],
+            ),
+        ]
+        checks.extend(case_checks)
+        case_results.append({
+            "id": case["id"],
+            "role": case["role"],
+            "variant": case["variant"],
+            "verification_candidate": case["verification_candidate"],
+            "control_for": case["control_for"],
+            "actual": actual,
+            "checks": case_checks,
+            "passed": all(item["passed"] for item in case_checks),
+        })
+
+    source_root = root / manifest["kernel"]["source_root"]
+    refcount_path = _relative(
+        root, manifest["property"]["refcount_file"], "progress refcount source"
+    )
+    add_not_zero = _function_source(refcount_path, progress["source_function"])
+    fallback = (
+        source_root / "include/linux/atomic/atomic-arch-fallback.h"
+    ).read_text()
+    x86_cmpxchg = (source_root / "arch/x86/include/asm/cmpxchg.h").read_text()
+    checks.extend([
+        _check("progress loop starts from one atomic read", 1,
+               add_not_zero.count("int old = refcount_read(r);")),
+        _check("progress loop exits on observed zero before CAS", True,
+               _ordered(add_not_zero, ["if (!old)", "break;",
+                                       "atomic_try_cmpxchg_relaxed"])),
+        _check("progress loop passes expected by address", 1,
+               add_not_zero.count(
+                   "atomic_try_cmpxchg_relaxed(&r->refs, &old, old + i)"
+               )),
+        _check("strong CAS contract updates expected on mismatch", True,
+               _ordered(fallback, [
+                   "If (@v == @old), atomically updates @v to @new",
+                   "Otherwise, @v is not modified, @old is updated to the current value",
+                   "Return: @true if the exchange occurred, @false otherwise.",
+               ])),
+        _check("generic strong CAS fallback writes current expected", True,
+               _ordered(fallback, [
+                   "r = raw_atomic_cmpxchg_relaxed(v, o, new);",
+                   "if (unlikely(r != o))",
+                   "*old = r;",
+                   "return likely(r == o);",
+               ])),
+        _check("x86 strong CAS writes instruction result on failure", True,
+               _ordered(x86_cmpxchg, [
+                   "#define __raw_try_cmpxchg",
+                   'asm_inline volatile(lock "cmpxchgl %[new], %[ptr]"',
+                   "if (unlikely(!success))",
+                   "*_old = __old;",
+                   "likely(success);",
+               ])),
+    ])
+
+    result_profiles = {profile["id"]: profile for profile in profile_results}
+    manifest_profiles = {
+        profile["id"]: profile for profile in manifest["profiles"]
+    }
+    retry_tokens = {
+        "x86_64-ipc-refcount-c3": [
+            "lock cmpxchg", "mov    %eax,%edx",
+            "jmp    bfe <ipc_rcu_getref+0xe>",
+        ],
+        "um-x86_64-smp-ipc-refcount-c3": [
+            "lock cmpxchg", "mov    %eax,%ebx",
+            "jmp    9c9 <ipc_rcu_getref+0x14>",
+        ],
+    }
+    for profile_id in progress["implementation_profiles"]:
+        profile = result_profiles[profile_id]
+        declared = manifest_profiles[profile_id]["configured_compile"]["functions"]
+        order = declared["ipc_rcu_getref"]["disassembly_order"]
+        checks.extend([
+            _check(f"progress mapping {profile_id}: build gate", True,
+                   profile["accepted"]),
+            _check(f"progress mapping {profile_id}: strong CAS retry lowering",
+                   True, all(token in order for token in retry_tokens[profile_id])),
+        ])
+
+    positive = actual_by_id["bounded_quiescent_strong_cas"]
+    stale = actual_by_id["stale_expected_negative"]
+    spurious = actual_by_id["spurious_failure_negative"]
+    unbounded = actual_by_id["unbounded_interference_negative"]
+    checks.extend([
+        _check("bounded source model always terminates", 0,
+               positive["nonterminating"]),
+        _check("bounded source model obeys declared CAS bound",
+               domain["max_cas_attempts"], positive["max_cas_attempts"]),
+        _check("stale-expected control exposes quiescent cycles", True,
+               stale["nonterminating"] > 0),
+        _check("spurious-failure control exposes a self-cycle", True,
+               spurious["cycle_found"] and spurious["cycle_length"] == 1),
+        _check("unbounded-interference control exposes starvation cycle", True,
+               unbounded["cycle_found"] and unbounded["cycle_length"] == 2),
+    ])
+    accepted = all(item["passed"] for item in checks)
+    result = {
+        "kind": progress["kind"],
+        "backend": progress["backend"],
+        "claim": progress["claim"],
+        "implementation_profiles": progress["implementation_profiles"],
+        "domain": domain,
+        "assumptions": progress["assumptions"],
+        "exclusions": progress["exclusions"],
+        "cases": case_results,
+        "checks": checks,
+        "accepted": accepted,
+        "kernel_verification_count": 1 if accepted else 0,
+        "detecting_control_count": 3 if accepted else 0,
+    }
+    _json(output / "result.json", result)
+    return result
 
 
 def _diagnostic_lines(process: dict[str, Any]) -> list[str]:
@@ -1502,12 +1961,15 @@ def _run_profile(
 def render_summary(result: dict[str, Any]) -> str:
     passed = sum(item["passed"] for item in result["checks"])
     lines = [
-        "# System V IPC refcount C3 lifetime pilot",
+        "# System V IPC refcount C3 lifetime and bounded-progress pilot",
         "",
         f"Overall source-linked gate: **{'PASS' if result['accepted'] else 'FAIL'}**",
         "",
-        f"Accepted kernel lifetime properties: **{result['kernel_verification_count']}**",
+        f"Accepted kernel properties: **{result['kernel_verification_count']}**",
+        f"Accepted lifetime properties: **{result['lifetime_verification_count']}**",
+        f"Accepted bounded-progress properties: **{result['progress_verification_count']}**",
         f"Checked architecture mappings: **{result['architecture_mapping_count']}**",
+        f"Progress implementation mappings: **{result['progress_implementation_mapping_count']}**",
         f"LKMM functional cases: **{len(result['cases'])}**",
         "",
         "| Architecture profile | Kernel ARCH | Scope | Object | Gate |",
@@ -1539,6 +2001,25 @@ def render_summary(result: dict[str, Any]) -> str:
         )
     lines.extend([
         "",
+        "| Progress case | Role | Finite schedules | Nontermination | Max CAS attempts | Gate |",
+        "|---|---|---:|---:|---:|---|",
+    ])
+    for case in result["progress"]["cases"]:
+        actual = case["actual"]
+        nontermination = actual.get("nonterminating")
+        if nontermination is None:
+            nontermination = (
+                f"cycle/{actual.get('cycle_length', '?')}"
+                if actual.get("cycle_found") else "none"
+            )
+        lines.append(
+            f"| `{case['id']}` | {case['role']} | "
+            f"{actual.get('total_schedules', '—')} | {nontermination} | "
+            f"{actual.get('max_cas_attempts', '—')} | "
+            f"{'PASS' if case['passed'] else 'FAIL'} |"
+        )
+    lines.extend([
+        "",
         f"Evidence checks: **{passed}/{len(result['checks'])} passed**.",
         "",
         "Starting with the IPC contract's sole reference, the selected final put",
@@ -1546,6 +2027,13 @@ def render_summary(result: dict[str, Any]) -> str:
         "and that a reference was acquired. LKMM reports the mutual-success outcome",
         "`Never` (0/2 witnesses). The unsafe unconditional-increment control can",
         "resurrect zero and reports `Sometimes` (1/1).",
+        "",
+        "A separate finite-state check enumerates 340 bounded interference",
+        "schedules for the source retry loop. With strong compare/exchange",
+        "mismatch updating the expected value, every schedule terminates in at",
+        "most four CAS attempts. A stale-expected variant has 117 quiescent",
+        "nonterminating schedules; spurious failure and unbounded interference",
+        "separately expose one-state and two-state cycles.",
         "",
         "The gate pins the IPC helper and locking contract, refcount implementation,",
         "LKMM RMW axiom, and nine configured SMP profiles: x86-64, arm64,",
@@ -1555,8 +2043,9 @@ def render_summary(result: dict[str, Any]) -> str:
         "The caller-locking prerequisite is assumed. Callback execution and RCU",
         "grace periods are not modeled.",
         "",
-        "No allocator reuse, arbitrary refcount population, progress, unlisted",
-        "architecture, whole-IPC, whole-RCU, or whole-kernel property is accepted.",
+        "No allocator reuse, arbitrary refcount population, unbounded progress,",
+        "wait-freedom, LL/SC liveness, unlisted architecture, whole-IPC, whole-RCU,",
+        "or whole-kernel property is accepted.",
         "No runtime kernel was used; nothing was installed and no privileged",
         "operation was performed.",
         "",
@@ -1623,6 +2112,11 @@ def run_c3_ipc_refcount(
         )
         checks.extend(profile_checks)
         profile_results.append(profile_result)
+
+    progress_result = _run_progress_model(
+        root, manifest, profile_results, output / "progress"
+    )
+    checks.extend(progress_result["checks"])
 
     baseline_manifest = concurrency_c3_lkmm.load_manifest(root)
     baseline_provider = baseline_manifest["provider"]
@@ -1745,8 +2239,8 @@ def run_c3_ipc_refcount(
     _json(output / "input-identities.json", identities)
     _json(output / "source-model-evidence.json", source_model_evidence)
     result = {
-        "schema_version": 4,
-        "kind": "ipc-refcount-c3-lifetime-functional-multiarch-pilot",
+        "schema_version": 5,
+        "kind": "ipc-refcount-c3-lifetime-progress-multiarch-pilot",
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "target": manifest["id"],
         "kernel_revision": kernel["revision"],
@@ -1755,6 +2249,7 @@ def run_c3_ipc_refcount(
         "property": manifest["property"],
         "model_abstraction": model["abstraction"],
         "source_model_evidence": source_model_evidence,
+        "progress": progress_result,
         "profiles": profile_results,
         "configured_objects": {
             profile["id"]: profile["configured_object"]
@@ -1777,13 +2272,19 @@ def run_c3_ipc_refcount(
         "architecture_mapping_count": sum(
             profile["accepted"] for profile in profile_results
         ),
-        "kernel_verification_count": 1 if accepted else 0,
-        "detecting_control_count": 1 if accepted else 0,
+        "kernel_verification_count": 2 if accepted else 0,
+        "lifetime_verification_count": 1 if accepted else 0,
+        "progress_verification_count": 1 if accepted else 0,
+        "detecting_control_count": 4 if accepted else 0,
         "c3_lifetime_functional_pilot_complete": accepted,
+        "c3_bounded_progress_pilot_complete": accepted,
         "c3_selected_architecture_mappings_complete": accepted,
+        "progress_implementation_mapping_count": (
+            len(progress_result["implementation_profiles"]) if accepted else 0
+        ),
         "c3_stage_complete": False,
         "remaining_c3": [
-            "Any separately justified progress property",
+            "Unbounded progress, scheduler fairness, wait-freedom and LL/SC implementation liveness",
             "Implementation mappings for Linux architectures beyond x86-64, arm64, riscv64, s390x, ARM32, PowerPC32, SuperH, Alpha, and UML x86-64",
             "Broader lock-free functional protocol coverage",
         ],

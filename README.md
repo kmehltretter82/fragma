@@ -55,19 +55,27 @@ concurrent `atomic_inc()` operations on `failed_load_modules` cannot collapse to
 one. Its split once-access control permits the lost update, and an independent
 pair distinguishes fully ordered from relaxed increment-return operations. The
 [System V IPC refcount pilot](docs/CONCURRENCY-C3-REFCOUNT-20260907.md) then
-passes 822/822 gates and accepts one lifetime-sensitive functional property:
-from the sole reference, `ipc_rcu_putref()` cannot schedule destruction while a
-concurrent, locking-stabilized `ipc_rcu_getref()` also succeeds. Its unsafe
-unconditional-increment control exposes a zero-refcount resurrection witness.
+passes 845/845 gates and accepts two separate properties. The lifetime property
+says that, from the sole reference, `ipc_rcu_putref()` cannot schedule
+destruction while a concurrent, locking-stabilized `ipc_rcu_getref()` also
+succeeds; its unsafe unconditional-increment control exposes a zero-refcount
+resurrection witness. A bounded finite-state progress property exhaustively
+checks 340 interference schedules and shows that the selected strong-CAS retry
+loop terminates in at most four compare/exchange attempts after at most three
+counter observations and quiescence. Stale-expected, spurious-failure and
+unbounded-interference controls expose the excluded nontermination behaviors.
 Real `ipc/util.o` source/compiler/symbol/disassembly mappings pass for x86-64,
 arm64, riscv64, big-endian s390x, ARMv7, big-endian PowerPC32, SuperH, Alpha
 and UML x86-64, including emitted alternative atomic paths and UML's explicit
 `ARCH`/`SUBARCH` header route. All nine selected configurations are SMP; the
-UP-only exploratory m68k object is not promoted into this claim.
-These checks confirm bounded production weak-memory/atomic reasoning, not a new
-defect or general concurrency support. Progress, remaining architecture mappings,
-broader lockless protocols, IRQ/NMI classes and explicit RCU grace-period
-reasoning remain open.
+UP-only exploratory m68k object is not promoted into this claim. The lifetime
+implementation map covers all nine profiles; the progress mapping is
+deliberately limited to native and UML x86-64 objects whose single-instruction
+`CMPXCHG` retry paths are checked. These checks confirm bounded production
+weak-memory/atomic reasoning, not a new defect or general concurrency support.
+Unbounded progress, scheduler fairness, wait-freedom, LL/SC liveness, remaining
+architecture mappings, broader lockless protocols, IRQ/NMI classes and explicit
+RCU grace-period reasoning remain open.
 The [renewed s390x pilot](s390/L2-RENEWAL-20260907.md) establishes scoped L2 support
 for seven C helpers. The [freshly renewed common24 baselines](common/L2-CLANG-RENEWAL-20260907.md)
 cover four helpers on ARM32, PowerPC32, m68k, ARM64, RISC-V64, SH, Alpha,

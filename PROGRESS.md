@@ -53,22 +53,30 @@ selected concurrent `failed_load_modules` increments cannot finish at one. Its
 split once-access control permits the lost update; a separate pair distinguishes
 fully ordered and relaxed increment-return operations. This also verifies
 correct selected code rather than finding a defect. The subsequent
-[System V IPC refcount lifetime pilot](docs/CONCURRENCY-C3-REFCOUNT-20260907.md)
-passes 822/822 checks and accepts one bounded functional property: from an
-initial sole reference, the locking-stabilized final put cannot schedule RCU
-destruction while the concurrent get-unless-zero also succeeds. Its unsafe
-unconditional-increment control permits the zero-refcount resurrection outcome.
+[System V IPC refcount lifetime/progress pilot](docs/CONCURRENCY-C3-REFCOUNT-20260907.md)
+passes 845/845 checks and accepts two separately bounded properties. The
+lifetime property says that, from an initial sole reference, the
+locking-stabilized final put cannot schedule RCU destruction while the
+concurrent get-unless-zero also succeeds. Its unsafe unconditional-increment
+control permits the zero-refcount resurrection outcome. The finite-state
+progress property checks all 340 declared interference schedules and establishes
+termination within four strong-CAS attempts after at most three observations
+and quiescence. Its stale-expected, spurious-failure and unbounded-interference
+controls expose the omitted behaviors.
 The same real `ipc/util.o` mapping now passes on nine configured SMP builds:
 x86-64, arm64, riscv64, big-endian s390x, ARMv7, big-endian PowerPC32, SuperH
 and Alpha, plus UML x86-64. The UML profile separately binds `ARCH=um`,
 `SUBARCH=x86_64`, an SMP config mutation, its x86-header route and its own
 object. Native atomic paths, emitted alternatives, ELF32/ELF64 symbols and build
-diagnostics are checked per architecture. This again verifies correct
+diagnostics are checked per architecture. The lifetime mapping covers all nine;
+the progress implementation mapping is limited to the checked native/UML x86-64
+`CMPXCHG` paths and makes no LL/SC-liveness claim. This again verifies correct
 selected code rather than finding a defect. The available m68k profile is UP
-only and was deliberately not promoted into the SMP claim. Progress, broader
-lockless lifetime behavior and remaining architecture mappings keep C3
-incomplete. Further Hexagon work remains parked; these additions do not change architecture/profile
-or the main 25-target suite acceptance counts.
+only and was deliberately not promoted into the SMP claim. Unbounded progress,
+LL/SC liveness, broader lockless lifetime behavior and remaining architecture
+mappings keep C3 incomplete. Further Hexagon work remains parked; these
+additions do not change architecture/profile or the main 25-target suite
+acceptance counts.
 
 The IPC CLI addition was followed by current-input renewal of the C0 result,
 C1 audit and dependency-specific stale control, both C2 pilots, the C3 LKMM
@@ -79,18 +87,19 @@ in `c0-...-09`, `c1-...-05`, `c1-stale-control-...-06`, `c2-...-08`,
 rejects exactly seven pthread-dependent cases while preserving the two
 builtins-only cases. A direct readback finds no input identity drift in those
 positive receipts, the preceding `c3-ipc-refcount-...-03` lifetime pilot or the
-current `c3-ipc-refcount-...-07` receipt. The
-accepted eight-profile predecessor is `c3-ipc-refcount-...-06`; the current
-nine-profile successor is `c3-ipc-refcount-...-07`. Run `-04` is retained as a
-736/738 failed matcher attempt caused only by PowerPC objdump whitespace, and
+current `c3-ipc-refcount-...-08` receipt. The accepted eight-profile predecessor
+is `c3-ipc-refcount-...-06`; run `-07` added the ninth UML mapping, and the
+current `-08` successor retains all nine while adding bounded progress. Run
+`-04` is retained as a 736/738 failed matcher attempt caused only by PowerPC
+objdump whitespace, and
 the mechanically green `-05` is superseded because final readback caught its
 stale four-profile exclusion sentence.
 
-All [986 project tests](results/tests-concurrency-c3-nine-arch-refcount-20260907.log)
-pass in the nine-profile refcount tree, with 20 pre-existing conditional skips.
-The IPC/refcount module has 18 focused tests, including exact profile
-inventory, ELF32/Alpha symbol parsing, diagnostic classification and native
-atomic-disassembly requirements.
+All [990 project tests](results/tests-concurrency-c3-bounded-progress-20260907.log)
+pass in the bounded-progress tree, with 20 pre-existing conditional skips. The
+IPC/refcount module has 22 focused tests, including exact profile inventory,
+ELF32/Alpha symbol parsing, diagnostic classification, native atomic-disassembly
+requirements, exhaustive progress outcomes and fail-closed scope controls.
 
 The [audited private VLA/arithmetic successor](build/framac-alignment-provider-20260907/CANDIDATE-VLA-ARITHMETIC-20260907.md)
 now retains candidate 5 and candidate 4's preceding regression separately.
@@ -364,7 +373,7 @@ a proof of the whole kernel or automatic verification of every caller.
 | RISC-V encoders | Current source/model/proof gates for seven helpers and five project witnesses: 119 ordinary goals, 119 dependencies and 47 postconditions. | Helper-specific calibration, kernel callers and a documented encoder L2 scope. |
 | ARM64 scalar extraction | Current runtime-safety gates for two cpuid helpers: six ordinary goals and ten selected dependencies with genuine-header checks. | Add functional contracts/calibration and verify kernel callers. |
 | Kernel bug review | RV32 `load_unaligned_zeropad()` wrong result dynamically reproduced in QEMU; identical-config A/B passes after a two-line fix; send-ready patch and exact evidence audit. | Human submission decision, then upstream review/revision; broaden review without treating alarms as bugs. |
-| Concurrency | C0/C1 infrastructure, limited C2 mutex/IRQ pilots, a 92-check LKMM baseline, a 135-check release/acquire pilot, a 162-check atomic/RMW pilot and an 822-check IPC refcount lifetime pilot are accepted. Five narrow kernel concurrency properties now exist: two access-protection claims, trace tgid-map publication ordering, module-statistics no-lost-update atomicity, and IPC final-put/get-unless-zero exclusion with nine checked SMP mappings (x86-64, arm64, riscv64, s390x, ARM32, PowerPC32, SuperH, Alpha and UML x86-64). | C3 progress, broader lockless lifetime behavior and remaining architecture mappings; then C4 RCU. Broader IRQ classes, functional protocols and the preserved unlocked HDQ accesses remain open. |
+| Concurrency | C0/C1 infrastructure, limited C2 mutex/IRQ pilots, a 92-check LKMM baseline, a 135-check release/acquire pilot, a 162-check atomic/RMW pilot and an 845-check IPC refcount lifetime/progress pilot are accepted. Six narrow kernel concurrency properties now exist: two access-protection claims, trace tgid-map publication ordering, module-statistics no-lost-update atomicity, IPC final-put/get-unless-zero exclusion with nine checked SMP mappings, and bounded-quiescent strong-CAS retry progress with native/UML x86-64 mappings. | C3 unbounded/LL/SC progress, broader lockless lifetime behavior and remaining architecture mappings; then C4 RCU. Broader IRQ classes, functional protocols and the preserved unlocked HDQ accesses remain open. |
 
 The registry's 24 distinct kernel functions reach the plan's initial numerical
 range, not its proof/coverage acceptance. The current report has 18 functions
@@ -617,9 +626,10 @@ No blanket system-package command is required for continuing the current work.
 ## Next acceptance milestones
 
 The bounded review, RV32 A/B handoff, limited C2 pilot, C3 LKMM baseline,
-source-linked release/acquire pilot, atomic/RMW pilot and IPC refcount lifetime
-pilot are complete at their narrow boundaries. Immediate choices are human
-review/submission of the patch and C3 progress/architecture evaluation.
+source-linked release/acquire pilot, atomic/RMW pilot and IPC refcount
+lifetime/bounded-progress pilot are complete at their narrow boundaries.
+Immediate choices are human review/submission of the patch and further C3
+protocol/progress/architecture evaluation.
 Mappings for architectures outside the refcount pilot's nine-profile set,
 interrupt classes and functional protocols remain explicit extensions
 rather than inherited claims. The later
@@ -629,9 +639,9 @@ parked unless its workstream is resumed explicitly.
 1. Review the RV32 submission handoff and, only on explicit authorization, send
    it to the recorded RISC-V maintainers/lists. Treat “send-ready”, “sent”, and
    “maintainer accepted” as separate states.
-2. Continue with C3 from the [concurrency plan](docs/CONCURRENCY-PLAN.md): add
-   any separately justified progress claim and broaden lockless functional
-   protocols. Extend the release/acquire and module-statistics mappings beyond
+2. Continue with C3 from the [concurrency plan](docs/CONCURRENCY-PLAN.md): broaden
+   lockless functional protocols and evaluate unbounded plus architecture-specific
+   LL/SC progress. Extend the release/acquire and module-statistics mappings beyond
    their configured SMP x86-64 cases, and extend the refcount map beyond its
    configured x86-64, arm64, riscv64, s390x, ARM32, PowerPC32, SuperH, Alpha
    and UML x86-64 cases. Do not treat Mthread interleavings as weak-memory

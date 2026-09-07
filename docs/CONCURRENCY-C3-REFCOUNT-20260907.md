@@ -1,14 +1,15 @@
-# C3 System V IPC refcount lifetime pilot — 2026-09-07
+# C3 System V IPC refcount lifetime and bounded-progress pilot — 2026-09-07
 
 Status: accepted for one narrow production lifetime decision with nine
-configured SMP implementation mappings; C3 remains incomplete.
+configured SMP implementation mappings and one separate bounded progress
+property with two x86-64 implementation mappings; C3 remains incomplete.
 
 The current standalone evidence is
-[`results/concurrency-c3-ipc-refcount-20260907-07`](../results/concurrency-c3-ipc-refcount-20260907-07/SUMMARY.md).
-It passes all 822 gates, accepts one source-linked kernel property, and accepts
-nine implementation mappings for that same property. The receipt pins 77 input
-identities and retains 330 raw artifacts. It found no new Linux defect: the
-selected IPC code uses the refcount API correctly.
+[`results/concurrency-c3-ipc-refcount-20260907-08`](../results/concurrency-c3-ipc-refcount-20260907-08/SUMMARY.md).
+It passes all 845 gates, accepts two separately bounded source-linked kernel
+properties, and accepts nine lifetime plus two progress implementation mappings.
+The receipt pins 77 input identities and retains 331 raw artifacts. It found no
+new Linux defect: the selected IPC code uses the refcount API correctly.
 
 The preceding `-01` run passed the same model, source, build and outcome gates.
 Run `-02` renews the receipt after changing the property wording from a generic
@@ -29,8 +30,11 @@ and reruns all model, source and build work. Thus `-05` is superseded despite
 its green computed result. Run `-07` retains the same property and A/B outcome,
 then adds a fresh `ARCH=um`, `SUBARCH=x86_64`, `CONFIG_SMP=y` mapping with
 explicit UML configuration, x86-header routing, symbol and disassembly gates.
+Run `-08` retains the lifetime result and all nine mappings, then adds the
+separate finite-state progress property, three detecting controls and exact
+native/UML x86-64 retry-loop mappings.
 
-## Accepted property
+## Accepted lifetime property
 
 The pinned `ipc/util.h` contract says that its reference-counted objects start
 at one, that a put reducing the count to zero schedules RCU destruction, and
@@ -82,6 +86,40 @@ value is one. The successful source path also executes
 `smp_acquire__after_ctrl_dep()`. That ordering matters for later destruction
 work but cannot change this same-refcount mutual-success question; no
 cross-object ordering claim is inferred from its omission.
+
+## Accepted bounded progress property
+
+The progress claim is separate from the lifetime model. For the selected native
+and UML x86-64 `ipc_rcu_getref()` implementations, assume that:
+
+- the caller keeps the object and refcount storage valid;
+- the operation is scheduled for every modeled loop step and once after
+  interference quiesces;
+- `atomic_try_cmpxchg_relaxed()` is strong and non-spurious, and updates its
+  expected argument with the current counter after a mismatch; and
+- there are at most three interfering counter observations in the explicit
+  zero-through-three domain, with saturation and overflow unreachable.
+
+The project-owned finite-state enumerator checks all 340 initial-value and
+interference-prefix combinations. Every source-candidate schedule returns by
+zero exit or successful increment in at most four CAS attempts; 150 schedules
+succeed and 190 exit at zero. A maximum witness observes `2, 1, 2`, fails three
+CAS attempts as the expected value is refreshed, then succeeds after quiescence
+on attempt four.
+
+Three permanently ineligible controls make the boundary observable. Retaining a
+stale expected value leaves 117 of 340 schedules in a quiescent retry cycle;
+allowing spurious failure creates a one-state cycle; and alternating unbounded
+interference between one and two creates a two-state starvation cycle. Thus the
+accepted result is a finite-quiescence termination bound, not wait-freedom,
+general lock-free progress, scheduler fairness or global CPU forward progress.
+
+Both selected x86 objects lower the operation to a locked `CMPXCHG`, update the
+expected register from `EAX` on mismatch and branch back to the source retry.
+Their exact objects and disassembly are checked by the same build gate. The
+other seven lifetime profiles use architecture-dependent operations, including
+LL/SC loops on several targets; this pilot does not establish their machine-level
+progress.
 
 ## Source and configured implementation gates
 
@@ -136,15 +174,19 @@ UML-specific flags rather than inheriting the native x86 object.
 Not accepted: an unstabilized or already reclaimed pointer, callback execution,
 RCU grace periods, allocator reuse, ABA, `SLAB_TYPESAFE_BY_RCU`, arbitrary
 initial counts, a third update, saturation/overflow/underflow, warning paths,
-whole-IPC or whole-RCU correctness, whole-kernel race freedom, or any progress,
-fairness, retry-bound, lock-free or wait-free guarantee.
+whole-IPC or whole-RCU correctness, or whole-kernel race freedom. The lifetime
+model itself accepts no progress result. The separate finite-state property
+accepts only its stated three-observation/four-attempt quiescent bound; it does
+not accept unbounded progress, scheduler fairness, wait-freedom, general
+lock-freedom or LL/SC implementation liveness.
 
 The implementation mapping is limited to x86-64, arm64, riscv64, s390x, ARM32,
 PowerPC32, SuperH, Alpha and UML x86-64, all under the exact SMP configurations
 above. The architecture-independent refcount contract and LKMM result do not
 activate any other architecture without its source/macro/compiler/object
-evidence. C3 still needs any separately justified progress property, mappings for the remaining
-Linux architectures and broader lockless protocol coverage. C4 remains
+evidence. The progress implementation mapping is narrower still: native and UML
+x86-64 only. C3 still needs unbounded/LL/SC progress evaluation, mappings for the
+remaining Linux architectures and broader lockless protocol coverage. C4 remains
 responsible for explicit RCU grace-period and reclamation reasoning.
 
 The available m68k `virt_defconfig` is UP-only, so its successful exploratory
@@ -153,8 +195,8 @@ a separately worded local task/interrupt claim or a non-concurrency compiler
 mapping, but not this profile's `smp-multicpu` label.
 
 The post-expansion project regression run passes
-[986 tests](../results/tests-concurrency-c3-nine-arch-refcount-20260907.log),
-with 20 pre-existing conditional skips.
+[990 tests](../results/tests-concurrency-c3-bounded-progress-20260907.log),
+with 20 pre-existing conditional skips; all 22 focused IPC/refcount tests pass.
 
 Reproduce with:
 

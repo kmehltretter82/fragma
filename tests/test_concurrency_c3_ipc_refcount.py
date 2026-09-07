@@ -119,6 +119,101 @@ class ConcurrencyC3IpcRefcountTests(unittest.TestCase):
         self.assertIn("lock xadd", tokens["um-x86_64-smp-ipc-refcount-c3"])
         self.assertIn("lfence", tokens["um-x86_64-smp-ipc-refcount-c3"])
 
+    def test_progress_claim_is_separate_bounded_and_x86_scoped(self):
+        manifest = concurrency_c3_ipc_refcount.load_manifest(ROOT)
+        progress = manifest["progress"]
+        self.assertEqual(progress["kind"], "bounded_quiescent_retry_progress")
+        self.assertEqual(
+            progress["backend"],
+            "project-owned-exhaustive-finite-state-enumerator",
+        )
+        self.assertEqual(
+            progress["implementation_profiles"],
+            [
+                "x86_64-ipc-refcount-c3",
+                "um-x86_64-smp-ipc-refcount-c3",
+            ],
+        )
+        self.assertEqual(progress["domain"]["max_interference_observations"], 3)
+        self.assertEqual(progress["domain"]["max_cas_attempts"], 4)
+        self.assertEqual(
+            [case["id"] for case in progress["cases"]
+             if case["verification_candidate"]],
+            ["bounded_quiescent_strong_cas"],
+        )
+        excluded = " ".join(progress["exclusions"]).lower()
+        for boundary in (
+            "unbounded interference", "wait-free", "spurious", "ll/sc",
+            "scheduler fairness", "whole-kernel",
+        ):
+            with self.subTest(boundary=boundary):
+                self.assertIn(boundary, excluded)
+
+    def test_progress_enumerator_and_controls_have_detecting_outcomes(self):
+        progress = concurrency_c3_ipc_refcount.load_manifest(ROOT)["progress"]
+        positive = concurrency_c3_ipc_refcount._bounded_progress_aggregate(
+            progress["domain"], update_expected=True
+        )
+        stale = concurrency_c3_ipc_refcount._bounded_progress_aggregate(
+            progress["domain"], update_expected=False
+        )
+        self.assertEqual(
+            concurrency_c3_ipc_refcount._progress_core(
+                positive, progress["cases"][0]["expected"]
+            ),
+            progress["cases"][0]["expected"],
+        )
+        self.assertIsNone(positive["nonterminating_witness"])
+        self.assertEqual(positive["max_attempt_witness"]["cas_attempts"], 4)
+        self.assertEqual(
+            concurrency_c3_ipc_refcount._progress_core(
+                stale, progress["cases"][1]["expected"]
+            ),
+            progress["cases"][1]["expected"],
+        )
+        self.assertGreater(stale["nonterminating"], 0)
+        self.assertEqual(
+            stale["nonterminating_witness"]["trace"][-1]["event"],
+            "quiescent-stale-expected-cycle",
+        )
+        self.assertTrue(progress["cases"][2]["expected"]["cycle_found"])
+        self.assertTrue(progress["cases"][3]["expected"]["cycle_found"])
+
+    def test_progress_source_and_selected_mapping_checks_pass(self):
+        manifest = concurrency_c3_ipc_refcount.load_manifest(ROOT)
+        selected = [
+            {"id": profile_id, "accepted": True}
+            for profile_id in manifest["progress"]["implementation_profiles"]
+        ]
+        with tempfile.TemporaryDirectory() as temporary:
+            result = concurrency_c3_ipc_refcount._run_progress_model(
+                ROOT, manifest, selected, Path(temporary) / "progress"
+            )
+        self.assertTrue(result["accepted"], result["checks"])
+        self.assertEqual(result["kernel_verification_count"], 1)
+        self.assertEqual(result["detecting_control_count"], 3)
+
+    def test_progress_control_promotion_and_scope_widening_are_rejected(self):
+        manifest = concurrency_c3_ipc_refcount.load_manifest(ROOT)
+        promoted = deepcopy(manifest)
+        promoted["progress"]["cases"][1]["verification_candidate"] = True
+        widened = deepcopy(manifest)
+        widened["progress"]["implementation_profiles"].append(
+            "arm64-ipc-refcount-c3"
+        )
+        for changed, error in (
+            (promoted, "cannot satisfy its evidence role"),
+            (widened, "unexpected IPC progress scope"),
+        ):
+            with self.subTest(error=error), mock.patch.object(
+                concurrency_c3_ipc_refcount, "_strict_json", return_value=changed
+            ):
+                with self.assertRaisesRegex(
+                    concurrency_c3_ipc_refcount.ConcurrencyC3IpcRefcountError,
+                    error,
+                ):
+                    concurrency_c3_ipc_refcount.load_manifest(ROOT)
+
     def test_declared_source_and_model_hashes_are_current(self):
         manifest = concurrency_c3_ipc_refcount.load_manifest(ROOT)
         identities = dict(manifest["kernel"]["source_identities"])
