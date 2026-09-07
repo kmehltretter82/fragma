@@ -55,14 +55,15 @@ concurrent `atomic_inc()` operations on `failed_load_modules` cannot collapse to
 one. Its split once-access control permits the lost update, and an independent
 pair distinguishes fully ordered from relaxed increment-return operations. The
 [System V IPC refcount pilot](docs/CONCURRENCY-C3-REFCOUNT-20260907.md) then
-passes 739/739 gates and accepts one lifetime-sensitive functional property:
+passes 822/822 gates and accepts one lifetime-sensitive functional property:
 from the sole reference, `ipc_rcu_putref()` cannot schedule destruction while a
 concurrent, locking-stabilized `ipc_rcu_getref()` also succeeds. Its unsafe
 unconditional-increment control exposes a zero-refcount resurrection witness.
 Real `ipc/util.o` source/compiler/symbol/disassembly mappings pass for x86-64,
-arm64, riscv64, big-endian s390x, ARMv7, big-endian PowerPC32, SuperH and Alpha,
-including emitted alternative atomic paths. All eight selected configurations
-are SMP; the UP-only exploratory m68k object is not promoted into this claim.
+arm64, riscv64, big-endian s390x, ARMv7, big-endian PowerPC32, SuperH, Alpha
+and UML x86-64, including emitted alternative atomic paths and UML's explicit
+`ARCH`/`SUBARCH` header route. All nine selected configurations are SMP; the
+UP-only exploratory m68k object is not promoted into this claim.
 These checks confirm bounded production weak-memory/atomic reasoning, not a new
 defect or general concurrency support. Progress, remaining architecture mappings,
 broader lockless protocols, IRQ/NMI classes and explicit RCU grace-period

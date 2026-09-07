@@ -9,8 +9,9 @@ SMP x86-64 release/acquire property. A second four-case pilot adds one
 source-linked module-statistics atomicity property plus an independent atomic
 return-ordering calibration on SMP x86-64. A third source pilot adds one bounded
 System V IPC final-put/get-unless-zero lifetime property and an unsafe
-zero-resurrection control. Its implementation map covers eight configured SMP
-builds: x86-64, arm64, riscv64, s390x, ARM32, PowerPC32, SuperH and Alpha.
+zero-resurrection control. Its implementation map covers nine configured SMP
+builds: x86-64, arm64, riscv64, s390x, ARM32, PowerPC32, SuperH, Alpha and
+UML x86-64.
 Progress, broader lockless lifetime, remaining architecture mappings and C4
 remain open.
 See the [C0 evidence record](CONCURRENCY-C0-20260907.md) and
@@ -192,14 +193,16 @@ accepts one production no-lost-update property for two selected concurrent
 `failed_load_modules` increments. Its split once-access control permits the lost
 update, while a separate ordered/relaxed return-value pair calibrates ordering.
 The subsequent
-[739-check IPC refcount pilot](../results/concurrency-c3-ipc-refcount-20260907-06/SUMMARY.md)
+[822-check IPC refcount pilot](../results/concurrency-c3-ipc-refcount-20260907-07/SUMMARY.md)
 accepts one lifetime-sensitive functional property: under the contract's
 caller-locking prerequisite and from the sole reference, `ipc_rcu_putref()`
 cannot schedule RCU destruction while concurrent `ipc_rcu_getref()` succeeds.
 An unsafe unconditional-increment control exposes the zero-resurrection
 outcome. Its real `ipc/util.o` implementation map passes for configured SMP
 x86-64, arm64, riscv64, big-endian s390x, ARM32, big-endian PowerPC32, SuperH
-and Alpha profiles. The available m68k build remains outside this SMP claim.
+Alpha and UML x86-64 profiles. The UML result has its own `ARCH=um`,
+`SUBARCH=x86_64`, SMP config and object rather than inheriting native x86
+evidence. The available m68k build remains outside this SMP claim.
 All three source pilots verify correct selected code; none found a new defect or
 completes C3.
 Progress, broader lockless lifetime behavior and mappings for remaining

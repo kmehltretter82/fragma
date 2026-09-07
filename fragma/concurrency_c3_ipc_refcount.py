@@ -24,6 +24,7 @@ _CASE_IDS = {
 _PROFILE_SPECS = {
     "x86_64-ipc-refcount-c3": {
         "arch": "x86_64",
+        "subarch": None,
         "cross_compile": None,
         "base_recipe": "x86_64_defconfig",
         "compiler": "/usr/bin/gcc",
@@ -44,6 +45,7 @@ _PROFILE_SPECS = {
     },
     "arm64-ipc-refcount-c3": {
         "arch": "arm64",
+        "subarch": None,
         "cross_compile": "/usr/bin/aarch64-linux-gnu-",
         "base_recipe": "defconfig",
         "compiler": "/usr/bin/aarch64-linux-gnu-gcc",
@@ -64,6 +66,7 @@ _PROFILE_SPECS = {
     },
     "riscv64-ipc-refcount-c3": {
         "arch": "riscv",
+        "subarch": None,
         "cross_compile": "/usr/bin/riscv64-linux-gnu-",
         "base_recipe": "defconfig",
         "compiler": "/usr/bin/riscv64-linux-gnu-gcc",
@@ -85,6 +88,7 @@ _PROFILE_SPECS = {
     },
     "s390x-ipc-refcount-c3": {
         "arch": "s390",
+        "subarch": None,
         "cross_compile": "/usr/bin/s390x-linux-gnu-",
         "base_recipe": "defconfig",
         "compiler": "/usr/bin/s390x-linux-gnu-gcc",
@@ -107,6 +111,7 @@ _PROFILE_SPECS = {
     },
     "arm32-ipc-refcount-c3": {
         "arch": "arm",
+        "subarch": None,
         "cross_compile": "/usr/bin/arm-linux-gnueabi-",
         "base_recipe": "multi_v7_defconfig",
         "compiler": "/usr/bin/arm-linux-gnueabi-gcc",
@@ -130,6 +135,7 @@ _PROFILE_SPECS = {
     },
     "powerpc32-smp-ipc-refcount-c3": {
         "arch": "powerpc",
+        "subarch": None,
         "cross_compile": "/usr/bin/powerpc-linux-gnu-",
         "base_recipe": "chrp32_defconfig",
         "compiler": "/usr/bin/powerpc-linux-gnu-gcc",
@@ -152,6 +158,7 @@ _PROFILE_SPECS = {
     },
     "sh-smp-ipc-refcount-c3": {
         "arch": "sh",
+        "subarch": None,
         "cross_compile": "/usr/bin/sh4-linux-gnu-",
         "base_recipe": "shx3_defconfig",
         "compiler": "/usr/bin/sh4-linux-gnu-gcc",
@@ -176,6 +183,7 @@ _PROFILE_SPECS = {
     },
     "alpha-smp-ipc-refcount-c3": {
         "arch": "alpha",
+        "subarch": None,
         "cross_compile": "/usr/bin/alpha-linux-gnu-",
         "base_recipe": "defconfig",
         "mutations": [{"symbol": "SMP", "operation": "enable"}],
@@ -187,6 +195,31 @@ _PROFILE_SPECS = {
             "CONFIG_ALPHA": "y",
             "CONFIG_ALPHA_GENERIC": "y",
             "CONFIG_64BIT": "y",
+            "CONFIG_SMP": "y",
+            "CONFIG_SYSVIPC": "y",
+            "CONFIG_TREE_RCU": "y",
+            "CONFIG_PREEMPT_RCU": "absent",
+            "CONFIG_RCU_EXPERT": "n",
+            "CONFIG_KCSAN": "absent",
+            "CONFIG_CC_IS_GCC": "y",
+        },
+    },
+    "um-x86_64-smp-ipc-refcount-c3": {
+        "arch": "um",
+        "subarch": "x86_64",
+        "cross_compile": None,
+        "base_recipe": "x86_64_defconfig",
+        "mutations": [{"symbol": "SMP", "operation": "enable"}],
+        "compiler": "/usr/bin/gcc",
+        "compiler_target": "x86_64-linux-gnu",
+        "objdump": "/usr/bin/objdump",
+        "elf": [2, 1, 62],
+        "required_config": {
+            "CONFIG_UML": "y",
+            "CONFIG_UML_X86": "y",
+            "CONFIG_64BIT": "y",
+            "CONFIG_X86_64": "y",
+            "CONFIG_X86_32": "absent",
             "CONFIG_SMP": "y",
             "CONFIG_SYSVIPC": "y",
             "CONFIG_TREE_RCU": "y",
@@ -221,8 +254,9 @@ _PROFILE_DIAGNOSTICS = {
 
 
 _ARCHITECTURE_EXCLUSION = (
-    "No architecture implementation other than the eight configured SMP "
-    "x86-64, arm64, riscv64, s390x, ARM32, PowerPC32, SuperH and Alpha "
+    "No architecture implementation other than the nine configured SMP "
+    "x86-64, arm64, riscv64, s390x, ARM32, PowerPC32, SuperH, Alpha and "
+    "UML x86-64 "
     "profiles is accepted by this source-linked pilot; every other "
     "architecture remains outside the claim."
 )
@@ -337,8 +371,8 @@ def _validate_expected(expected: Any, case_id: str) -> None:
 
 def _validate_profile(root: Path, profile: Any, expected_id: str) -> None:
     if not isinstance(profile, dict) or set(profile) != {
-        "id", "arch", "cross_compile", "jobs", "build_directory", "config",
-        "config_sha256", "execution_scope", "configuration",
+        "id", "arch", "subarch", "cross_compile", "jobs", "build_directory",
+        "config", "config_sha256", "execution_scope", "configuration",
         "required_config", "allowed_diagnostics", "make", "compiler",
         "objdump", "configured_compile",
     }:
@@ -347,6 +381,7 @@ def _validate_profile(root: Path, profile: Any, expected_id: str) -> None:
     if (
         profile["id"] != expected_id
         or profile["arch"] != spec["arch"]
+        or profile["subarch"] != spec["subarch"]
         or profile["cross_compile"] != spec["cross_compile"]
         or type(profile["jobs"]) is not int
         or not 1 <= profile["jobs"] <= 256
@@ -494,7 +529,7 @@ def load_manifest(root: Path) -> dict[str, Any]:
             "schema_version", "id", "kernel", "baseline", "profiles",
             "property", "model",
         }
-        or manifest["schema_version"] != 3
+        or manifest["schema_version"] != 4
         or manifest["id"] != "linux-ipc-refcount-lifetime-multiarch-c3"
     ):
         raise ConcurrencyC3IpcRefcountError("unsupported IPC refcount C3 schema")
@@ -516,7 +551,7 @@ def load_manifest(root: Path) -> dict[str, Any]:
             "source receipt is outside kernel source"
         ) from exc
     identities = kernel["source_identities"]
-    if not isinstance(identities, dict) or len(identities) != 43:
+    if not isinstance(identities, dict) or len(identities) != 47:
         raise ConcurrencyC3IpcRefcountError(
             "IPC refcount source identity set is not exact"
         )
@@ -897,6 +932,12 @@ def _semantic_checks(
         source_root / "arch/alpha/include/asm/barrier.h"
     ).read_text()
     alpha_kconfig = (source_root / "arch/alpha/Kconfig").read_text()
+    um_kconfig = (source_root / "arch/um/Kconfig").read_text()
+    um_makefile = (source_root / "arch/um/Makefile").read_text()
+    um_x86_kconfig = (source_root / "arch/x86/um/Kconfig").read_text()
+    um_x86_barrier = (
+        source_root / "arch/x86/um/asm/barrier.h"
+    ).read_text()
     config_script = (source_root / "scripts/config").read_text()
     barrier = (source_root / "include/asm-generic/barrier.h").read_text()
     model_def = (source_root / "tools/memory-model/linux-kernel.def").read_text()
@@ -1126,6 +1167,26 @@ def _semantic_checks(
                    "depends on ALPHA_SABLE || ALPHA_RAWHIDE || ALPHA_DP264",
                    "ALPHA_GENERIC",
                ])),
+        _check("UML x86-64 explicitly supports SMP", True,
+               _ordered(um_kconfig, [
+                   "config UML_SUBARCH_SUPPORTS_SMP",
+                   "config SMP",
+                   "depends on UML_SUBARCH_SUPPORTS_SMP",
+               ]) and _ordered(um_x86_kconfig, [
+                   "config UML_X86",
+                   "select UML_SUBARCH_SUPPORTS_SMP if X86_CX8",
+               ])),
+        _check("UML x86-64 selects x86 kernel headers", True,
+               _ordered(um_makefile, [
+                   "ifneq ($(filter $(SUBARCH),x86 x86_64 i386),)",
+                   "HEADER_ARCH := x86",
+                   "KBUILD_CPPFLAGS += -I$(srctree)/$(HOST_DIR)/include",
+               ])),
+        _check("UML x86-64 acquire-after-control emits LFENCE", True,
+               _ordered(um_x86_barrier, [
+                   "#else /* CONFIG_X86_32 */",
+                   '#define rmb()\tasm volatile("lfence" : : : "memory")',
+               ])),
         _check("kernel config helper provides explicit enable operation", True,
                "--enable|-e)" in config_script),
         _check("generic acquire-after-control is explicit", True,
@@ -1257,6 +1318,8 @@ def _run_profile(
         profile["make"]["binary"], "-C", str(source_root),
         f"O={build_directory}", f"ARCH={profile['arch']}",
     ]
+    if profile["subarch"] is not None:
+        common_make.append(f"SUBARCH={profile['subarch']}")
     if profile["cross_compile"] is not None:
         common_make.append(f"CROSS_COMPILE={profile['cross_compile']}")
     common_make.append(f"CC={profile['compiler']['binary']}")
@@ -1421,6 +1484,7 @@ def _run_profile(
     result = {
         "id": profile_id,
         "arch": profile["arch"],
+        "subarch": profile["subarch"],
         "cross_compile": profile["cross_compile"],
         "configured_object": elf,
         "configured_config_sha256": config_hash,
@@ -1451,8 +1515,11 @@ def render_summary(result: dict[str, Any]) -> str:
     ]
     for profile in result["profiles"]:
         elf = profile["configured_object"]
+        architecture = profile["arch"]
+        if profile["subarch"] is not None:
+            architecture += f" (SUBARCH={profile['subarch']})"
         lines.append(
-            f"| `{profile['id']}` | `{profile['arch']}` | "
+            f"| `{profile['id']}` | `{architecture}` | "
             f"`{profile['execution_scope']}` | "
             f"ELF{(elf.get('class') or 0) * 32}, machine {elf.get('machine')} | "
             f"{'PASS' if profile['accepted'] else 'FAIL'} |"
@@ -1481,8 +1548,8 @@ def render_summary(result: dict[str, Any]) -> str:
         "resurrect zero and reports `Sometimes` (1/1).",
         "",
         "The gate pins the IPC helper and locking contract, refcount implementation,",
-        "LKMM RMW axiom, and eight configured SMP profiles: x86-64, arm64,",
-        "riscv64, s390x, ARM32, PowerPC32, SuperH, and Alpha.",
+        "LKMM RMW axiom, and nine configured SMP profiles: x86-64, arm64,",
+        "riscv64, s390x, ARM32, PowerPC32, SuperH, Alpha, and UML x86-64.",
         "Each mapping pins both function symbols and target disassembly,",
         "including alternative atomic paths where the architecture emits them.",
         "The caller-locking prerequisite is assumed. Callback execution and RCU",
@@ -1678,7 +1745,7 @@ def run_c3_ipc_refcount(
     _json(output / "input-identities.json", identities)
     _json(output / "source-model-evidence.json", source_model_evidence)
     result = {
-        "schema_version": 3,
+        "schema_version": 4,
         "kind": "ipc-refcount-c3-lifetime-functional-multiarch-pilot",
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "target": manifest["id"],
@@ -1717,7 +1784,7 @@ def run_c3_ipc_refcount(
         "c3_stage_complete": False,
         "remaining_c3": [
             "Any separately justified progress property",
-            "Implementation mappings for Linux architectures beyond x86-64, arm64, riscv64, s390x, ARM32, PowerPC32, SuperH, and Alpha",
+            "Implementation mappings for Linux architectures beyond x86-64, arm64, riscv64, s390x, ARM32, PowerPC32, SuperH, Alpha, and UML x86-64",
             "Broader lock-free functional protocol coverage",
         ],
         "call_rcu_modeled": False,

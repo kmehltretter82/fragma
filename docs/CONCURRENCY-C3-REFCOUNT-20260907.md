@@ -1,13 +1,14 @@
 # C3 System V IPC refcount lifetime pilot — 2026-09-07
 
-Status: accepted for one narrow production lifetime decision with eight
+Status: accepted for one narrow production lifetime decision with nine
 configured SMP implementation mappings; C3 remains incomplete.
 
 The current standalone evidence is
-[`results/concurrency-c3-ipc-refcount-20260907-06`](../results/concurrency-c3-ipc-refcount-20260907-06/SUMMARY.md).
-It passes all 739 gates, accepts one source-linked kernel property, and accepts
-eight implementation mappings for that same property. It found no new Linux
-defect: the selected IPC code uses the refcount API correctly.
+[`results/concurrency-c3-ipc-refcount-20260907-07`](../results/concurrency-c3-ipc-refcount-20260907-07/SUMMARY.md).
+It passes all 822 gates, accepts one source-linked kernel property, and accepts
+nine implementation mappings for that same property. The receipt pins 77 input
+identities and retains 330 raw artifacts. It found no new Linux defect: the
+selected IPC code uses the refcount API correctly.
 
 The preceding `-01` run passed the same model, source, build and outcome gates.
 Run `-02` renews the receipt after changing the property wording from a generic
@@ -25,7 +26,9 @@ Run `-05` then passed 738/738 mechanical gates, but final human readback found
 that an exclusion sentence still named only the old four-profile set. Run `-06`
 updates that sentence, adds an exact scope-binding gate and negative unit test,
 and reruns all model, source and build work. Thus `-05` is superseded despite
-its green computed result.
+its green computed result. Run `-07` retains the same property and A/B outcome,
+then adds a fresh `ARCH=um`, `SUBARCH=x86_64`, `CONFIG_SMP=y` mapping with
+explicit UML configuration, x86-header routing, symbol and disassembly gates.
 
 ## Accepted property
 
@@ -93,10 +96,11 @@ The source gate pins and rechecks:
 - the kernel refcount ordering documentation;
 - the instrumented atomic API, generic fallback, LKMM RMW atomicity axiom, and
   x86-64, arm64, RISC-V, s390, ARM32, PowerPC32, SuperH and Alpha
-  atomic/cmpxchg/barrier implementation files;
+  atomic/cmpxchg/barrier implementation files, plus UML's SMP Kconfig,
+  `SUBARCH`-to-x86 header route and UML x86 barrier implementation;
 - the System V IPC Kconfig/Makefile selection and actual configured objects.
 
-Eight dedicated SMP builds compile the real `ipc/util.o`, not a project wrapper.
+Nine dedicated SMP builds compile the real `ipc/util.o`, not a project wrapper.
 All use GCC 15.2.0 and GNU binutils 2.46 already present on the machine.
 
 | Profile | ELF | Config SHA-256 | Object SHA-256 | Checked lowering |
@@ -109,6 +113,7 @@ All use GCC 15.2.0 and GNU binutils 2.46 already present on the machine.
 | PowerPC32 CHRP | 32-bit BE, machine 20 | `2ce33c1da81f6882148455cd62c55ecb5a7f8ebe83a11b0ba452ed3cc50ec1e7` | `68021ae57fdbf7ce71efe35877ca5d98fdd09fe7160e7f0e1486bd82a469fad3` | get and put `lwarx`/`stwcx.`; put `hwsync` |
 | SuperH SH-X3 | 32-bit LE, machine 42 | `e53d91d1ed9b63b39c7abf0a3c9711c88c0ef0ffb30d17309720098cd9538047` | `b1fef80ad64b4fdd77542c261c027a05d260b90d92ff53b8454665f8a8084791` | get and put `movli.l`/`movco.l`; `synco` |
 | Alpha generic SMP | 64-bit LE, machine 36902 | `21d6b92b20bfb82d67380adc6624e767aeacd54be1bec0950e3ccca309816902` | `cb63e40524cedb288279cb14d469a7a851046dead44dda22d45be8066c8986b5` | get and put `ldl_l`/`stl_c`; `mb` |
+| UML x86-64 SMP | 64-bit LE, machine 62 | `d1152890f190eca30f4d27785da89871dd2d95c2378ed5b479114aa29e8ca2d1` | `fdecff20215771537646f5604c476691260b94d44d70020ff350220de2a34c31` | explicit x86 header route; get `lock cmpxchg`; put `lock xadd`, then `lfence` |
 
 Every profile pins both global function symbols and the `call_rcu` relocation.
 The arm64 and RISC-V objects contain runtime-selected alternative atomic paths;
@@ -119,9 +124,12 @@ identities and artifact hashes are retained in the local evidence directory.
 The runner now classifies build warnings, errors, jobserver messages and
 `File exists` contamination. Every unlisted diagnostic fails the profile. The
 only declared exception is SuperH's exact cold-build `checksyscalls.sh` warning
-that `clone3` is not implemented; the accepted `-06` run observed no diagnostic.
+that `clone3` is not implemented; the accepted `-07` run observed no diagnostic.
 Alpha starts from `defconfig`, applies the recorded `scripts/config --enable SMP`
 mutation, finalizes with `olddefconfig`, and checks the resulting config hash.
+UML independently starts from `x86_64_defconfig`, records the same explicit SMP
+mutation, finalizes it under both `ARCH=um` and `SUBARCH=x86_64`, and checks
+UML-specific flags rather than inheriting the native x86 object.
 
 ## Boundaries and next work
 
@@ -132,10 +140,10 @@ whole-IPC or whole-RCU correctness, whole-kernel race freedom, or any progress,
 fairness, retry-bound, lock-free or wait-free guarantee.
 
 The implementation mapping is limited to x86-64, arm64, riscv64, s390x, ARM32,
-PowerPC32, SuperH and Alpha, all under the exact SMP configurations above. The
-architecture-independent refcount contract and LKMM result do not activate any
-other architecture without its source/macro/compiler/object evidence. C3 still
-needs any separately justified progress property, mappings for the remaining
+PowerPC32, SuperH, Alpha and UML x86-64, all under the exact SMP configurations
+above. The architecture-independent refcount contract and LKMM result do not
+activate any other architecture without its source/macro/compiler/object
+evidence. C3 still needs any separately justified progress property, mappings for the remaining
 Linux architectures and broader lockless protocol coverage. C4 remains
 responsible for explicit RCU grace-period and reclamation reasoning.
 
@@ -145,7 +153,7 @@ a separately worded local task/interrupt claim or a non-concurrency compiler
 mapping, but not this profile's `smp-multicpu` label.
 
 The post-expansion project regression run passes
-[986 tests](../results/tests-concurrency-c3-eight-arch-refcount-20260907.log),
+[986 tests](../results/tests-concurrency-c3-nine-arch-refcount-20260907.log),
 with 20 pre-existing conditional skips.
 
 Reproduce with:
