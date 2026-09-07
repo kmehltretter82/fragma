@@ -1,0 +1,187 @@
+{
+  "schema_version": 1,
+  "provider": {
+    "binary": "toolchain/verified-prefix/opam/fragma/bin/frama-c",
+    "expected_version": "33.0 (Arsenic)",
+    "required_plugin_text": [
+      "Mthread",
+      "Experimental tools for multi-threaded programs"
+    ],
+    "model_files": [
+      "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread.h",
+      "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread.c",
+      "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_pthread.c",
+      "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_interrupts.h",
+      "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_interrupts.c"
+    ],
+    "implementation_files": [
+      "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_main.ml",
+      "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_lib.ml",
+      "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_thread.ml",
+      "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_analysis_hooks.ml",
+      "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_analysis_fixpoint.ml",
+      "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_mutexes.ml"
+    ]
+  },
+  "common_options": [
+    "-eva",
+    "-mthread",
+    "-eva-slevel",
+    "15",
+    "-mt-shared-values",
+    "2",
+    "-mt-shared-accesses-synchronization",
+    "-mt-write-races",
+    "-no-warn-unaligned-pointer",
+    "-mt-verbose",
+    "3",
+    "-eva-verbose",
+    "3",
+    "-eva-msg-key",
+    "interferences,-summary",
+    "-eva-warn-key",
+    "experimental=inactive",
+    "-mt-stop-after",
+    "12"
+  ],
+  "cases": [
+    {
+      "id": "isolated",
+      "source": "concurrency/fixtures/isolated.c",
+      "thread_library": "pthreads",
+      "options": [],
+      "expected_exit": 0,
+      "expected_assertions": {"isolated_arithmetic": "valid"},
+      "expected_unprotected_races": {"read_write": false, "write_write": false},
+      "required_diagnostics": ["New thread: worker_thread", "Analysis performed"],
+      "forbidden_diagnostics": [],
+      "report_expected": true,
+      "outcome_kind": "valid_calibration"
+    },
+    {
+      "id": "mutex",
+      "source": "concurrency/fixtures/mutex.c",
+      "thread_library": "pthreads",
+      "options": [],
+      "expected_exit": 0,
+      "expected_assertions": {
+        "mutex_worker_owned": "valid",
+        "mutex_main_owned": "valid"
+      },
+      "expected_unprotected_races": {"read_write": false, "write_write": false},
+      "required_diagnostics": ["Initializing mutex shared_mutex", "protected by shared_mutex", "Analysis performed"],
+      "forbidden_diagnostics": ["shared_value  unprotected"],
+      "report_expected": true,
+      "outcome_kind": "valid_calibration"
+    },
+    {
+      "id": "interference",
+      "source": "concurrency/fixtures/interference.c",
+      "thread_library": "pthreads",
+      "options": [],
+      "expected_exit": 0,
+      "expected_assertions": {
+        "interference_worker_range": "valid",
+        "interference_main_range": "valid"
+      },
+      "expected_unprotected_races": {"read_write": true, "write_write": false},
+      "required_diagnostics": ["shared_value  unprotected", "Analysis performed"],
+      "forbidden_diagnostics": [],
+      "report_expected": true,
+      "outcome_kind": "possible_race"
+    },
+    {
+      "id": "join",
+      "source": "concurrency/fixtures/join.c",
+      "thread_library": "pthreads",
+      "options": [],
+      "expected_exit": 0,
+      "expected_assertions": {"join_completion_model_gap": "unknown"},
+      "expected_unprotected_races": {"read_write": true, "write_write": false},
+      "required_diagnostics": ["join_completion_model_gap", "Analysis performed"],
+      "forbidden_diagnostics": [],
+      "report_expected": true,
+      "outcome_kind": "model_gap"
+    },
+    {
+      "id": "false_assertion",
+      "source": "concurrency/fixtures/false_assertion.c",
+      "thread_library": "pthreads",
+      "options": [],
+      "expected_exit": 0,
+      "expected_assertions": {"deliberate_false": "invalid"},
+      "expected_unprotected_races": {"read_write": false, "write_write": false},
+      "required_diagnostics": ["deliberate_false", "Analysis performed"],
+      "forbidden_diagnostics": [],
+      "report_expected": true,
+      "outcome_kind": "false_property"
+    },
+    {
+      "id": "interrupt_unprotected",
+      "source": "concurrency/fixtures/interrupt_unprotected.c",
+      "thread_library": "builtins-only",
+      "options": ["-mt-interrupt-handlers", "irq_handler"],
+      "expected_exit": 0,
+      "expected_assertions": {"interrupt_range": "valid"},
+      "expected_unprotected_races": {"read_write": true, "write_write": false},
+      "required_diagnostics": ["New thread: <interrupt_handler irq_handler>", "interrupt_value  unprotected", "Analysis performed"],
+      "forbidden_diagnostics": [],
+      "report_expected": true,
+      "outcome_kind": "possible_race"
+    },
+    {
+      "id": "interrupt_exclusion_synthetic",
+      "source": "concurrency/fixtures/interrupt_exclusion_synthetic.c",
+      "thread_library": "pthreads",
+      "options": [],
+      "expected_exit": 0,
+      "expected_assertions": {
+        "synthetic_interrupt_worker_owned": "valid",
+        "synthetic_interrupt_main_owned": "valid"
+      },
+      "expected_unprotected_races": {"read_write": false, "write_write": false},
+      "required_diagnostics": ["Initializing mutex interrupt-lock", "protected by interrupt-lock", "Analysis performed"],
+      "forbidden_diagnostics": ["interrupt_value  unprotected"],
+      "report_expected": true,
+      "outcome_kind": "valid_synthetic_exclusion"
+    },
+    {
+      "id": "interrupt_registered_exclusion_gap",
+      "source": "concurrency/fixtures/interrupt_exclusion.c",
+      "thread_library": "builtins-only",
+      "options": ["-mt-interrupt-handlers", "masked_irq_handler"],
+      "expected_exit": 0,
+      "expected_assertions": {
+        "interrupt_handler_owned": "unknown",
+        "interrupt_main_owned": "unknown"
+      },
+      "expected_unprotected_races": {"read_write": true, "write_write": false},
+      "required_diagnostics": [
+        "New thread: <interrupt_handler masked_irq_handler>",
+        "might not be initialized yet",
+        "interrupt_value  write protected by interrupt-lock",
+        "Analysis performed"
+      ],
+      "forbidden_diagnostics": [],
+      "report_expected": true,
+      "outcome_kind": "model_gap"
+    },
+    {
+      "id": "unsupported_pthread",
+      "source": "concurrency/fixtures/unsupported_pthread.c",
+      "thread_library": "pthreads",
+      "options": [],
+      "expected_exit": 1,
+      "expected_assertions": {},
+      "expected_unprotected_races": {"read_write": false, "write_write": false},
+      "required_diagnostics": [
+        "Unsupported function pthread_barrier_wait",
+        "analysis is probably unsound",
+        "Plug-in mt aborted: invalid user input"
+      ],
+      "forbidden_diagnostics": [],
+      "report_expected": false,
+      "outcome_kind": "unsupported"
+    }
+  ]
+}

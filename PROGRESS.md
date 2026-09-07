@@ -4,9 +4,26 @@ Updated 2026-09-07. [PLAN.md](PLAN.md) remains in progress. Model calibration,
 individual proofs and named architecture baselines are not whole-suite or
 all-architecture completion.
 
-Current priority is actual bounded Linux kernel correctness review, as requested
-by the user. Further Hexagon implementation is parked; no new architecture,
-accepted target/function, installed provider or confirmed kernel bug is claimed.
+The requested bounded Linux review has produced one dynamically confirmed RV32
+wrong-result defect. A project-only guard-page KUnit test fails on all three
+page-end offsets before the fix and passes after it under a byte-identical
+configuration. The [A/B handoff](riscv/rv32-zeropad/README.md) contains the
+minimal send-ready patch, replay script and review/test notes; the
+[evidence audit](results/rv32-zeropad-20260907/SUMMARY.md) binds source, logs,
+images, configs, tool versions, patch identity, mainline/linux-next applicability,
+RV32/RV64 build controls, strict checkpatch, maintainers and mail dry-run. It has
+not been emailed or acknowledged upstream. No `sudo` or package installation was
+used.
+
+The requested concurrency continuation has also completed C0 capability
+characterization. The [nine-case Mthread + Eva record](docs/CONCURRENCY-C0-20260907.md)
+passes its valid, invalid, unknown, protected, race, interrupt and unsupported
+controls with the exact Frama-C 33 provider pinned. It explicitly exposes the
+join-completion and automatic-handler initialization gaps and supplies no Linux
+weak-memory, RCU or kernel-lock acceptance. C1 is next. Further Hexagon work
+remains parked; these additions do not change architecture/profile acceptance.
+All [899 project tests](results/tests-rv32-concurrency-20260907.log) pass in the
+post-change tree, with 20 pre-existing conditional skips.
 
 The [audited private VLA/arithmetic successor](build/framac-alignment-provider-20260907/CANDIDATE-VLA-ARITHMETIC-20260907.md)
 now retains candidate 5 and candidate 4's preceding regression separately.
@@ -49,8 +66,8 @@ typed GNU arithmetic. The extra run's exit zero denotes raw collection only.
 Independent retained-output audits find no drift. No target program, proof,
 kernel build, installation or production activation was run. Hexagon remains
 unconfigured, with full semantics, L1, L2 and integration open; current accepted
-target/function/architecture counts and the zero confirmed kernel-bug count
-are unchanged.
+target/function/architecture counts are unchanged. No kernel defect arose from
+that private provider work; the later RV32 finding is separate.
 
 The [nine-calibration renewal](docs/CALIBRATION-RENEWAL-20260907.md) now passes
 both normal batches, completing at 02:20:28 UTC on September 7. All 38 model
@@ -131,7 +148,8 @@ subsequent private context continuation above confirms the double-VLA risk and
 exercises the opt-in YAML, which differs from the unchanged generator candidate
 by exactly one policy field. It is still not activated in the normal profile
 pipeline. The unmodified baseline and installed provider remain unchanged;
-no architecture, proof or kernel-bug finding is added.
+no architecture or proof is added, and that provider work produced no kernel
+finding.
 
 The preceding [Hexagon layout calibration](profiles/HEXAGON-LAYOUT-20260906.md)
 corrects the scalar-only `max_align_t` representation and executable-path/dialect
@@ -278,6 +296,8 @@ a proof of the whole kernel or automatic verification of every caller.
 | Common byte helpers | Current nine-profile scoped L2: 164 model checks, 846 ordinary goals, 738 properties, 252 fixture/compiler observations and accepted replay; 5,155 audit hashes match. | Remaining architectures, second-location runs, kernel callers, runtime corroboration and optional s390 common-provider convergence. |
 | RISC-V encoders | Current source/model/proof gates for seven helpers and five project witnesses: 119 ordinary goals, 119 dependencies and 47 postconditions. | Helper-specific calibration, kernel callers and a documented encoder L2 scope. |
 | ARM64 scalar extraction | Current runtime-safety gates for two cpuid helpers: six ordinary goals and ten selected dependencies with genuine-header checks. | Add functional contracts/calibration and verify kernel callers. |
+| Kernel bug review | RV32 `load_unaligned_zeropad()` wrong result dynamically reproduced in QEMU; identical-config A/B passes after a two-line fix; send-ready patch and exact evidence audit. | Human submission decision, then upstream review/revision; broaden review without treating alarms as bugs. |
+| Concurrency | Frama-C 33 Mthread+Eva C0 accepted across nine capability/negative controls; join, automatic-handler initialization, unsupported primitives and weak-memory limits remain explicit. | Implement C1 model/result schemas and invalidation, then a narrowly justified C2 Linux pilot; C3/C4 weak memory and RCU remain open. |
 
 The registry's 24 distinct kernel functions reach the plan's initial numerical
 range, not its proof/coverage acceptance. The current report has 18 functions
@@ -526,17 +546,24 @@ No blanket system-package command is required for continuing the current work.
 
 ## Next acceptance milestones
 
-The immediate task is bounded kernel correctness review. The implementation
-milestones below remain open backlog, not permission to resume the parked
-Hexagon prototype before the user's priority is handled.
+The bounded review and RV32 A/B handoff are complete. Immediate choices are
+human review/submission of that patch and the already requested C1 concurrency
+integration. The remaining milestones are still open backlog; Hexagon stays
+parked unless its workstream is resumed explicitly.
 
-1. Renew and resolve the six legacy nonpasses beyond the 25 current accepted
+1. Review the RV32 submission handoff and, only on explicit authorization, send
+   it to the recorded RISC-V maintainers/lists. Treat “send-ready”, “sent”, and
+   “maintainer accepted” as separate states.
+2. Implement C1 from the [concurrency plan](docs/CONCURRENCY-PLAN.md): bind model,
+   context, ownership, interference and property-scope identities into target
+   results, fail unsupported semantics, and invalidate stale concurrent evidence.
+3. Renew and resolve the six legacy nonpasses beyond the 25 current accepted
    targets across the 31 registered targets, and
    extend inventory/source gates to remaining examples.
    Keep the earlier 22-target results identifiable as dated evidence.
-2. Replay the current-policy suite with the clean toolchain and at a second location;
+4. Replay the current-policy suite with the clean toolchain and at a second location;
    separate stable input identity from timing and temporary filenames.
-3. When architecture implementation resumes, continue the
+5. When architecture implementation resumes, continue the
    [remaining-architecture queue](profiles/NEXT-WAVE.md): resolve Hexagon's
    remaining cast/constant-expression, static type-query, VLA allocation and
    wider extended-alignment gaps, preserving the audited declaration and
@@ -548,7 +575,7 @@ Hexagon prototype before the user's priority is handled.
    [wave three](common/L2-WAVE3-20260906.md); their four-helper proof scopes now
    have [current-input renewal](common/L2-CLANG-RENEWAL-20260907.md).
    Approvals do not transfer to a new architecture.
-4. Expand the curated function collection and run eligible generic helpers across
+6. Expand the curated function collection and run eligible generic helpers across
    checked profiles. [Eleven architectures](profiles/NEXT-WAVE.md) still need
    configured L1 evidence and documented L2 baselines. The renewed s390
    and common24 scopes do not complete broader trap, runtime, ABI-variant

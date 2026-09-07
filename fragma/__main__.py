@@ -5,7 +5,7 @@ import json
 import os
 from pathlib import Path
 
-from . import build, profiles, sources, suite, toolchain
+from . import build, concurrency, profiles, rv32_zeropad, sources, suite, toolchain
 
 
 def replay_roots(values, project):
@@ -25,6 +25,20 @@ def main(argv=None):
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("preflight", help="check the locked analysis toolchain without installing")
     sub.add_parser("list", help="list registered proof/calibration targets and profiles")
+    c0 = sub.add_parser(
+        "concurrency-c0",
+        help="run the pinned Mthread+Eva capability calibrations without installing",
+    )
+    c0.add_argument("--output", type=Path,
+                    help="new evidence directory; existing paths are never overwritten")
+    c0.add_argument("--timeout", type=int, default=120,
+                    help="wall-clock limit in seconds for each provider invocation")
+    rv32 = sub.add_parser(
+        "rv32-zeropad-audit",
+        help="audit the retained RV32 load_unaligned_zeropad A/B evidence",
+    )
+    rv32.add_argument("--output", type=Path,
+                      help="new compact evidence directory; never overwritten")
     coverage = sub.add_parser("coverage", help="report explicit run/profile evidence and current input freshness; does not run proofs")
     coverage.add_argument("--summary", type=Path, action="append", default=[])
     coverage.add_argument("--profile-evidence", type=Path, action="append", default=[])
@@ -59,6 +73,17 @@ def main(argv=None):
                      help="explicit native specification-calibration receipt; repeat for distinct providers; all inputs and observations are revalidated")
     args = parser.parse_args(argv)
     try:
+        if args.command == "concurrency-c0":
+            result = concurrency.run_c0(
+                root, args.output or concurrency.default_output(root), args.timeout,
+            )
+            print(f"{'passed' if result['accepted'] else 'failed'}: {result['output']}")
+            return 0 if result["accepted"] else 1
+        if args.command == "rv32-zeropad-audit":
+            output = args.output or rv32_zeropad.default_output(root)
+            result = rv32_zeropad.audit(root, output)
+            print(f"{'passed' if result['accepted'] else 'failed'}: {output}")
+            return 0 if result["accepted"] else 1
         if args.command == "coverage":
             from .coverage import generate_matrix, render_markdown
             if args.output.exists():

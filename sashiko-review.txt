@@ -1,0 +1,38 @@
+File: arch/riscv/mm/extable.c
+Role: Dispatches RISC-V exception-table fixups and reconstructs a zero-padded
+word when an unaligned kernel load faults at an unmapped page boundary.
+Subsystem: RISC-V ARCHITECTURE
+
+[Severity: Medium]
+arch/riscv/mm/extable.c:ex_handler_load_unaligned_zeropad()
+
+    unsigned long data, addr, offset;
+
+    addr = regs_get_gpr(regs, reg_addr * sizeof(unsigned long));
+
+    offset = addr & 0x7UL;
+    addr &= ~0x7UL;
+
+    data = *(unsigned long *)addr >> (offset * 8);
+
+    regs_set_gpr(regs, reg_data * sizeof(unsigned long), data);
+
+    regs->epc = get_ex_fixup(ex);
+    return true;
+
+Can the hard-coded eight-byte alignment corrupt every RV32 page-crossing
+recovery?  On RV32, REG_L selects a four-byte lw and unsigned long is four
+bytes, but the handler rounds the faulting address down to an eight-byte
+boundary.  A four-byte load crossing a page starts in one of the page's last
+three bytes; its offset from that eight-byte boundary is therefore 5, 6, or
+7.  The recovery load reads the preceding four bytes instead of any byte from
+the requested word, then shifts that 32-bit value by 40, 48, or 56 bits.
+Those shift counts exceed the C operand width.
+
+ARCH_RV32I and RISCV_EFFICIENT_UNALIGNED_ACCESS can be selected together, and
+the latter selects DCACHE_WORD_ACCESS on an MMU build.  The exception-table
+entry reaches this handler, which replaces the destination register and
+advances epc without retrying the load.  The advertised zero-padded result can
+therefore contain unrelated bytes instead of the mapped prefix of the word.
+
+arch/riscv/mm/extable.c totals: Critical: 0 High: 0 Medium: 1 Low: 0

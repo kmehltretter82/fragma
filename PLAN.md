@@ -6,12 +6,18 @@ Progress updated: 2026-09-07. See [PROGRESS.md](PROGRESS.md) for current evidenc
 commands, and limitations. Checked boxes describe individual delivered tasks;
 each phase's acceptance criteria still apply independently.
 
-Current user priority: actual bounded Linux kernel correctness review.
-Further Hexagon implementation is parked; its retained private diagnostics
-remain development evidence, not new accepted proofs, profiles or kernel bugs.
-Next user-requested workstream: concurrency support after that bounded review.
-See [the staged concurrency plan](docs/CONCURRENCY-PLAN.md). This adds work to
-the goal; existing sequential proofs do not gain concurrent guarantees.
+The requested bounded Linux kernel review has produced one dynamically
+reproduced RV32 wrong-result defect. Its [A/B handoff](riscv/rv32-zeropad/README.md)
+contains a send-ready, strict-checkpatch-clean fix and exact test/review evidence;
+the patch has not been emailed or acknowledged upstream. Further Hexagon
+implementation remains parked, and its private diagnostics did not produce this
+kernel finding or add accepted proofs/profiles.
+
+The next user-requested workstream is concurrency support. C0 capability
+characterization is now accepted; C1-C4 remain open. See the
+[C0 record](docs/CONCURRENCY-C0-20260907.md) and
+[staged concurrency plan](docs/CONCURRENCY-PLAN.md). Existing sequential proofs
+do not gain concurrent guarantees.
 
 The common runner, source gates, locked local toolchain, and 21-architecture
 registry now exist. Ten configured profiles, including s390x and UML x86-64,
@@ -274,11 +280,11 @@ earlier proof's source identity.
   as distinct profile inputs. Distinguish kernel data layouts from compatibility
   userspace layouts handled by particular functions.
 
-Concurrency and RCU remain unsupported by the accepted suite. The user has
-requested that their implementation workstream begin after the current bounded
-kernel review, without waiting for all-architecture completion. Follow
-[C0-C4](docs/CONCURRENCY-PLAN.md) for capability assessment, synchronization
-models, kernel integration and weak-memory/RCU validation. Inline assembly,
+Linux concurrency and RCU remain unsupported by the accepted kernel suite. C0
+now pins the provider's limited Mthread+Eva capabilities and gaps; it does not
+award a concurrent kernel target. Follow the remaining
+[C1-C4](docs/CONCURRENCY-PLAN.md) for synchronization models, kernel integration
+and weak-memory/RCU validation without waiting for all-architecture completion. Inline assembly,
 MMIO and whole-subsystem verification still require additional models.
 Unsupported features must be visible in coverage reports.
 
@@ -292,7 +298,7 @@ Unsupported features must be visible in coverage reports.
 | A0–A3. Architecture support | P1 for s390; P2 for later waves | 0–2; alongside 3–4 | Common port interface, s390 first, then every architecture in the pinned tree |
 | 3. Stronger specifications | P1 | 1 and 2 | Functional contracts and reusable proof components |
 | 4. Curated coverage expansion | P1 | 2 and 3 | A measured collection of 20–50 distinct functions |
-| C0–C4. Concurrency support | P1, next after the bounded kernel review | 1–2 for acceptance; independent of all-architecture completion | Reviewed thread/interrupt models, scoped kernel integration, then explicit weak-memory and RCU capabilities |
+| C0–C4. Concurrency support | P1 active; C0 accepted, C1 next | 1–2 for acceptance; independent of all-architecture completion | Reviewed thread/interrupt models, scoped kernel integration, then explicit weak-memory and RCU capabilities |
 | 5. Maintenance and performance | P2 | 2; use 4 for measurement | Incremental checks and a documented update workflow |
 
 Runner scaffolding and dependency pinning can start during phase 0. Accept a

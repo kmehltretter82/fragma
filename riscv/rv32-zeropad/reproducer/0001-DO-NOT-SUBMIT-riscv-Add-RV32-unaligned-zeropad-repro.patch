@@ -1,0 +1,95 @@
+From 04a5cfb10c0f82771f217c5bd6810573c348c367 Mon Sep 17 00:00:00 2001
+From: Karl Mehltretter <kmehltretter@gmail.com>
+Date: Mon, 7 Sep 2026 07:07:33 +0000
+Subject: [PATCH] DO NOT SUBMIT: riscv: Add RV32 unaligned zeropad reproducer
+
+Add a project-only KUnit test that places recognizable bytes at the end
+of a one-page vmalloc area. vmalloc reserves an unmapped guard page, so
+loads from the last one, two, and three bytes exercise the exception-table
+zero-padding path.
+
+This commit exists only to produce before/after evidence for the
+accompanying fix.
+
+Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
+---
+ arch/riscv/mm/Makefile                       |  1 +
+ arch/riscv/mm/load_unaligned_zeropad_kunit.c | 55 ++++++++++++++++++++
+ 2 files changed, 56 insertions(+)
+ create mode 100644 arch/riscv/mm/load_unaligned_zeropad_kunit.c
+
+diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile
+index b916a68d324a..a60f38a7be0a 100644
+--- a/arch/riscv/mm/Makefile
++++ b/arch/riscv/mm/Makefile
+@@ -14,6 +14,7 @@ KCOV_INSTRUMENT_init.o := n
+ 
+ obj-y += init.o
+ obj-$(CONFIG_MMU) += extable.o fault.o pageattr.o pgtable.o tlbflush.o
++obj-$(CONFIG_KUNIT) += load_unaligned_zeropad_kunit.o
+ obj-y += cacheflush.o
+ obj-y += context.o
+ obj-y += pmem.o
+diff --git a/arch/riscv/mm/load_unaligned_zeropad_kunit.c b/arch/riscv/mm/load_unaligned_zeropad_kunit.c
+new file mode 100644
+index 000000000000..307c888af763
+--- /dev/null
++++ b/arch/riscv/mm/load_unaligned_zeropad_kunit.c
+@@ -0,0 +1,55 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Project-only reproducer; not proposed for upstream inclusion. */
++
++#include <kunit/test.h>
++#include <linux/mm.h>
++#include <linux/module.h>
++#include <linux/string.h>
++#include <linux/vmalloc.h>
++
++#include <asm/word-at-a-time.h>
++
++static void riscv_load_unaligned_zeropad_guard_test(struct kunit *test)
++{
++#if defined(CONFIG_32BIT) && defined(CONFIG_DCACHE_WORD_ACCESS)
++	unsigned long expected, got;
++	unsigned int remaining;
++	u8 *page;
++
++	page = vmalloc(PAGE_SIZE);
++	KUNIT_ASSERT_NOT_NULL(test, page);
++	KUNIT_ASSERT_NULL(test, vmalloc_to_page(page + PAGE_SIZE));
++
++	memset(page, 0xa5, PAGE_SIZE);
++	page[PAGE_SIZE - 4] = 0x11;
++	page[PAGE_SIZE - 3] = 0x22;
++	page[PAGE_SIZE - 2] = 0x33;
++	page[PAGE_SIZE - 1] = 0x44;
++
++	for (remaining = 1; remaining <= 3; remaining++) {
++		expected = 0;
++		memcpy(&expected, page + PAGE_SIZE - remaining, remaining);
++		got = load_unaligned_zeropad(page + PAGE_SIZE - remaining);
++		KUNIT_EXPECT_EQ_MSG(test, got, expected,
++				    "remaining bytes: %u", remaining);
++	}
++
++	vfree(page);
++#else
++	kunit_skip(test, "requires RV32 CONFIG_DCACHE_WORD_ACCESS");
++#endif
++}
++
++static struct kunit_case riscv_load_unaligned_zeropad_cases[] = {
++	KUNIT_CASE(riscv_load_unaligned_zeropad_guard_test),
++	{}
++};
++
++static struct kunit_suite riscv_load_unaligned_zeropad_suite = {
++	.name = "riscv-load-unaligned-zeropad",
++	.test_cases = riscv_load_unaligned_zeropad_cases,
++};
++
++kunit_test_suite(riscv_load_unaligned_zeropad_suite);
++
++MODULE_LICENSE("GPL");
+-- 
+2.53.0

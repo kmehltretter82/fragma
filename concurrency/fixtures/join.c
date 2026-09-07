@@ -18,10 +18,13 @@ static void *worker(void *unused)
 
 int main(void)
 {
+	int observed;
+
 	if (pthread_create(&worker_thread, 0, worker, 0) != 0)
 		return 1;
 	if (pthread_join(worker_thread, 0) != 0)
 		return 2;
-	/*@ assert join_completion_model_gap: join_completed == 1; */
+	observed = join_completed;
+	/*@ assert join_completion_model_gap: observed == 1; */
 	return 0;
 }

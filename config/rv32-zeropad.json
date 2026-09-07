@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "source_repository": "build/rv32-zeropad/linux-mainline",
+  "source": {
+    "mainline_base": "df2908090cda368b01ff43709f51890076c56157",
+    "mainline_name": "v7.3-rc2",
+    "linux_next_base": "af5f12805e5cefa4fe68d6127c7e1fb78cd5535c",
+    "linux_next_name": "next-20260904",
+    "introducing_commit": "d0fdc20b0429150c9dd09111f9b1d9d48117b56f",
+    "diagnostic_commit": "04a5cfb10c0f82771f217c5bd6810573c348c367",
+    "tested_fix_commit": "a815e79559d1f56683c5f534b067be42ed256298",
+    "submission_commit": "7fe4d4e77ee4f57046785b82918ce72cce7507e5",
+    "stable_patch_id": "1e15327041a5d49a362302ac8826bf9296aa6039"
+  },
+  "patches": {
+    "submission": {
+      "path": "riscv/rv32-zeropad/patches/0001-riscv-Fix-load_unaligned_zeropad-on-RV32.patch",
+      "sha256": "491691183f32452bc2387731525466b19b54be93bc9f691d7bd01c04f84a1fd3"
+    },
+    "diagnostic": {
+      "path": "riscv/rv32-zeropad/reproducer/0001-DO-NOT-SUBMIT-riscv-Add-RV32-unaligned-zeropad-repro.patch",
+      "sha256": "b67036cf1b094ec4798d6a48eab44ff8bcd566e18b0e47001866fee3b0e7cf7a"
+    },
+    "config_fragment": {
+      "path": "riscv/rv32-zeropad/repro.config",
+      "sha256": "6e28e8799ca3c3ce349b55df0f3e84f421412949704f6e10ec02407c09e0fccf"
+    }
+  },
+  "evidence_directory": "build/rv32-zeropad",
+  "artifacts": {
+    "image_before": {
+      "path": "Image.before",
+      "sha256": "82aec25a6968a360238a58689ae6c3524fc7612436aa8923ed7e53032d89330c"
+    },
+    "image_after": {
+      "path": "Image.after",
+      "sha256": "fd8e3124cb1298e251c31d6d9d614e4928ba33d4028d38961e408779f593dd32"
+    },
+    "config_before": {
+      "path": "config.before",
+      "sha256": "47d87fee06e6d1985f7f46059d69daebf301820e98e5a207af3cd309c19cfbd0"
+    },
+    "config_after": {
+      "path": "config.after",
+      "sha256": "47d87fee06e6d1985f7f46059d69daebf301820e98e5a207af3cd309c19cfbd0"
+    },
+    "log_before": {
+      "path": "qemu-before.log",
+      "sha256": "d6ac8a4ea071255ce21fc0faf264a6e47d22213fd70dae95649900583a2aec46"
+    },
+    "log_after": {
+      "path": "qemu-after.log",
+      "sha256": "b97aeed76316bb035b3668d96545fe5599fc14e981973954aaba49859769b798"
+    },
+    "rv32_fixed_vmlinux": {
+      "path": "build-before/vmlinux",
+      "sha256": "17759344be938e67a2619f2c76279874da59017428711f51effd0c3f42f3f360"
+    },
+    "rv32_fixed_extable_object": {
+      "path": "build-before/arch/riscv/mm/extable.o",
+      "sha256": "aa3f712e7cac19d13438500216c672c7589c24f26fd4d0c5b25c95d252ec0376"
+    },
+    "rv32_fixed_extable_command": {
+      "path": "build-before/arch/riscv/mm/.extable.o.cmd",
+      "sha256": "689fb2095040ebeee9115084e881a882bffc285a24c2fc847be157e5f5fe20a0"
+    },
+    "rv64_fixed_extable_object": {
+      "path": "build-rv64-fix/arch/riscv/mm/extable.o",
+      "sha256": "d63b3a713828b6dc01e73f9e345974e37b5f6a0359ca058a73b0f1877dc7e2af"
+    },
+    "rv64_fixed_extable_command": {
+      "path": "build-rv64-fix/arch/riscv/mm/.extable.o.cmd",
+      "sha256": "0736debed9bbaf91bf9d8774001182fa0fa134f94e4ee14699696d0d511f6da9"
+    },
+    "rv64_fixed_config": {
+      "path": "build-rv64-fix/.config",
+      "sha256": "f3d3c8ba18bddb53d54968a6951015d2f51597a20fc2f5958f24ca4fef3993a5"
+    }
+  },
+  "required_config": {
+    "CONFIG_32BIT": "y",
+    "CONFIG_NONPORTABLE": "y",
+    "CONFIG_ARCH_RV32I": "y",
+    "CONFIG_MMU": "y",
+    "CONFIG_RISCV_EFFICIENT_UNALIGNED_ACCESS": "y",
+    "CONFIG_DCACHE_WORD_ACCESS": "y",
+    "CONFIG_KUNIT": "y",
+    "CONFIG_KUNIT_DEFAULT_ENABLED": "y",
+    "CONFIG_KUNIT_AUTORUN_ENABLED": "y",
+    "CONFIG_SERIAL_8250": "y",
+    "CONFIG_SERIAL_8250_CONSOLE": "y",
+    "CONFIG_HVC_RISCV_SBI": "y"
+  },
+  "kernel_command_line": "console=ttyS0 earlycon=sbi kunit.enable=1 kunit.autorun=1 kunit.filter_glob=riscv-load-unaligned-zeropad panic=-1",
+  "expected_before_failures": {
+    "1": {"got": 165, "expected": 68},
+    "2": {"got": 42405, "expected": 17459},
+    "3": {"got": 10855845, "expected": 4469538}
+  },
+  "tools": {
+    "qemu": {
+      "argv": ["qemu-system-riscv32", "--version"],
+      "expected_first_line": "QEMU emulator version 10.2.1 (Debian 1:10.2.1+ds-1ubuntu3.2)"
+    },
+    "compiler": {
+      "argv": ["riscv64-linux-gnu-gcc", "--version"],
+      "expected_first_line": "riscv64-linux-gnu-gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0"
+    }
+  },
+  "maintainers": [
+    "Paul Walmsley <pjw@kernel.org>",
+    "Palmer Dabbelt <palmer@dabbelt.com>",
+    "Albert Ou <aou@eecs.berkeley.edu>",
+    "Alexandre Ghiti <alex@ghiti.fr>",
+    "Karl Mehltretter <kmehltretter@gmail.com>",
+    "Jisheng Zhang <jszhang@kernel.org>",
+    "linux-riscv@lists.infradead.org",
+    "linux-kernel@vger.kernel.org"
+  ],
+  "email": {
+    "to": [
+      "Paul Walmsley <pjw@kernel.org>",
+      "Palmer Dabbelt <palmer@dabbelt.com>",
+      "Albert Ou <aou@eecs.berkeley.edu>"
+    ],
+    "cc": [
+      "Alexandre Ghiti <alex@ghiti.fr>",
+      "Jisheng Zhang <jszhang@kernel.org>",
+      "linux-riscv@lists.infradead.org",
+      "linux-kernel@vger.kernel.org"
+    ]
+  }
+}

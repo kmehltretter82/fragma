@@ -1,0 +1,43 @@
+From 7fe4d4e77ee4f57046785b82918ce72cce7507e5 Mon Sep 17 00:00:00 2001
+From: Karl Mehltretter <kmehltretter@gmail.com>
+Date: Mon, 7 Sep 2026 07:06:41 +0000
+Subject: [PATCH] riscv: Fix load_unaligned_zeropad() on RV32
+
+load_unaligned_zeropad() issues REG_L, which is lw on RV32 and ld on
+RV64. Its exception handler nevertheless aligns every faulting address
+to an eight-byte boundary and derives a shift from three address bits.
+
+For an RV32 load starting in the last three bytes of a mapped page, this
+selects an earlier four-byte word and shifts it by 40, 48, or 56 bits.
+The destination register therefore does not contain the bytes at the
+requested address followed by zero padding.
+
+Derive the alignment and offset from the width of the data word. This
+leaves RV64 behavior unchanged and makes RV32 use the correct source word
+and a shift of 8, 16, or 24 bits.
+
+Fixes: d0fdc20b0429 ("riscv: select DCACHE_WORD_ACCESS for efficient unaligned access HW")
+Cc: stable@vger.kernel.org
+Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
+---
+ arch/riscv/mm/extable.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/riscv/mm/extable.c b/arch/riscv/mm/extable.c
+index dd1530af3ef1..e252eba55ede 100644
+--- a/arch/riscv/mm/extable.c
++++ b/arch/riscv/mm/extable.c
+@@ -68,8 +68,8 @@ ex_handler_load_unaligned_zeropad(const struct exception_table_entry *ex,
+ 
+ 	addr = regs_get_gpr(regs, reg_addr * sizeof(unsigned long));
+ 
+-	offset = addr & 0x7UL;
+-	addr &= ~0x7UL;
++	offset = addr & (sizeof(data) - 1);
++	addr &= ~(sizeof(data) - 1);
+ 
+ 	data = *(unsigned long *)addr >> (offset * 8);
+ 
+-- 
+2.53.0
+

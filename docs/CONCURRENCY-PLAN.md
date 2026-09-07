@@ -1,7 +1,9 @@
 # Concurrency verification workstream
 
 Requested: 2026-09-07, after the current bounded kernel-source review.
-Status: planned; no concurrent-kernel acceptance or implementation is claimed.
+Status: C0 capability calibration accepted on 2026-09-07; C1-C4 remain open and
+no concurrent-kernel target is accepted. See the
+[C0 evidence record](CONCURRENCY-C0-20260907.md).
 Parent goal: [execute PLAN.md](../PLAN.md). This work does not replace the
 remaining sequential-suite, architecture or coverage requirements.
 
@@ -25,17 +27,17 @@ A successful narrow pilot must not erase the later weak-memory/RCU requirements.
 
 ## C0 — Establish the actual tool and semantic capabilities
 
-- [ ] Inspect the locked production provider's version, source, documentation,
+- [x] Inspect the locked production provider's version, source, documentation,
   available Mthread features and bundled threading models. Keep the private
   Hexagon candidate out of this baseline unless separately accepted.
-- [ ] Record the exact execution/memory model: thread discovery, shared writes,
+- [x] Record the exact execution/memory model: thread discovery, shared writes,
   synchronization, object lifetime, interrupts, atomic operations and unsupported
   constructs. Separate upstream claims from locally verified capabilities.
-- [ ] Add small project-owned, non-kernel calibration models for thread creation,
+- [x] Add small project-owned, non-kernel calibration models for thread creation,
   joining, protected shared state, interference and interrupt exclusion. Include
   both valid invariants and deliberately false assertions with independently
   justified expected outcomes. No fault-triggering kernel tests are required.
-- [ ] Preserve raw diagnostics and distinguish an identified false property,
+- [x] Preserve raw diagnostics and distinguish an identified false property,
   a possible alarm, an unknown result, unsupported semantics and a tool error.
   A missing warning or successful parse is not a successful negative control.
 
@@ -43,6 +45,13 @@ Acceptance: a pinned, repeatable capability report states which properties the
 actual provider checks and exposes every modeling assumption. If a required
 feature is absent, record the evidence and implement or integrate a suitable
 backend; do not relabel a sequential run as concurrency verification.
+
+C0 decision: accepted for capability characterization only. The pinned
+[nine-case result](../results/concurrency-c0-20260907-04/SUMMARY.md) matches every
+expected result class. `pthread_join()` completion, automatically registered
+handler lock initialization, unsupported pthread operations, weak-memory
+atomics/barriers, Linux synchronization and RCU remain explicit gaps. C1 is the
+next acceptance gate.
 
 ## C1 — Integrate explicit concurrency models and evidence gates
 
@@ -125,8 +134,9 @@ its required model or validation evidence.
 
 ## Execution order and reporting
 
-Finish the current bounded static kernel review, then begin C0. Early concurrent
-model work need not wait for every architecture port or all sequential proofs.
+The bounded static review and C0 capability calibration are complete. Continue
+with C1; later concurrent model work need not wait for every architecture port
+or all sequential proofs.
 No system installation, running-kernel modification or new backend execution is
 authorized merely by this planning document.
 

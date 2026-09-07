@@ -1,0 +1,3 @@
+# Preserve unified-diff markers in stored mail patches without treating their
+# mandatory blank context lines as whitespace errors in the containing commit.
+*.patch -whitespace

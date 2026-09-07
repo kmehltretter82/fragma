@@ -3,8 +3,9 @@
 Verification and calibration rig for selected Linux kernel C functions.
 Frama-C/ACSL checks conditional correctness claims; deliberately wrong contracts
 and altered control examples test whether the verification setup detects them.
-This is not a whole-kernel proof, and no reportable Linux kernel defect has been
-confirmed by this project.
+This is not a whole-kernel proof. One Linux RV32 wrong-result defect has now been
+dynamically reproduced and has a send-ready fix; it has not yet been emailed or
+acknowledged upstream.
 
 The public repository contains the authored runner, specifications, tests,
 plans, compact result summaries, and experimental provider patches. Downloaded
@@ -14,13 +15,24 @@ excluded bulk artifacts therefore describe local evidence rather than files
 shipped in Git. Licensing remains governed by the notices on individual files;
 no blanket repository license has been assigned.
 
-Source tree: `~/linux-work/linux` @ `b9b3e33b70b71` (7.2-rc6), `lib/string.c`.
+Original string baseline source tree: `~/linux-work/linux` @ `b9b3e33b70b71`
+(7.2-rc6), `lib/string.c`. The RV32 finding records its separate v7.3-rc2 and
+linux-next identities in its handoff.
 
 Development roadmap: [PLAN.md](PLAN.md) covers model validation, reproducible
 regression checks, stronger contracts, and staged coverage expansion, including
 s390 first and eventual support for every architecture in the pinned kernel tree.
 
 Current implementation and fresh evidence: [PROGRESS.md](PROGRESS.md).
+The [RV32 guard-page A/B result](riscv/rv32-zeropad/README.md) demonstrates that
+`load_unaligned_zeropad()` returns bytes from the preceding word at a page
+boundary before the fix and passes all three cases after it. The minimal patch
+is strict-checkpatch clean, applies to mainline and linux-next, has RV32/RV64
+build controls, and passed a mail dry-run. It is send-ready, not sent.
+The [Mthread + Eva C0 record](docs/CONCURRENCY-C0-20260907.md) pins nine
+capability controls and their valid, invalid, unknown, race and unsupported
+outcomes. This completes capability characterization only; Linux concurrency,
+weak memory and RCU remain unsupported.
 The [renewed s390x pilot](s390/L2-RENEWAL-20260907.md) establishes scoped L2 support
 for seven C helpers. The [freshly renewed common24 baselines](common/L2-CLANG-RENEWAL-20260907.md)
 cover four helpers on ARM32, PowerPC32, m68k, ARM64, RISC-V64, SH, Alpha,
@@ -35,7 +47,8 @@ The results and reproduction notes below describe the original experiments;
 they are not the acceptance baseline for the new runner and checked profiles.
 
 The new entry point is `python3 -m fragma` (`list`, `preflight`, `snapshot`,
-`prepare`, `run`, `compare`, `coverage`). See [toolchain setup](docs/toolchain.md) and
+`prepare`, `run`, `compare`, `coverage`, `concurrency-c0`,
+`rv32-zeropad-audit`). See [toolchain setup](docs/toolchain.md) and
 [architecture profiles](profiles/README.md). Verification never installs
 packages. No `sudo` installation is needed on the current machine for the
 ten configured architecture profiles, including s390x and UML x86-64.
@@ -79,8 +92,9 @@ eleven exit-zero and 33 exit-one initial results per analyzer mode, and 22
 successful reparses. Three expanded AST-check failures recover; cast/constant-
 expression, static type-query and three valid-but-unsupported VLA cases remain.
 Patch 009 is unbuilt. Hexagon implementation is parked for the user's priority:
-actual bounded Linux kernel correctness review. No profile, accepted count or
-confirmed kernel-bug count changes; these are private tool/model observations.
+actual bounded Linux kernel correctness review. No profile or accepted count
+changes; these are private tool/model observations and are unrelated to the
+separately confirmed RV32 finding.
 The [current coverage matrix](results/coverage-calibrations-clang-renewed-20260907/coverage.md)
 retains all 31 targets: 16 current proofs, nine current accepted Eva calibrations
 and six legacy nonpasses. No accepted-stale targets remain. Eighteen of 24
@@ -135,7 +149,7 @@ See the [configured-profile queue](common/NEXT-PROFILES.md) and
   memcpy's dst_ok/no_overlap preconditions become unprovable; E-ACSL witness
   aborts on the out-of-bounds store. => the BUG_ON guard is load-bearing.
 
-## NOT a reportable bug
+## The string calibration is not a reportable bug
 
 Everything here is by construction: a planted wrong spec on decades-hardened
 code, and a guard *we* removed. The value delivered is a validated rig, not a
