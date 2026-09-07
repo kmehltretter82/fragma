@@ -74,6 +74,53 @@ class RV32ZeropadTests(unittest.TestCase):
             path.write_bytes(header)
             self.assertEqual(rv32_zeropad.parse_elf(path)["class_bits"], 64)
 
+    def test_mail_recipient_parser_handles_folded_headers(self):
+        patch = """From 0123456789abcdef0123456789abcdef01234567 Mon Sep 17 00:00:00 2001
+From: Author <author@example.com>
+To: One Person <one@example.com>,
+\tTwo Person <two@example.com>
+Cc: list@example.com
+Subject: [PATCH] example
+
+message
+---
+diff --git a/a b/a
+"""
+        self.assertEqual(rv32_zeropad.parse_mail_recipients(patch), {
+            "to": [
+                ("One Person", "one@example.com"),
+                ("Two Person", "two@example.com"),
+            ],
+            "cc": [("", "list@example.com")],
+        })
+
+    def test_mail_recipient_parser_rejects_non_format_patch_input(self):
+        with self.assertRaisesRegex(rv32_zeropad.RV32ZeropadError,
+                                    "format-patch envelope"):
+            rv32_zeropad.parse_mail_recipients("To: someone@example.com\n")
+
+    def test_failed_summary_reports_the_actual_pass_count(self):
+        failures = {
+            str(remaining): {"expected_hex": "0x44", "got_hex": "0xa5"}
+            for remaining in (1, 2, 3)
+        }
+        rendered = rv32_zeropad._render({
+            "accepted": False,
+            "checks": [{"passed": True}, {"passed": False}],
+            "logs": {
+                "before": {"failures": failures, "suite_status": "not ok"},
+                "after": {"suite_status": "ok"},
+            },
+            "source": {
+                "mainline_base": "base",
+                "mainline_name": "mainline",
+                "submission_commit": "submission",
+                "stable_patch_id": "patch-id",
+            },
+        })
+        self.assertIn("Overall audit: **FAIL**", rendered)
+        self.assertIn("1/2 recorded checks passed.", rendered)
+
     def test_existing_audit_output_is_never_overwritten(self):
         root = Path(__file__).resolve().parents[1]
         with tempfile.TemporaryDirectory() as temporary:

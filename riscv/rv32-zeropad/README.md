@@ -37,7 +37,7 @@ configuration is byte-for-byte identical on both sides, SHA-256
 Both boots intentionally have no root filesystem and panic only after KUnit has
 finished; that later panic is the test-termination mechanism, not a test result.
 
-The compact [audit summary](../../results/rv32-zeropad-20260907/SUMMARY.md)
+The compact [audit summary](../../results/rv32-zeropad-mail-ready-20260907/SUMMARY.md)
 records all gates passing. Its machine-readable companion binds the raw local
 images, configs, QEMU logs, compiled objects, patches, source commits, tool
 versions, KUnit values, and all review gates by SHA-256 or exact value. Bulk
@@ -73,12 +73,18 @@ no `sudo` command was used.
 - The final RV32 `vmlinux` and `extable.o` are ELF32 RISC-V.
 - A separate fixed RV64 `defconfig` `arch/riscv/mm/extable.o` build is ELF64
   RISC-V.
+- The complete RV64 `extable.o` is byte-for-byte identical before and after
+  the fix (SHA-256 on both sides:
+  `d63b3a713828b6dc01e73f9e345974e37b5f6a0359ca058a73b0f1877dc7e2af`).
+  This establishes that the generated RV64 code did not change; a runtime
+  RV64 regression test is therefore not needed to distinguish the two sides.
 - RV32 disassembly contains masks `3` and `-4` followed by the word shift.
 - Strict `scripts/checkpatch.pl`: 0 errors, 0 warnings, 0 checks.
 - Clean indexed apply checks against both recorded mainline and linux-next.
-- `git send-email --dry-run`: `Result: OK`; no email was transmitted.
-- All [905 project unit tests](../../results/tests-rv32-concurrency-20260907.log)
-  pass, with 20 pre-existing conditional skips.
+- Direct `git send-email --dry-run` using the patch's embedded `To:` and `Cc:`
+  headers: `Result: OK`; no email was transmitted.
+- All [1,015 project unit tests](../../results/tests-mips-rv32-checkpoint-20260907.log)
+  pass, with 20 conditional skips.
 
 Run the read-only audit of the retained local evidence with:
 

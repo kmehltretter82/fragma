@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+from email.parser import Parser
+from email.utils import getaddresses
 import hashlib
 import json
 import os
@@ -162,6 +164,23 @@ def parse_elf(path: Path) -> dict[str, Any]:
     }
 
 
+def parse_mail_recipients(patch_text: str) -> dict[str, list[tuple[str, str]]]:
+    """Return normalized To/Cc recipients from a format-patch mail header."""
+    header_text = patch_text.split("\n\n", 1)[0]
+    lines = header_text.splitlines()
+    if not lines or not re.fullmatch(
+        r"From [0-9a-f]{40} Mon Sep 17 00:00:00 2001", lines[0]
+    ):
+        raise RV32ZeropadError("submission lacks a format-patch envelope line")
+    headers = Parser().parsestr("\n".join(lines[1:]) + "\n\n", headersonly=True)
+    if headers.defects:
+        raise RV32ZeropadError(f"malformed submission mail headers: {headers.defects}")
+    return {
+        "to": getaddresses(headers.get_all("To", [])),
+        "cc": getaddresses(headers.get_all("Cc", [])),
+    }
+
+
 def _run(argv: list[str], cwd: Path, *, input_text: str | None = None,
          environment: dict[str, str] | None = None) -> dict[str, Any]:
     env = dict(os.environ)
@@ -190,6 +209,7 @@ def _write_json(path: Path, value: Any) -> None:
 def _render(result: dict[str, Any]) -> str:
     before = result["logs"]["before"]
     after = result["logs"]["after"]
+    passed_checks = sum(check["passed"] for check in result["checks"])
     lines = [
         "# RV32 `load_unaligned_zeropad()` A/B audit",
         "",
@@ -198,7 +218,7 @@ def _render(result: dict[str, Any]) -> str:
         "The unpatched kernel returned bytes from the preceding word in all three",
         "guard-page cases. The patched kernel passed the same KUnit case under a",
         "byte-identical configuration.",
-        f"All {len(result['checks'])} recorded checks passed.",
+        f"{passed_checks}/{len(result['checks'])} recorded checks passed.",
         "",
         "| Remaining mapped bytes | Expected | Before | Before status | After status |",
         "|---:|---:|---:|---|---|",
@@ -321,13 +341,23 @@ def audit(root: Path, output: Path) -> dict[str, Any]:
     rv32_elf = parse_elf(artifact_paths["rv32_fixed_vmlinux"])
     rv32_object = parse_elf(artifact_paths["rv32_fixed_extable_object"])
     rv64_object = parse_elf(artifact_paths["rv64_fixed_extable_object"])
+    rv64_baseline_object = parse_elf(
+        artifact_paths["rv64_baseline_extable_object"]
+    )
     for name, value, bits in (
         ("RV32 fixed vmlinux", rv32_elf, 32),
         ("RV32 fixed extable.o", rv32_object, 32),
         ("RV64 fixed extable.o", rv64_object, 64),
+        ("RV64 baseline extable.o", rv64_baseline_object, 64),
     ):
         add(f"{name} ELF class", bits, value["class_bits"])
         add(f"{name} RISC-V machine", 243, value["machine"])
+    add(
+        "RV64 extable.o unchanged byte-for-byte",
+        True,
+        artifact_paths["rv64_baseline_extable_object"].read_bytes()
+        == artifact_paths["rv64_fixed_extable_object"].read_bytes(),
+    )
     rv32_command = artifact_paths["rv32_fixed_extable_command"].read_text()
     rv64_command = artifact_paths["rv64_fixed_extable_command"].read_text()
     add("RV32 compile command uses ILP32", True, "-mabi=ilp32" in rv32_command)
@@ -371,6 +401,25 @@ def audit(root: Path, output: Path) -> dict[str, Any]:
     patch_text = project_paths["submission"].read_text()
     add("submission mail patch commit", True,
         patch_text.startswith(f"From {source['submission_commit']} "))
+    recipients = parse_mail_recipients(patch_text)
+    for kind in ("to", "cc"):
+        add(
+            f"embedded {kind.upper()} recipients",
+            getaddresses(manifest["email"][kind]),
+            recipients[kind],
+        )
+    review_notes = patch_text.split("\n---\n", 1)[1].split("\ndiff --git ", 1)[0]
+    for phrase in (
+        "RV32 QEMU virt/TCG",
+        "fill bytes from the previous word",
+        "0xa5, 0xa5a5, and\n0xa5a5a5",
+        "string tail (0x44, 0x4433, and 0x443322)",
+        "all three cases and the suite passed",
+        "full RV32 Images",
+        "RV64\nextable.o is byte-for-byte identical",
+    ):
+        add(f"review note {phrase.replace(chr(10), ' ')}", True,
+            phrase in review_notes)
     patch_id = git("submission_patch_id", ["patch-id", "--stable"], input_text=patch_text)
     patch_id_value = patch_id["stdout"].split()[0] if patch_id["stdout"].split() else ""
     add("submission stable patch-id", source["stable_patch_id"], patch_id_value)
@@ -471,18 +520,19 @@ def audit(root: Path, output: Path) -> dict[str, Any]:
     add("get_maintainer exit", 0, maintainers["returncode"])
     add("maintainer routing", manifest["maintainers"], actual_maintainers)
 
-    email_argv = ["git", "send-email", "--dry-run", "--confirm=never"]
-    for recipient in manifest["email"]["to"]:
-        email_argv.append(f"--to={recipient}")
-    for recipient in manifest["email"]["cc"]:
-        email_argv.append(f"--cc={recipient}")
-    email_argv.append(str(project_paths["submission"]))
+    email_argv = [
+        "git", "send-email", "--dry-run", "--confirm=never",
+        str(project_paths["submission"]),
+    ]
     email = _run(email_argv, root)
     commands["send_email_dry_run"] = email
     email_text = email["stdout"] + email["stderr"]
     add("git send-email dry-run exit", 0, email["returncode"])
     add("git send-email dry-run mode", True, "Dry-OK." in email_text)
     add("git send-email dry-run result", True, "Result: OK" in email_text)
+    for _, address in recipients["to"] + recipients["cc"]:
+        add(f"git send-email envelope recipient {address}", True,
+            f"RCPT TO:<{address}>" in email_text)
 
     commit_message = git("submission_commit_message", [
         "show", "-s", "--format=%B", source["submission_commit"]
@@ -494,6 +544,8 @@ def audit(root: Path, output: Path) -> dict[str, Any]:
     ):
         add(f"submission trailer {trailer.split(':', 1)[0]}", True,
             trailer in commit_message)
+    add("submission Assisted-by trailer", True,
+        "Assisted-by: LLM" in patch_text)
 
     objdump = _run(
         ["riscv64-linux-gnu-objdump", "-dr",
@@ -517,6 +569,7 @@ def audit(root: Path, output: Path) -> dict[str, Any]:
             "rv32_fixed_vmlinux": rv32_elf,
             "rv32_fixed_extable_object": rv32_object,
             "rv64_fixed_extable_object": rv64_object,
+            "rv64_baseline_extable_object": rv64_baseline_object,
         },
         "identities": identities,
         "checks": checks,

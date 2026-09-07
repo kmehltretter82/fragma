@@ -26,9 +26,11 @@ LoongArch profile, so LoongArch remains in this architecture-support queue.
 The same narrow exception now exists for MIPS: a genuine little-endian
 `malta_defconfig` MIPS32r2 SMP `ipc/util.o` is accepted for the C3 lifetime
 mapping through Clang/LLVM 21.1.8. Its O32 ELF identity, configuration, Kbuild
-command and LL/SC lowering are checked. It supplies no generated Frama-C target
-headers, type/layout calibration, L1, L2, big-endian or 64-bit MIPS support, so
-MIPS also remains in this general architecture-support queue.
+command and LL/SC lowering are checked. A later, separately scoped
+[MIPS32el candidate](MIPS32EL-MACHDEP-20260907.md) provisions authenticated
+generator headers and passes type/layout, parser and Eva calibration. It is
+deliberately unregistered and has no L1 or L2 result; big-endian and 64-bit MIPS
+also remain open. MIPS therefore stays in this general architecture queue.
 
 The subsequent [LLVM metadata assessment](../build/llvm-readiness-20260906/REPORT.md)
 confirms the installed compiler, linker and LLVM utility suite at version
@@ -74,13 +76,14 @@ include the following useful candidates:
 | --- | --- | --- |
 | Hexagon | `hexagon-linux-musl` | Compiler/build/header identities, full candidate generation and source-derived compiler/analyzer layout agreement exist. Resolve extended-alignment mismatch, integrate the profile route, then pass genuine-kernel L1/L2; requested/observed triples remain separately bound. |
 | LoongArch | `loongarch64-linux-gnusf` | The distinct LLVM C3 IPC object mapping is now checked. Keep it separate from the planned GCC profile; add generated-header ABI/model calibration and genuine L1/L2 before general activation. |
-| MIPS | `mipsel-linux-gnu` | The little-endian O32 C3 IPC object mapping is checked. Keep it separate from general L1/L2 and from big-endian/64-bit configurations; bind word size and endian selection as actual configuration inputs. |
+| MIPS | `mipsel-linux-gnu` | The little-endian O32 C3 IPC mapping and a separate O32/MIPS32r2 machine-model candidate are checked. Register and pass genuine-kernel L1/L2 before general activation; big-endian and 64-bit configurations remain separate. |
 | Sparc64 | `sparc64-linux-gnu` | The documented LLVM route also needs external GNU assembler support; that cross-prefix is missing locally. |
 
-Continue from the Hexagon adapter's explicit extended-alignment gate
-through profile integration and model calibration, then consider distinct LoongArch/MIPS
-profiles after genuine tool and source checks. Preserve the planned GCC routes
-as separate profile work. Required acceptance remains: compiler identity,
+Continue from the Hexagon adapter's explicit extended-alignment gate through
+profile integration and model calibration. For MIPS, continue from the
+unregistered MIPS32el candidate through production integration and genuine L1;
+LoongArch still needs its machine-model candidate. Preserve the planned GCC
+routes as separate profile work. Required acceptance remains: compiler identity,
 target-aware version/macros, pinned tools and generator headers, genuine build,
 fresh machine/type/layout/parser/calibration evidence, and finally scoped proofs.
 Additional configurations, compatibility layouts and runtime support remain
@@ -98,8 +101,8 @@ pinned Linux roster; a missing toolchain is not grounds to count it as complete.
 
 No download, installation, compiler build, target execution or support-level
 promotion was performed for the original readiness assessment. The subsequent
-linked build/header/adapter milestones compile Hexagon objects, run benign host
-build tools, and prepare workspace-local headers, but do not execute target objects or
-award model support. The currently configured profiles
+linked build/header/adapter milestones compile objects, run benign host build
+tools, and prepare workspace-local Hexagon and MIPS headers, but do not execute
+target objects or award model support. The currently configured profiles
 can continue without `sudo`; provisioning missing future-port dependencies is
 a separate setup step.

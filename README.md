@@ -27,8 +27,9 @@ Current implementation and fresh evidence: [PROGRESS.md](PROGRESS.md).
 The [RV32 guard-page A/B result](riscv/rv32-zeropad/README.md) demonstrates that
 `load_unaligned_zeropad()` returns bytes from the preceding word at a page
 boundary before the fix and passes all three cases after it. The minimal patch
-is strict-checkpatch clean, applies to mainline and linux-next, has RV32/RV64
-build controls, and passed a mail dry-run. It is send-ready, not sent.
+is strict-checkpatch clean, applies to mainline and linux-next, has an RV32 A/B
+test and byte-identical RV64 objects, and passed a mail dry-run. It is
+send-ready, not sent.
 The [Mthread + Eva C0 record](docs/CONCURRENCY-C0-20260907.md) pins nine
 capability controls and their valid, invalid, unknown, race and unsupported
 outcomes. The [C1 evidence gate](docs/CONCURRENCY-C1-20260907.md) adds explicit
@@ -90,6 +91,11 @@ mapping is not yet a general Frama-C LoongArch profile.
 The [MIPS mapping record](docs/CONCURRENCY-C3-MIPS-20260907.md) does the same for
 the distinct little-endian O32/MIPS32r2 SMP route and keeps big-endian/64-bit
 MIPS and general Eva/WP support outside the claim.
+The separate [MIPS32el machine-model candidate](profiles/MIPS32EL-MACHDEP-20260907.md)
+now passes generator, compiler-layout, parser and Eva calibration for that O32
+little-endian variant. It remains deliberately unregistered and is not L1 or
+L2; the C3 object mapping and this model calibration do not inherit each
+other's acceptance.
 Unbounded progress, scheduler fairness, wait-freedom, architecture-backed LL/SC
 guarantees, remaining architecture mappings, broader lockless protocols,
 IRQ/NMI classes and explicit RCU grace-period reasoning remain open.
@@ -114,9 +120,10 @@ The new entry point is `python3 -m fragma` (`list`, `preflight`, `snapshot`,
 `rv32-zeropad-audit`). See
 [toolchain setup](docs/toolchain.md) and
 [architecture profiles](profiles/README.md). Verification never installs
-packages. No `sudo` installation is needed on the current machine for the
-ten configured general analyzer profiles, including s390x and UML x86-64, or
-for the separate LoongArch and MIPS IPC object mappings described above.
+packages. No `sudo` installation is needed on the current machine for the ten
+configured general analyzer profiles, including s390x and UML x86-64, the
+separate LoongArch and MIPS IPC object mappings, or the unregistered MIPS32el
+calibration described above.
 See [result semantics](docs/results.md) and [explicit-evidence coverage](docs/coverage.md)
 for the distinction between historical, current, incomplete and calibrated results.
 The [maintenance guide](docs/maintenance.md) covers adding targets, scoped reviews,

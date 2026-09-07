@@ -57,6 +57,13 @@ work needed for Hexagon and other candidates, and Nios II's separate compiler
 version requirement. These are setup/implementation prerequisites, not current
 support claims; no installation is required for the ten existing profiles.
 
+The [MIPS32el candidate checkpoint](MIPS32EL-MACHDEP-20260907.md) is a deliberate
+step beyond compiler availability: an offline authenticated musl header sysroot,
+the unchanged Frama-C generator, O32 little-endian compiler calibration, two
+negative controls, parsing and Eva all pass. It remains absent from the profile
+registry and central toolchain lock, so it is unregistered rather than L1. The
+separate MIPS C3 IPC object mapping does not promote this general model.
+
 The [Hexagon LLVM compiler-build milestone](LLVM-BUILD-20260906.md) passes
 genuine v68 preparation and `lib/string.o`, with pinned tools and 37 new inert
 build-path tests. The [target-aware Clang interfaces](CLANG-INTERFACE-20260906.md)

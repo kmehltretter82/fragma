@@ -9,11 +9,19 @@ wrong-result defect. A project-only guard-page KUnit test fails on all three
 page-end offsets before the fix and passes after it under a byte-identical
 configuration. The [A/B handoff](riscv/rv32-zeropad/README.md) contains the
 minimal send-ready patch, replay script and review/test notes; the
-[evidence audit](results/rv32-zeropad-20260907/SUMMARY.md) binds source, logs,
+[evidence audit](results/rv32-zeropad-mail-ready-20260907/SUMMARY.md) binds source, logs,
 images, configs, tool versions, patch identity, mainline/linux-next applicability,
 RV32/RV64 build controls, strict checkpatch, maintainers and mail dry-run. It has
 not been emailed or acknowledged upstream. No `sudo` or package installation was
 used.
+
+The [MIPS32el machine-model checkpoint](profiles/MIPS32EL-MACHDEP-20260907.md)
+now passes an offline authenticated-header setup and the unchanged Frama-C 33
+generator for little-endian O32/MIPS32r2. Clang 21.1.8 produces the checked
+ELF32 MIPS calibration object; wrong-width and wrong-endian controls reject,
+and Eva reports zero alarms with 7/0/0 assertions. Input readback shows no
+drift. The candidate remains deliberately unregistered, integration-ineligible
+and below L1; no architecture-support count changes.
 
 The concurrency continuation has completed C0 capability characterization,
 C1 evidence/scope infrastructure and the limited C2 pilot milestone. The
@@ -129,8 +137,9 @@ The earlier IPC run `-04` is retained as a 736/738 failed matcher attempt caused
 only by PowerPC objdump whitespace, and IPC run `-05` is superseded because
 final readback caught its stale four-profile exclusion sentence.
 
-All [1,002 project tests](results/tests-concurrency-c3-mips-final-20260907.log)
-pass after the MIPS extension, with 20 conditional skips. The
+All [1,015 project tests](results/tests-mips-rv32-checkpoint-20260907.log)
+pass after the MIPS model and RV32 submission-hygiene checkpoint, with 20
+conditional skips. The
 IPC/refcount module has 23 focused tests, including exact profile inventory,
 ELF32/Alpha symbol parsing, diagnostic classification, native atomic-disassembly
 requirements, exhaustive progress outcomes and fail-closed scope controls.
@@ -402,7 +411,7 @@ a proof of the whole kernel or automatic verification of every caller.
 | Source identity | Token-based whole-TU/function gates, pinned source snapshot and consumed-header checks; dated relocated string experiment. | Register and rerun remaining historical examples; automate path-bound review relocation. |
 | Toolchain | Actual 18-tool preflight passes; target-aware Clang identities; genuine Hexagon v68 object build, 217 authenticated headers, 100-query generation and compiler/analyzer layout agreement. | Resolve extended alignment and integrate the Hexagon route; other tools, broader relocated setup and CVC5/WP compatibility investigation. |
 | Runner | Twenty-five targets have current acceptance: sixteen proof variants and nine Eva calibrations. Registry has 31 targets; old histories are preserved. | Renew and resolve six legacy nonpasses, automate relocation and expand the profile matrix. |
-| Architecture models | Ten-profile GCC renewal passes 182 L1 checks with unchanged models/flags; all ten named L2 scopes renewed; Hexagon candidate/layout calibration still refuses extended alignment. | Resolve Hexagon extended alignment and complete production integration/L1; eleven further profiles' L2 work, then broader ABI/endian/configuration variants. |
+| Architecture models | Ten-profile GCC renewal passes 182 L1 checks with unchanged models/flags; all ten named L2 scopes renewed; Hexagon still refuses extended alignment; an unregistered MIPS32el O32 candidate passes generator/layout/parser/Eva calibration. | Integrate and pass genuine L1 for MIPS32el; resolve Hexagon extended alignment; eleven unconfigured families still need L2 baselines, then broader ABI/endian/configuration variants. |
 | Stronger strings | Current conditional WP proofs: `strnchr` 48/48 and `strlcat` 62/62 ordinary goals, all 44 selected dependencies valid; eight current Eva calibrations with retained native evidence revalidated read-only. | Renew relocation; external implementations and kernel callers remain outside these proofs. |
 | s390 pilot | Current seven-helper scoped L2: 183 ordinary goals, 158 WP properties, three project round trips and mandatory byte-order calibration. All four target gates and retained native evidence rechecked. | Broaden trap models and verify kernel callers; whole-pilot L3 remains open. QEMU max is not exact z13 emulation. |
 | Common byte helpers | Current nine-profile scoped L2: 164 model checks, 846 ordinary goals, 738 properties, 252 fixture/compiler observations and accepted replay; 5,155 audit hashes match. | Remaining architectures, second-location runs, kernel callers, runtime corroboration and optional s390 common-provider convergence. |
@@ -665,8 +674,8 @@ The bounded review, RV32 A/B handoff, limited C2 pilot, C3 LKMM baseline,
 source-linked release/acquire pilot, atomic/RMW pilot and IPC refcount
 lifetime/bounded-progress pilot are complete at their narrow boundaries. The
 eight-profile LL/SC admission evaluation is also complete, with zero promotion.
-Immediate choices are human review/submission of the patch and further C3
-protocol work or architecture-backed progress evidence.
+Immediate choices are human review/submission of the patch, MIPS32el profile
+integration/L1, and further C3 protocol or architecture-backed progress work.
 Mappings for architectures outside the refcount pilot's eleven-profile set,
 interrupt classes and functional protocols remain explicit extensions
 rather than inherited claims. The later

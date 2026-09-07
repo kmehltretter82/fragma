@@ -1,25 +1,45 @@
 From 7fe4d4e77ee4f57046785b82918ce72cce7507e5 Mon Sep 17 00:00:00 2001
 From: Karl Mehltretter <kmehltretter@gmail.com>
 Date: Mon, 7 Sep 2026 07:06:41 +0000
-Subject: [PATCH] riscv: Fix load_unaligned_zeropad() on RV32
+To: Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>
+Cc: Alexandre Ghiti <alex@ghiti.fr>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] riscv: fix load_unaligned_zeropad() fixup for RV32
 
-load_unaligned_zeropad() issues REG_L, which is lw on RV32 and ld on
-RV64. Its exception handler nevertheless aligns every faulting address
-to an eight-byte boundary and derives a shift from three address bits.
+The fixup for load_unaligned_zeropad() runs when REG_L crosses into an
+unmapped page. REG_L is lw on RV32 and ld on RV64, but the fixup assumes
+an 8-byte load: it rounds the address down to 8 bytes and derives the
+shift from three address bits.
 
-For an RV32 load starting in the last three bytes of a mapped page, this
-selects an earlier four-byte word and shifts it by 40, 48, or 56 bits.
-The destination register therefore does not contain the bytes at the
-requested address followed by zero padding.
+On RV32, a load starting in the last three bytes of a mapped page selects
+the word four bytes earlier and shifts it by 40, 48, or 56 bits, more than
+the register width. The caller gets earlier bytes instead of the string
+tail followed by zeroes. This affects RV32 MMU kernels built with
+RISCV_EFFICIENT_UNALIGNED_ACCESS=y, which selects
+DCACHE_WORD_ACCESS and lets dcache name hashing and comparison and
+strscpy() use this path.
 
-Derive the alignment and offset from the width of the data word. This
-leaves RV64 behavior unchanged and makes RV32 use the correct source word
-and a shift of 8, 16, or 24 bits.
+Derive the alignment and offset masks from sizeof(data) instead of a fixed
+8. This makes RV32 use the correct source word. RV64 code is unchanged: the
+complete extable.o is byte-for-byte identical before and after.
 
 Fixes: d0fdc20b0429 ("riscv: select DCACHE_WORD_ACCESS for efficient unaligned access HW")
 Cc: stable@vger.kernel.org
+Assisted-by: LLM
 Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
 ---
+Tested on RV32 QEMU virt/TCG with a KUnit guard-page test. Before, the last
+three offsets returned fill bytes from the previous word (0xa5, 0xa5a5, and
+0xa5a5a5) instead of the string tail (0x44, 0x4433, and 0x443322), and the
+suite failed. After, all three cases and the suite passed.
+
+Built full RV32 Images for both sides with GCC 15.2.0. The complete RV64
+extable.o is byte-for-byte identical before and after the change.
+
  arch/riscv/mm/extable.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
@@ -40,4 +60,3 @@ index dd1530af3ef1..e252eba55ede 100644
  
 -- 
 2.53.0
-

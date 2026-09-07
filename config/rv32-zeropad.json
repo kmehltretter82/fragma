@@ -15,7 +15,7 @@
   "patches": {
     "submission": {
       "path": "riscv/rv32-zeropad/patches/0001-riscv-Fix-load_unaligned_zeropad-on-RV32.patch",
-      "sha256": "491691183f32452bc2387731525466b19b54be93bc9f691d7bd01c04f84a1fd3"
+      "sha256": "8f1ec3507579e6fa3142f9117d3285eeba61745fca89398de7ebecafc07fb676"
     },
     "diagnostic": {
       "path": "riscv/rv32-zeropad/reproducer/0001-DO-NOT-SUBMIT-riscv-Add-RV32-unaligned-zeropad-repro.patch",
@@ -66,6 +66,10 @@
     },
     "rv64_fixed_extable_object": {
       "path": "build-rv64-fix/arch/riscv/mm/extable.o",
+      "sha256": "d63b3a713828b6dc01e73f9e345974e37b5f6a0359ca058a73b0f1877dc7e2af"
+    },
+    "rv64_baseline_extable_object": {
+      "path": "rv64-regression-20260907-03/evidence/extable.baseline.o",
       "sha256": "d63b3a713828b6dc01e73f9e345974e37b5f6a0359ca058a73b0f1877dc7e2af"
     },
     "rv64_fixed_extable_command": {

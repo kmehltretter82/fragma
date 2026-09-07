@@ -658,6 +658,12 @@ This table is the starting wave order, not current support status. The named
 nine common24 baselines below supplement the separately renewed s390 pilot;
 all-architecture and additional ABI coverage remain open.
 
+- [x] Calibrate an unregistered little-endian O32/MIPS32r2 candidate with the
+  unchanged Frama-C generator, authenticated musl headers, pinned Clang target
+  semantics, compiler/layout controls and Eva. The
+  [checkpoint](profiles/MIPS32EL-MACHDEP-20260907.md) remains below L1 and does
+  not cover big-endian or 64-bit MIPS; registration, central lock renewal and a
+  genuine configured-kernel L1 receipt are still required.
 - [x] Extend the C3 IPC refcount implementation map from four to eleven exact
   SMP profiles. The accepted set now spans 32/64-bit and little/big-endian
   objects on x86-64, arm64, riscv64, s390x, ARMv7, PowerPC32, SuperH, Alpha and

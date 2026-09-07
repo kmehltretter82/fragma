@@ -1,0 +1,1272 @@
+{
+  "accepted": true,
+  "checks": [
+    {
+      "actual": "8f1ec3507579e6fa3142f9117d3285eeba61745fca89398de7ebecafc07fb676",
+      "expected": "8f1ec3507579e6fa3142f9117d3285eeba61745fca89398de7ebecafc07fb676",
+      "name": "submission SHA-256",
+      "passed": true
+    },
+    {
+      "actual": "b67036cf1b094ec4798d6a48eab44ff8bcd566e18b0e47001866fee3b0e7cf7a",
+      "expected": "b67036cf1b094ec4798d6a48eab44ff8bcd566e18b0e47001866fee3b0e7cf7a",
+      "name": "diagnostic SHA-256",
+      "passed": true
+    },
+    {
+      "actual": "6e28e8799ca3c3ce349b55df0f3e84f421412949704f6e10ec02407c09e0fccf",
+      "expected": "6e28e8799ca3c3ce349b55df0f3e84f421412949704f6e10ec02407c09e0fccf",
+      "name": "config_fragment SHA-256",
+      "passed": true
+    },
+    {
+      "actual": "82aec25a6968a360238a58689ae6c3524fc7612436aa8923ed7e53032d89330c",
+      "expected": "82aec25a6968a360238a58689ae6c3524fc7612436aa8923ed7e53032d89330c",
+      "name": "image_before SHA-256",
+      "passed": true
+    },
+    {
+      "actual": "fd8e3124cb1298e251c31d6d9d614e4928ba33d4028d38961e408779f593dd32",
+      "expected": "fd8e3124cb1298e251c31d6d9d614e4928ba33d4028d38961e408779f593dd32",
+      "name": "image_after SHA-256",
+      "passed": true
+    },
+    {
+      "actual": "47d87fee06e6d1985f7f46059d69daebf301820e98e5a207af3cd309c19cfbd0",
+      "expected": "47d87fee06e6d1985f7f46059d69daebf301820e98e5a207af3cd309c19cfbd0",
+      "name": "config_before SHA-256",
+      "passed": true
+    },
+    {
+      "actual": "47d87fee06e6d1985f7f46059d69daebf301820e98e5a207af3cd309c19cfbd0",
+      "expected": "47d87fee06e6d1985f7f46059d69daebf301820e98e5a207af3cd309c19cfbd0",
+      "name": "config_after SHA-256",
+      "passed": true
+    },
+    {
+      "actual": "d6ac8a4ea071255ce21fc0faf264a6e47d22213fd70dae95649900583a2aec46",
+      "expected": "d6ac8a4ea071255ce21fc0faf264a6e47d22213fd70dae95649900583a2aec46",
+      "name": "log_before SHA-256",
+      "passed": true
+    },
+    {
+      "actual": "b97aeed76316bb035b3668d96545fe5599fc14e981973954aaba49859769b798",
+      "expected": "b97aeed76316bb035b3668d96545fe5599fc14e981973954aaba49859769b798",
+      "name": "log_after SHA-256",
+      "passed": true
+    },
+    {
+      "actual": "17759344be938e67a2619f2c76279874da59017428711f51effd0c3f42f3f360",
+      "expected": "17759344be938e67a2619f2c76279874da59017428711f51effd0c3f42f3f360",
+      "name": "rv32_fixed_vmlinux SHA-256",
+      "passed": true
+    },
+    {
+      "actual": "aa3f712e7cac19d13438500216c672c7589c24f26fd4d0c5b25c95d252ec0376",
+      "expected": "aa3f712e7cac19d13438500216c672c7589c24f26fd4d0c5b25c95d252ec0376",
+      "name": "rv32_fixed_extable_object SHA-256",
+      "passed": true
+    },
+    {
+      "actual": "689fb2095040ebeee9115084e881a882bffc285a24c2fc847be157e5f5fe20a0",
+      "expected": "689fb2095040ebeee9115084e881a882bffc285a24c2fc847be157e5f5fe20a0",
+      "name": "rv32_fixed_extable_command SHA-256",
+      "passed": true
+    },
+    {
+      "actual": "d63b3a713828b6dc01e73f9e345974e37b5f6a0359ca058a73b0f1877dc7e2af",
+      "expected": "d63b3a713828b6dc01e73f9e345974e37b5f6a0359ca058a73b0f1877dc7e2af",
+      "name": "rv64_fixed_extable_object SHA-256",
+      "passed": true
+    },
+    {
+      "actual": "d63b3a713828b6dc01e73f9e345974e37b5f6a0359ca058a73b0f1877dc7e2af",
+      "expected": "d63b3a713828b6dc01e73f9e345974e37b5f6a0359ca058a73b0f1877dc7e2af",
+      "name": "rv64_baseline_extable_object SHA-256",
+      "passed": true
+    },
+    {
+      "actual": "0736debed9bbaf91bf9d8774001182fa0fa134f94e4ee14699696d0d511f6da9",
+      "expected": "0736debed9bbaf91bf9d8774001182fa0fa134f94e4ee14699696d0d511f6da9",
+      "name": "rv64_fixed_extable_command SHA-256",
+      "passed": true
+    },
+    {
+      "actual": "f3d3c8ba18bddb53d54968a6951015d2f51597a20fc2f5958f24ca4fef3993a5",
+      "expected": "f3d3c8ba18bddb53d54968a6951015d2f51597a20fc2f5958f24ca4fef3993a5",
+      "name": "rv64_fixed_config SHA-256",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "A/B configurations byte-identical",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "configuration CONFIG_32BIT",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "configuration CONFIG_NONPORTABLE",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "configuration CONFIG_ARCH_RV32I",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "configuration CONFIG_MMU",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "configuration CONFIG_RISCV_EFFICIENT_UNALIGNED_ACCESS",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "configuration CONFIG_DCACHE_WORD_ACCESS",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "configuration CONFIG_KUNIT",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "configuration CONFIG_KUNIT_DEFAULT_ENABLED",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "configuration CONFIG_KUNIT_AUTORUN_ENABLED",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "configuration CONFIG_SERIAL_8250",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "configuration CONFIG_SERIAL_8250_CONSOLE",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "configuration CONFIG_HVC_RISCV_SBI",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "CONFIG_64BIT is not enabled",
+      "passed": true
+    },
+    {
+      "actual": {
+        "1": {
+          "expected": 68,
+          "got": 165
+        },
+        "2": {
+          "expected": 17459,
+          "got": 42405
+        },
+        "3": {
+          "expected": 4469538,
+          "got": 10855845
+        }
+      },
+      "expected": {
+        "1": {
+          "expected": 68,
+          "got": 165
+        },
+        "2": {
+          "expected": 17459,
+          "got": 42405
+        },
+        "3": {
+          "expected": 4469538,
+          "got": 10855845
+        }
+      },
+      "name": "A-side exact wrong values",
+      "passed": true
+    },
+    {
+      "actual": 3,
+      "expected": 3,
+      "name": "A-side failure count",
+      "passed": true
+    },
+    {
+      "actual": "not ok",
+      "expected": "not ok",
+      "name": "A-side case status",
+      "passed": true
+    },
+    {
+      "actual": "not ok",
+      "expected": "not ok",
+      "name": "A-side suite status",
+      "passed": true
+    },
+    {
+      "actual": {},
+      "expected": {},
+      "name": "B-side failures",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "B-side failure count",
+      "passed": true
+    },
+    {
+      "actual": "ok",
+      "expected": "ok",
+      "name": "B-side case status",
+      "passed": true
+    },
+    {
+      "actual": "ok",
+      "expected": "ok",
+      "name": "B-side suite status",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "A-side RV32 ISA",
+      "passed": true
+    },
+    {
+      "actual": "console=ttyS0 earlycon=sbi kunit.enable=1 kunit.autorun=1 kunit.filter_glob=riscv-load-unaligned-zeropad panic=-1",
+      "expected": "console=ttyS0 earlycon=sbi kunit.enable=1 kunit.autorun=1 kunit.filter_glob=riscv-load-unaligned-zeropad panic=-1",
+      "name": "A-side kernel command line",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "A-side KUnit precedes intentional rootfs panic",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "B-side RV32 ISA",
+      "passed": true
+    },
+    {
+      "actual": "console=ttyS0 earlycon=sbi kunit.enable=1 kunit.autorun=1 kunit.filter_glob=riscv-load-unaligned-zeropad panic=-1",
+      "expected": "console=ttyS0 earlycon=sbi kunit.enable=1 kunit.autorun=1 kunit.filter_glob=riscv-load-unaligned-zeropad panic=-1",
+      "name": "B-side kernel command line",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "B-side KUnit precedes intentional rootfs panic",
+      "passed": true
+    },
+    {
+      "actual": "04a5cfb10c0f",
+      "expected": "04a5cfb10c0f",
+      "name": "A-side diagnostic commit",
+      "passed": true
+    },
+    {
+      "actual": "a815e79559d1",
+      "expected": "a815e79559d1",
+      "name": "B-side tested fix commit",
+      "passed": true
+    },
+    {
+      "actual": 32,
+      "expected": 32,
+      "name": "RV32 fixed vmlinux ELF class",
+      "passed": true
+    },
+    {
+      "actual": 243,
+      "expected": 243,
+      "name": "RV32 fixed vmlinux RISC-V machine",
+      "passed": true
+    },
+    {
+      "actual": 32,
+      "expected": 32,
+      "name": "RV32 fixed extable.o ELF class",
+      "passed": true
+    },
+    {
+      "actual": 243,
+      "expected": 243,
+      "name": "RV32 fixed extable.o RISC-V machine",
+      "passed": true
+    },
+    {
+      "actual": 64,
+      "expected": 64,
+      "name": "RV64 fixed extable.o ELF class",
+      "passed": true
+    },
+    {
+      "actual": 243,
+      "expected": 243,
+      "name": "RV64 fixed extable.o RISC-V machine",
+      "passed": true
+    },
+    {
+      "actual": 64,
+      "expected": 64,
+      "name": "RV64 baseline extable.o ELF class",
+      "passed": true
+    },
+    {
+      "actual": 243,
+      "expected": 243,
+      "name": "RV64 baseline extable.o RISC-V machine",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "RV64 extable.o unchanged byte-for-byte",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "RV32 compile command uses ILP32",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "RV32 compile command uses rv32 ISA",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "RV64 compile command uses LP64",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "RV64 compile command uses rv64 ISA",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "RV64 compile configuration",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "RV64 compile MMU configuration",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "qemu inventory exit",
+      "passed": true
+    },
+    {
+      "actual": "QEMU emulator version 10.2.1 (Debian 1:10.2.1+ds-1ubuntu3.2)",
+      "expected": "QEMU emulator version 10.2.1 (Debian 1:10.2.1+ds-1ubuntu3.2)",
+      "name": "qemu inventory",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "compiler inventory exit",
+      "passed": true
+    },
+    {
+      "actual": "riscv64-linux-gnu-gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+      "expected": "riscv64-linux-gnu-gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+      "name": "compiler inventory",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "Git object mainline_base",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "Git object linux_next_base",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "Git object introducing_commit",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "Git object diagnostic_commit",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "Git object tested_fix_commit",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "Git object submission_commit",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "introducing commit is in mainline history",
+      "passed": true
+    },
+    {
+      "actual": "df2908090cda368b01ff43709f51890076c56157",
+      "expected": "df2908090cda368b01ff43709f51890076c56157",
+      "name": "submission parent",
+      "passed": true
+    },
+    {
+      "actual": "df2908090cda368b01ff43709f51890076c56157",
+      "expected": "df2908090cda368b01ff43709f51890076c56157",
+      "name": "diagnostic parent",
+      "passed": true
+    },
+    {
+      "actual": "04a5cfb10c0f82771f217c5bd6810573c348c367",
+      "expected": "04a5cfb10c0f82771f217c5bd6810573c348c367",
+      "name": "tested fix parent",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "submission mail patch commit",
+      "passed": true
+    },
+    {
+      "actual": [
+        [
+          "Paul Walmsley",
+          "pjw@kernel.org"
+        ],
+        [
+          "Palmer Dabbelt",
+          "palmer@dabbelt.com"
+        ],
+        [
+          "Albert Ou",
+          "aou@eecs.berkeley.edu"
+        ]
+      ],
+      "expected": [
+        [
+          "Paul Walmsley",
+          "pjw@kernel.org"
+        ],
+        [
+          "Palmer Dabbelt",
+          "palmer@dabbelt.com"
+        ],
+        [
+          "Albert Ou",
+          "aou@eecs.berkeley.edu"
+        ]
+      ],
+      "name": "embedded TO recipients",
+      "passed": true
+    },
+    {
+      "actual": [
+        [
+          "Alexandre Ghiti",
+          "alex@ghiti.fr"
+        ],
+        [
+          "Jisheng Zhang",
+          "jszhang@kernel.org"
+        ],
+        [
+          "",
+          "linux-riscv@lists.infradead.org"
+        ],
+        [
+          "",
+          "linux-kernel@vger.kernel.org"
+        ]
+      ],
+      "expected": [
+        [
+          "Alexandre Ghiti",
+          "alex@ghiti.fr"
+        ],
+        [
+          "Jisheng Zhang",
+          "jszhang@kernel.org"
+        ],
+        [
+          "",
+          "linux-riscv@lists.infradead.org"
+        ],
+        [
+          "",
+          "linux-kernel@vger.kernel.org"
+        ]
+      ],
+      "name": "embedded CC recipients",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "review note RV32 QEMU virt/TCG",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "review note fill bytes from the previous word",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "review note 0xa5, 0xa5a5, and 0xa5a5a5",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "review note string tail (0x44, 0x4433, and 0x443322)",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "review note all three cases and the suite passed",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "review note full RV32 Images",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "review note RV64 extable.o is byte-for-byte identical",
+      "passed": true
+    },
+    {
+      "actual": "1e15327041a5d49a362302ac8826bf9296aa6039",
+      "expected": "1e15327041a5d49a362302ac8826bf9296aa6039",
+      "name": "submission stable patch-id",
+      "passed": true
+    },
+    {
+      "actual": "1e15327041a5d49a362302ac8826bf9296aa6039",
+      "expected": "1e15327041a5d49a362302ac8826bf9296aa6039",
+      "name": "tested and submission patch-id",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "tested and submission extable content",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "diagnostic mail patch commit",
+      "passed": true
+    },
+    {
+      "actual": "585fed3b7bbdb843c14483add2831bd7b7b6c2a5",
+      "expected": "585fed3b7bbdb843c14483add2831bd7b7b6c2a5",
+      "name": "diagnostic file and tested commit patch-id",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "bug present on mainline",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "bug present on linux-next",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "width-derived fix present",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "prepare mainline apply index",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "submission applies to mainline",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "prepare linux-next apply index",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "submission applies to linux-next",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "strict checkpatch exit",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "strict checkpatch clean",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "get_maintainer exit",
+      "passed": true
+    },
+    {
+      "actual": [
+        "Paul Walmsley <pjw@kernel.org>",
+        "Palmer Dabbelt <palmer@dabbelt.com>",
+        "Albert Ou <aou@eecs.berkeley.edu>",
+        "Alexandre Ghiti <alex@ghiti.fr>",
+        "Karl Mehltretter <kmehltretter@gmail.com>",
+        "Jisheng Zhang <jszhang@kernel.org>",
+        "linux-riscv@lists.infradead.org",
+        "linux-kernel@vger.kernel.org"
+      ],
+      "expected": [
+        "Paul Walmsley <pjw@kernel.org>",
+        "Palmer Dabbelt <palmer@dabbelt.com>",
+        "Albert Ou <aou@eecs.berkeley.edu>",
+        "Alexandre Ghiti <alex@ghiti.fr>",
+        "Karl Mehltretter <kmehltretter@gmail.com>",
+        "Jisheng Zhang <jszhang@kernel.org>",
+        "linux-riscv@lists.infradead.org",
+        "linux-kernel@vger.kernel.org"
+      ],
+      "name": "maintainer routing",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "git send-email dry-run exit",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "git send-email dry-run mode",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "git send-email dry-run result",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "git send-email envelope recipient pjw@kernel.org",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "git send-email envelope recipient palmer@dabbelt.com",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "git send-email envelope recipient aou@eecs.berkeley.edu",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "git send-email envelope recipient alex@ghiti.fr",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "git send-email envelope recipient jszhang@kernel.org",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "git send-email envelope recipient linux-riscv@lists.infradead.org",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "git send-email envelope recipient linux-kernel@vger.kernel.org",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "submission trailer Fixes",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "submission trailer Cc",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "submission trailer Signed-off-by",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "submission Assisted-by trailer",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "RV32 disassembly exit",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "RV32 fix instruction andi\ta3,a5,3",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "RV32 fix instruction andi\ta5,a5,-4",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "RV32 fix instruction srl\ta5,a5,a3",
+      "passed": true
+    }
+  ],
+  "commands": {
+    "apply_linux-next": {
+      "argv": [
+        "git",
+        "apply",
+        "--cached",
+        "--check",
+        "--whitespace=error-all",
+        "/home/karl/linux-work/fragma/riscv/rv32-zeropad/patches/0001-riscv-Fix-load_unaligned_zeropad-on-RV32.patch"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "apply_linux-next_read_tree": {
+      "argv": [
+        "git",
+        "read-tree",
+        "af5f12805e5cefa4fe68d6127c7e1fb78cd5535c"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "apply_mainline": {
+      "argv": [
+        "git",
+        "apply",
+        "--cached",
+        "--check",
+        "--whitespace=error-all",
+        "/home/karl/linux-work/fragma/riscv/rv32-zeropad/patches/0001-riscv-Fix-load_unaligned_zeropad-on-RV32.patch"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "apply_mainline_read_tree": {
+      "argv": [
+        "git",
+        "read-tree",
+        "df2908090cda368b01ff43709f51890076c56157"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "checkpatch": {
+      "argv": [
+        "/home/karl/linux-work/fragma/build/rv32-zeropad/linux-mainline/scripts/checkpatch.pl",
+        "--strict",
+        "--no-tree",
+        "/home/karl/linux-work/fragma/riscv/rv32-zeropad/patches/0001-riscv-Fix-load_unaligned_zeropad-on-RV32.patch"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "total: 0 errors, 0 warnings, 0 checks, 10 lines checked\n\n/home/karl/linux-work/fragma/riscv/rv32-zeropad/patches/0001-riscv-Fix-load_unaligned_zeropad-on-RV32.patch has no obvious style problems and is ready for submission.\n"
+    },
+    "commit_diagnostic_commit": {
+      "argv": [
+        "git",
+        "cat-file",
+        "-e",
+        "04a5cfb10c0f82771f217c5bd6810573c348c367^{commit}"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "commit_introducing_commit": {
+      "argv": [
+        "git",
+        "cat-file",
+        "-e",
+        "d0fdc20b0429150c9dd09111f9b1d9d48117b56f^{commit}"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "commit_linux_next_base": {
+      "argv": [
+        "git",
+        "cat-file",
+        "-e",
+        "af5f12805e5cefa4fe68d6127c7e1fb78cd5535c^{commit}"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "commit_mainline_base": {
+      "argv": [
+        "git",
+        "cat-file",
+        "-e",
+        "df2908090cda368b01ff43709f51890076c56157^{commit}"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "commit_submission_commit": {
+      "argv": [
+        "git",
+        "cat-file",
+        "-e",
+        "7fe4d4e77ee4f57046785b82918ce72cce7507e5^{commit}"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "commit_tested_fix_commit": {
+      "argv": [
+        "git",
+        "cat-file",
+        "-e",
+        "a815e79559d1f56683c5f534b067be42ed256298^{commit}"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "diagnostic_commit_diff": {
+      "argv": [
+        "git",
+        "diff",
+        "--binary",
+        "df2908090cda368b01ff43709f51890076c56157..04a5cfb10c0f82771f217c5bd6810573c348c367"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile\nindex b916a68d324a..a60f38a7be0a 100644\n--- a/arch/riscv/mm/Makefile\n+++ b/arch/riscv/mm/Makefile\n@@ -14,6 +14,7 @@ KCOV_INSTRUMENT_init.o := n\n \n obj-y += init.o\n obj-$(CONFIG_MMU) += extable.o fault.o pageattr.o pgtable.o tlbflush.o\n+obj-$(CONFIG_KUNIT) += load_unaligned_zeropad_kunit.o\n obj-y += cacheflush.o\n obj-y += context.o\n obj-y += pmem.o\ndiff --git a/arch/riscv/mm/load_unaligned_zeropad_kunit.c b/arch/riscv/mm/load_unaligned_zeropad_kunit.c\nnew file mode 100644\nindex 000000000000..307c888af763\n--- /dev/null\n+++ b/arch/riscv/mm/load_unaligned_zeropad_kunit.c\n@@ -0,0 +1,55 @@\n+// SPDX-License-Identifier: GPL-2.0-only\n+/* Project-only reproducer; not proposed for upstream inclusion. */\n+\n+#include <kunit/test.h>\n+#include <linux/mm.h>\n+#include <linux/module.h>\n+#include <linux/string.h>\n+#include <linux/vmalloc.h>\n+\n+#include <asm/word-at-a-time.h>\n+\n+static void riscv_load_unaligned_zeropad_guard_test(struct kunit *test)\n+{\n+#if defined(CONFIG_32BIT) && defined(CONFIG_DCACHE_WORD_ACCESS)\n+\tunsigned long expected, got;\n+\tunsigned int remaining;\n+\tu8 *page;\n+\n+\tpage = vmalloc(PAGE_SIZE);\n+\tKUNIT_ASSERT_NOT_NULL(test, page);\n+\tKUNIT_ASSERT_NULL(test, vmalloc_to_page(page + PAGE_SIZE));\n+\n+\tmemset(page, 0xa5, PAGE_SIZE);\n+\tpage[PAGE_SIZE - 4] = 0x11;\n+\tpage[PAGE_SIZE - 3] = 0x22;\n+\tpage[PAGE_SIZE - 2] = 0x33;\n+\tpage[PAGE_SIZE - 1] = 0x44;\n+\n+\tfor (remaining = 1; remaining <= 3; remaining++) {\n+\t\texpected = 0;\n+\t\tmemcpy(&expected, page + PAGE_SIZE - remaining, remaining);\n+\t\tgot = load_unaligned_zeropad(page + PAGE_SIZE - remaining);\n+\t\tKUNIT_EXPECT_EQ_MSG(test, got, expected,\n+\t\t\t\t    \"remaining bytes: %u\", remaining);\n+\t}\n+\n+\tvfree(page);\n+#else\n+\tkunit_skip(test, \"requires RV32 CONFIG_DCACHE_WORD_ACCESS\");\n+#endif\n+}\n+\n+static struct kunit_case riscv_load_unaligned_zeropad_cases[] = {\n+\tKUNIT_CASE(riscv_load_unaligned_zeropad_guard_test),\n+\t{}\n+};\n+\n+static struct kunit_suite riscv_load_unaligned_zeropad_suite = {\n+\t.name = \"riscv-load-unaligned-zeropad\",\n+\t.test_cases = riscv_load_unaligned_zeropad_cases,\n+};\n+\n+kunit_test_suite(riscv_load_unaligned_zeropad_suite);\n+\n+MODULE_LICENSE(\"GPL\");\n"
+    },
+    "diagnostic_commit_patch_id": {
+      "argv": [
+        "git",
+        "patch-id",
+        "--stable"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "585fed3b7bbdb843c14483add2831bd7b7b6c2a5 0000000000000000000000000000000000000000\n"
+    },
+    "diagnostic_parent": {
+      "argv": [
+        "git",
+        "rev-parse",
+        "04a5cfb10c0f82771f217c5bd6810573c348c367^"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "df2908090cda368b01ff43709f51890076c56157\n"
+    },
+    "diagnostic_patch_id": {
+      "argv": [
+        "git",
+        "patch-id",
+        "--stable"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "585fed3b7bbdb843c14483add2831bd7b7b6c2a5 04a5cfb10c0f82771f217c5bd6810573c348c367\n"
+    },
+    "fixed_extable": {
+      "argv": [
+        "git",
+        "show",
+        "7fe4d4e77ee4f57046785b82918ce72cce7507e5:arch/riscv/mm/extable.c"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "// SPDX-License-Identifier: GPL-2.0-or-later\n/*\n * Copyright (C) 2009 Sunplus Core Technology Co., Ltd.\n *  Lennox Wu <lennox.wu@sunplusct.com>\n *  Chen Liqin <liqin.chen@sunplusct.com>\n * Copyright (C) 2013 Regents of the University of California\n */\n\n\n#include <linux/bitfield.h>\n#include <linux/extable.h>\n#include <linux/module.h>\n#include <linux/uaccess.h>\n#include <asm/asm-extable.h>\n#include <asm/ptrace.h>\n\nstatic inline unsigned long\nget_ex_fixup(const struct exception_table_entry *ex)\n{\n\treturn ((unsigned long)&ex->fixup + ex->fixup);\n}\n\nstatic bool ex_handler_fixup(const struct exception_table_entry *ex,\n\t\t\t     struct pt_regs *regs)\n{\n\tregs->epc = get_ex_fixup(ex);\n\treturn true;\n}\n\nstatic inline unsigned long regs_get_gpr(struct pt_regs *regs, unsigned int offset)\n{\n\tif (unlikely(!offset || offset > MAX_REG_OFFSET))\n\t\treturn 0;\n\n\treturn *(unsigned long *)((unsigned long)regs + offset);\n}\n\nstatic inline void regs_set_gpr(struct pt_regs *regs, unsigned int offset,\n\t\t\t\tunsigned long val)\n{\n\tif (unlikely(offset > MAX_REG_OFFSET))\n\t\treturn;\n\n\tif (offset)\n\t\t*(unsigned long *)((unsigned long)regs + offset) = val;\n}\n\nstatic bool ex_handler_uaccess_err_zero(const struct exception_table_entry *ex,\n\t\t\t\t\tstruct pt_regs *regs)\n{\n\tint reg_err = FIELD_GET(EX_DATA_REG_ERR, ex->data);\n\tint reg_zero = FIELD_GET(EX_DATA_REG_ZERO, ex->data);\n\n\tregs_set_gpr(regs, reg_err * sizeof(unsigned long), -EFAULT);\n\tregs_set_gpr(regs, reg_zero * sizeof(unsigned long), 0);\n\n\tregs->epc = get_ex_fixup(ex);\n\treturn true;\n}\n\nstatic bool\nex_handler_load_unaligned_zeropad(const struct exception_table_entry *ex,\n\t\t\t\t  struct pt_regs *regs)\n{\n\tint reg_data = FIELD_GET(EX_DATA_REG_DATA, ex->data);\n\tint reg_addr = FIELD_GET(EX_DATA_REG_ADDR, ex->data);\n\tunsigned long data, addr, offset;\n\n\taddr = regs_get_gpr(regs, reg_addr * sizeof(unsigned long));\n\n\toffset = addr & (sizeof(data) - 1);\n\taddr &= ~(sizeof(data) - 1);\n\n\tdata = *(unsigned long *)addr >> (offset * 8);\n\n\tregs_set_gpr(regs, reg_data * sizeof(unsigned long), data);\n\n\tregs->epc = get_ex_fixup(ex);\n\treturn true;\n}\n\nbool fixup_exception(struct pt_regs *regs)\n{\n\tconst struct exception_table_entry *ex;\n\n\tex = search_exception_tables(regs->epc);\n\tif (!ex)\n\t\treturn false;\n\n\tswitch (ex->type) {\n\tcase EX_TYPE_FIXUP:\n\t\treturn ex_handler_fixup(ex, regs);\n\tcase EX_TYPE_BPF:\n\t\treturn ex_handler_bpf(ex, regs);\n\tcase EX_TYPE_UACCESS_ERR_ZERO:\n\t\treturn ex_handler_uaccess_err_zero(ex, regs);\n\tcase EX_TYPE_LOAD_UNALIGNED_ZEROPAD:\n\t\treturn ex_handler_load_unaligned_zeropad(ex, regs);\n\t}\n\n\tBUG();\n}\n"
+    },
+    "get_maintainer": {
+      "argv": [
+        "/home/karl/linux-work/fragma/build/rv32-zeropad/linux-mainline/scripts/get_maintainer.pl",
+        "--no-rolestats",
+        "/home/karl/linux-work/fragma/riscv/rv32-zeropad/patches/0001-riscv-Fix-load_unaligned_zeropad-on-RV32.patch"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "Paul Walmsley <pjw@kernel.org>\nPalmer Dabbelt <palmer@dabbelt.com>\nAlbert Ou <aou@eecs.berkeley.edu>\nAlexandre Ghiti <alex@ghiti.fr>\nKarl Mehltretter <kmehltretter@gmail.com>\nJisheng Zhang <jszhang@kernel.org>\nlinux-riscv@lists.infradead.org\nlinux-kernel@vger.kernel.org\n"
+    },
+    "introducing_commit_ancestry": {
+      "argv": [
+        "git",
+        "merge-base",
+        "--is-ancestor",
+        "d0fdc20b0429150c9dd09111f9b1d9d48117b56f",
+        "df2908090cda368b01ff43709f51890076c56157"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "linux-next_extable": {
+      "argv": [
+        "git",
+        "show",
+        "af5f12805e5cefa4fe68d6127c7e1fb78cd5535c:arch/riscv/mm/extable.c"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "// SPDX-License-Identifier: GPL-2.0-or-later\n/*\n * Copyright (C) 2009 Sunplus Core Technology Co., Ltd.\n *  Lennox Wu <lennox.wu@sunplusct.com>\n *  Chen Liqin <liqin.chen@sunplusct.com>\n * Copyright (C) 2013 Regents of the University of California\n */\n\n\n#include <linux/bitfield.h>\n#include <linux/extable.h>\n#include <linux/module.h>\n#include <linux/uaccess.h>\n#include <asm/asm-extable.h>\n#include <asm/ptrace.h>\n\nstatic inline unsigned long\nget_ex_fixup(const struct exception_table_entry *ex)\n{\n\treturn ((unsigned long)&ex->fixup + ex->fixup);\n}\n\nstatic bool ex_handler_fixup(const struct exception_table_entry *ex,\n\t\t\t     struct pt_regs *regs)\n{\n\tregs->epc = get_ex_fixup(ex);\n\treturn true;\n}\n\nstatic inline unsigned long regs_get_gpr(struct pt_regs *regs, unsigned int offset)\n{\n\tif (unlikely(!offset || offset > MAX_REG_OFFSET))\n\t\treturn 0;\n\n\treturn *(unsigned long *)((unsigned long)regs + offset);\n}\n\nstatic inline void regs_set_gpr(struct pt_regs *regs, unsigned int offset,\n\t\t\t\tunsigned long val)\n{\n\tif (unlikely(offset > MAX_REG_OFFSET))\n\t\treturn;\n\n\tif (offset)\n\t\t*(unsigned long *)((unsigned long)regs + offset) = val;\n}\n\nstatic bool ex_handler_uaccess_err_zero(const struct exception_table_entry *ex,\n\t\t\t\t\tstruct pt_regs *regs)\n{\n\tint reg_err = FIELD_GET(EX_DATA_REG_ERR, ex->data);\n\tint reg_zero = FIELD_GET(EX_DATA_REG_ZERO, ex->data);\n\n\tregs_set_gpr(regs, reg_err * sizeof(unsigned long), -EFAULT);\n\tregs_set_gpr(regs, reg_zero * sizeof(unsigned long), 0);\n\n\tregs->epc = get_ex_fixup(ex);\n\treturn true;\n}\n\nstatic bool\nex_handler_load_unaligned_zeropad(const struct exception_table_entry *ex,\n\t\t\t\t  struct pt_regs *regs)\n{\n\tint reg_data = FIELD_GET(EX_DATA_REG_DATA, ex->data);\n\tint reg_addr = FIELD_GET(EX_DATA_REG_ADDR, ex->data);\n\tunsigned long data, addr, offset;\n\n\taddr = regs_get_gpr(regs, reg_addr * sizeof(unsigned long));\n\n\toffset = addr & 0x7UL;\n\taddr &= ~0x7UL;\n\n\tdata = *(unsigned long *)addr >> (offset * 8);\n\n\tregs_set_gpr(regs, reg_data * sizeof(unsigned long), data);\n\n\tregs->epc = get_ex_fixup(ex);\n\treturn true;\n}\n\nbool fixup_exception(struct pt_regs *regs)\n{\n\tconst struct exception_table_entry *ex;\n\n\tex = search_exception_tables(regs->epc);\n\tif (!ex)\n\t\treturn false;\n\n\tswitch (ex->type) {\n\tcase EX_TYPE_FIXUP:\n\t\treturn ex_handler_fixup(ex, regs);\n\tcase EX_TYPE_BPF:\n\t\treturn ex_handler_bpf(ex, regs);\n\tcase EX_TYPE_UACCESS_ERR_ZERO:\n\t\treturn ex_handler_uaccess_err_zero(ex, regs);\n\tcase EX_TYPE_LOAD_UNALIGNED_ZEROPAD:\n\t\treturn ex_handler_load_unaligned_zeropad(ex, regs);\n\t}\n\n\tBUG();\n}\n"
+    },
+    "mainline_extable": {
+      "argv": [
+        "git",
+        "show",
+        "df2908090cda368b01ff43709f51890076c56157:arch/riscv/mm/extable.c"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "// SPDX-License-Identifier: GPL-2.0-or-later\n/*\n * Copyright (C) 2009 Sunplus Core Technology Co., Ltd.\n *  Lennox Wu <lennox.wu@sunplusct.com>\n *  Chen Liqin <liqin.chen@sunplusct.com>\n * Copyright (C) 2013 Regents of the University of California\n */\n\n\n#include <linux/bitfield.h>\n#include <linux/extable.h>\n#include <linux/module.h>\n#include <linux/uaccess.h>\n#include <asm/asm-extable.h>\n#include <asm/ptrace.h>\n\nstatic inline unsigned long\nget_ex_fixup(const struct exception_table_entry *ex)\n{\n\treturn ((unsigned long)&ex->fixup + ex->fixup);\n}\n\nstatic bool ex_handler_fixup(const struct exception_table_entry *ex,\n\t\t\t     struct pt_regs *regs)\n{\n\tregs->epc = get_ex_fixup(ex);\n\treturn true;\n}\n\nstatic inline unsigned long regs_get_gpr(struct pt_regs *regs, unsigned int offset)\n{\n\tif (unlikely(!offset || offset > MAX_REG_OFFSET))\n\t\treturn 0;\n\n\treturn *(unsigned long *)((unsigned long)regs + offset);\n}\n\nstatic inline void regs_set_gpr(struct pt_regs *regs, unsigned int offset,\n\t\t\t\tunsigned long val)\n{\n\tif (unlikely(offset > MAX_REG_OFFSET))\n\t\treturn;\n\n\tif (offset)\n\t\t*(unsigned long *)((unsigned long)regs + offset) = val;\n}\n\nstatic bool ex_handler_uaccess_err_zero(const struct exception_table_entry *ex,\n\t\t\t\t\tstruct pt_regs *regs)\n{\n\tint reg_err = FIELD_GET(EX_DATA_REG_ERR, ex->data);\n\tint reg_zero = FIELD_GET(EX_DATA_REG_ZERO, ex->data);\n\n\tregs_set_gpr(regs, reg_err * sizeof(unsigned long), -EFAULT);\n\tregs_set_gpr(regs, reg_zero * sizeof(unsigned long), 0);\n\n\tregs->epc = get_ex_fixup(ex);\n\treturn true;\n}\n\nstatic bool\nex_handler_load_unaligned_zeropad(const struct exception_table_entry *ex,\n\t\t\t\t  struct pt_regs *regs)\n{\n\tint reg_data = FIELD_GET(EX_DATA_REG_DATA, ex->data);\n\tint reg_addr = FIELD_GET(EX_DATA_REG_ADDR, ex->data);\n\tunsigned long data, addr, offset;\n\n\taddr = regs_get_gpr(regs, reg_addr * sizeof(unsigned long));\n\n\toffset = addr & 0x7UL;\n\taddr &= ~0x7UL;\n\n\tdata = *(unsigned long *)addr >> (offset * 8);\n\n\tregs_set_gpr(regs, reg_data * sizeof(unsigned long), data);\n\n\tregs->epc = get_ex_fixup(ex);\n\treturn true;\n}\n\nbool fixup_exception(struct pt_regs *regs)\n{\n\tconst struct exception_table_entry *ex;\n\n\tex = search_exception_tables(regs->epc);\n\tif (!ex)\n\t\treturn false;\n\n\tswitch (ex->type) {\n\tcase EX_TYPE_FIXUP:\n\t\treturn ex_handler_fixup(ex, regs);\n\tcase EX_TYPE_BPF:\n\t\treturn ex_handler_bpf(ex, regs);\n\tcase EX_TYPE_UACCESS_ERR_ZERO:\n\t\treturn ex_handler_uaccess_err_zero(ex, regs);\n\tcase EX_TYPE_LOAD_UNALIGNED_ZEROPAD:\n\t\treturn ex_handler_load_unaligned_zeropad(ex, regs);\n\t}\n\n\tBUG();\n}\n"
+    },
+    "rv32_objdump": {
+      "argv": [
+        "riscv64-linux-gnu-objdump",
+        "-dr",
+        "/home/karl/linux-work/fragma/build/rv32-zeropad/build-before/arch/riscv/mm/extable.o"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "\n/home/karl/linux-work/fragma/build/rv32-zeropad/build-before/arch/riscv/mm/extable.o:     file format elf32-littleriscv\n\n\nDisassembly of section .text:\n\n00000000 <fixup_exception>:\n   0:\t1141                \taddi\tsp,sp,-16\n   2:\tc422                \tsw\ts0,8(sp)\n   4:\tc226                \tsw\ts1,4(sp)\n   6:\tc606                \tsw\tra,12(sp)\n   8:\t0800                \taddi\ts0,sp,16\n   a:\t84aa                \tmv\ts1,a0\n   c:\t4108                \tlw\ta0,0(a0)\n   e:\t00000097          \tauipc\tra,0x0\n\t\t\te: R_RISCV_CALL_PLT\tsearch_exception_tables\n\t\t\te: R_RISCV_RELAX\t*ABS*\n  12:\t000080e7          \tjalr\tra # e <fixup_exception+0xe>\n  16:\tcd19                \tbeqz\ta0,34 <.L2>\n\t\t\t16: R_RISCV_RVC_BRANCH\t.L2\n  18:\t00851783          \tlh\ta5,8(a0)\n  1c:\t470d                \tli\ta4,3\n  1e:\t06e78963          \tbeq\ta5,a4,90 <.L3>\n\t\t\t1e: R_RISCV_BRANCH\t.L3\n  22:\t00f74e63          \tblt\ta4,a5,3e <.L4>\n\t\t\t22: R_RISCV_BRANCH\t.L4\n  26:\t4705                \tli\ta4,1\n  28:\t04e78a63          \tbeq\ta5,a4,7c <.L10>\n\t\t\t28: R_RISCV_BRANCH\t.L10\n  2c:\t4709                \tli\ta4,2\n  2e:\t4501                \tli\ta0,0\n  30:\t08e79d63          \tbne\ta5,a4,ca <.L1^B1>\n\t\t\t30: R_RISCV_BRANCH\t.L6\n\n00000034 <.L2>:\n  34:\t40b2                \tlw\tra,12(sp)\n  36:\t4422                \tlw\ts0,8(sp)\n  38:\t4492                \tlw\ts1,4(sp)\n  3a:\t0141                \taddi\tsp,sp,16\n  3c:\t8082                \tret\n\n0000003e <.L4>:\n  3e:\t4711                \tli\ta4,4\n  40:\t08e79563          \tbne\ta5,a4,ca <.L1^B1>\n\t\t\t40: R_RISCV_BRANCH\t.L6\n  44:\t00a51703          \tlh\ta4,10(a0)\n  48:\t08b00693          \tli\ta3,139\n  4c:\t01671613          \tslli\ta2,a4,0x16\n  50:\t01b65793          \tsrli\ta5,a2,0x1b\n  54:\t078a                \tslli\ta5,a5,0x2\n  56:\tfff78613          \taddi\ta2,a5,-1\n  5a:\t8b7d                \tandi\ta4,a4,31\n  5c:\t06c6e463          \tbltu\ta3,a2,c4 <.L15>\n\t\t\t5c: R_RISCV_BRANCH\t.L15\n  60:\t97a6                \tadd\ta5,a5,s1\n  62:\t439c                \tlw\ta5,0(a5)\n  64:\t0037f693          \tandi\ta3,a5,3\n  68:\t068e                \tslli\ta3,a3,0x3\n  6a:\t9bf1                \tandi\ta5,a5,-4\n\n0000006c <.L11>:\n  6c:\t00271613          \tslli\ta2,a4,0x2\n  70:\tc711                \tbeqz\ta4,7c <.L10>\n\t\t\t70: R_RISCV_RVC_BRANCH\t.L10\n  72:\t439c                \tlw\ta5,0(a5)\n  74:\t9626                \tadd\ta2,a2,s1\n  76:\t00d7d7b3          \tsrl\ta5,a5,a3\n  7a:\tc21c                \tsw\ta5,0(a2)\n\n0000007c <.L10>:\n  7c:\t415c                \tlw\ta5,4(a0)\n  7e:\t0511                \taddi\ta0,a0,4\n  80:\t97aa                \tadd\ta5,a5,a0\n  82:\tc09c                \tsw\ta5,0(s1)\n  84:\t4505                \tli\ta0,1\n\n00000086 <.L27>:\n  86:\t40b2                \tlw\tra,12(sp)\n  88:\t4422                \tlw\ts0,8(sp)\n  8a:\t4492                \tlw\ts1,4(sp)\n  8c:\t0141                \taddi\tsp,sp,16\n  8e:\t8082                \tret\n\n00000090 <.L3>:\n  90:\t00a51783          \tlh\ta5,10(a0)\n  94:\t01f7f713          \tandi\ta4,a5,31\n  98:\t01679693          \tslli\ta3,a5,0x16\n  9c:\t01b6d793          \tsrli\ta5,a3,0x1b\n  a0:\t00271693          \tslli\ta3,a4,0x2\n  a4:\tc701                \tbeqz\ta4,ac <.L9>\n\t\t\ta4: R_RISCV_RVC_BRANCH\t.L9\n  a6:\t96a6                \tadd\ta3,a3,s1\n  a8:\t5749                \tli\ta4,-14\n  aa:\tc298                \tsw\ta4,0(a3)\n\n000000ac <.L9>:\n  ac:\t00279713          \tslli\ta4,a5,0x2\n  b0:\td7f1                \tbeqz\ta5,7c <.L10>\n\t\t\tb0: R_RISCV_RVC_BRANCH\t.L10\n  b2:\t9726                \tadd\ta4,a4,s1\n  b4:\t00072023          \tsw\tzero,0(a4)\n  b8:\t415c                \tlw\ta5,4(a0)\n  ba:\t0511                \taddi\ta0,a0,4\n  bc:\t97aa                \tadd\ta5,a5,a0\n  be:\tc09c                \tsw\ta5,0(s1)\n  c0:\t4505                \tli\ta0,1\n  c2:\tb7d1                \tj\t86 <.L27>\n\t\t\tc2: R_RISCV_RVC_JUMP\t.L27\n\n000000c4 <.L15>:\n  c4:\t4681                \tli\ta3,0\n  c6:\t4781                \tli\ta5,0\n  c8:\tb755                \tj\t6c <.L11>\n\t\t\tc8: R_RISCV_RVC_JUMP\t.L11\n\n000000ca <.L1^B1>:\n  ca:\t9002                \tebreak\n"
+    },
+    "send_email_dry_run": {
+      "argv": [
+        "git",
+        "send-email",
+        "--dry-run",
+        "--confirm=never",
+        "/home/karl/linux-work/fragma/riscv/rv32-zeropad/patches/0001-riscv-Fix-load_unaligned_zeropad-on-RV32.patch"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "/home/karl/linux-work/fragma/riscv/rv32-zeropad/patches/0001-riscv-Fix-load_unaligned_zeropad-on-RV32.patch\n(mbox) Adding cc: Karl Mehltretter <kmehltretter@gmail.com> from line 'From: Karl Mehltretter <kmehltretter@gmail.com>'\n(mbox) Adding to: Paul Walmsley <pjw@kernel.org> from line 'To: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>'\n(mbox) Adding to: Palmer Dabbelt <palmer@dabbelt.com> from line 'To: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>'\n(mbox) Adding to: Albert Ou <aou@eecs.berkeley.edu> from line 'To: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>'\n(mbox) Adding cc: Alexandre Ghiti <alex@ghiti.fr> from line 'Cc: Alexandre Ghiti <alex@ghiti.fr>, Jisheng Zhang <jszhang@kernel.org>, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org'\n(mbox) Adding cc: Jisheng Zhang <jszhang@kernel.org> from line 'Cc: Alexandre Ghiti <alex@ghiti.fr>, Jisheng Zhang <jszhang@kernel.org>, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org'\n(mbox) Adding cc: linux-riscv@lists.infradead.org from line 'Cc: Alexandre Ghiti <alex@ghiti.fr>, Jisheng Zhang <jszhang@kernel.org>, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org'\n(mbox) Adding cc: linux-kernel@vger.kernel.org from line 'Cc: Alexandre Ghiti <alex@ghiti.fr>, Jisheng Zhang <jszhang@kernel.org>, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org'\n(body) Adding cc: stable@vger.kernel.org from line 'Cc: stable@vger.kernel.org'\n(body) Ignoring Assisted-by from line 'Assisted-by: LLM'\n(body) Adding cc: Karl Mehltretter <kmehltretter@gmail.com> from line 'Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>'\nDry-OK. Log says:\nServer: localhost\nMAIL FROM:<kmehltretter@gmail.com>\nRCPT TO:<pjw@kernel.org>\nRCPT TO:<palmer@dabbelt.com>\nRCPT TO:<aou@eecs.berkeley.edu>\nRCPT TO:<kmehltretter@gmail.com>\nRCPT TO:<alex@ghiti.fr>\nRCPT TO:<jszhang@kernel.org>\nRCPT TO:<linux-riscv@lists.infradead.org>\nRCPT TO:<linux-kernel@vger.kernel.org>\nRCPT TO:<stable@vger.kernel.org>\nFrom: Karl Mehltretter <kmehltretter@gmail.com>\nTo: Paul Walmsley <pjw@kernel.org>,\n\tPalmer Dabbelt <palmer@dabbelt.com>,\n\tAlbert Ou <aou@eecs.berkeley.edu>\nCc: Karl Mehltretter <kmehltretter@gmail.com>,\n\tAlexandre Ghiti <alex@ghiti.fr>,\n\tJisheng Zhang <jszhang@kernel.org>,\n\tlinux-riscv@lists.infradead.org,\n\tlinux-kernel@vger.kernel.org,\n\tstable@vger.kernel.org\nSubject: [PATCH] riscv: fix load_unaligned_zeropad() fixup for RV32\nDate: Mon,  7 Sep 2026 19:11:18 +0000\nMessage-ID: <20260907191118.46-1-kmehltretter@gmail.com>\nX-Mailer: git-send-email 2.53.0\nMIME-Version: 1.0\nContent-Transfer-Encoding: 8bit\n\nResult: OK\n"
+    },
+    "submission_commit_message": {
+      "argv": [
+        "git",
+        "show",
+        "-s",
+        "--format=%B",
+        "7fe4d4e77ee4f57046785b82918ce72cce7507e5"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "riscv: Fix load_unaligned_zeropad() on RV32\n\nload_unaligned_zeropad() issues REG_L, which is lw on RV32 and ld on\nRV64. Its exception handler nevertheless aligns every faulting address\nto an eight-byte boundary and derives a shift from three address bits.\n\nFor an RV32 load starting in the last three bytes of a mapped page, this\nselects an earlier four-byte word and shifts it by 40, 48, or 56 bits.\nThe destination register therefore does not contain the bytes at the\nrequested address followed by zero padding.\n\nDerive the alignment and offset from the width of the data word. This\nleaves RV64 behavior unchanged and makes RV32 use the correct source word\nand a shift of 8, 16, or 24 bits.\n\nFixes: d0fdc20b0429 (\"riscv: select DCACHE_WORD_ACCESS for efficient unaligned access HW\")\nCc: stable@vger.kernel.org\nSigned-off-by: Karl Mehltretter <kmehltretter@gmail.com>\n\n"
+    },
+    "submission_parent": {
+      "argv": [
+        "git",
+        "rev-parse",
+        "7fe4d4e77ee4f57046785b82918ce72cce7507e5^"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "df2908090cda368b01ff43709f51890076c56157\n"
+    },
+    "submission_patch_id": {
+      "argv": [
+        "git",
+        "patch-id",
+        "--stable"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "1e15327041a5d49a362302ac8826bf9296aa6039 7fe4d4e77ee4f57046785b82918ce72cce7507e5\n"
+    },
+    "tested_fix_diff": {
+      "argv": [
+        "git",
+        "diff",
+        "--binary",
+        "04a5cfb10c0f82771f217c5bd6810573c348c367..a815e79559d1f56683c5f534b067be42ed256298"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "diff --git a/arch/riscv/mm/extable.c b/arch/riscv/mm/extable.c\nindex dd1530af3ef1..e252eba55ede 100644\n--- a/arch/riscv/mm/extable.c\n+++ b/arch/riscv/mm/extable.c\n@@ -68,8 +68,8 @@ ex_handler_load_unaligned_zeropad(const struct exception_table_entry *ex,\n \n \taddr = regs_get_gpr(regs, reg_addr * sizeof(unsigned long));\n \n-\toffset = addr & 0x7UL;\n-\taddr &= ~0x7UL;\n+\toffset = addr & (sizeof(data) - 1);\n+\taddr &= ~(sizeof(data) - 1);\n \n \tdata = *(unsigned long *)addr >> (offset * 8);\n \n"
+    },
+    "tested_fix_parent": {
+      "argv": [
+        "git",
+        "rev-parse",
+        "a815e79559d1f56683c5f534b067be42ed256298^"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "04a5cfb10c0f82771f217c5bd6810573c348c367\n"
+    },
+    "tested_fix_patch_id": {
+      "argv": [
+        "git",
+        "patch-id",
+        "--stable"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "1e15327041a5d49a362302ac8826bf9296aa6039 0000000000000000000000000000000000000000\n"
+    },
+    "tested_submission_content": {
+      "argv": [
+        "git",
+        "diff",
+        "--exit-code",
+        "7fe4d4e77ee4f57046785b82918ce72cce7507e5:arch/riscv/mm/extable.c",
+        "a815e79559d1f56683c5f534b067be42ed256298:arch/riscv/mm/extable.c"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "tool_compiler": {
+      "argv": [
+        "riscv64-linux-gnu-gcc",
+        "--version"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "riscv64-linux-gnu-gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0\nCopyright (C) 2025 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+    },
+    "tool_qemu": {
+      "argv": [
+        "qemu-system-riscv32",
+        "--version"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "QEMU emulator version 10.2.1 (Debian 1:10.2.1+ds-1ubuntu3.2)\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\n"
+    }
+  },
+  "config_sha256": "47d87fee06e6d1985f7f46059d69daebf301820e98e5a207af3cd309c19cfbd0",
+  "elf": {
+    "rv32_fixed_extable_object": {
+      "byte_order": "little",
+      "class_bits": 32,
+      "machine": 243
+    },
+    "rv32_fixed_vmlinux": {
+      "byte_order": "little",
+      "class_bits": 32,
+      "machine": 243
+    },
+    "rv64_baseline_extable_object": {
+      "byte_order": "little",
+      "class_bits": 64,
+      "machine": 243
+    },
+    "rv64_fixed_extable_object": {
+      "byte_order": "little",
+      "class_bits": 64,
+      "machine": 243
+    }
+  },
+  "email_dry_run": true,
+  "email_sent": false,
+  "generated_at": "2026-09-07T19:11:18.351098+00:00",
+  "identities": {
+    "build/rv32-zeropad/Image.after": "fd8e3124cb1298e251c31d6d9d614e4928ba33d4028d38961e408779f593dd32",
+    "build/rv32-zeropad/Image.before": "82aec25a6968a360238a58689ae6c3524fc7612436aa8923ed7e53032d89330c",
+    "build/rv32-zeropad/build-before/arch/riscv/mm/.extable.o.cmd": "689fb2095040ebeee9115084e881a882bffc285a24c2fc847be157e5f5fe20a0",
+    "build/rv32-zeropad/build-before/arch/riscv/mm/extable.o": "aa3f712e7cac19d13438500216c672c7589c24f26fd4d0c5b25c95d252ec0376",
+    "build/rv32-zeropad/build-before/vmlinux": "17759344be938e67a2619f2c76279874da59017428711f51effd0c3f42f3f360",
+    "build/rv32-zeropad/build-rv64-fix/.config": "f3d3c8ba18bddb53d54968a6951015d2f51597a20fc2f5958f24ca4fef3993a5",
+    "build/rv32-zeropad/build-rv64-fix/arch/riscv/mm/.extable.o.cmd": "0736debed9bbaf91bf9d8774001182fa0fa134f94e4ee14699696d0d511f6da9",
+    "build/rv32-zeropad/build-rv64-fix/arch/riscv/mm/extable.o": "d63b3a713828b6dc01e73f9e345974e37b5f6a0359ca058a73b0f1877dc7e2af",
+    "build/rv32-zeropad/config.after": "47d87fee06e6d1985f7f46059d69daebf301820e98e5a207af3cd309c19cfbd0",
+    "build/rv32-zeropad/config.before": "47d87fee06e6d1985f7f46059d69daebf301820e98e5a207af3cd309c19cfbd0",
+    "build/rv32-zeropad/qemu-after.log": "b97aeed76316bb035b3668d96545fe5599fc14e981973954aaba49859769b798",
+    "build/rv32-zeropad/qemu-before.log": "d6ac8a4ea071255ce21fc0faf264a6e47d22213fd70dae95649900583a2aec46",
+    "build/rv32-zeropad/rv64-regression-20260907-03/evidence/extable.baseline.o": "d63b3a713828b6dc01e73f9e345974e37b5f6a0359ca058a73b0f1877dc7e2af",
+    "config/rv32-zeropad.json": "319564d999c1b635030323d38314c632a58e5ea029dbebb6ad44f35878169c05",
+    "fragma/rv32_zeropad.py": "7dc2aedbe72a735aa9edf4ee013948edbb7bf71624a028539775e7b17cd6bf69",
+    "riscv/rv32-zeropad/patches/0001-riscv-Fix-load_unaligned_zeropad-on-RV32.patch": "8f1ec3507579e6fa3142f9117d3285eeba61745fca89398de7ebecafc07fb676",
+    "riscv/rv32-zeropad/repro.config": "6e28e8799ca3c3ce349b55df0f3e84f421412949704f6e10ec02407c09e0fccf",
+    "riscv/rv32-zeropad/reproducer/0001-DO-NOT-SUBMIT-riscv-Add-RV32-unaligned-zeropad-repro.patch": "b67036cf1b094ec4798d6a48eab44ff8bcd566e18b0e47001866fee3b0e7cf7a",
+    "riscv/rv32-zeropad/run-ab.sh": "1476005dc681bf302b1a1cad2f6e55e12fb652dcd2182206e519e79d3bb31e05",
+    "tests/test_rv32_zeropad.py": "041623dea2c0a8baf217e19b7946855057af0c51854c62351aaa800d9bc417ff"
+  },
+  "kind": "rv32-load-unaligned-zeropad-ab-audit",
+  "logs": {
+    "after": {
+      "case_status": "ok",
+      "failure_count": 0,
+      "failures": {},
+      "isa": "rv32imafdch",
+      "kernel_command_line": "console=ttyS0 earlycon=sbi kunit.enable=1 kunit.autorun=1 kunit.filter_glob=riscv-load-unaligned-zeropad panic=-1",
+      "kernel_commit_abbrev": "a815e79559d1",
+      "linux_version": "7.3.0-rc2-00002-ga815e79559d1 (karl@ubuntu-24gb-nbg1-1) (riscv64-linux-gnu-gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0, GNU ld (GNU Binutils for Ubuntu) 2.46) #2 SMP PREEMPT Mon Sep  7 07:13:29 UTC 2026",
+      "rootfs_panic_after_test": true,
+      "suite_status": "ok"
+    },
+    "before": {
+      "case_status": "not ok",
+      "failure_count": 3,
+      "failures": {
+        "1": {
+          "expected": 68,
+          "expected_hex": "0x44",
+          "got": 165,
+          "got_hex": "0xa5"
+        },
+        "2": {
+          "expected": 17459,
+          "expected_hex": "0x4433",
+          "got": 42405,
+          "got_hex": "0xa5a5"
+        },
+        "3": {
+          "expected": 4469538,
+          "expected_hex": "0x443322",
+          "got": 10855845,
+          "got_hex": "0xa5a5a5"
+        }
+      },
+      "isa": "rv32imafdch",
+      "kernel_command_line": "console=ttyS0 earlycon=sbi kunit.enable=1 kunit.autorun=1 kunit.filter_glob=riscv-load-unaligned-zeropad panic=-1",
+      "kernel_commit_abbrev": "04a5cfb10c0f",
+      "linux_version": "7.3.0-rc2-00001-g04a5cfb10c0f (karl@ubuntu-24gb-nbg1-1) (riscv64-linux-gnu-gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0, GNU ld (GNU Binutils for Ubuntu) 2.46) #1 SMP PREEMPT Mon Sep  7 07:12:10 UTC 2026",
+      "rootfs_panic_after_test": true,
+      "suite_status": "not ok"
+    }
+  },
+  "maintainer_acknowledged": false,
+  "maintainers": [
+    "Paul Walmsley <pjw@kernel.org>",
+    "Palmer Dabbelt <palmer@dabbelt.com>",
+    "Albert Ou <aou@eecs.berkeley.edu>",
+    "Alexandre Ghiti <alex@ghiti.fr>",
+    "Karl Mehltretter <kmehltretter@gmail.com>",
+    "Jisheng Zhang <jszhang@kernel.org>",
+    "linux-riscv@lists.infradead.org",
+    "linux-kernel@vger.kernel.org"
+  ],
+  "raw_evidence_published": false,
+  "schema_version": 1,
+  "source": {
+    "diagnostic_commit": "04a5cfb10c0f82771f217c5bd6810573c348c367",
+    "introducing_commit": "d0fdc20b0429150c9dd09111f9b1d9d48117b56f",
+    "linux_next_base": "af5f12805e5cefa4fe68d6127c7e1fb78cd5535c",
+    "linux_next_name": "next-20260904",
+    "mainline_base": "df2908090cda368b01ff43709f51890076c56157",
+    "mainline_name": "v7.3-rc2",
+    "stable_patch_id": "1e15327041a5d49a362302ac8826bf9296aa6039",
+    "submission_commit": "7fe4d4e77ee4f57046785b82918ce72cce7507e5",
+    "tested_fix_commit": "a815e79559d1f56683c5f534b067be42ed256298"
+  }
+}
