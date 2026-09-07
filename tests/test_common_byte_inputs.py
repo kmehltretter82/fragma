@@ -406,6 +406,89 @@ class CommonByteInputTests(unittest.TestCase):
         self.assertEqual(prepared["original_compile_command"], self.entry)
         self.assertFalse(any(frontend.MACRO in arg for arg in expected))
 
+    def test_arm32_kernel_tu_uses_real_arch_headers_and_exact_opt_in(self):
+        target = {"harness": "legacy/helper.c", "input_mode": "kernel-tu",
+                  "profile": "arm-gcc", "source": "lib/string.c",
+                  "kernel_tu_policy": copy.deepcopy(inputs.ARM32_KERNEL_TU_POLICY)}
+        prepared = self.prepare(target)
+        expected = inputs.command_without_outputs(self.entry)
+        expected += ["-include", str(self.root / "annotated/specs.h"), "-include",
+                     str(self.root / "annotated/compat.h"), *inputs.ARM32_SHIMS, "-E", "-C"]
+        self.assertEqual(shlex.split(prepared["frama_cpp_command"]), expected)
+        self.assertNotIn(str(self.root / "annotated/override"), expected)
+        self.assertFalse(any(str(self.root / directory) in expected
+                             for directory in inputs.ARM32_HEADER_MODEL_DIRS.values()))
+        self.assertNotIn("-D__SIZEOF_INT128__=16", expected)
+        self.assertEqual(prepared["original_compile_command"], self.entry)
+
+    def test_arm32_header_model_is_closed_and_explicit(self):
+        base = {"harness": "legacy/helper.c", "input_mode": "kernel-tu",
+                "profile": "arm-gcc", "source": "lib/string.c",
+                "kernel_tu_policy": copy.deepcopy(inputs.ARM32_KERNEL_TU_POLICY)}
+        target = {**base,
+                  "arm32_header_models": ["word-at-a-time-mapped-load-v1"]}
+        prepared = self.prepare(target)
+        argv = shlex.split(prepared["frama_cpp_command"])
+        override = str(self.root / inputs.ARM32_HEADER_MODEL_DIRS[
+            "word-at-a-time-mapped-load-v1"])
+        self.assertEqual(argv[1:3], ["-I", override])
+        for models in (True, "word-at-a-time-mapped-load-v1",
+                       ["word-at-a-time-mapped-load-v2"],
+                       ["word-at-a-time-mapped-load-v1"] * 2):
+            with self.subTest(models=models), self.assertRaisesRegex(
+                    SourceError, "header-model inventory"):
+                self.prepare({**base, "arm32_header_models": models})
+
+    def test_arm32_header_models_preserve_declared_precedence(self):
+        base = {"harness": "legacy/helper.c", "input_mode": "kernel-tu",
+                "profile": "arm-gcc", "source": "lib/string.c",
+                "kernel_tu_policy": copy.deepcopy(inputs.ARM32_KERNEL_TU_POLICY),
+                "arm32_header_models": ["recent-pci-frontend-v1",
+                                        "word-at-a-time-mapped-load-v1"]}
+        argv = shlex.split(self.prepare(base)["frama_cpp_command"])
+        self.assertEqual(argv[1:5], [
+            "-I", str(self.root / "harness/arm32-recent-override"),
+            "-I", str(self.root / "harness/arm32-override")])
+
+    def test_pinned_arm32_translation_unit_is_analyzed_directly(self):
+        target = {"input_mode": "kernel-tu", "profile": "arm-gcc",
+                  "source": "lib/string.c", "specs": "annotated/specs.h",
+                  "kernel_tu_policy": copy.deepcopy(inputs.ARM32_KERNEL_TU_POLICY),
+                  "provenance": {"mode": "pinned-translation-unit"}}
+        prepared = self.prepare(target)
+        source = str((self.source / "lib/string.c").resolve())
+        self.assertEqual(prepared["frama_input"], source)
+        self.assertEqual(prepared["analysis_source"], source)
+        self.assertEqual(Path(prepared["preprocess"]["argv"][-1]), Path(source))
+        self.assertNotIn("harness", target)
+
+    def test_pinned_translation_unit_rejects_a_copy_or_standalone_route(self):
+        base = {"input_mode": "kernel-tu", "profile": "arm-gcc",
+                "source": "lib/string.c", "specs": "annotated/specs.h",
+                "kernel_tu_policy": copy.deepcopy(inputs.ARM32_KERNEL_TU_POLICY),
+                "provenance": {"mode": "pinned-translation-unit"}}
+        for target in ({**base, "harness": "legacy/helper.c"},
+                       {**base, "input_mode": "standalone"}):
+            with self.subTest(target=target), self.assertRaisesRegex(
+                    SourceError, "pinned translation units"):
+                self.prepare(target)
+
+    def test_non_x86_kernel_tu_requires_the_exact_supported_policy(self):
+        base = {"harness": "legacy/helper.c", "input_mode": "kernel-tu",
+                "profile": "arm-gcc", "source": "lib/string.c"}
+        for policy in (None, {}, {"schema_version": True, "kind": "configured-arm32-v1"},
+                       {"schema_version": 1, "kind": "configured-arm32-v2"},
+                       {"schema_version": 1, "kind": "configured-arm32-v1", "extra": True}):
+            target = {**base, **({} if policy is None else {"kernel_tu_policy": policy})}
+            with self.subTest(policy=policy), self.assertRaisesRegex(
+                    SourceError, "whole-TU frontend policy"):
+                self.prepare(target)
+
+        changed_profile = {**base, "profile": "powerpc32-gcc",
+                           "kernel_tu_policy": copy.deepcopy(inputs.ARM32_KERNEL_TU_POLICY)}
+        with self.assertRaisesRegex(SourceError, "whole-TU frontend policy"):
+            self.prepare(changed_profile)
+
     def test_legacy_fixture_keeps_original_argv_and_receipt_shape(self):
         target = {"harness": "legacy/helper.c", "kernel_model_check": "legacy/fixture.c"}
         output = self.output()

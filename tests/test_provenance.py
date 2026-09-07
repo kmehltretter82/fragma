@@ -216,6 +216,27 @@ class GateTests(unittest.TestCase):
         self.target["source"] = "missing.c"
         self.assertFalse(self.check(commit)["passed"])
 
+    def test_pinned_translation_unit_uses_git_blob_without_a_project_copy(self):
+        def git(*args):
+            return subprocess.check_output(
+                ["git", "-C", str(self.kernel), *args],
+                stderr=subprocess.DEVNULL).decode().strip()
+        git("init", "-q")
+        git("add", "source.c")
+        git("-c", "user.name=Provenance Test",
+            "-c", "user.email=provenance@example.invalid",
+            "commit", "-qm", "fixture")
+        commit = git("rev-parse", "HEAD")
+        self.target.pop("harness")
+        self.target["provenance"]["mode"] = "pinned-translation-unit"
+        result = self.check(commit)
+        self.assertTrue(result["passed"], result)
+        self.assertEqual(result["harness"]["kind"], "pinned-source-identity")
+        self.assertEqual(result["source"]["sha256"], result["harness"]["sha256"])
+        self.assertFalse(self.check()["passed"])
+        self.target["harness"] = "harness.c"
+        self.assertFalse(self.check(commit)["passed"])
+
     def test_cli_failure_is_nonzero(self):
         with patch("builtins.print"):
             status = main(["--kernel-tree", str(self.kernel), "--root", str(self.root),

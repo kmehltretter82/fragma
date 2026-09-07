@@ -79,6 +79,19 @@ before body review, unchanged-source Eva/RTE and WP evidence, and a concrete
 original/fixed A/B witness before a lead can be called a Fragma-found bug. The
 RV32 defect remains correctly classified as review-found.
 
+The generic eight-string batch has now run and is retained only as frontend and
+driver calibration: it produced zero confirmed bugs. The primary campaign is a
+frozen eight-function recent-risk ARM32 batch spanning cache synchronization,
+BPF JIT translation, module relocation/PLTs, PCI alignment, uprobes and DMA.
+Its first source-identical slice, the March 2026 `pcibios_align_resource()`
+change, passes bounded RTE/Eva with 20 valid properties, zero unresolved
+properties and zero warnings after one callback-model defect was corrected.
+This is a scoped `verified-no-finding`, not whole-TU or functional verification.
+Six preserved whole-TU attempts instead document Frama-C frontend gaps in
+unrelated transitive headers. No Fragma-found kernel bug is confirmed yet; the
+next strict target is `module_frob_arch_sections()`. See the compact
+[ARM32 checkpoint](results/arm32-recent-pci-20260907/SUMMARY.md).
+
 The [nine-calibration renewal](docs/CALIBRATION-RENEWAL-20260907.md) now passes
 both normal Eva batches: 38 model checks, 55 positive selected properties and
 nine deliberately false assertions corroborated by revalidated retained native
@@ -546,6 +559,11 @@ The first new bug-search batch uses only the configured 32-bit ARMv7
 `arm-gcc` profile. Candidate names are frozen mechanically before detailed body
 inspection. Follow the [Fragma-first classification and A/B protocol](docs/BUG-SEARCH-PLAN.md);
 an alarm, timeout or failed proof alone is not a kernel defect.
+
+- [x] Freeze the eight-function recent-risk ARM32 batch and complete one
+  source-identical bounded RTE/Eva canary. `pcibios_align_resource()` has no
+  surviving safety lead in that scope; seven recent candidates and functional
+  follow-up remain.
 
 - [ ] Execute the first ARM32 Fragma-first campaign: freeze 5–10 unchanged
   functions, run bounded Eva/RTE before manual source diagnosis, add

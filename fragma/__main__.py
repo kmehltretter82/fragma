@@ -151,6 +151,12 @@ def main(argv=None):
     prep.add_argument("--source", type=Path)
     prep.add_argument("--seed-config", type=Path)
     prep.add_argument("--jobs", type=int, default=4)
+    prep.add_argument("--build-id",
+                      help="distinct retained build identity using the selected profile")
+    prep.add_argument("--enable-config", action="append", default=[], metavar="SYMBOL",
+                      help="enable a recorded Kconfig symbol before olddefconfig")
+    prep.add_argument("--object", action="append", default=[], metavar="PATH.o",
+                      help="configured object to build and retain instead of lib/string.o")
     run = sub.add_parser("run", help="run provenance/model/proof gates and write fresh reports")
     for command in (source_parser, run):
         command.add_argument("--kernel", type=Path, default=Path(os.environ.get(
@@ -270,8 +276,11 @@ def main(argv=None):
             profile = profiles.load_profiles(root).get(args.profile)
             if profile is None:
                 raise suite.SuiteError(f"unknown profile: {args.profile}")
-            result = build.prepare_build(root, args.source or default_source, profile,
-                toolchain.prepare_environment(root), seed_config=args.seed_config, jobs=args.jobs)
+            result = build.prepare_build(
+                root, args.source or default_source, profile,
+                toolchain.prepare_environment(root), seed_config=args.seed_config,
+                jobs=args.jobs, build_id=args.build_id,
+                config_enable=args.enable_config, object_targets=args.object or None)
             print(json.dumps(result, indent=2))
             return 0 if result["status"] == "prepared" else 1
         result = suite.run_suite(root, args.kernel, ids=args.target,

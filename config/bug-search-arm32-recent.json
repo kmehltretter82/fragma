@@ -1,0 +1,254 @@
+{
+  "schema_version": 1,
+  "campaign_id": "arm32-recent-risk-20260907",
+  "status": "active-first-candidate-bounded-rte-no-finding",
+  "frozen_at": "2026-09-07",
+  "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+  "kernel_revision_date": "2026-08-09",
+  "architecture": "arm",
+  "profile": "arm-gcc",
+  "purpose": "Primary ARM32 bug-search campaign; the generic string campaign is retained only as frontend and search-policy calibration.",
+  "selection": {
+    "history_window": "The 12 months ending at the pinned kernel revision",
+    "paths": [
+      "arch/arm/kernel/*.c",
+      "arch/arm/mm/*.c",
+      "arch/arm/net/*.c",
+      "arch/arm/probes/**/*.c"
+    ],
+    "screening_inputs": "Commit subjects/messages, zero-context diff hunk function names, configured object presence/size, and raw function token counts only",
+    "body_review_before_freeze": false,
+    "included_risk_classes": [
+      "32-bit relocation and address-range arithmetic",
+      "resource alignment and overflow boundaries",
+      "BPF-to-A32 instruction translation",
+      "DMA/scatterlist chunk and page-boundary arithmetic",
+      "cache-maintenance state and races",
+      "temporary instruction mapping/copy"
+    ],
+    "deferred_classes": [
+      "board-description and device-tree changes",
+      "reference-count-only fixes",
+      "crypto assembly glue",
+      "pure cleanup and removal commits",
+      "global MMU/PAN sequencing that needs an architectural state model before useful Eva properties"
+    ],
+    "limit": 8,
+    "ordering": "Trigger commit date descending; same-file siblings follow their changed function; DMA functions retain source order",
+    "notes": "get_module_plt is the largest non-orchestrator compiled sibling in the recently fixed module relocation pipeline. All other entries are named by a qualifying change hunk. This is selection metadata, not a defect claim."
+  },
+  "configurations": {
+    "multi_v7": {
+      "recipe": "multi_v7_defconfig",
+      "sha256": "9001027fc1668165f240e4012d7a0505953839ac85c128d15ab8e39daaf0b412"
+    },
+    "multi_v7_bpf_jit": {
+      "base_recipe": "multi_v7_defconfig",
+      "delta": [
+        "BPF_SYSCALL=y",
+        "BPF_JIT=y",
+        "BPF_JIT_ALWAYS_ON=y"
+      ],
+      "sha256": "ba10a6976ece869d9284011ea09f809092565ffcbbcfba8dfa67ff6c373bbc35"
+    }
+  },
+  "compiler": {
+    "path": "/usr/bin/arm-linux-gnueabi-gcc",
+    "sha256": "b417460992a88c2df65d82f82c6af452210d25e8def84d35701393063afd30bd"
+  },
+  "candidates": [
+    {
+      "name": "__sync_icache_dcache",
+      "source": "arch/arm/mm/flush.c",
+      "source_blob": "4d7ef5cc36b66d650139b4717d405d571f9d9e4b",
+      "source_sha256": "8642de64dfcadfc0cd911192a12fde073972238ebda24ffd0d8b9a9bb7d87b81",
+      "source_line": 285,
+      "function_tokens": 136,
+      "function_token_sha256": "d9fdc83818a53012672cf8cbc372fc74db4d1956a4dd42143c49293d7dc49438",
+      "object": "arch/arm/mm/flush.o",
+      "object_function_size": 208,
+      "configuration": "multi_v7",
+      "trigger_commit": "75f9a484e817adea211c73f89ed938a2b2f90953",
+      "trigger_date": "2026-04-24",
+      "trigger_subject": "ARM: 9472/1: fix race condition on PG_dcache_clean in __sync_icache_dcache()",
+      "analysis_lane": "mthread-plus-eva"
+    },
+    {
+      "name": "build_insn",
+      "source": "arch/arm/net/bpf_jit_32.c",
+      "source_blob": "9ede81afbc50e295726a08da699352e5513859b4",
+      "source_sha256": "db6a06715406e2277966729b0d65503763ac6ffc4b218dda621ac5046685c42b",
+      "source_line": 1589,
+      "function_tokens": 2797,
+      "function_token_sha256": "49454fa5f56c2c4d80dcb579384cbaa438f8fcda8f72b9c95a95fd446d5f9aa1",
+      "object": "arch/arm/net/bpf_jit_32.o",
+      "object_function_size": null,
+      "object_note": "The compiler inlines build_insn into build_body; source identity is retained independently.",
+      "configuration": "multi_v7_bpf_jit",
+      "trigger_commit": "e1d486445af3c392628532229f7ce5f5cf7891b6",
+      "trigger_date": "2026-04-17",
+      "trigger_subject": "bpf, arm32: Reject BPF-to-BPF calls and callbacks in the JIT",
+      "analysis_lane": "eva-rte-then-functional"
+    },
+    {
+      "name": "module_frob_arch_sections",
+      "source": "arch/arm/kernel/module-plts.c",
+      "source_blob": "b5338fe59706a8c7cbeeef593fbfbfd11ec418d7",
+      "source_sha256": "c110d3fe8c4c04e1586ddefca7a50416f1a02d8778ce0e4813bd81c41561ee2d",
+      "source_line": 209,
+      "function_tokens": 583,
+      "function_token_sha256": "de47a9730cb8f64c06774efa24e7d5b4efcd69ad067f0cefcac50814033a6f1c",
+      "object": "arch/arm/kernel/module-plts.o",
+      "object_function_size": 640,
+      "configuration": "multi_v7",
+      "trigger_commit": "5a21253b3073df578ee074da2f9427cbb4c3146a",
+      "trigger_date": "2026-04-09",
+      "trigger_subject": "ARM: 9471/1: module: fix unwind section relocation out of range error",
+      "analysis_lane": "eva-rte-then-functional"
+    },
+    {
+      "name": "get_module_plt",
+      "source": "arch/arm/kernel/module-plts.c",
+      "source_blob": "b5338fe59706a8c7cbeeef593fbfbfd11ec418d7",
+      "source_sha256": "c110d3fe8c4c04e1586ddefca7a50416f1a02d8778ce0e4813bd81c41561ee2d",
+      "source_line": 46,
+      "function_tokens": 278,
+      "function_token_sha256": "1dd913d2cfb7434d652795642d5daf69b440bf5a19afefe90a002c5b721e163e",
+      "object": "arch/arm/kernel/module-plts.o",
+      "object_function_size": 364,
+      "configuration": "multi_v7",
+      "trigger_commit": "5a21253b3073df578ee074da2f9427cbb4c3146a",
+      "trigger_date": "2026-04-09",
+      "trigger_subject": "ARM: 9471/1: module: fix unwind section relocation out of range error",
+      "selection_basis": "compiled relocation-pipeline sibling",
+      "eligibility_note": "The body was exposed during dependency-model inspection before its analyzer run; conservatively, any later finding here is not eligible for the strict fragma-found label.",
+      "analysis_lane": "eva-rte-then-functional"
+    },
+    {
+      "name": "pcibios_align_resource",
+      "source": "arch/arm/kernel/bios32.c",
+      "source_blob": "ac0e890510daf63525e7460ec67230059066ca70",
+      "source_sha256": "55031f55a2e736b1efcd721972864abf1077d41ba60ffffcacf7df136518f3b8",
+      "source_line": 562,
+      "function_tokens": 124,
+      "function_token_sha256": "dfa41dbf6ffc59538c599a006fa963573c06fa052512dc7ac654833a45120b26",
+      "object": "arch/arm/kernel/bios32.o",
+      "object_function_size": 176,
+      "configuration": "multi_v7",
+      "trigger_commit": "9036bd0efcb6162a77f3bf9bacbafba7686c7275",
+      "trigger_date": "2026-03-27",
+      "trigger_subject": "PCI: Align head space better",
+      "analysis_lane": "eva-rte-then-functional"
+    },
+    {
+      "name": "arch_uprobe_copy_ixol",
+      "source": "arch/arm/probes/uprobes/core.c",
+      "source_blob": "0e1c6b9e7e54a32685eb4d59c85b57b4a5d71580",
+      "source_sha256": "79bb32878baee8232f234a0a88f86738d28836b9b649223c73a74beb379e8454",
+      "source_line": 113,
+      "function_tokens": 76,
+      "function_token_sha256": "e3c5f3ace201c05fa6fe4f4e18426746805b77000f563297faae5193b1cb8ea7",
+      "object": "arch/arm/probes/uprobes/core.o",
+      "object_function_size": 104,
+      "configuration": "multi_v7",
+      "trigger_commit": "1752a1ad43a1d4fd450a8ef5f8d240f9e228e0a3",
+      "trigger_date": "2026-01-06",
+      "trigger_subject": "arm/uprobes: use kmap_local_page() in arch_uprobe_copy_ixol()",
+      "analysis_lane": "eva-rte"
+    },
+    {
+      "name": "dma_cache_maint_page",
+      "source": "arch/arm/mm/dma-mapping.c",
+      "source_blob": "f9bc53b60f99748eac9fc289cfc11821888ab5e4",
+      "source_sha256": "8babb6d21a5fec2a856477d8527a1149f6e2708687c5d0570a90b1cc834c4ae9",
+      "source_line": 627,
+      "function_tokens": 206,
+      "function_token_sha256": "a9acf3c17369800887680a1aac5a8cd7c8ea9bb6293ac72bfd7fba804d7dfda1",
+      "object": "arch/arm/mm/dma-mapping.o",
+      "object_function_size": 340,
+      "configuration": "multi_v7",
+      "trigger_commit": "52c9aa1adc301b6b6bfe1a6c8ca188da125a332c",
+      "trigger_date": "2025-10-29",
+      "trigger_subject": "ARM: dma-mapping: Reduce struct page exposure in arch_sync_dma*()",
+      "analysis_lane": "eva-rte"
+    },
+    {
+      "name": "__map_sg_chunk",
+      "source": "arch/arm/mm/dma-mapping.c",
+      "source_blob": "f9bc53b60f99748eac9fc289cfc11821888ab5e4",
+      "source_sha256": "8babb6d21a5fec2a856477d8527a1149f6e2708687c5d0570a90b1cc834c4ae9",
+      "source_line": 1183,
+      "function_tokens": 258,
+      "function_token_sha256": "23913dfe9400be80bf8236b436bf255157502cd8adbdffc2a3380f9440af3258",
+      "object": "arch/arm/mm/dma-mapping.o",
+      "object_function_size": 656,
+      "configuration": "multi_v7",
+      "trigger_commit": "52c9aa1adc301b6b6bfe1a6c8ca188da125a332c",
+      "trigger_date": "2025-10-29",
+      "trigger_subject": "ARM: dma-mapping: Reduce struct page exposure in arch_sync_dma*()",
+      "analysis_lane": "eva-rte-then-functional"
+    }
+  ],
+  "selection_build": {
+    "status": "all-selected-translation-units-compiled",
+    "temporary_build_kind": "fresh out-of-tree selection probe",
+    "default_targets": [
+      "arch/arm/kernel/module-plts.o",
+      "arch/arm/kernel/bios32.o",
+      "arch/arm/mm/flush.o",
+      "arch/arm/mm/dma-mapping.o",
+      "arch/arm/probes/uprobes/core.o"
+    ],
+    "bpf_target": "arch/arm/net/bpf_jit_32.o",
+    "object_sha256": {
+      "arch/arm/kernel/module-plts.o": "07818442b6422139fe8e9d91dd0403ee654c9235a30037aaccdccd47402c45db",
+      "arch/arm/kernel/bios32.o": "f85c4e01915672e5205a304e073a40ac31138a95c43a06769bb14ac15d514353",
+      "arch/arm/mm/flush.o": "4ec5659d8247586e1283334f8d689d67d40119e18ed8ebd013d39e31d9fe8729",
+      "arch/arm/mm/dma-mapping.o": "9c9c4cff56e8fec68d1a528f49666315e21fecd6b99f00d1c2a3206fa5fcbbc4",
+      "arch/arm/probes/uprobes/core.o": "33abb062275d129bd6a09e9559c47ad9f30e0a912205f243229110a83c34eec9",
+      "arch/arm/net/bpf_jit_32.o": "53caf17a3ad55c64de26fcdf76c7177dd7ecf21fe815a7184022179f825611b6"
+    }
+  },
+  "retained_build": {
+    "id": "arm-gcc-recent-v2",
+    "receipt": "build/kernel/arm-gcc-recent-v2/fragma-build.json",
+    "receipt_sha256": "ce0b54138f74ec8fe76a4846ac4b52bc1e2536a777979e2e971daef83af356e9",
+    "configuration_sha256": "ba10a6976ece869d9284011ea09f809092565ffcbbcfba8dfa67ff6c373bbc35",
+    "status": "prepared-all-selected-objects",
+    "object_sha256": {
+      "lib/string.o": "4adc30a0aee4a1558a13deb047ec35c3c36fd61efd8e3853c83eec61ba727631",
+      "arch/arm/mm/flush.o": "b5bb4ea5b7b1965b70e058efd5176c4626acbb1d9f4d326ad6550006a53b8306",
+      "arch/arm/net/bpf_jit_32.o": "da52b97c4493530d9de638c0b42eb0967ed1e837233f2a9ffc29896f21f395ea",
+      "arch/arm/kernel/module-plts.o": "dae73383e619d96c223a8b39048d543f8457ec244a9fd7f139b29601d3310bad",
+      "arch/arm/kernel/bios32.o": "9775bab6337162ec0bc99398bc3b0d9647017fc7774dc3cf8b919214410f5665",
+      "arch/arm/probes/uprobes/core.o": "8272f23bc1e632e4f6a7df0c3f0ec737e01ead58fd57ac2a60e56a2fcba40274",
+      "arch/arm/mm/dma-mapping.o": "50a68c4f68cd0396bb6d9b24eb12c0e3ac5878a6c187f2eb4c61c77eeee2a2d2"
+    }
+  },
+  "execution": {
+    "pcibios_align_resource": {
+      "full_translation_unit": {
+        "status": "model-or-contract-gap",
+        "attempts": 6,
+        "last_output": "build/arm32-recent-search-20260907/pci-raw-6",
+        "result": "Frama-C never reached candidate analysis; retained failures progressed through inferred-auto, nested zero-length padding and constant-expression models, then stopped in unrelated sysfs, ratelimit, rbtree-latch and context-tracking declarations."
+      },
+      "source_identical_slice": {
+        "status": "calibration-passed",
+        "output": "build/arm32-recent-search-20260907/pci-slice-final-1",
+        "summary_sha256": "ead8e47677d6a96bd6774dfcd63cf8eb96550e1b772c8eb712f51b206d321d0a",
+        "result_sha256": "b803e1bb1bc6071dd1f4613e9834398c52057e08af984d8a6fcac8c794dc3dbb",
+        "analysis_log_sha256": "8a769efe56685fb259bc72dc75164361f7446107bb1edbd53245925227d3d6a1",
+        "source_function_tokens": 124,
+        "source_function_token_sha256": "dfa41dbf6ffc59538c599a006fa963573c06fa052512dc7ac654833a45120b26",
+        "properties": {"valid": 20, "unknown": 0, "invalid": 0},
+        "warnings": 0,
+        "classification": "verified-no-finding",
+        "scope": "Bounded below-2-GiB scalar inputs, valid local objects, and modeled PCI host/default/optional alignment dependencies; runtime safety only, not a functional or whole-TU proof."
+      },
+      "raw_model_gap": "The first slice run used an incorrect callback third-parameter type and Frama-C reported the resulting integer-to-pointer call. The corrected source-derived signature removed every candidate alarm."
+    }
+  },
+  "confirmed_bugs": 0,
+  "next_step": "Mechanically extract and run module_frob_arch_sections() as the next strict analyzer-first recent ARM32 target without exposing its body before the raw result; retain get_module_plt() only as a non-strict calibration candidate because its body was already viewed."
+}

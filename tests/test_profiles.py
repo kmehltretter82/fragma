@@ -10,7 +10,8 @@ import unittest
 from unittest.mock import patch
 
 from fragma.profiles import (ProfileError, check_machine_description,
-                             _defines, _run, compiler_capabilities, load_architectures,
+                             _defines, _normalize_machdep_compiler_dialect, _run,
+                             compiler_capabilities, load_architectures,
                              load_profiles, validate_profile, validate_registration)
 from fragma import analysis_policy
 
@@ -50,6 +51,29 @@ class ProfilesTests(unittest.TestCase):
         self.assertEqual(profile["kernel"]["arch"], "s390")
         self.assertEqual(profile["compiler_target"], "s390x-linux-gnu")
         self.assertEqual(profile["abi"]["byte_order"], "big")
+
+    def test_generated_cross_compiler_name_becomes_exact_frama_dialect(self):
+        cases = (("arm-gcc", "arm-linux-gnueabi-gcc", "gcc"),
+                 ("mips32el-clang", "clang-21", "clang"))
+        for profile_id, generated, dialect in cases:
+            path = Path(self.directory.name) / (profile_id + ".yaml")
+            path.write_text("sizeof_int: 4\ncompiler: " + generated + "\nsizeof_ptr: 4\n")
+            with self.subTest(profile=profile_id):
+                result = _normalize_machdep_compiler_dialect(
+                    self.profiles[profile_id], path)
+                self.assertEqual(result["generated_value"], generated)
+                self.assertEqual(result["dialect"], dialect)
+                self.assertEqual(result["changed_fields"], ["compiler"])
+                self.assertEqual(path.read_text(),
+                                 "sizeof_int: 4\ncompiler: " + dialect + "\nsizeof_ptr: 4\n")
+
+    def test_machdep_dialect_normalization_rejects_ambiguous_or_relabelled_input(self):
+        profile = self.profiles["arm-gcc"]
+        for text in ("sizeof_int: 4\n", "compiler: arm-linux-gnueabi-gcc\ncompiler: gcc\n",
+                     "compiler: unrelated-gcc\n"):
+            self.machine.write_text(text)
+            with self.subTest(text=text), self.assertRaises(ProfileError):
+                _normalize_machdep_compiler_dialect(profile, self.machine)
 
     def test_registered_mips_profile_binds_mt7621_o32_clang_and_seed(self):
         profile = self.profiles["mips32el-clang"]

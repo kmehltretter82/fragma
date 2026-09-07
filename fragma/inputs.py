@@ -19,17 +19,42 @@ from . import frontend_policy
 SHIMS = ["-D__builtin_memcpy=memcpy", "-D__typeof_unqual__=__typeof__",
          "-D__restrict__=restrict", "-D__SIZEOF_INT128__=16", "-D__signed__=",
          "-D__builtin_unreachable=fragma_unreachable", "-std=gnu11"]
+ARM32_SHIMS = [flag for flag in SHIMS if flag != "-D__SIZEOF_INT128__=16"]
+ARM32_HEADER_MODEL_DIRS = {
+    "word-at-a-time-mapped-load-v1": "harness/arm32-override",
+    "recent-pci-frontend-v1": "harness/arm32-recent-override",
+}
+ARM32_HEADER_MODELS = tuple(ARM32_HEADER_MODEL_DIRS)
+
+ARM32_KERNEL_TU_POLICY = {
+    "schema_version": 1,
+    "kind": "configured-arm32-v1",
+}
 
 
-def load_build(root: Path, profile_id: str, revision: str) -> dict:
-    build = root / "build" / "kernel" / profile_id
+def _is_arm32_kernel_tu_policy(value: object) -> bool:
+    return (isinstance(value, dict) and set(value) == set(ARM32_KERNEL_TU_POLICY) and
+            type(value.get("schema_version")) is int and value["schema_version"] == 1 and
+            type(value.get("kind")) is str and
+            value["kind"] == ARM32_KERNEL_TU_POLICY["kind"])
+
+
+def load_build(root: Path, profile_id: str, revision: str,
+               build_id: str | None = None) -> dict:
+    selected_id = profile_id if build_id is None else build_id
+    if (not isinstance(selected_id, str) or
+            not re.fullmatch(r"[a-z0-9][a-z0-9_-]*", selected_id)):
+        raise SourceError("invalid kernel build ID")
+    build = root / "build" / "kernel" / selected_id
     path = build / "fragma-build.json"
     if not path.is_file():
         raise SourceError(f"missing prepared kernel build: {build}")
     record = json.loads(path.read_text())
     if record.get("schema_version") != 1 or record.get("status") != "prepared":
         raise SourceError("kernel preparation did not complete")
-    if record.get("revision") != revision or record.get("profile_id") != profile_id:
+    recorded_id = record.get("build_id", record.get("profile_id"))
+    if (record.get("revision") != revision or
+            record.get("profile_id") != profile_id or recorded_id != selected_id):
         raise SourceError("kernel build revision/profile mismatch")
     for name, expected in record.get("files", {}).items():
         if not (build / name).is_file() or sha256(build / name) != expected:
@@ -168,19 +193,50 @@ def prepare_input(root: Path, target: dict, profile: dict, build: dict,
     perform its own ACSL preprocessing so named macros inside comments expand.
     """
     frontend_policy.identity(target, root=root)
-    harness = (root / target["harness"]).resolve()
+    pinned_source = target.get("provenance", {}).get("mode") == "pinned-translation-unit"
+    if pinned_source:
+        if target.get("harness") is not None or target.get("input_mode") != "kernel-tu":
+            raise SourceError("pinned translation units require direct kernel-TU input")
+        source_root = Path(build["source"]).resolve()
+        harness = (source_root / target["source"]).resolve()
+        if not harness.is_relative_to(source_root):
+            raise SourceError("pinned translation-unit source escapes snapshot")
+    else:
+        harness = (root / target["harness"]).resolve()
     if not harness.is_file():
         raise SourceError(f"missing harness: {harness}")
     depfile, preprocessed = output / "headers.d", output / "input.i"
     cwd = Path(build["path"])
     if target["input_mode"] == "kernel-tu":
-        if target["profile"] != "x86_64-gcc":
-            raise SourceError("whole-TU header substitutions currently scoped to x86-64")
         entry = compile_entry(build, target["source"])
         args = command_without_outputs(entry)
-        args[1:1] = ["-I", str(root / "annotated/override")]
+        if target["profile"] == "x86_64-gcc":
+            if target.get("arm32_header_models") is not None:
+                raise SourceError("ARM32 header models on a non-ARM frontend")
+            # These models contain x86 declarations and must never leak into
+            # another architecture's configured header route.
+            args[1:1] = ["-I", str(root / "annotated/override")]
+            shims = SHIMS
+        elif (target["profile"] != "arm-gcc" or
+              not _is_arm32_kernel_tu_policy(target.get("kernel_tu_policy"))):
+            raise SourceError("unsupported or missing whole-TU frontend policy")
+        else:
+            # GCC's ARM EABI target does not advertise __int128.  Defining
+            # __SIZEOF_INT128__ here would invent a kernel type that neither
+            # the genuine compile command nor the generated machdep supports.
+            models = target.get("arm32_header_models", [])
+            if (not isinstance(models, list) or len(set(models)) != len(models) or
+                    any(type(model) is not str or model not in ARM32_HEADER_MODELS
+                        for model in models)):
+                raise SourceError("unsupported ARM32 header-model inventory")
+            # Header models are target-local and ordered exactly as declared.
+            # Each directory wraps only the unsupported construct named by its
+            # model; recent-source campaigns otherwise retain genuine headers.
+            for model in reversed(models):
+                args[1:1] = ["-I", str(root / ARM32_HEADER_MODEL_DIRS[model])]
+            shims = ARM32_SHIMS
         args.extend(["-include", str(root / target.get("specs", "annotated/specs.h")),
-                     "-include", str(root / "annotated/compat.h"), *SHIMS])
+                     "-include", str(root / "annotated/compat.h"), *shims])
     elif target["input_mode"] == "standalone":
         entry = None
         args = [profile["compiler"]["path"], *profile["analysis"]["compiler_flags"],
@@ -199,11 +255,14 @@ def prepare_input(root: Path, target: dict, profile: dict, build: dict,
     inputs = input_receipts(root, kernel, revision, build, paths)
     # Catch concurrent edits between preprocessing and use. The final suite also
     # rechecks these hashes after all analyses before accepting a run.
-    return {"path": str(preprocessed), "sha256": sha256(preprocessed),
+    result = {"path": str(preprocessed), "sha256": sha256(preprocessed),
             "frama_input": str(harness), "frama_cpp_command": frama_cpp_command,
             "cwd": str(cwd),
             "preprocess": receipt, "original_compile_command": entry,
             "inputs": inputs, "annotations": "Frama-C native -pp-annot with target compiler"}
+    if pinned_source:
+        result["analysis_source"] = str(harness)
+    return result
 
 
 def audit_inputs(root: Path, kernel: Path, revision: str, build: dict,
@@ -232,9 +291,13 @@ def audit_inputs(root: Path, kernel: Path, revision: str, build: dict,
         if not path.is_file() or hashlib.md5(path.read_bytes(), usedforsecurity=False).hexdigest() != expected:
             raise SourceError(f"Frama-C consumed source changed: {path}")
         paths.add(path)
-    for field in ("harness", "driver"):
-        if target.get(field) and (root / target[field]).resolve() not in paths:
-            raise SourceError(f"Frama-C audit does not include declared {field}")
+    if target.get("provenance", {}).get("mode") == "pinned-translation-unit":
+        if Path(prepared.get("analysis_source", "")).resolve() not in paths:
+            raise SourceError("Frama-C audit does not include pinned analysis source")
+    elif target.get("harness") and (root / target["harness"]).resolve() not in paths:
+        raise SourceError("Frama-C audit does not include declared harness")
+    if target.get("driver") and (root / target["driver"]).resolve() not in paths:
+        raise SourceError("Frama-C audit does not include declared driver")
     records = input_receipts(root, kernel, revision, build, sorted(paths))
     retained = []
     temporary = output / "tmp"

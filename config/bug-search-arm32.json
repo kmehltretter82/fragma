@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "campaign_id": "arm32-string-first-20260907",
-  "status": "candidates-frozen-analyzer-not-run",
+  "status": "calibration-run-no-confirmed-findings",
   "frozen_at": "2026-09-07",
   "selection_review": "Candidate names and object metadata only; no detailed function-body review before freeze",
   "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
@@ -61,5 +61,15 @@
     "same_input_fix_ab_required": true,
     "rv32_zeropad_classification": "review-found-confirmed"
   },
-  "scope": "First ARM32 semantic-profile campaign on generic kernel string code; not yet an arch/arm-specific source campaign"
+  "execution": {
+    "output": "build/arm32-bug-search-20260907/raw-batch-1",
+    "summary_sha256": "37eb3e0bae1a388a83a233aa263f5bc6c8d713a2d50b306ceb1e8b21219647fb",
+    "targets": 8,
+    "properties": {"valid": 61, "unknown": 11, "unreachable": 10},
+    "warnings": 817,
+    "confirmed_bugs": 0,
+    "classification": "frontend-and-driver-calibration",
+    "note": "Several unresolved results are model, dependency or reachability gaps. No result survived triage as a kernel defect."
+  },
+  "scope": "Retained ARM32 whole-TU frontend and driver calibration on generic kernel string code; superseded as the primary bug-search lane by config/bug-search-arm32-recent.json"
 }

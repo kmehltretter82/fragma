@@ -665,7 +665,9 @@ __visible int memcmp(const void *cs, const void *ct, size_t count)
 		const unsigned long *u1 = cs;
 		const unsigned long *u2 = ct;
 		do {
-			if (get_unaligned(u1) != get_unaligned(u2))
+			if (get_unaligned(u1) !=
+			    /* FRAGMA: distinct report locations; C tokens unchanged. */
+			    get_unaligned(u2))
 				break;
 			u1++;
 			u2++;

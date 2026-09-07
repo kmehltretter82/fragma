@@ -5,13 +5,20 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import unittest
 
+from fragma.analysis_policy import pipeline_identity
+from fragma.provenance import check_target, extract_function, tokenize
+
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "config/bug-search-arm32.json"
+TARGETS = ROOT / "config/bug-search-arm32-targets.json"
+RECENT = ROOT / "config/bug-search-arm32-recent.json"
+RECENT_TARGETS = ROOT / "config/bug-search-arm32-recent-targets.json"
 
 
 def sha256(path: Path) -> str:
@@ -27,15 +34,19 @@ class ARM32BugSearchFreezeTests(unittest.TestCase):
     def setUpClass(cls):
         cls.data = json.loads(MANIFEST.read_text())
 
-    def test_campaign_is_arm32_and_explicitly_not_an_analyzer_result_yet(self):
+    def test_campaign_is_arm32_and_is_now_a_calibration_result(self):
         self.assertEqual(self.data["schema_version"], 1)
         self.assertEqual(self.data["campaign_id"], "arm32-string-first-20260907")
-        self.assertEqual(self.data["status"], "candidates-frozen-analyzer-not-run")
+        self.assertEqual(self.data["status"],
+                         "calibration-run-no-confirmed-findings")
         self.assertEqual(self.data["architecture"], "arm")
         self.assertEqual(self.data["profile"], "arm-gcc")
         self.assertEqual(self.data["configuration"]["recipe"], "multi_v7_defconfig")
         self.assertEqual(self.data["configuration"]["bits"], 32)
         self.assertIn("no detailed function-body review", self.data["selection_review"])
+        self.assertEqual(self.data["execution"]["confirmed_bugs"], 0)
+        self.assertEqual(self.data["execution"]["classification"],
+                         "frontend-and-driver-calibration")
 
     def test_frozen_candidates_and_selection_rule_are_exact(self):
         self.assertEqual(
@@ -103,6 +114,288 @@ class ARM32BugSearchFreezeTests(unittest.TestCase):
                 })
         selected = list(reversed(rows[-self.data["selection"]["limit"]:]))
         self.assertEqual(selected, self.data["candidates"])
+
+
+class ARM32BugSearchTargetTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.targets = json.loads(TARGETS.read_text())["targets"]
+
+    def test_frozen_candidates_have_one_closed_analyzer_target_each(self):
+        frozen = json.loads(MANIFEST.read_text())
+        self.assertEqual([target["functions"][0] for target in self.targets],
+                         [row["name"] for row in frozen["candidates"]])
+        self.assertEqual(len(self.targets), 8)
+        for target in self.targets:
+            with self.subTest(target=target["id"]):
+                self.assertEqual(target["suite"], "bug-search-arm32")
+                self.assertEqual(target["profile"], "arm-gcc")
+                self.assertEqual(target["analysis_pipeline"], {"kind": "rte-eva"})
+                self.assertIs(target["eva_auto_builtins"], False)
+                self.assertEqual(target["eva_builtins"], ["memcpy:Frama_C_memcpy"])
+                self.assertIn("arm32_unknown_bytes", target["analysis_functions"])
+                self.assertEqual(pipeline_identity(target)["rte_functions"],
+                    [*target["analysis_functions"], target["entry"]])
+                self.assertEqual(target["search_classification"],
+                                 "calibration-only-no-confirmed-bug")
+
+    def test_reached_kernel_and_modeled_helpers_are_not_hidden(self):
+        closures = {
+            "sized_strscpy": {"load_unaligned_zeropad", "has_zero",
+                               "create_zero_mask", "find_zero", "fls"},
+            "memchr_inv": {"check_bytes8"},
+            "strstr": {"strlen", "memcmp"},
+            "strncasecmp": {"__tolower"},
+            "strnstr": {"strlen", "memcmp"},
+            "strsep": {"strpbrk", "fragma_arm32_strchr_model"},
+            "memcmp": set(),
+            "strncmp": set(),
+        }
+        for target in self.targets:
+            function = target["functions"][0]
+            with self.subTest(function=function):
+                self.assertTrue(closures[function] <= set(target["analysis_functions"]))
+
+    def test_memchr_inv_domain_reaches_the_large_buffer_path(self):
+        source = (ROOT / "harness/arm32_search.c").read_text()
+        tokens = extract_function(source, "fragma_arm32_memchr_inv").tokens
+        body = " ".join(tokens)
+        self.assertRegex(body, r"input \[ 40 \]")
+        self.assertIn("Frama_C_interval ( 0 , 40 )", body)
+        self.assertRegex(source, r"assert arm32_memchr_inv_domain:\s*\n\s*count <= 40")
+
+    def test_assembly_dependencies_are_explicit_and_target_scoped(self):
+        assumptions = {item["id"] for item in
+            json.loads((ROOT / "config/assumptions.json").read_text())["assumptions"]}
+        by_name = {target["functions"][0]: target for target in self.targets}
+        self.assertIn("arm32-search-unaligned-load", assumptions)
+        self.assertIn("arm32-search-strchr", assumptions)
+        self.assertIn("arm32-search-unaligned-load",
+                      by_name["sized_strscpy"]["assumptions"])
+        self.assertIn("arm32-search-strchr", by_name["strsep"]["assumptions"])
+        for name, target in by_name.items():
+            if name != "sized_strscpy":
+                self.assertNotIn("arm32-search-unaligned-load", target["assumptions"])
+            if name != "strsep":
+                self.assertNotIn("arm32-search-strchr", target["assumptions"])
+
+    def test_shadow_header_changes_only_the_assembly_loader_when_kernel_is_available(self):
+        kernel = ROOT.parent / "linux"
+        if not (kernel / ".git").exists():
+            self.skipTest("local pinned kernel tree unavailable")
+        revision = json.loads(MANIFEST.read_text())["kernel_revision"]
+        process = subprocess.run(
+            ["git", "--no-optional-locks", "-C", str(kernel), "show",
+             revision + ":arch/arm/include/asm/word-at-a-time.h"],
+            check=True, text=True, capture_output=True,
+        )
+        original = process.stdout
+        shadow = (ROOT / "harness/arm32-override/asm/word-at-a-time.h").read_text()
+        for name in ("has_zero", "create_zero_mask", "find_zero"):
+            with self.subTest(function=name):
+                self.assertEqual(extract_function(original, name).tokens,
+                                 extract_function(shadow, name).tokens)
+        self.assertNotEqual(extract_function(original, "load_unaligned_zeropad").tokens,
+                            extract_function(shadow, "load_unaligned_zeropad").tokens)
+        self.assertIn("does not model exception", shadow)
+        self.assertIn("page crossing", shadow)
+
+
+class ARM32RecentRiskFreezeTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.data = json.loads(RECENT.read_text())
+
+    def test_recent_risk_campaign_replaces_strings_as_primary_search(self):
+        self.assertEqual(self.data["campaign_id"], "arm32-recent-risk-20260907")
+        self.assertEqual(self.data["status"],
+                         "active-first-candidate-bounded-rte-no-finding")
+        self.assertIn("Primary ARM32 bug-search", self.data["purpose"])
+        self.assertIs(self.data["selection"]["body_review_before_freeze"], False)
+        self.assertEqual(self.data["selection"]["limit"], 8)
+
+    def test_frozen_recent_candidates_are_exact_and_non_string(self):
+        self.assertEqual([item["name"] for item in self.data["candidates"]], [
+            "__sync_icache_dcache",
+            "build_insn",
+            "module_frob_arch_sections",
+            "get_module_plt",
+            "pcibios_align_resource",
+            "arch_uprobe_copy_ixol",
+            "dma_cache_maint_page",
+            "__map_sg_chunk",
+        ])
+        self.assertTrue(all(item["source"].startswith("arch/arm/")
+                            for item in self.data["candidates"]))
+        self.assertTrue(all("string" not in item["name"]
+                            for item in self.data["candidates"]))
+
+    def test_candidate_sources_and_function_tokens_match_pinned_git(self):
+        kernel = ROOT.parent / "linux"
+        if not (kernel / ".git").exists():
+            self.skipTest("local pinned kernel tree unavailable")
+        revision = self.data["kernel_revision"]
+        cache = {}
+        for item in self.data["candidates"]:
+            path = item["source"]
+            if path not in cache:
+                process = subprocess.run(
+                    ["git", "--no-optional-locks", "-C", str(kernel), "show",
+                     revision + ":" + path],
+                    check=True, capture_output=True,
+                )
+                cache[path] = process.stdout
+            source = cache[path]
+            with self.subTest(function=item["name"]):
+                self.assertEqual(hashlib.sha256(source).hexdigest(),
+                                 item["source_sha256"])
+                function = extract_function(source.decode(), item["name"])
+                self.assertEqual(len(function.tokens), item["function_tokens"])
+                payload = json.dumps(function.tokens, ensure_ascii=True,
+                                     separators=(",", ":")).encode()
+                self.assertEqual(hashlib.sha256(payload).hexdigest(),
+                                 item["function_token_sha256"])
+
+    def test_every_candidate_has_recent_trigger_and_analysis_lane(self):
+        for item in self.data["candidates"]:
+            with self.subTest(function=item["name"]):
+                self.assertRegex(item["trigger_commit"], r"^[0-9a-f]{40}$")
+                self.assertGreaterEqual(item["trigger_date"], "2025-08-09")
+                self.assertIn(item["analysis_lane"], {
+                    "eva-rte", "eva-rte-then-functional", "mthread-plus-eva"
+                })
+                self.assertGreater(item["function_tokens"], 0)
+
+    def test_first_result_is_narrow_and_reports_zero_bugs(self):
+        result = self.data["execution"]["pcibios_align_resource"]
+        self.assertEqual(result["full_translation_unit"]["status"],
+                         "model-or-contract-gap")
+        sliced = result["source_identical_slice"]
+        self.assertEqual(sliced["status"], "calibration-passed")
+        self.assertEqual(sliced["classification"], "verified-no-finding")
+        self.assertEqual(sliced["properties"],
+                         {"valid": 20, "unknown": 0, "invalid": 0})
+        self.assertIn("not a functional or whole-TU proof", sliced["scope"])
+        self.assertEqual(self.data["confirmed_bugs"], 0)
+
+    def test_exposed_sibling_is_not_eligible_for_strict_discovery_label(self):
+        by_name = {item["name"]: item for item in self.data["candidates"]}
+        self.assertIn("not eligible for the strict fragma-found label",
+                      by_name["get_module_plt"]["eligibility_note"])
+
+    def test_retained_build_receipt_and_objects_match_when_available(self):
+        retained = self.data["retained_build"]
+        receipt = ROOT / retained["receipt"]
+        if not receipt.is_file():
+            self.skipTest("retained ARM32 recent-risk build unavailable")
+        self.assertEqual(sha256(receipt), retained["receipt_sha256"])
+        build = json.loads(receipt.read_text())
+        self.assertEqual(build["build_id"], retained["id"])
+        self.assertEqual(build["files"][".config"],
+                         retained["configuration_sha256"])
+        for relative, expected in retained["object_sha256"].items():
+            self.assertEqual(build["files"][relative], expected, relative)
+
+
+class ARM32RecentRiskSliceTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.campaign = json.loads(RECENT.read_text())
+        cls.target = json.loads(RECENT_TARGETS.read_text())["targets"][0]
+        cls.kernel = ROOT.parent / "linux"
+
+    def git_source(self, relative: str) -> str:
+        process = subprocess.run(
+            ["git", "--no-optional-locks", "-C", str(self.kernel), "show",
+             self.campaign["kernel_revision"] + ":" + relative],
+            check=True, text=True, capture_output=True,
+        )
+        return process.stdout
+
+    def test_target_is_a_source_identical_bounded_arm32_slice(self):
+        self.assertEqual(self.target["functions"], ["pcibios_align_resource"])
+        self.assertEqual(self.target["profile"], "arm-gcc")
+        self.assertEqual(self.target["build_id"], "arm-gcc-recent-v2")
+        self.assertEqual(self.target["input_mode"], "standalone")
+        self.assertEqual(self.target["provenance"], {"mode": "functions"})
+        self.assertEqual(self.target["analysis_pipeline"], {"kind": "rte-eva"})
+        self.assertIs(self.target["eva_auto_builtins"], False)
+        self.assertEqual(self.target["search_classification"],
+                         "verified-no-finding-bounded-rte")
+
+    def test_candidate_definition_matches_the_pinned_git_blob(self):
+        if not (self.kernel / ".git").exists():
+            self.skipTest("local pinned kernel tree unavailable")
+        result = check_target(self.target, self.kernel,
+                              self.campaign["kernel_revision"], ROOT)
+        self.assertTrue(result["passed"], result["errors"])
+        function = result["functions"][0]
+        self.assertEqual(function["source_token_sha256"],
+                         "dfa41dbf6ffc59538c599a006fa963573c06fa052512dc7ac654833a45120b26")
+        self.assertTrue(function["declaration_prefix_equal"])
+
+    def test_minimal_resource_and_callback_declarations_are_source_derived(self):
+        if not (self.kernel / ".git").exists():
+            self.skipTest("local pinned kernel tree unavailable")
+        ioport = self.git_source("include/linux/ioport.h")
+        pci = self.git_source("include/linux/pci.h")
+        model = (ROOT / "harness/arm32_recent_pci_model.h").read_text()
+
+        def one(pattern: str, text: str) -> tuple[str, ...]:
+            matches = re.findall(pattern, text, flags=re.S)
+            self.assertEqual(len(matches), 1, pattern)
+            return tokenize(matches[0])
+
+        resource = r"struct resource\s*\{.*?\n\};"
+        self.assertEqual(one(resource, ioport), one(resource, model))
+        callback = r"resource_size_t\s*\(\*align_resource\)\s*\([^;]+;"
+        self.assertEqual(one(callback, pci), one(callback, model))
+        default = r"resource_size_t\s+pci_align_resource\s*\([^;]+;"
+        self.assertEqual(one(default, pci), one(default, model))
+        lookup = r"struct pci_host_bridge\s*\*pci_find_host_bridge\s*\([^;]+;"
+        self.assertEqual(one(lookup, pci), one(lookup, model))
+        pci_dev = pci[pci.index("struct pci_dev {"):]
+        model_dev = model[model.index("struct pci_dev {"):]
+        bus_field = r"struct pci_bus\s*\*bus\s*;"
+        self.assertEqual(tokenize(re.search(bus_field, pci_dev).group()),
+                         tokenize(re.search(bus_field, model_dev).group()))
+
+        for name, value in (("IORESOURCE_IO", "0x00000100"),
+                            ("IORESOURCE_MEM", "0x00000200")):
+            actual = re.search(rf"#define\s+{name}\s+(0x[0-9a-fA-F]+)", ioport)
+            modeled = re.search(rf"#define\s+{name}\s+(0x[0-9a-fA-F]+)", model)
+            self.assertIsNotNone(actual)
+            self.assertIsNotNone(modeled)
+            self.assertEqual(actual.group(1), value)
+            self.assertEqual(modeled.group(1), value)
+
+    def test_configured_resource_size_is_32_bits(self):
+        receipt = ROOT / self.campaign["retained_build"]["receipt"]
+        if not receipt.is_file():
+            self.skipTest("retained ARM32 recent-risk build unavailable")
+        build = json.loads(receipt.read_text())
+        config = Path(build["output"]) / ".config"
+        self.assertNotRegex(config.read_text(),
+                            r"(?m)^CONFIG_PHYS_ADDR_T_64BIT=y$")
+        model = (ROOT / "harness/arm32_recent_pci_model.h").read_text()
+        self.assertIn("typedef unsigned int resource_size_t;", model)
+
+    def test_retained_final_result_matches_manifest_when_available(self):
+        run = self.campaign["execution"]["pcibios_align_resource"][
+            "source_identical_slice"]
+        output = ROOT / run["output"]
+        if not output.is_dir():
+            self.skipTest("retained local analyzer result unavailable")
+        result = output / "search.arm32.recent.pcibios_align_resource/result.json"
+        analysis = output / "search.arm32.recent.pcibios_align_resource/analysis.log"
+        self.assertEqual(sha256(output / "summary.json"), run["summary_sha256"])
+        self.assertEqual(sha256(result), run["result_sha256"])
+        self.assertEqual(sha256(analysis), run["analysis_log_sha256"])
+        parsed = json.loads(result.read_text())
+        self.assertEqual(parsed["status"], "calibration-passed")
+        self.assertEqual(parsed["warnings"], [])
+        self.assertEqual(parsed["evaluation"]["counts"]["properties"],
+                         {"valid": 20})
 
 
 if __name__ == "__main__":

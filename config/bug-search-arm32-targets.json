@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+  "targets": [
+    {
+      "id": "search.arm32.sized_strscpy", "suite": "bug-search-arm32", "role": "calibration", "profile": "arm-gcc",
+      "source": "lib/string.c", "harness": "harness/string_calibration.c", "specs": "harness/arm32_search_specs.h",
+      "driver": "harness/arm32_search.c", "entry": "fragma_arm32_sized_strscpy", "functions": ["sized_strscpy"],
+      "analysis_functions": ["sized_strscpy", "load_unaligned_zeropad", "has_zero", "create_zero_mask", "find_zero", "fls", "arm32_unknown_bytes"],
+      "analysis": "eva", "analysis_pipeline": {"kind": "rte-eva"}, "input_mode": "kernel-tu",
+      "kernel_tu_policy": {"schema_version": 1, "kind": "configured-arm32-v1"}, "provenance": {"mode": "translation-unit"},
+      "arm32_header_models": ["word-at-a-time-mapped-load-v1"],
+      "required_properties": ["arm32_sized_strscpy_domain"], "assumptions": ["arm32-search-drivers", "arm32-search-frontend", "arm32-search-memcpy", "arm32-search-unaligned-load"],
+      "eva_auto_builtins": false,
+      "eva_builtins": ["memcpy:Frama_C_memcpy"],
+      "claims": [], "caller_coverage": "not-applicable", "search_classification": "calibration-only-no-confirmed-bug"
+    },
+    {
+      "id": "search.arm32.memchr_inv", "suite": "bug-search-arm32", "role": "calibration", "profile": "arm-gcc",
+      "source": "lib/string.c", "harness": "harness/string_calibration.c", "specs": "harness/arm32_search_specs.h",
+      "driver": "harness/arm32_search.c", "entry": "fragma_arm32_memchr_inv", "functions": ["memchr_inv"],
+      "analysis_functions": ["memchr_inv", "check_bytes8", "arm32_unknown_bytes"],
+      "analysis": "eva", "analysis_pipeline": {"kind": "rte-eva"}, "input_mode": "kernel-tu",
+      "kernel_tu_policy": {"schema_version": 1, "kind": "configured-arm32-v1"}, "provenance": {"mode": "translation-unit"},
+      "required_properties": ["arm32_memchr_inv_domain"], "assumptions": ["arm32-search-drivers", "arm32-search-frontend", "arm32-search-memcpy"],
+      "eva_auto_builtins": false,
+      "eva_builtins": ["memcpy:Frama_C_memcpy"],
+      "claims": [], "caller_coverage": "not-applicable", "search_classification": "calibration-only-no-confirmed-bug"
+    },
+    {
+      "id": "search.arm32.strstr", "suite": "bug-search-arm32", "role": "calibration", "profile": "arm-gcc",
+      "source": "lib/string.c", "harness": "harness/string_calibration.c", "specs": "harness/arm32_search_specs.h",
+      "driver": "harness/arm32_search.c", "entry": "fragma_arm32_strstr", "functions": ["strstr"],
+      "analysis_functions": ["strstr", "strlen", "memcmp", "arm32_unknown_bytes"],
+      "analysis": "eva", "analysis_pipeline": {"kind": "rte-eva"}, "input_mode": "kernel-tu",
+      "kernel_tu_policy": {"schema_version": 1, "kind": "configured-arm32-v1"}, "provenance": {"mode": "translation-unit"},
+      "required_properties": ["arm32_strstr_domain"], "assumptions": ["arm32-search-drivers", "arm32-search-frontend", "arm32-search-memcpy"],
+      "eva_auto_builtins": false,
+      "eva_builtins": ["memcpy:Frama_C_memcpy"],
+      "claims": [], "caller_coverage": "not-applicable", "search_classification": "calibration-only-no-confirmed-bug"
+    },
+    {
+      "id": "search.arm32.strncasecmp", "suite": "bug-search-arm32", "role": "calibration", "profile": "arm-gcc",
+      "source": "lib/string.c", "harness": "harness/string_calibration.c", "specs": "harness/arm32_search_specs.h",
+      "driver": "harness/arm32_search.c", "entry": "fragma_arm32_strncasecmp", "functions": ["strncasecmp"],
+      "analysis_functions": ["strncasecmp", "__tolower", "arm32_unknown_bytes"],
+      "analysis": "eva", "analysis_pipeline": {"kind": "rte-eva"}, "input_mode": "kernel-tu",
+      "kernel_tu_policy": {"schema_version": 1, "kind": "configured-arm32-v1"}, "provenance": {"mode": "translation-unit"},
+      "required_properties": ["arm32_strncasecmp_domain"], "assumptions": ["arm32-search-drivers", "arm32-search-frontend", "arm32-search-ctype-safety", "arm32-search-memcpy"],
+      "eva_auto_builtins": false,
+      "eva_builtins": ["memcpy:Frama_C_memcpy"],
+      "claims": [], "caller_coverage": "not-applicable", "search_classification": "calibration-only-no-confirmed-bug"
+    },
+    {
+      "id": "search.arm32.strnstr", "suite": "bug-search-arm32", "role": "calibration", "profile": "arm-gcc",
+      "source": "lib/string.c", "harness": "harness/string_calibration.c", "specs": "harness/arm32_search_specs.h",
+      "driver": "harness/arm32_search.c", "entry": "fragma_arm32_strnstr", "functions": ["strnstr"],
+      "analysis_functions": ["strnstr", "strlen", "memcmp", "arm32_unknown_bytes"],
+      "analysis": "eva", "analysis_pipeline": {"kind": "rte-eva"}, "input_mode": "kernel-tu",
+      "kernel_tu_policy": {"schema_version": 1, "kind": "configured-arm32-v1"}, "provenance": {"mode": "translation-unit"},
+      "required_properties": ["arm32_strnstr_domain"], "assumptions": ["arm32-search-drivers", "arm32-search-frontend", "arm32-search-memcpy"],
+      "eva_auto_builtins": false,
+      "eva_builtins": ["memcpy:Frama_C_memcpy"],
+      "claims": [], "caller_coverage": "not-applicable", "search_classification": "calibration-only-no-confirmed-bug"
+    },
+    {
+      "id": "search.arm32.strsep", "suite": "bug-search-arm32", "role": "calibration", "profile": "arm-gcc",
+      "source": "lib/string.c", "harness": "harness/string_calibration.c", "specs": "harness/arm32_search_specs.h",
+      "driver": "harness/arm32_search.c", "entry": "fragma_arm32_strsep", "functions": ["strsep"],
+      "analysis_functions": ["strsep", "strpbrk", "fragma_arm32_strchr_model", "arm32_unknown_bytes"],
+      "analysis": "eva", "analysis_pipeline": {"kind": "rte-eva"}, "input_mode": "kernel-tu",
+      "kernel_tu_policy": {"schema_version": 1, "kind": "configured-arm32-v1"}, "provenance": {"mode": "translation-unit"},
+      "required_properties": ["arm32_strsep_domain"], "assumptions": ["arm32-search-drivers", "arm32-search-frontend", "arm32-search-memcpy", "arm32-search-strchr"],
+      "eva_auto_builtins": false,
+      "eva_builtins": ["memcpy:Frama_C_memcpy"],
+      "claims": [], "caller_coverage": "not-applicable", "search_classification": "calibration-only-no-confirmed-bug"
+    },
+    {
+      "id": "search.arm32.memcmp", "suite": "bug-search-arm32", "role": "calibration", "profile": "arm-gcc",
+      "source": "lib/string.c", "harness": "harness/string_calibration.c", "specs": "harness/arm32_search_specs.h",
+      "driver": "harness/arm32_search.c", "entry": "fragma_arm32_memcmp", "functions": ["memcmp"],
+      "analysis_functions": ["memcmp", "arm32_unknown_bytes"],
+      "analysis": "eva", "analysis_pipeline": {"kind": "rte-eva"}, "input_mode": "kernel-tu",
+      "kernel_tu_policy": {"schema_version": 1, "kind": "configured-arm32-v1"}, "provenance": {"mode": "translation-unit"},
+      "required_properties": ["arm32_memcmp_domain"], "assumptions": ["arm32-search-drivers", "arm32-search-frontend", "arm32-search-memcpy"],
+      "eva_auto_builtins": false,
+      "eva_builtins": ["memcpy:Frama_C_memcpy"],
+      "claims": [], "caller_coverage": "not-applicable", "search_classification": "calibration-only-no-confirmed-bug"
+    },
+    {
+      "id": "search.arm32.strncmp", "suite": "bug-search-arm32", "role": "calibration", "profile": "arm-gcc",
+      "source": "lib/string.c", "harness": "harness/string_calibration.c", "specs": "harness/arm32_search_specs.h",
+      "driver": "harness/arm32_search.c", "entry": "fragma_arm32_strncmp", "functions": ["strncmp"],
+      "analysis_functions": ["strncmp", "arm32_unknown_bytes"],
+      "analysis": "eva", "analysis_pipeline": {"kind": "rte-eva"}, "input_mode": "kernel-tu",
+      "kernel_tu_policy": {"schema_version": 1, "kind": "configured-arm32-v1"}, "provenance": {"mode": "translation-unit"},
+      "required_properties": ["arm32_strncmp_domain"], "assumptions": ["arm32-search-drivers", "arm32-search-frontend", "arm32-search-memcpy"],
+      "eva_auto_builtins": false,
+      "eva_builtins": ["memcpy:Frama_C_memcpy"],
+      "claims": [], "caller_coverage": "not-applicable", "search_classification": "calibration-only-no-confirmed-bug"
+    }
+  ]
+}

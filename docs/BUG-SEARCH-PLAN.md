@@ -1,7 +1,9 @@
 # Fragma-first Linux kernel bug search
 
-Status: active next execution track, restricted initially to the configured
-32-bit ARMv7 `arm-gcc` / `multi_v7_defconfig` profile. This protocol
+Status: active execution track, restricted initially to the configured 32-bit
+ARMv7 `arm-gcc` / `multi_v7_defconfig` profile. The generic string batch is a
+frontend/driver calibration only. The primary batch is the eight-function
+recent-risk inventory in `config/bug-search-arm32-recent.json`. This protocol
 distinguishes analyzer discovery from source-review discovery and from
 verification of already changed code.
 
@@ -58,9 +60,34 @@ The RV32 `load_unaligned_zeropad()` defect is
 9. Record checkpatch/applicability/regression evidence where a kernel patch is
    justified. The project never sends email on this host.
 
+## Current ARM32 execution
+
+The recent-risk batch was frozen from commit metadata, zero-context changed
+function names, configured object availability/size and raw token counts before
+candidate-body review. It covers ARM cache synchronization, the BPF JIT,
+module relocations/PLTs, PCI resource alignment, uprobes and DMA scatterlists.
+
+The first canary, `pcibios_align_resource()`, exposed an important frontend
+boundary. Six attempts on the exact pinned `bios32.c` translation unit stopped
+in unrelated transitive headers. A mechanically extracted function slice then
+passed a 124-token identity gate against the pinned Git blob. Its first Eva run
+correctly exposed a wrong callback declaration in the project model; after that
+source-derived declaration was fixed, the final bounded RTE/Eva run completed
+with 20 valid properties, no unknown/invalid properties and no warnings. It is
+classified `verified-no-finding`, restricted to the stated driver and external
+models—not as whole-TU or functional verification.
+The compact [checkpoint record](../results/arm32-recent-pci-20260907/SUMMARY.md)
+contains the exact scope, identities and retained-output hashes.
+
+No Fragma-found Linux bug has been confirmed in this campaign yet. The next
+strict analyzer-first target is the recently changed ARM module relocation
+function `module_frob_arch_sections()`. `get_module_plt()` remains useful for
+calibration, but its body was exposed during dependency inspection before an
+analyzer run and is conservatively ineligible for the strict discovery label.
+
 ## First campaign acceptance
 
-- [ ] Freeze a mechanically selected 5–10-function ARM32 batch before body
+- [x] Freeze a mechanically selected 5–10-function ARM32 batch before body
   review. Prefer 32-bit word/size arithmetic, 31/32-bit shift boundaries,
   sign/zero extension, pointer-range calculations and page-boundary helpers.
 - [ ] Run unchanged-source Eva/RTE triage under at least one current configured

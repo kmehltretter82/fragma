@@ -432,7 +432,7 @@ a proof of the whole kernel or automatic verification of every caller.
 | Common byte helpers | Dated nine-GCC-profile scoped L2 plus one current MIPS32el target. MIPS passes 19 model checks, 94 ordinary goals, 82 properties and all 27 compiler/control commands. | Replay the nine GCC targets at the post-registration identity; remaining architectures, kernel callers and runtime corroboration. |
 | RISC-V encoders | Dated source/model/proof gates for seven helpers and five project witnesses: 119 ordinary goals, 119 dependencies and 47 postconditions. | Replay at the post-registration identity; helper-specific calibration, kernel callers and a documented encoder L2 scope. |
 | ARM64 scalar extraction | Dated runtime-safety gates for two cpuid helpers: six ordinary goals and ten selected dependencies with genuine-header checks. | Replay at the post-registration identity; add functional contracts/calibration and verify kernel callers. |
-| Kernel bug search | RV32 `load_unaligned_zeropad()` is a review-found defect, dynamically reproduced in QEMU; identical-config A/B passes after a two-line fix and the user sent it manually. | Execute the first analyzer-led campaign on configured ARM32; count only analyzer-first, concretely reproduced violations as Fragma-found. Track RV32 upstream review separately. |
+| Kernel bug search | RV32 `load_unaligned_zeropad()` is a review-found defect, dynamically reproduced in QEMU; identical-config A/B passes after a two-line fix and the user sent it manually. The recent-risk ARM32 batch is frozen, and its first source-identical canary (`pcibios_align_resource()`) passes bounded RTE/Eva with 20 valid properties and no warnings or surviving leads. | Analyze the remaining seven recent ARM32 candidates, starting with strict analyzer-first `module_frob_arch_sections()`; add functional/WP passes for survivors. Count only analyzer-first, concretely reproduced violations as Fragma-found. Track RV32 upstream review separately. |
 | Concurrency | C0/C1 infrastructure, limited C2 mutex/IRQ pilots, a 92-check LKMM baseline, a 135-check release/acquire pilot, a 162-check atomic/RMW pilot and a 1036-check IPC refcount lifetime/progress pilot are accepted. Six narrow kernel concurrency properties now exist: two access-protection claims, trace tgid-map publication ordering, module-statistics no-lost-update atomicity, IPC final-put/get-unless-zero exclusion with eleven checked SMP mappings, and bounded-quiescent strong-CAS retry progress with native/UML x86-64 and s390x mappings. A separate 609-check audit evaluates all eight existing LL/SC-bearing profiles and promotes none. | C3 architecture-backed unbounded/LL/SC progress, broader lockless lifetime behavior and remaining architecture mappings; then C4 RCU. Broader IRQ classes, functional protocols and the preserved unlocked HDQ accesses remain open. |
 
 The registry's 24 distinct kernel functions reach the plan's initial numerical
@@ -692,8 +692,10 @@ The bounded review, RV32 A/B handoff, limited C2 pilot, C3 LKMM baseline,
 source-linked release/acquire pilot, atomic/RMW pilot and IPC refcount
 lifetime/bounded-progress pilot are complete at their narrow boundaries. The
 eight-profile LL/SC admission evaluation is also complete, with zero promotion.
-The scoped MIPS32el L2 proof is now complete. Immediate work is the configured
-ARM32 Fragma-first bug-search campaign, followed by post-registration proof
+The scoped MIPS32el L2 proof is now complete. The ARM32 Fragma-first campaign
+has frozen its recent-risk batch and completed one bounded canary with no
+finding; seven candidates plus functional follow-up remain. Immediate work is
+the rest of that configured ARM32 campaign, followed by post-registration proof
 replay, tracking the manually sent RV32 patch, and further C3 protocol or
 architecture-backed progress work.
 Mappings for architectures outside the refcount pilot's eleven-profile set,

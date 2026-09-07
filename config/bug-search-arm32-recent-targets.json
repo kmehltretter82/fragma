@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+  "targets": [
+    {
+      "id": "search.arm32.recent.pcibios_align_resource",
+      "suite": "bug-search-arm32-recent",
+      "role": "calibration",
+      "profile": "arm-gcc",
+      "build_id": "arm-gcc-recent-v2",
+      "source": "arch/arm/kernel/bios32.c",
+      "harness": "harness/arm32_recent_pci_slice.c",
+      "specs": "harness/arm32_recent_specs.h",
+      "driver": "harness/arm32_recent_pci_driver.c",
+      "entry": "fragma_arm32_pcibios_align_resource",
+      "functions": ["pcibios_align_resource"],
+      "analysis_functions": ["pcibios_align_resource"],
+      "analysis": "eva",
+      "analysis_pipeline": {"kind": "rte-eva"},
+      "input_mode": "standalone",
+      "provenance": {"mode": "functions"},
+      "required_properties": ["arm32_pcibios_scalar_domain"],
+      "assumptions": ["arm32-recent-drivers", "arm32-recent-slice-frontend", "arm32-recent-pci-dependencies"],
+      "eva_auto_builtins": false,
+      "claims": [],
+      "caller_coverage": "allocate_resource-callback-shape-first-bounded-slice-pass",
+      "search_classification": "verified-no-finding-bounded-rte"
+    }
+  ]
+}

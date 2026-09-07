@@ -65,9 +65,19 @@ def load_registry(root: Path) -> tuple[str, dict, dict]:
             raise SuiteError(f"unknown profile for {target['id']}")
         if target.get("analysis") not in ("wp", "eva"):
             raise SuiteError(f"unsupported analysis for {target['id']}")
+        build_id = target.get("build_id", target["profile"])
+        if (not isinstance(build_id, str) or
+                not re.fullmatch(r"[a-z0-9][a-z0-9_-]*", build_id)):
+            raise SuiteError(f"invalid build ID for {target['id']}")
         for name in target.get("assumptions", []):
             if name not in assumptions:
                 raise SuiteError(f"undeclared assumption {name} for {target['id']}")
+        provenance_mode = target.get("provenance", {}).get("mode")
+        if provenance_mode == "pinned-translation-unit":
+            if target.get("harness") is not None or target.get("input_mode") != "kernel-tu":
+                raise SuiteError(f"invalid pinned source input for {target['id']}")
+        elif not target.get("harness"):
+            raise SuiteError(f"missing harness for {target['id']}")
         for field in ("harness", "driver", "specs", "kernel_model_check", "wp_strategy_file"):
             if target.get(field):
                 path = (root / target[field]).resolve()
@@ -391,8 +401,10 @@ def execute_target(root: Path, kernel: Path, revision: str, target: dict,
         evidence["integrity_inputs"] = integrity.merge_records(evidence["integrity_inputs"],
                                                                  integrity.metadata_records(audit))
         goals = report.parse_wp_report(output / "wp.json") if target["analysis"] == "wp" else []
+        analysis_source = (Path(prepared["analysis_source"])
+                           if "analysis_source" in prepared else root / target["harness"])
         properties = report.parse_properties(output / "properties.tsv",
-            source_files=[root / target["harness"], *driver_paths], source_root=Path(prepared["cwd"]),
+            source_files=[analysis_source, *driver_paths], source_root=Path(prepared["cwd"]),
             selected_functions=[*target.get("analysis_functions", target["functions"]),
                                 *([target["entry"]] if target["analysis"] == "eva" else [])])
         evaluation = report.evaluate_target(target, goals, properties,
@@ -508,27 +520,36 @@ def run_suite(root: Path, kernel: Path, *, ids: list[str], suites: list[str],
                         "message": "Analysis was not attempted because toolchain preflight failed",
                         "preflight_errors": tools["issues"]}]}})
         return write_terminal_summary(summary)
-    builds = {}
-    for profile_id in dict.fromkeys(target["profile"] for target in selected):
-        print(f"Checking profile {profile_id} ...", flush=True)
+    builds, models = {}, {}
+    contexts = list(dict.fromkeys(
+        (target["profile"], target.get("build_id", target["profile"]))
+        for target in selected))
+    for profile_id, build_id in contexts:
+        label = profile_id if build_id == profile_id else profile_id + "@" + build_id
+        print(f"Checking profile/build {label} ...", flush=True)
         try:
-            builds[profile_id] = inputs.load_build(root, profile_id, revision)
+            builds[(profile_id, build_id)] = inputs.load_build(
+                root, profile_id, revision,
+                None if build_id == profile_id else build_id)
             model = profiles.validate_profile(root, profile_id, kernel=kernel,
-                frama_c=tools["tools"]["frama-c"]["path"], output=output / ("profile-" + profile_id),
-                kernel_build=Path(builds[profile_id]["path"]), env=env)
+                frama_c=tools["tools"]["frama-c"]["path"],
+                output=output / ("profile-" + label.replace("@", "--")),
+                kernel_build=Path(builds[(profile_id, build_id)]["path"]), env=env)
         except (OSError, ValueError, KeyError) as exc:
             model = {"status": "failed", "level": "L0", "error": str(exc)}
-        summary["profiles"][profile_id] = model
+        models[(profile_id, build_id)] = model
+        summary["profiles"][label] = model
         write_json(output / "summary.json", summary)
     for target in selected:
         print(f"Analyzing {target['id']} ...", flush=True)
-        model = summary["profiles"][target["profile"]]
+        context = (target["profile"], target.get("build_id", target["profile"]))
+        model = models[context]
         if model.get("status") != "passed" or model.get("level") != "L1":
             evidence = {"target": target, "status": "profile-blocked", "accepted": False,
                         "evaluation": {"target_id": target["id"], "accepted": False,
                                        "verified": False, "status": "profile-blocked"}}
         else:
-            evidence = execute_target(root, kernel, revision, target, model, builds[target["profile"]],
+            evidence = execute_target(root, kernel, revision, target, model, builds[context],
                 tools, ledger, output / target["id"], env, timeout=timeout, jobs=jobs, provers=provers,
                 native_evidence=native_routes.get(target["id"]),
                 wall_timeout=limits["wall_timeout_seconds"])

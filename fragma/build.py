@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import time
@@ -12,7 +13,10 @@ from .sources import SourceError, sha256
 
 
 def prepare_build(root: Path, source: Path, profile: dict, env: dict,
-                  *, seed_config: Path | None = None, jobs: int = 4) -> dict:
+                  *, seed_config: Path | None = None, jobs: int = 4,
+                  build_id: str | None = None,
+                  config_enable: list[str] | None = None,
+                  object_targets: list[str] | None = None) -> dict:
     root, source = root.resolve(), source.resolve()
     if jobs < 1:
         raise SourceError("jobs must be positive")
@@ -23,7 +27,27 @@ def prepare_build(root: Path, source: Path, profile: dict, env: dict,
     profile_id = profile["id"]
     if not profile_id or any(c not in "abcdefghijklmnopqrstuvwxyz0123456789_-" for c in profile_id):
         raise SourceError("invalid profile ID")
-    output = root / "build" / "kernel" / profile_id
+    build_id = profile_id if build_id is None else build_id
+    if (not isinstance(build_id, str) or
+            not re.fullmatch(r"[a-z0-9][a-z0-9_-]*", build_id)):
+        raise SourceError("invalid build ID")
+    config_enable = [] if config_enable is None else config_enable
+    if (not isinstance(config_enable, list) or
+            any(not isinstance(symbol, str) or
+                not re.fullmatch(r"[A-Z][A-Z0-9_]*", symbol)
+                or symbol.startswith("CONFIG_")
+                for symbol in config_enable) or
+            len(set(config_enable)) != len(config_enable)):
+        raise SourceError("invalid config-enable inventory")
+    object_targets = ["lib/string.o"] if object_targets is None else object_targets
+    if (not isinstance(object_targets, list) or not object_targets or
+            any(not isinstance(target, str) or
+                not re.fullmatch(r"[A-Za-z0-9_./+-]+\.o", target) or
+                target.startswith(("-", "/", "../")) or "/../" in target
+                for target in object_targets) or
+            len(set(object_targets)) != len(object_targets)):
+        raise SourceError("invalid or empty kernel object-target inventory")
+    output = root / "build" / "kernel" / build_id
     if output.exists():
         raise SourceError(f"build directory already exists; retain or explicitly choose a fresh workspace: {output}")
     declared_seed_hash = profile["kernel"].get("seed_config_sha256")
@@ -70,6 +94,11 @@ def prepare_build(root: Path, source: Path, profile: dict, env: dict,
               "source_tree": identity["git_tree"], "compiler": compiler,
               "compiler_sha256": sha256(Path(compiler)), "commands": [],
               "status": "running", "output": str(output)}
+    if build_id != profile_id:
+        record["build_id"] = build_id
+    if config_enable:
+        record["config_enable"] = list(config_enable)
+    record["object_targets"] = list(object_targets)
     if llvm_receipt is not None:
         record["llvm"] = llvm_receipt
     config = output / ".config"
@@ -79,9 +108,15 @@ def prepare_build(root: Path, source: Path, profile: dict, env: dict,
         recipe = ["olddefconfig"]
     else:
         recipe = profile["kernel"]["config_recipe"]
-    commands = [command + recipe, command + [f"-j{jobs}", "prepare", "lib/string.o"],
-                ["python3", str(source / "scripts/clang-tools/gen_compile_commands.py"),
-                 "-d", str(output), "-o", str(output / "compile_commands.json")]]
+    commands = [command + recipe]
+    if config_enable:
+        configure = [str(source / "scripts/config"), "--file", str(config)]
+        for symbol in config_enable:
+            configure += ["--enable", symbol]
+        commands += [configure, command + ["olddefconfig"]]
+    commands += [command + [f"-j{jobs}", "prepare", *object_targets],
+                 ["python3", str(source / "scripts/clang-tools/gen_compile_commands.py"),
+                  "-d", str(output), "-o", str(output / "compile_commands.json")]]
     with (output / "prepare.log").open("w") as log:
         for argv in commands:
             started = time.monotonic()
@@ -106,6 +141,11 @@ def prepare_build(root: Path, source: Path, profile: dict, env: dict,
     record["files"] = {name: sha256(output / name) for name in (
         ".config", "include/generated/autoconf.h", "include/config/auto.conf",
         "compile_commands.json") if (output / name).is_file()}
+    for target in object_targets:
+        command_file = str(Path(target).with_name("." + Path(target).name + ".cmd"))
+        for name in (target, command_file):
+            if (output / name).is_file():
+                record["files"][name] = sha256(output / name)
     if llvm_receipt is not None:
         record["files"].update({name: sha256(output / name) for name in (
             "lib/string.o", "lib/.string.o.cmd", "prepare.log") if (output / name).is_file()})

@@ -36,6 +36,32 @@ def _digest(value):
     return hashlib.sha256(json.dumps(value, sort_keys=True).encode()).hexdigest()
 
 
+def _normalize_machdep_compiler_dialect(profile, machine):
+    """Make Frama-C's compiler field describe syntax, not an executable.
+
+    make_machdep uses the --compiler argument both to run ABI probes and as the
+    generated YAML value.  For cross compilers those are distinct identities:
+    Frama-C accepts the literal dialects ``gcc`` and ``clang`` for GNU syntax,
+    while the executable, target, flags and hash are recorded separately.
+    """
+    family = profile.get("compiler_family", "gcc")
+    if family not in ("gcc", "clang"):
+        raise ProfileError("Unsupported machine-description compiler dialect")
+    path = Path(machine)
+    text = path.read_text()
+    matches = list(re.finditer(r"(?m)^compiler:[ \t]*([^\r\n]+?)[ \t]*$", text))
+    if len(matches) != 1:
+        raise ProfileError("Generated machine description has no unique compiler field")
+    observed = matches[0].group(1).strip()
+    if observed != profile["compiler"]:
+        raise ProfileError("Generated machine-description compiler identity changed")
+    rewritten = text[:matches[0].start()] + "compiler: " + family + text[matches[0].end():]
+    path.write_text(rewritten)
+    return {"schema_version": 1, "status": "checked", "generated_value": observed,
+            "dialect": family, "changed_fields": ["compiler"],
+            "executable_identity_source": "profile compiler receipt"}
+
+
 def load_architectures(root):
     data = json.loads((Path(root) / "config/architectures.json").read_text())
     if data.get("schema_version") != 1:
@@ -897,6 +923,8 @@ def validate_profile(root, profile_or_id, *, kernel=None, frama_c=None, output=N
                                "probe_input_hashes": {path.name: _hash(path) for path in sorted(helper.parent.iterdir())
                                                       if path.suffix in (".c", ".h")}}
         check("machine-generation", generation["exit_code"] == 0 and not generation["stderr"].strip(), generation)
+        result["machdep_compiler_dialect"] = _normalize_machdep_compiler_dialect(profile, machine)
+        check("machine-compiler-dialect", True, result["machdep_compiler_dialect"])
         values = check_machine_description(profile, machine)
         check("machine-fields", True, values)
         result["machdep"] = {"path": str(machine), "sha256": _hash(machine), "checked_fields": values}
@@ -986,7 +1014,7 @@ def validate_profile(root, profile_or_id, *, kernel=None, frama_c=None, output=N
     except (ProfileError, OSError, subprocess.SubprocessError, KeyError, ValueError) as exc:
         result["status"] = "failed" if result["checks"] else "blocked"
         result["gaps"].append(str(exc))
-    result["fingerprint"] = _digest({k: result.get(k) for k in ("profile_sha256", "compiler", "frama_c", "machdep", "generator", "generator_headers", "header_hashes", "exported_header_inputs", "fixture_sha256", "build", "execution_environment", "analysis", "validated_model_policy", "analysis_policy_audit")})
+    result["fingerprint"] = _digest({k: result.get(k) for k in ("profile_sha256", "compiler", "frama_c", "machdep", "machdep_compiler_dialect", "generator", "generator_headers", "header_hashes", "exported_header_inputs", "fixture_sha256", "build", "execution_environment", "analysis", "validated_model_policy", "analysis_policy_audit")})
     (output / "profile.json").write_text(json.dumps(result, indent=2) + "\n")
     return result
 

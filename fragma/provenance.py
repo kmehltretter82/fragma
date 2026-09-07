@@ -283,13 +283,21 @@ def check_target(target: dict[str, Any], kernel_tree: Path, revision: str | None
     result: dict[str, Any] = {"passed": False, "errors": [], "functions": []}
     try:
         source_path = _relative_path(target.get("source"), "source")
-        harness_path = _relative_path(target.get("harness"), "harness")
         source_identity: dict[str, Any] = {"path": source_path, "kind": "git-blob" if revision else "working-tree"}
         result["source"] = source_identity
-        result["harness"] = {"path": harness_path}
         mode = target.get("provenance", {}).get("mode")
-        if mode not in ("translation-unit", "functions"):
+        if mode not in ("translation-unit", "functions", "pinned-translation-unit"):
             raise ProvenanceError(f"unsupported provenance mode: {mode!r}")
+        if mode == "pinned-translation-unit":
+            if revision is None:
+                raise ProvenanceError("pinned translation-unit mode requires a revision")
+            if target.get("harness") is not None:
+                raise ProvenanceError("pinned translation units do not accept a project harness")
+            harness_path = source_path
+            result["harness"] = {"path": source_path, "kind": "pinned-source-identity"}
+        else:
+            harness_path = _relative_path(target.get("harness"), "harness")
+            result["harness"] = {"path": harness_path, "kind": "project-copy"}
         result["mode"] = mode
         functions = target.get("functions", [target["function"]] if "function" in target else [])
         if (not isinstance(functions, list) or not functions
@@ -323,7 +331,8 @@ def check_target(target: dict[str, Any], kernel_tree: Path, revision: str | None
         except ProvenanceError as error:
             source_identity["checkout_read_error"] = str(error)
             source_identity["checkout_matches_source"] = False
-        harness_bytes = _read_local(Path(root), harness_path)
+        harness_bytes = (source_bytes if mode == "pinned-translation-unit" else
+                         _read_local(Path(root), harness_path))
         result["harness"]["sha256"] = hashlib.sha256(harness_bytes).hexdigest()
         try:
             source = source_bytes.decode("utf-8")
@@ -333,7 +342,7 @@ def check_target(target: dict[str, Any], kernel_tree: Path, revision: str | None
         source_tokens, harness_tokens = tokenize(source), tokenize(harness)
         result["source"]["token_sha256"] = token_hash(source_tokens)
         result["harness"]["token_sha256"] = token_hash(harness_tokens)
-        if mode == "translation-unit" and source_tokens != harness_tokens:
+        if mode in ("translation-unit", "pinned-translation-unit") and source_tokens != harness_tokens:
             result["errors"].append("translation unit has non-comment token changes")
         for name in functions:
             original = extract_function(source, name)

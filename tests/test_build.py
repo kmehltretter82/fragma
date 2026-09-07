@@ -15,6 +15,7 @@ import unittest
 from unittest.mock import patch
 
 from fragma.build import prepare_build
+from fragma.inputs import load_build
 from fragma.sources import SourceError, sha256
 
 
@@ -119,6 +120,54 @@ class BuildTests(unittest.TestCase):
         self.assertEqual(record["commands"][1]["argv"], base + ["-j4", "prepare", "lib/string.o"])
         self.prepare_llvm.assert_not_called()
         self.verify_llvm.assert_not_called()
+
+    def test_named_build_records_config_delta_and_exact_object_inventory(self):
+        objects = ["arch/arm/kernel/bios32.o", "arch/arm/net/bpf_jit_32.o"]
+        symbols = ["BPF_SYSCALL", "BPF_JIT"]
+        record = prepare_build(
+            self.root, self.source, self.profile, self.env, jobs=2,
+            build_id="arm32-recent", config_enable=symbols,
+            object_targets=objects,
+        )
+        output = self.root / "build/kernel/arm32-recent"
+        base = ["make", "-C", str(self.source), f"O={output}", "ARCH=x86",
+                f"CC={self.bin / 'gcc'}"]
+        configure = [str(self.source / "scripts/config"), "--file",
+                     str(output / ".config"), "--enable", "BPF_SYSCALL",
+                     "--enable", "BPF_JIT"]
+        expected = [base + ["defconfig"], configure, base + ["olddefconfig"],
+                    base + ["-j2", "prepare", *objects],
+                    self._database_command(output)]
+        self.assertEqual([row["argv"] for row in record["commands"]], expected)
+        self.assertEqual(record["build_id"], "arm32-recent")
+        self.assertEqual(record["profile_id"], self.profile["id"])
+        self.assertEqual(record["config_enable"], symbols)
+        self.assertEqual(record["object_targets"], objects)
+        self.assertEqual(record["output"], str(output))
+        loaded = load_build(self.root, self.profile["id"], self.identity["revision"],
+                            "arm32-recent")
+        self.assertEqual(loaded["build_id"], "arm32-recent")
+        with self.assertRaisesRegex(SourceError, "revision/profile"):
+            load_build(self.root, "another-profile", self.identity["revision"],
+                       "arm32-recent")
+
+    def test_invalid_named_build_inputs_fail_before_output(self):
+        cases = [
+            {"build_id": "../escape"},
+            {"build_id": True},
+            {"config_enable": ["CONFIG_BPF_JIT"]},
+            {"config_enable": ["BPF_JIT", "BPF_JIT"]},
+            {"object_targets": []},
+            {"object_targets": ["../outside.o"]},
+            {"object_targets": ["arch/arm/mm/fault.c"]},
+            {"object_targets": ["-f.o"]},
+        ]
+        for index, options in enumerate(cases):
+            profile = {**self.profile, "id": f"invalid-build-{index}"}
+            with self.subTest(options=options), self.assertRaises(SourceError):
+                prepare_build(self.root, self.source, profile, self.env, **options)
+            self.assertFalse(self._output(profile).exists())
+        self.run.assert_not_called()
 
     def test_gcc_subarch_is_retained_on_both_make_commands(self):
         profile = deepcopy(self.profile)
