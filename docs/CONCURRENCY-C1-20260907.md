@@ -1,7 +1,8 @@
 # Concurrency C1 identity, scope and evidence gates
 
-Status: **C1 infrastructure accepted on 2026-09-07; zero Linux concurrency
-targets accepted; C2-C4 remain open**.
+Status: **C1 infrastructure accepted and renewed on 2026-09-07; zero Linux
+concurrency targets are accepted by C1 itself. Two narrow C2 properties were
+accepted later; C3-C4 remain open**.
 
 C1 turns the C0 capability observations into explicitly scoped, dependency-bound
 records. It prevents a successful calibration from silently becoming a claim
@@ -31,7 +32,7 @@ without modifying it:
 
 ```sh
 python3 -m fragma concurrency-c1 \
-  --c0-result results/concurrency-c0-20260907-06 \
+  --c0-result results/concurrency-c0-20260907-07 \
   --output results/concurrency-c1-NEW
 ```
 
@@ -39,15 +40,15 @@ Existing outputs are never overwritten. No installation or `sudo` is involved.
 
 ## Accepted current result
 
-The final [C0 result](../results/concurrency-c0-20260907-06/SUMMARY.md) pins the
+The final [C0 result](../results/concurrency-c0-20260907-07/SUMMARY.md) pins the
 current C0 runner, CLI, tests, source fixtures, provider binary, bundled models,
 implementation sources, options and tool lock. C1 then re-parses every report
 CSV and stdout/stderr diagnostic, recomputes every expected outcome, checks each
 argv/environment/exit status, compares the per-case result with the terminal C0
 summary, and hashes 47 raw C0 artifacts.
 
-The [C1 result](../results/concurrency-c1-20260907-02/SUMMARY.md) passes all 82
-checks. Its [machine-readable audit](../results/concurrency-c1-20260907-02/pilot-audit.json)
+The [C1 result](../results/concurrency-c1-20260907-03/SUMMARY.md) passes all 82
+checks. Its [machine-readable audit](../results/concurrency-c1-20260907-03/pilot-audit.json)
 records 25 current C0 inputs, target-specific dependency digests, four C1
 implementation/schema identities, all raw-artifact hashes, support blockers and
 the complete scope metadata. All nine capability calibrations are accepted as
@@ -77,7 +78,7 @@ explicitly `supported`; `calibrated`, `partial`, `unsupported` and
 A copied C0 receipt was changed only by replacing the recorded SHA-256 identity
 of `mthread_pthread.c` with a false value; the provider/model files themselves
 were not modified. The resulting
-[negative-control summary](../results/concurrency-c1-stale-control-20260907-02/SUMMARY.md)
+[negative-control summary](../results/concurrency-c1-stale-control-20260907-03/SUMMARY.md)
 is a required **FAIL**:
 
 - the overall input-freshness gate detects exactly that model dependency;
@@ -88,7 +89,7 @@ This demonstrates dependency-specific invalidation instead of globally
 rewriting old observations or upgrading unaffected sequential evidence. Unit
 controls also verify that unknown/not-assessed support blocks verification and
 that the unsupported join primitive remains an explicit blocker. The combined
-[914-test project run](../results/tests-concurrency-c2-20260907.log) passes with
+[928-test project run](../results/tests-concurrency-c2-irq-20260907.log) passes with
 20 pre-existing conditional skips.
 
 ## C1 boundary and next work
@@ -102,7 +103,8 @@ benign and negative controls, and only then change the relevant statuses to
 `supported` for precisely stated properties. Weak-memory atomics and RCU remain
 separate C3/C4 gates.
 
-Subsequent work completed the first such bounded connection in the
-[C2 `DO_ONCE_SLEEPABLE` mutex pilot](CONCURRENCY-C2-20260907.md). That later
-result accepts one UP/process-context access-protection property in its own C2
-scope; it does not alter or upgrade any of the nine C1 calibration records.
+Subsequent work completed two such bounded connections in the
+[C2 `DO_ONCE_SLEEPABLE` mutex pilot](CONCURRENCY-C2-20260907.md) and
+[C2 OMAP HDQ IRQ pilot](CONCURRENCY-C2-IRQ-20260907.md). Those later results
+accept two access-protection properties in their own C2 scopes; they do not
+alter or upgrade any of the nine C1 calibration records.

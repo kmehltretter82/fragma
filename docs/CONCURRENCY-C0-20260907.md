@@ -1,9 +1,10 @@
 # Mthread + Eva C0 capability record
 
-Status: **C0 accepted and renewed on 2026-09-07; C1 and one narrow C2 mutex
-property were subsequently accepted; general kernel concurrency remains open**.
+Status: **C0 accepted and renewed on 2026-09-07; C1 and two narrow C2
+properties were subsequently accepted; general kernel concurrency remains open**.
 See the [C1 record](CONCURRENCY-C1-20260907.md) and
-[C2 mutex record](CONCURRENCY-C2-20260907.md).
+[C2 mutex record](CONCURRENCY-C2-20260907.md), followed by the
+[C2 IRQ record](CONCURRENCY-C2-IRQ-20260907.md).
 
 This milestone establishes what the project's locked Frama-C provider actually
 does on small, project-owned concurrent models. It does not establish that Linux
@@ -29,7 +30,7 @@ the Linux Kernel Memory Model are soundly modeled.
 The runner refuses an existing output path. It retains version/help inventory,
 argv, stdout, stderr, Frama-C report CSV, parsed results, and SHA-256 identities
 locally. The compact accepted result is
-[results/concurrency-c0-20260907-06/SUMMARY.md](../results/concurrency-c0-20260907-06/SUMMARY.md).
+[results/concurrency-c0-20260907-07/SUMMARY.md](../results/concurrency-c0-20260907-07/SUMMARY.md).
 
 ## Empirically established behavior
 
@@ -96,12 +97,13 @@ All nine expected classes pass: valid property, invalid property, unknown
 property, protected access, possible unprotected race, automatic interrupt
 registration, lock-initialization gap, unsupported primitive, and tool exit.
 Focused concurrency runner/parser tests pass; the combined project run is
-[914 passing tests](../results/tests-concurrency-c2-20260907.log), with 20
+[928 passing tests](../results/tests-concurrency-c2-irq-20260907.log), with 20
 pre-existing conditional skips.
 
 This meets C0 because the actual provider and its limitations are now pinned,
 exercised, and distinguished in evidence. It awards no Linux concurrency target.
 The subsequent C1 milestone adds the required identities, stale-evidence gates
-and scope fields without upgrading these calibrations. The later C2 mutex pilot
-accepts only one independently gated UP/process-context access-protection
-property; interrupt/SMP, weak-memory and RCU work remains open.
+and scope fields without upgrading these calibrations. The later C2 mutex and
+IRQ pilots accept two independently gated access-protection properties. They do
+not upgrade C0's automatic-handler mechanism or establish general interrupt,
+weak-memory or RCU support.

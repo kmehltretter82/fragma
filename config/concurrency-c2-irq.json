@@ -1,0 +1,384 @@
+{
+  "schema_version": 1,
+  "id": "omap-hdq-hardirq-spinlock-arm-smp-c2",
+  "kernel": {
+    "revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+    "git_tree": "054b6818c409ab20ae89b1031a1a7c358f673d87",
+    "source_root": "build/sources/linux-b9b3e33b70b71",
+    "source_receipt": "build/sources/linux-b9b3e33b70b71/.fragma-source.json",
+    "profile": {
+      "id": "arm-omap2plus-c2",
+      "arch": "arm",
+      "config_recipe": "omap2plus_defconfig",
+      "build_dir": "build/kernel/arm-omap2plus-c2",
+      "config": "build/kernel/arm-omap2plus-c2/.config",
+      "config_sha256": "acf44274ccdbae68da6e356a26f5573220b82e2177518892579e2f02b689a89e",
+      "compiler": "/usr/bin/arm-linux-gnueabi-gcc",
+      "compiler_realpath": "/usr/bin/arm-linux-gnueabi-gcc-15",
+      "compiler_sha256": "b417460992a88c2df65d82f82c6af452210d25e8def84d35701393063afd30bd",
+      "compiler_version_line": "arm-linux-gnueabi-gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+      "cross_compile": "/usr/bin/arm-linux-gnueabi-",
+      "required_config": {
+        "CONFIG_ARM": "y",
+        "CONFIG_ARCH_OMAP": "y",
+        "CONFIG_ARCH_OMAP2PLUS": "y",
+        "CONFIG_CPU_BIG_ENDIAN": "n",
+        "CONFIG_SMP": "y",
+        "CONFIG_PREEMPT_VOLUNTARY": "y",
+        "CONFIG_PREEMPT_RT": "n",
+        "CONFIG_W1": "m",
+        "CONFIG_HDQ_MASTER_OMAP": "m",
+        "CONFIG_PROVE_LOCKING": "n",
+        "CONFIG_DEBUG_SPINLOCK": "n",
+        "CONFIG_DEBUG_LOCK_ALLOC": "n"
+      }
+    },
+    "source_identities": {
+      "build/sources/linux-b9b3e33b70b71/.fragma-source.json": "93cffd1d937e730bf3010bfc904db8ce5c8ebc8df6e8d610032dda667c2950bd",
+      "build/sources/linux-b9b3e33b70b71/drivers/w1/masters/omap_hdq.c": "dad2bea66e8bfc4ccc0522532e6ec360927bffd6a29a1d5c77cc5e007b2da6ae",
+      "build/sources/linux-b9b3e33b70b71/drivers/w1/masters/Makefile": "97e2ab17882fab1b01404bce51246e0bf5ec874b6bad7337c23c46673719931d",
+      "build/sources/linux-b9b3e33b70b71/drivers/w1/masters/Kconfig": "47f79739a5d82a54f995b18a39abd44e6987986dafaca7d6bbad1980acf03fb8",
+      "build/sources/linux-b9b3e33b70b71/include/linux/spinlock.h": "66efd3c65e5d83b93748c6adfb09f20103398e7a8649b1a303f3ac502cc5f93b",
+      "build/sources/linux-b9b3e33b70b71/include/linux/spinlock_api_smp.h": "69a7b2867e99c726a3ea633e164e682686303b783678c6a092f8789bc70be30b",
+      "build/sources/linux-b9b3e33b70b71/include/linux/irqflags.h": "a75ca718d7055b83e41215e619c410b8cd646a6aa07ea7bf2eb272b07288efd2",
+      "build/sources/linux-b9b3e33b70b71/include/linux/preempt.h": "f576bf81e5fcdcd3ea97ee423a162343f766cf00456514a0c281744c007a269b",
+      "build/sources/linux-b9b3e33b70b71/arch/arm/include/asm/irqflags.h": "3a95eead5525e3c709fbbe8eb2b1de9597ab9dff3bcf225d79f36db3e1e29d27",
+      "build/sources/linux-b9b3e33b70b71/arch/arm/configs/omap2plus_defconfig": "bce4e47803a800f21f710fb0b21211bff629b429245949b3e4a922a1cc4c1f69",
+      "build/sources/linux-b9b3e33b70b71/kernel/locking/spinlock.c": "ff0974dd5c6197bf864431acb20c1d3c031f2fb26a92192000ff9f6c54bd0997"
+    },
+    "copied_functions": [
+      "hdq_reset_irqstatus",
+      "hdq_isr"
+    ],
+    "probe_contract": {
+      "function": "omap_hdq_probe",
+      "ordered_calls": [
+        "devm_kzalloc",
+        "spin_lock_init",
+        "devm_request_irq",
+        "omap_hdq_break"
+      ],
+      "registered_handler": "hdq_isr",
+      "first_process_caller": "omap_hdq_break",
+      "selected_process_helper": "hdq_reset_irqstatus"
+    },
+    "configured_compile": {
+      "target": "drivers/w1/masters/omap_hdq.o",
+      "object": "build/kernel/arm-omap2plus-c2/drivers/w1/masters/omap_hdq.o",
+      "command_file": "build/kernel/arm-omap2plus-c2/drivers/w1/masters/.omap_hdq.o.cmd",
+      "elf_class": 1,
+      "elf_data": 1,
+      "elf_machine": 40,
+      "required_command_tokens": [
+        "/usr/bin/arm-linux-gnueabi-gcc",
+        "-mlittle-endian",
+        "-D__LINUX_ARM_ARCH__=6",
+        "-march=armv6k",
+        "-DMODULE",
+        "drivers/w1/masters/omap_hdq.o"
+      ]
+    }
+  },
+  "model": {
+    "c1_model_id": "framac-33-mthread-eva-c0",
+    "fixture": "concurrency/c2/omap_hdq_irq.c",
+    "fixture_sha256": "9a6e0c889eb08e4fee3c97891a6f687f63eac212e8d4839fd1753962b1af5572",
+    "thread_library": "pthreads",
+    "common_options": [
+      "-eva",
+      "-mthread",
+      "-eva-slevel",
+      "20",
+      "-eva-split-return",
+      "full",
+      "-eva-interprocedural-splits",
+      "-mt-shared-values",
+      "2",
+      "-mt-shared-accesses-synchronization",
+      "-mt-write-races",
+      "-no-warn-unaligned-pointer",
+      "-mt-verbose",
+      "3",
+      "-eva-verbose",
+      "1",
+      "-eva-msg-key",
+      "interferences,-summary",
+      "-eva-warn-key",
+      "experimental=inactive",
+      "-mt-stop-after",
+      "15"
+    ],
+    "entry_adapter": {
+      "kind": "one_post_init_pthread_hardirq_entry",
+      "automatic_handler_status": "excluded_initialization_gap",
+      "automatic_handler_calibration": "interrupt_registered_exclusion_gap",
+      "argument": "Probe initializes hdq_spinlock before devm_request_irq. The adapter likewise initializes both abstract locks before creating one independently analyzed handler entry. One reached invocation is sufficient only for the site-based access-protection property; recurrence, nesting, priorities and liveness are excluded. Frama-C 33 automatic handlers instead start from main's initial state and cannot consume this probe-time initialization."
+    },
+    "verification_gate": {
+      "target": {
+        "evidence_kind": "verification",
+        "required_dimensions": [
+          "sequential",
+          "mutex_protected_concurrency",
+          "interrupts"
+        ],
+        "required_primitives": [
+          "post_init_hardirq_entry",
+          "linux_local_irq_mask",
+          "linux_hdq_spinlock"
+        ]
+      },
+      "dimensions": {
+        "sequential": {
+          "status": "supported",
+          "scope": "Only the named adapter-result assertions in this exact fixture.",
+          "limitations": [
+            "The same-CPU functional no-overlap assertion remains Unknown and is a recorded precision boundary, not an accepted assertion."
+          ]
+        },
+        "mutex_protected_concurrency": {
+          "status": "supported",
+          "scope": "Only Mthread lockset classification of the selected irqstatus accesses in the two token-identical OMAP HDQ functions.",
+          "limitations": [
+            "No whole-object race freedom, functional status protocol, wait-queue ordering, weak-memory ordering or lock implementation proof follows."
+          ]
+        },
+        "interrupts": {
+          "status": "supported",
+          "scope": "One abstract post-probe hard-IRQ entry, separately checked for same-CPU local masking and remote-CPU spinlock exclusion.",
+          "limitations": [
+            "No automatic-handler initialization, repeated delivery, nesting, priorities, FIQ/NMI, softirq, threaded IRQ, affinity migration or CPU-hotplug semantics are accepted."
+          ]
+        }
+      },
+      "primitive_models": {
+        "post_init_hardirq_entry": {
+          "status": "supported",
+          "semantics": "A pthread-created Mthread entry invokes the exact handler body once after both model locks are initialized.",
+          "conservative_argument": "For a site-based lockset property, the independent handler entry exposes the selected process/handler access pairs and arbitrary cross-entry interference after the source-supported initialization point. No completion fact is consumed.",
+          "limitations": [
+            "The adapter is not Linux IRQ registration or delivery and does not model recurrence, nesting, priority or liveness."
+          ],
+          "empty_stub_allowed": false
+        },
+        "linux_local_irq_mask": {
+          "status": "supported",
+          "semantics": "One per-CPU abstract mutex represents exclusion between the process critical interval after local_irq_save and the entire same-CPU hard-IRQ invocation.",
+          "conservative_argument": "The configured ARM local IRQ save disables IRQ entry on that CPU; the handler entry and selected process interval share the gate. A mask-elided control must expose the model marker while leaving the data spinlock active.",
+          "limitations": [
+            "Only CPU0 and ordinary hard IRQs are represented; nested masking depth, FIQ/NMI, softirq, migration and exact entry/return state are excluded."
+          ],
+          "empty_stub_allowed": false
+        },
+        "linux_hdq_spinlock": {
+          "status": "supported",
+          "semantics": "One successful Mthread mutex acquisition/release represents exclusive ownership of hdq_spinlock around the copied source critical sections.",
+          "conservative_argument": "For access protection only, the configured non-RT SMP spinlock admits one owner across CPUs. Both copied critical sections route through the same abstract lock, and a remote-CPU lock-elided control must remove that common lockset.",
+          "limitations": [
+            "The atomic spin algorithm, contention, fairness, deadlock, acquire/release ordering and PREEMPT_RT behavior are not modeled."
+          ],
+          "empty_stub_allowed": false
+        }
+      }
+    },
+    "context": {
+      "process": "one process-context hdq_reset_irqstatus invocation reached after lock initialization",
+      "handler": "one hard-IRQ-like hdq_isr invocation reached after registration ordering",
+      "same_cpu": "the process mask interval and whole handler share cpu0-local-irq",
+      "remote_cpu": "local IRQ masking is CPU-local and only hdq-spinlock is shared",
+      "preemption": "configured non-RT spin_lock_irqsave disables preemption in source; task/task scheduling is outside the selected process/hard-IRQ property",
+      "lifetime": "the fixture object is static; real devm lifetime and remove-time IRQ teardown are source-reviewed but not analyzed",
+      "memory_order": "Mthread interleavings and locksets only; no LKMM or ARM weak-memory claim"
+    }
+  },
+  "property": {
+    "kind": "kernel_hardirq_critical_access_protection",
+    "claim": "For the one post-initialization process/handler pair, every selected irqstatus access inside the token-identical hdq_reset_irqstatus critical section and hdq_isr locked update carries hdq-spinlock; same-CPU entry is additionally classified under the local IRQ gate and remote-CPU exclusion relies on the shared spinlock.",
+    "shared_object": "modeled_hdq.hdq_irqstatus",
+    "required_spinlock": "hdq-spinlock",
+    "access_roles": {
+      "process_status_copy_read": {
+        "object": "modeled_hdq.hdq_irqstatus",
+        "operation": "read",
+        "line_contains": "status = hdq_data->hdq_irqstatus;"
+      },
+      "process_status_rmw_read": {
+        "object": "modeled_hdq.hdq_irqstatus",
+        "operation": "read",
+        "line_contains": "hdq_data->hdq_irqstatus &= ~bits;"
+      },
+      "process_status_rmw_write": {
+        "object": "modeled_hdq.hdq_irqstatus",
+        "operation": "write",
+        "line_contains": "hdq_data->hdq_irqstatus &= ~bits;"
+      },
+      "handler_status_rmw_read": {
+        "object": "modeled_hdq.hdq_irqstatus",
+        "operation": "read",
+        "line_contains": "hdq_data->hdq_irqstatus |= hdq_reg_in(hdq_data, OMAP_HDQ_INT_STATUS);"
+      },
+      "handler_status_rmw_write": {
+        "object": "modeled_hdq.hdq_irqstatus",
+        "operation": "write",
+        "line_contains": "hdq_data->hdq_irqstatus |= hdq_reg_in(hdq_data, OMAP_HDQ_INT_STATUS);"
+      },
+      "handler_post_unlock_read": {
+        "object": "modeled_hdq.hdq_irqstatus",
+        "operation": "read",
+        "line_contains": "if (hdq_data->hdq_irqstatus &"
+      },
+      "same_cpu_handler_marker_read": {
+        "object": "modeled_process_critical",
+        "operation": "read",
+        "line_contains": "bool process_active = modeled_process_critical;"
+      },
+      "same_cpu_process_marker_set": {
+        "object": "modeled_process_critical",
+        "operation": "write",
+        "line_contains": "modeled_process_critical = true;"
+      },
+      "same_cpu_process_marker_clear": {
+        "object": "modeled_process_critical",
+        "operation": "write",
+        "line_contains": "modeled_process_critical = false;"
+      }
+    },
+    "accepted_roles": [
+      "process_status_copy_read",
+      "process_status_rmw_read",
+      "process_status_rmw_write",
+      "handler_status_rmw_read",
+      "handler_status_rmw_write"
+    ],
+    "diagnostic_only_roles": [
+      "handler_post_unlock_read",
+      "same_cpu_handler_marker_read",
+      "same_cpu_process_marker_set",
+      "same_cpu_process_marker_clear"
+    ],
+    "exclusions": [
+      "The unlocked hdq_isr status read remains visible and is not accepted as protected on a remote CPU.",
+      "Whole-variable or whole-driver data-race freedom is not claimed; unlocked wait predicates and logging are outside this property.",
+      "No functional status protocol, wakeup correctness, MMIO behavior, handler recurrence, nesting or priority property is checked.",
+      "Softirq, threaded IRQ, FIQ/NMI, PREEMPT_RT, affinity migration, CPU hotplug, teardown lifetime and nested locks are not supported.",
+      "No weak-memory, compiler ordering, atomic, RCU, lock-free, deadlock, fairness, progress or termination property is checked."
+    ]
+  },
+  "cases": [
+    {
+      "id": "same_cpu_positive",
+      "cpp_defines": [],
+      "verification_candidate": true,
+      "control_for": null,
+      "expected_assertions": {
+        "c2_irq_process_mask_lock_succeeds": "valid",
+        "c2_irq_process_spin_lock_succeeds": "valid",
+        "c2_irq_process_spin_unlock_succeeds": "valid",
+        "c2_irq_process_mask_unlock_succeeds": "valid",
+        "c2_irq_handler_spin_lock_succeeds": "valid",
+        "c2_irq_handler_spin_unlock_succeeds": "valid",
+        "c2_irq_handler_entry_lock_succeeds": "valid",
+        "c2_irq_same_cpu_no_overlap_boundary": "unknown",
+        "c2_irq_handler_exit_unlock_succeeds": "valid"
+      },
+      "expected_access_locks": {
+        "process_status_copy_read": ["cpu0-local-irq", "hdq-spinlock"],
+        "process_status_rmw_read": ["cpu0-local-irq", "hdq-spinlock"],
+        "process_status_rmw_write": ["cpu0-local-irq", "hdq-spinlock"],
+        "handler_status_rmw_read": ["cpu0-local-irq", "hdq-spinlock"],
+        "handler_status_rmw_write": ["cpu0-local-irq", "hdq-spinlock"],
+        "handler_post_unlock_read": ["cpu0-local-irq"],
+        "same_cpu_handler_marker_read": ["cpu0-local-irq"],
+        "same_cpu_process_marker_set": ["cpu0-local-irq"],
+        "same_cpu_process_marker_clear": ["cpu0-local-irq"]
+      },
+      "expected_manual_synchronisation": false,
+      "required_events": []
+    },
+    {
+      "id": "same_cpu_mask_elided_negative",
+      "cpp_defines": ["FRAGMA_C2_IRQ_ELIDE_MASK_NEGATIVE"],
+      "verification_candidate": false,
+      "control_for": "linux_local_irq_mask",
+      "expected_assertions": {
+        "c2_irq_process_spin_lock_succeeds": "valid",
+        "c2_irq_process_spin_unlock_succeeds": "valid",
+        "c2_irq_handler_spin_lock_succeeds": "valid",
+        "c2_irq_handler_spin_unlock_succeeds": "valid",
+        "c2_irq_handler_entry_lock_succeeds": "valid",
+        "c2_irq_same_cpu_no_overlap_boundary": "unknown",
+        "c2_irq_handler_exit_unlock_succeeds": "valid"
+      },
+      "expected_access_locks": {
+        "process_status_copy_read": ["hdq-spinlock"],
+        "process_status_rmw_read": ["hdq-spinlock"],
+        "process_status_rmw_write": ["hdq-spinlock"],
+        "handler_status_rmw_read": ["cpu0-local-irq", "hdq-spinlock"],
+        "handler_status_rmw_write": ["cpu0-local-irq", "hdq-spinlock"],
+        "handler_post_unlock_read": ["cpu0-local-irq"],
+        "same_cpu_handler_marker_read": ["cpu0-local-irq"],
+        "same_cpu_process_marker_set": [],
+        "same_cpu_process_marker_clear": []
+      },
+      "expected_manual_synchronisation": true,
+      "required_events": [
+        "Monitored event: negative process irq mask elided",
+        "Monitored event: negative process irq restore elided"
+      ]
+    },
+    {
+      "id": "remote_cpu_positive",
+      "cpp_defines": ["FRAGMA_C2_IRQ_REMOTE_CPU"],
+      "verification_candidate": true,
+      "control_for": null,
+      "expected_assertions": {
+        "c2_irq_process_mask_lock_succeeds": "valid",
+        "c2_irq_process_spin_lock_succeeds": "valid",
+        "c2_irq_process_spin_unlock_succeeds": "valid",
+        "c2_irq_process_mask_unlock_succeeds": "valid",
+        "c2_irq_handler_spin_lock_succeeds": "valid",
+        "c2_irq_handler_spin_unlock_succeeds": "valid"
+      },
+      "expected_access_locks": {
+        "process_status_copy_read": ["cpu0-local-irq", "hdq-spinlock"],
+        "process_status_rmw_read": ["cpu0-local-irq", "hdq-spinlock"],
+        "process_status_rmw_write": ["cpu0-local-irq", "hdq-spinlock"],
+        "handler_status_rmw_read": ["hdq-spinlock"],
+        "handler_status_rmw_write": ["hdq-spinlock"],
+        "handler_post_unlock_read": []
+      },
+      "expected_manual_synchronisation": true,
+      "required_events": []
+    },
+    {
+      "id": "remote_cpu_spin_elided_negative",
+      "cpp_defines": [
+        "FRAGMA_C2_IRQ_REMOTE_CPU",
+        "FRAGMA_C2_IRQ_ELIDE_SPIN_NEGATIVE"
+      ],
+      "verification_candidate": false,
+      "control_for": "linux_hdq_spinlock",
+      "expected_assertions": {
+        "c2_irq_process_mask_lock_succeeds": "valid",
+        "c2_irq_process_spin_lock_succeeds": "valid",
+        "c2_irq_process_spin_unlock_succeeds": "valid",
+        "c2_irq_process_mask_unlock_succeeds": "valid",
+        "c2_irq_handler_spin_lock_succeeds": "valid",
+        "c2_irq_handler_spin_unlock_succeeds": "valid"
+      },
+      "expected_access_locks": {
+        "process_status_copy_read": ["cpu0-local-irq"],
+        "process_status_rmw_read": ["cpu0-local-irq"],
+        "process_status_rmw_write": ["cpu0-local-irq"],
+        "handler_status_rmw_read": [],
+        "handler_status_rmw_write": [],
+        "handler_post_unlock_read": []
+      },
+      "expected_manual_synchronisation": true,
+      "required_events": [
+        "Monitored event: negative spin lock elided",
+        "Monitored event: negative spin unlock elided"
+      ]
+    }
+  ]
+}

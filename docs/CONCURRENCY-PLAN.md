@@ -1,12 +1,15 @@
 # Concurrency verification workstream
 
 Requested: 2026-09-07, after the current bounded kernel-source review.
-Status: C0 capability calibration, C1 evidence/scope infrastructure and one
-narrow C2 UP/process-context mutex-protection property accepted on 2026-09-07.
-C2 interrupt/SMP and functional work plus C3-C4 remain open.
+Status: C0 capability calibration, C1 evidence/scope infrastructure and two
+narrow C2 properties accepted on 2026-09-07: the UP/process-context mutex slice
+and the ARM SMP process/hard-IRQ spinlock slice. The limited C2 pilot milestone
+is complete; C3-C4, broader interrupt contexts and functional protocols remain
+open.
 See the [C0 evidence record](CONCURRENCY-C0-20260907.md) and
 [C1 evidence record](CONCURRENCY-C1-20260907.md), followed by the
-[C2 mutex pilot](CONCURRENCY-C2-20260907.md).
+[C2 mutex pilot](CONCURRENCY-C2-20260907.md) and
+[C2 IRQ pilot](CONCURRENCY-C2-IRQ-20260907.md).
 Parent goal: [execute PLAN.md](../PLAN.md). This work does not replace the
 remaining sequential-suite, architecture or coverage requirements.
 
@@ -50,7 +53,7 @@ feature is absent, record the evidence and implement or integrate a suitable
 backend; do not relabel a sequential run as concurrency verification.
 
 C0 decision: accepted for capability characterization only. The pinned
-[nine-case result](../results/concurrency-c0-20260907-06/SUMMARY.md) matches every
+[nine-case result](../results/concurrency-c0-20260907-07/SUMMARY.md) matches every
 expected result class. `pthread_join()` completion, automatically registered
 handler lock initialization, unsupported pthread operations, weak-memory
 atomics/barriers, Linux synchronization and RCU remain explicit gaps. C1 is the
@@ -78,9 +81,9 @@ concurrent property and assumptions. Data-race freedom is not automatically
 functional correctness, deadlock freedom, termination or lifetime safety.
 
 C1 decision: accepted for infrastructure only. The current
-[C1 audit](../results/concurrency-c1-20260907-02/SUMMARY.md) re-parses all nine C0
+[C1 audit](../results/concurrency-c1-20260907-03/SUMMARY.md) re-parses all nine C0
 cases with current dependencies and explicit scope metadata. A
-[stale-model control](../results/concurrency-c1-stale-control-20260907-02/SUMMARY.md)
+[stale-model control](../results/concurrency-c1-stale-control-20260907-03/SUMMARY.md)
 rejects exactly the pthread-dependent cases after their recorded model identity
 changes. All nine records remain calibrations, all verification flags are false,
 and the kernel-concurrency acceptance count is zero. C2 is the next gate.
@@ -95,7 +98,7 @@ and the kernel-concurrency acceptance count is zero. C2 is the next gate.
   interrupt exclusion, preemption exclusion and inter-CPU mutual exclusion.
 - [x] Check shared accesses and object lifetime across the selected callers and
   callees; a local helper proof cannot establish its caller's synchronization.
-- [ ] Validate interrupt-handler interference separately, including the limits
+- [x] Validate interrupt-handler interference separately, including the limits
   of modeled interrupt classes and nesting. Publish unsupported contexts.
 - [x] Compare the model with independent source review and benign calibration
   models. Preserve remaining alarms and assumptions in the accepted scope.
@@ -105,15 +108,28 @@ primitive models, checked callers, calibrated analysis and reproducible evidence
 This is a pilot milestone, not whole-subsystem or all-kernel support.
 
 C2 mutex-slice decision: the
-[current 63-check A/B pilot](../results/concurrency-c2-20260907-05/SUMMARY.md)
+[current 63-check A/B pilot](../results/concurrency-c2-20260907-06/SUMMARY.md)
 accepts one kernel property: shared `done` accesses in token-identical
 `__do_once_sleepable_start()`/`done()` bodies are protected by the same mutex
 for two correctly paired process-context callers under the pinned
 `CONFIG_SMP=n`, preemptible x86_64 profile. The lock-elided negative exposes the
 accesses as unprotected and downgrades the selected branch invariant. Functional
 exactly-once behavior, static keys, real subsystem callbacks, IRQ/NMI and SMP are
-not accepted. Keep C2 open until a separate spinlock/IRQ-interference pilot is
-validated; see the [scope record](CONCURRENCY-C2-20260907.md).
+not accepted; see the [scope record](CONCURRENCY-C2-20260907.md).
+
+C2 IRQ-slice decision: the
+[current 125-check four-way A/B pilot](../results/concurrency-c2-irq-20260907-02/SUMMARY.md)
+accepts one further kernel property. Selected accesses in token-identical
+`hdq_reset_irqstatus()` and the locked update in `hdq_isr()` carry the same
+`hdq-spinlock` under a pinned SMP ARM OMAP profile. The same-CPU case separately
+models the local hard-IRQ mask; the remote-CPU case relies only on the shared
+spinlock. Mask-elided and spin-elided controls expose their respective missing
+protection. The handler's post-unlock status read remains explicitly unprotected
+on a remote CPU and is outside the accepted property, not classified as a bug.
+Frama-C's automatic-handler initialization gap, recurrence, nesting, other IRQ
+classes, weak memory and lifetime remain unsupported. This completes the
+limited C2 pilot acceptance checklist, not general kernel concurrency support;
+see the [IRQ scope record](CONCURRENCY-C2-IRQ-20260907.md).
 
 ## C3 — Add weak-memory, atomics and lock-free reasoning
 
@@ -156,10 +172,10 @@ its required model or validation evidence.
 
 ## Execution order and reporting
 
-The bounded static review, C0/C1 and the first C2 mutex slice are complete.
-Continue C2 with the separate interrupt/spinlock slice; later
-concurrent model work need not wait for every architecture port
-or all sequential proofs.
+The bounded static review and limited C0-C2 pilot are complete. Continue with
+C3 weak-memory/atomic/lock-free reasoning and then C4 RCU/lifetime/combined
+coverage. Broader interrupt and functional-protocol extensions remain visible
+backlog and need not wait for every architecture port or all sequential proofs.
 No system installation, running-kernel modification or new backend execution is
 authorized merely by this planning document.
 

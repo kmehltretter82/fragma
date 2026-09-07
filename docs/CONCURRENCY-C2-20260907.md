@@ -1,7 +1,8 @@
 # C2 Linux `DO_ONCE_SLEEPABLE` mutex pilot
 
-Status: **one narrowly scoped kernel shared-access property accepted on
-2026-09-07; C2 interrupt/SMP and functional-once work remains open**.
+Status: **one narrowly scoped kernel shared-access property accepted and
+renewed on 2026-09-07; the separate IRQ/SMP slice was accepted later, while
+functional exactly-once behavior remains outside both properties**.
 
 This is the first result in this project that connects the calibrated Frama-C
 33 Mthread+Eva mutex abstraction to token-identical Linux kernel function
@@ -61,7 +62,7 @@ state, patching or ordering claim is accepted.
 
 ## Positive/negative evidence
 
-The current [63-check A/B result](../results/concurrency-c2-20260907-05/SUMMARY.md)
+The current [63-check A/B result](../results/concurrency-c2-20260907-06/SUMMARY.md)
 passes:
 
 | Run | Local assertions | Final `done` classification | Acceptance role |
@@ -83,7 +84,7 @@ Unknown. Acceptance requires both the positive result and this sensitivity
 control.
 
 The post-change repository regression run passes
-[all 914 tests](../results/tests-concurrency-c2-20260907.log), with 20 existing
+[all 928 tests](../results/tests-concurrency-c2-irq-20260907.log), with 20 existing
 environment/evidence-dependent skips.
 
 The machine-readable `pilot-audit.json` beside the summary directly retains the
@@ -121,10 +122,11 @@ across the conditionally lock-retaining function return. That observation is
 why the accepted claim is access protection, not functional exactly-once
 execution.
 
-## Next C2 work
+## Subsequent C2 work
 
-C2 is still open. The next separate pilot must select a real Linux
-spinlock/IRQ-mask scope, model local IRQ exclusion independently from preemption
-and inter-CPU lock exclusion, and retain handler-interference positives and
-negatives. A later SMP extension must not inherit this UP result automatically.
-C3 weak-memory/atomic work and C4 RCU work remain separate gates.
+The separate [OMAP HDQ hard-IRQ/spinlock pilot](CONCURRENCY-C2-IRQ-20260907.md)
+now checks local IRQ exclusion independently from remote-CPU spinlock exclusion,
+with mask-elided and lock-elided controls. Together the two pilots complete the
+limited C2 checklist, without transferring this UP mutex result to SMP or IRQ
+callers. Functional exactly-once work is still unproved. C3 weak-memory/atomic
+work and C4 RCU/lifetime work remain separate open gates.
