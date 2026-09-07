@@ -1,18 +1,18 @@
 # C3 LL/SC progress capability audit — 2026-09-07
 
-Status: accepted as a fail-closed capability evaluation of seven existing IPC
+Status: accepted as a fail-closed capability evaluation of eight existing IPC
 implementation profiles. It accepts **zero** new kernel progress properties and
 promotes **zero** LL/SC mappings. C3 remains incomplete.
 
 The accepted evidence is
-[`results/concurrency-c3-llsc-progress-20260907-05`](../results/concurrency-c3-llsc-progress-20260907-05/SUMMARY.md).
-All 556 checks pass. The receipt binds 19 direct inputs, retains 31 raw audit
-artifacts, and independently revalidates all 85 inputs and 363 raw artifacts of
+[`results/concurrency-c3-llsc-progress-20260907-07`](../results/concurrency-c3-llsc-progress-20260907-07/SUMMARY.md).
+All 609 checks pass. The receipt binds 22 direct inputs, retains 35 raw audit
+artifacts, and independently revalidates all 91 inputs and 395 raw artifacts of
 the fresh
-[`concurrency-c3-ipc-refcount-20260907-11`](../results/concurrency-c3-ipc-refcount-20260907-11/SUMMARY.md)
+[`concurrency-c3-ipc-refcount-20260907-13`](../results/concurrency-c3-ipc-refcount-20260907-13/SUMMARY.md)
 base. A separate readback of the accepted LL/SC receipt found no mismatch across
-its 50 direct input and retained-artifact records; the same readback found no
-mismatch across the base receipt's 448 records.
+its 57 direct input and retained-artifact records; the same readback found no
+mismatch across the base receipt's 486 records.
 
 This is a useful negative result. The existing bounded strong-CAS source model
 does not automatically establish machine-level progress on implementations that
@@ -43,12 +43,14 @@ The audit checks source order and freshly disassembles the complete configured
 | SuperH | `movli.l`/`movco.l` loop | not promoted |
 | Alpha | `ldl_l`/`stl_c` loop through a cold subsection trampoline | not promoted |
 | LoongArch64 | `ll.w`/`sc.w` get loop; separate AMO final decrement | not promoted |
+| MIPS32r2 little-endian | `ll`/`sc` loops in both selected operations | not promoted |
 
 ARM64 and RISC-V are mixed profiles: a native-CAS subpath cannot promote the
 whole configured object while a runtime-selectable LL/SC alternative remains.
 ARM32, PowerPC32, SuperH and Alpha directly contain LL/SC retries. LoongArch64's
 selected get also directly retries `ll.w`/`sc.w`; its `amadd_db.w` final-put path
-does not supply a bound for that get loop. None of the seven profile records
+does not supply a bound for that get loop. MIPS32r2 directly retries `ll`/`sc`
+in both the get and put paths. None of the eight profile records
 supplies a finite architecture-backed store-conditional failure bound. Alpha is
 intentionally checked with full-object disassembly because its
 failed-`stl_c` edge branches outside the reported function extent to a compiler
@@ -80,7 +82,7 @@ bound from being mistaken for unbounded progress evidence.
 
 Accepted:
 
-- all seven existing LL/SC-bearing IPC profiles received a source and emitted-
+- all eight existing LL/SC-bearing IPC profiles received a source and emitted-
   control-flow capability assessment;
 - their current admission decision is `not_promoted`;
 - the artificial finite diagnostic and unbounded-failure control have their
@@ -116,15 +118,19 @@ without comparing it to the object accepted by the base. Run `-03` adds
 twelve object hash/size comparisons and seven exact base-semantic gates, passing
 505/505. Run `-04` directly binds the two reused process/artifact helper modules
 in addition to their upstream-receipt identities; it also passes 505/505 at the
-former six-profile scope. Current run `-05` consumes the fresh schema-6,
-ten-profile IPC base, adds LoongArch source/object control flow and passes
-556/556. The conclusion remains zero progress promotion.
+former six-profile scope. Run `-05` consumes the schema-6, ten-profile IPC base,
+adds LoongArch source/object control flow and passes 556/556. Run `-06` adds
+MIPS32r2 and passes 609/609, but its generated explanation omits MIPS despite
+the correct eight-row table. Current run `-07` adds a renderer regression and
+the missing MIPS non-promotion explanation, then reruns the complete audit at
+609/609. The conclusion remains zero progress promotion; run `-06` is retained
+but superseded.
 
-Ten focused tests cover exact profile inventory, source/document identities,
+Eleven focused tests cover exact profile inventory, source/document identities,
 finite and cyclic outcomes, promotion rejection, fresh full-object disassembly,
 path traversal, result-directory symlinks, output non-overwrite, timeout typing
 and zero-promotion summary wording. The full project run passes
-[1,000 tests](../results/tests-concurrency-c3-loongarch-final-20260907.log),
+[1,002 tests](../results/tests-concurrency-c3-mips-final-20260907.log),
 with 20 existing conditional skips.
 
 No package was installed, no `sudo` command was used, no module was loaded and
@@ -148,4 +154,4 @@ LL/SC runtime alternatives where configuration and CPU selection permit it,
 bind relevant architecture guarantees or reviewed kernel backoff mechanisms,
 and add detecting controls for every adopted premise. Separately, C3 still needs
 broader lockless functional/lifetime protocols, mappings outside the current
-ten-profile IPC set and ultimately explicit RCU grace-period/reclamation work.
+eleven-profile IPC set and ultimately explicit RCU grace-period/reclamation work.

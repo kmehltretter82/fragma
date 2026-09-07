@@ -46,17 +46,19 @@ class ConcurrencyC3IpcRefcountTests(unittest.TestCase):
                 "sh-smp-ipc-refcount-c3",
                 "alpha-smp-ipc-refcount-c3",
                 "loongarch64-clang-ipc-refcount-c3",
+                "mips32el-clang-ipc-refcount-c3",
                 "um-x86_64-smp-ipc-refcount-c3",
             ],
         )
         self.assertEqual(
             [profile["arch"] for profile in profiles],
             ["x86_64", "arm64", "riscv", "s390", "arm", "powerpc",
-             "sh", "alpha", "loongarch", "um"],
+             "sh", "alpha", "loongarch", "mips", "um"],
         )
         self.assertEqual(
             [profile["subarch"] for profile in profiles],
-            [None, None, None, None, None, None, None, None, None, "x86_64"],
+            [None, None, None, None, None, None, None, None, None, None,
+             "x86_64"],
         )
         self.assertEqual(profiles[0]["configuration"]["base_recipe"],
                          "x86_64_defconfig")
@@ -68,14 +70,14 @@ class ConcurrencyC3IpcRefcountTests(unittest.TestCase):
             profile["execution_scope"] == "smp-multicpu"
             for profile in profiles
         ))
-        for index in (7, 9):
+        for index in (7, 10):
             self.assertEqual(
                 profiles[index]["configuration"]["mutations"],
                 [{"symbol": "SMP", "operation": "enable"}],
             )
         self.assertTrue(all(
             profile["configuration"]["mutations"] == []
-            for profile in profiles[:7]
+            for index, profile in enumerate(profiles) if index not in (7, 10)
         ))
         self.assertTrue(all(
             profile["required_config"]["CONFIG_SYSVIPC"] == "y"
@@ -83,6 +85,7 @@ class ConcurrencyC3IpcRefcountTests(unittest.TestCase):
         ))
         self.assertIsNone(profiles[0]["cross_compile"])
         self.assertIsNone(profiles[8]["cross_compile"])
+        self.assertIsNone(profiles[9]["cross_compile"])
         self.assertIsNone(profiles[-1]["cross_compile"])
         self.assertTrue(all(
             profile["cross_compile"].startswith("/usr/bin/")
@@ -91,16 +94,27 @@ class ConcurrencyC3IpcRefcountTests(unittest.TestCase):
         self.assertEqual(
             profiles[8]["make_assignments"], ["LLVM=1", "LLVM_IAS=1"]
         )
+        self.assertEqual(
+            profiles[9]["make_assignments"], ["LLVM=1", "LLVM_IAS=1"]
+        )
         self.assertTrue(all(
             profile["make_assignments"] == []
-            for index, profile in enumerate(profiles) if index != 8
+            for index, profile in enumerate(profiles) if index not in (8, 9)
         ))
         self.assertEqual(
             profiles[8]["compiler"]["target_args"],
             ["--target=loongarch64-linux-gnusf"],
         )
         self.assertEqual(
+            profiles[9]["compiler"]["target_args"],
+            ["--target=mipsel-linux-gnu"],
+        )
+        self.assertEqual(
             profiles[8]["objdump"]["disassemble_symbol_option"],
+            "--disassemble-symbols",
+        )
+        self.assertEqual(
+            profiles[9]["objdump"]["disassemble_symbol_option"],
             "--disassemble-symbols",
         )
         serialized = repr(profiles).lower()
@@ -137,9 +151,39 @@ class ConcurrencyC3IpcRefcountTests(unittest.TestCase):
         self.assertIn(
             "amadd_db.w\t", tokens["loongarch64-clang-ipc-refcount-c3"]
         )
+        self.assertIn("ll\t", tokens["mips32el-clang-ipc-refcount-c3"])
+        self.assertIn("sc\t", tokens["mips32el-clang-ipc-refcount-c3"])
+        self.assertIn("R_MIPS_26\tcall_rcu",
+                      tokens["mips32el-clang-ipc-refcount-c3"])
         self.assertIn("lock cmpxchg", tokens["um-x86_64-smp-ipc-refcount-c3"])
         self.assertIn("lock xadd", tokens["um-x86_64-smp-ipc-refcount-c3"])
         self.assertIn("lfence", tokens["um-x86_64-smp-ipc-refcount-c3"])
+
+    def test_summary_profile_count_tracks_manifest_inventory(self):
+        profiles = concurrency_c3_ipc_refcount.load_manifest(ROOT)["profiles"]
+        rendered = concurrency_c3_ipc_refcount.render_summary({
+            "accepted": True,
+            "kernel_verification_count": 2,
+            "lifetime_verification_count": 1,
+            "progress_verification_count": 1,
+            "architecture_mapping_count": len(profiles),
+            "progress_implementation_mapping_count": 3,
+            "cases": [],
+            "progress": {"cases": []},
+            "checks": [],
+            "profiles": [{
+                "id": profile["id"],
+                "arch": profile["arch"],
+                "subarch": profile["subarch"],
+                "execution_scope": profile["execution_scope"],
+                "configured_object": {
+                    "class": profile["configured_compile"]["elf_class"],
+                    "machine": profile["configured_compile"]["elf_machine"],
+                },
+                "accepted": True,
+            } for profile in profiles],
+        })
+        self.assertIn(f"all {len(profiles)} configured SMP profiles", rendered)
 
     def test_progress_claim_is_separate_bounded_and_single_cas_scoped(self):
         manifest = concurrency_c3_ipc_refcount.load_manifest(ROOT)
@@ -341,8 +385,9 @@ class ConcurrencyC3IpcRefcountTests(unittest.TestCase):
         changed = deepcopy(manifest)
         changed["property"]["exclusions"] = [
             item.replace(
-                "ten configured SMP x86-64, arm64, riscv64, s390x, ARM32, "
-                "PowerPC32, SuperH, Alpha, LoongArch64 and UML x86-64",
+                "eleven configured SMP x86-64, arm64, riscv64, s390x, ARM32, "
+                "PowerPC32, SuperH, Alpha, LoongArch64, MIPS32 little-endian "
+                "and UML x86-64",
                 "configured SMP x86-64, arm64, riscv64 and s390x",
             )
             for item in changed["property"]["exclusions"]

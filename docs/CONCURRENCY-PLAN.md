@@ -9,13 +9,13 @@ SMP x86-64 release/acquire property. A second four-case pilot adds one
 source-linked module-statistics atomicity property plus an independent atomic
 return-ordering calibration on SMP x86-64. A third source pilot adds one bounded
 System V IPC final-put/get-unless-zero lifetime property and an unsafe
-zero-resurrection control. Its implementation map covers ten configured SMP
+zero-resurrection control. Its implementation map covers eleven configured SMP
 builds: x86-64, arm64, riscv64, s390x, ARM32, PowerPC32, SuperH, Alpha,
-LoongArch64 and UML x86-64. The same pilot adds a separately scoped bounded-quiescent
+LoongArch64, little-endian MIPS32r2 and UML x86-64. The same pilot adds a separately scoped bounded-quiescent
 progress property for the strong-CAS get retry loop, mapped only to native/UML
 x86-64 and s390x and guarded by three nontermination controls.
-A subsequent fail-closed audit evaluates all seven LL/SC-bearing profiles'
-source and complete-object retry paths. Its 556 checks pass, but it promotes
+A subsequent fail-closed audit evaluates all eight LL/SC-bearing profiles'
+source and complete-object retry paths. Its 609 checks pass, but it promotes
 zero progress properties or implementation mappings because no profile supplies
 a finite reservation-failure guarantee. Unbounded progress, scheduler fairness,
 architecture-backed LL/SC implementation liveness, broader
@@ -29,7 +29,8 @@ the [LKMM capability baseline](CONCURRENCY-C3-LKMM-20260907.md) and the
 [module-statistics atomic/RMW pilot](CONCURRENCY-C3-ATOMIC-20260907.md) and the
 [System V IPC refcount lifetime/progress pilot](CONCURRENCY-C3-REFCOUNT-20260907.md),
 then the [LL/SC capability audit](CONCURRENCY-C3-LLSC-PROGRESS-20260907.md) and
-[LoongArch mapping handoff](CONCURRENCY-C3-LOONGARCH-20260907.md).
+[LoongArch mapping handoff](CONCURRENCY-C3-LOONGARCH-20260907.md) plus the
+[MIPS mapping handoff](CONCURRENCY-C3-MIPS-20260907.md).
 Parent goal: [execute PLAN.md](../PLAN.md). This work does not replace the
 remaining sequential-suite, architecture or coverage requirements.
 
@@ -185,10 +186,11 @@ see the [IRQ scope record](CONCURRENCY-C2-IRQ-20260907.md).
   the retry path to native/UML x86-64 and s390x objects. Three controls
   demonstrate the stale-expected, spurious-failure and unbounded-interference
   exclusions.
-- [x] Evaluate whether the six remaining IPC implementation profiles can soundly
+- [x] Evaluate whether the LL/SC-bearing IPC implementation profiles can soundly
   inherit that progress claim. The LL/SC capability audit checks pinned kernel
   documentation, implementation source and fresh full-object disassembly for
-  ARM64, RISC-V, ARM32, PowerPC32, SuperH and Alpha. It promotes none. Its
+  ARM64, RISC-V, ARM32, PowerPC32, SuperH, Alpha, LoongArch64 and MIPS32r2. It
+  promotes none. Its
   hypothetical two-failure bound remains ineligible, while the unbounded-failure
   control exposes a one-state retry cycle.
 - [ ] Broaden functional/lifetime coverage beyond the first refcount handshake,
@@ -215,7 +217,7 @@ accepts one production no-lost-update property for two selected concurrent
 `failed_load_modules` increments. Its split once-access control permits the lost
 update, while a separate ordered/relaxed return-value pair calibrates ordering.
 The subsequent
-[937-check IPC refcount pilot](../results/concurrency-c3-ipc-refcount-20260907-11/SUMMARY.md)
+[1036-check IPC refcount pilot](../results/concurrency-c3-ipc-refcount-20260907-13/SUMMARY.md)
 accepts one lifetime-sensitive functional property: under the contract's
 caller-locking prerequisite and from the sole reference, `ipc_rcu_putref()`
 cannot schedule RCU destruction while concurrent `ipc_rcu_getref()` succeeds.
@@ -225,17 +227,17 @@ schedules and establishes at-most-four-CAS termination after quiescence for the
 strong-CAS retry loop. Stale-expected, spurious-failure and unbounded-interference
 controls expose the boundaries. Its real `ipc/util.o` lifetime map passes for
 configured SMP x86-64, arm64, riscv64, big-endian s390x, ARM32, big-endian
-PowerPC32, SuperH, Alpha, LLVM-built LoongArch64 and UML x86-64 profiles. The
-LoongArch result binds the target-aware Clang route, ELF machine identity and
-native AMO/LL-SC lowering. The UML result has its own `ARCH=um`,
+PowerPC32, SuperH, Alpha, LLVM-built LoongArch64, little-endian MIPS32r2 and
+UML x86-64 profiles. The LoongArch and MIPS results bind distinct target-aware
+Clang routes, ELF identities and native LL/SC/AMO lowering. The UML result has its own `ARCH=um`,
 `SUBARCH=x86_64`, SMP config and object rather than inheriting native x86
 evidence. Only native/UML x86-64 and s390x are accepted as progress implementation
-mappings; LL/SC progress on the other seven profiles is not inferred. The
+mappings; LL/SC progress on the other eight profiles is not inferred. The
 available m68k build remains outside this SMP claim.
 A separate
-[556-check LL/SC capability audit](../results/concurrency-c3-llsc-progress-20260907-05/SUMMARY.md)
+[609-check LL/SC capability audit](../results/concurrency-c3-llsc-progress-20260907-07/SUMMARY.md)
 revalidates the complete fresh IPC receipt and checks implementation source plus
-full-object retry control flow for those seven profiles. It promotes none. Its
+full-object retry control flow for those eight profiles. It promotes none. Its
 hypothetical 120-schedule bounded diagnostic is permanently ineligible, and a
 one-state unbounded conditional-store-failure cycle acts as the detecting
 control. This completes the present-evidence admission evaluation, not an
@@ -270,7 +272,7 @@ its required model or validation evidence.
 
 The bounded static review and limited C0-C2 pilot are complete. Continue C3
 from its accepted LKMM baseline, release/acquire, atomic/RMW and multiarchitecture
-IPC refcount lifetime/bounded-progress pilot and completed seven-profile LL/SC
+IPC refcount lifetime/bounded-progress pilot and completed eight-profile LL/SC
 admission audit: broader lockless protocols, architecture-backed unbounded or
 LL/SC progress, and remaining architecture mappings come next,
 followed by C4 RCU/lifetime/combined coverage.

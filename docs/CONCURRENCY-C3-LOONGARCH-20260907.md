@@ -6,12 +6,12 @@ bounded strong-CAS progress property, and it does not activate a general
 Frama-C LoongArch machine profile, L1/L2 support or whole-kernel verification.
 
 The current full base is
-[`concurrency-c3-ipc-refcount-20260907-11`](../results/concurrency-c3-ipc-refcount-20260907-11/SUMMARY.md).
-It passes 937/937 checks across ten architecture profiles. The follow-on
-[`concurrency-c3-llsc-progress-20260907-05`](../results/concurrency-c3-llsc-progress-20260907-05/SUMMARY.md)
-passes 556/556 checks across seven LL/SC-bearing profiles and promotes zero of
-them. Independent byte readback found no mismatch across the base's 85 inputs
-and 363 artifacts or the follow-on audit's 19 inputs and 31 artifacts.
+[`concurrency-c3-ipc-refcount-20260907-13`](../results/concurrency-c3-ipc-refcount-20260907-13/SUMMARY.md).
+It passes 1036/1036 checks across eleven architecture profiles. The follow-on
+[`concurrency-c3-llsc-progress-20260907-07`](../results/concurrency-c3-llsc-progress-20260907-07/SUMMARY.md)
+passes 609/609 checks across eight LL/SC-bearing profiles and promotes zero of
+them. Independent byte readback found no mismatch across the base's 91 inputs
+and 395 artifacts or the follow-on audit's 22 inputs and 35 artifacts.
 
 ## Exact configured route
 
@@ -39,10 +39,10 @@ object; it is not a hermetic attestation of every host dynamic library or LLVM
 auxiliary binary.
 
 Schema 6 makes the Kbuild assignments, target-aware compiler query arguments
-and per-objdump named-symbol option explicit for every profile. The existing
-nine GNU profiles retain empty target arguments, empty extra Kbuild assignments
-and GNU `--disassemble=<function>`; this is an additive interface, not a silent
-global switch to LLVM.
+and per-objdump named-symbol option explicit for every profile. The nine GNU
+profiles retain empty target arguments, empty extra Kbuild assignments and GNU
+`--disassemble=<function>`; LoongArch and the later MIPS32 mapping use distinct
+LLVM routes. This is an additive interface, not a silent global switch to LLVM.
 
 ## Lowering and admission decision
 
@@ -74,7 +74,8 @@ the independently planned GCC profile), authenticated target-header inputs,
 machine/type/layout generation, parser and calibration gates, then scoped L1
 and L2 evidence. Other Linux architectures remain in the queue; this one
 successful translation-unit mapping must not be counted as all-architecture
-completion.
+completion. The later [MIPS mapping](CONCURRENCY-C3-MIPS-20260907.md) is a
+separate object-level result and does not broaden this LoongArch claim.
 
 No package was installed, no `sudo` command was used, no target object was
 executed and no running kernel was modified.

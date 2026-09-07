@@ -9,10 +9,10 @@
   "base": {
     "target": "linux-ipc-refcount-lifetime-multiarch-c3",
     "schema_version": 6,
-    "evidence_checks": 937,
-    "input_identity_count": 85,
-    "raw_artifact_count": 363,
-    "architecture_mapping_count": 10,
+    "evidence_checks": 1036,
+    "input_identity_count": 91,
+    "raw_artifact_count": 395,
+    "architecture_mapping_count": 11,
     "kernel_verification_count": 2,
     "progress_kernel_verification_count": 1,
     "progress_implementation_mapping_count": 3,
@@ -315,12 +315,64 @@
       "verification_candidate": false,
       "decision": "not_promoted",
       "blocking_reason": "The selected LoongArch LL.W/SC.W get compare/exchange retries after conditional-store failure without a profile-bound finite failure guarantee; the AMO final-decrement path does not establish get-loop progress."
+    },
+    {
+      "id": "mips32el-clang-ipc-refcount-c3",
+      "architecture": "mips32el",
+      "implementation_kind": "llsc_only_selected_object",
+      "source_checks": [
+        {
+          "path": "build/sources/linux-b9b3e33b70b71/arch/mips/include/asm/cmpxchg.h",
+          "sha256": "551b52fb9216d64f2a8481db42b07e48dd78948759677856441315ffaded0449",
+          "ordered_tokens": [
+            "#define __cmpxchg_asm(ld, st, m, old, new)",
+            "1:\t\" ld",
+            "bne\t%0, %z3, 2f",
+            "st \"\t$1, %1",
+            "__stringify(SC_BEQZ)",
+            "return __cmpxchg_asm(\"ll\", \"sc\""
+          ]
+        },
+        {
+          "path": "build/sources/linux-b9b3e33b70b71/arch/mips/include/asm/cpu-features.h",
+          "sha256": "9b214f4026aff73b4bb0d41d2296d86cb65a2d788f1183b75cebab6520086975",
+          "ordered_tokens": [
+            "#ifndef cpu_has_llsc",
+            "#define cpu_has_llsc\t\t__isa_ge_or_opt(1, MIPS_CPU_LLSC)",
+            "#ifndef kernel_uses_llsc",
+            "#define kernel_uses_llsc\tcpu_has_llsc"
+          ]
+        },
+        {
+          "path": "build/sources/linux-b9b3e33b70b71/arch/mips/include/asm/asm.h",
+          "sha256": "da92ec2427ae03a6085c7a87249471009f268d72d2ca556ecfad960fe13eb673",
+          "ordered_tokens": [
+            "#ifdef CONFIG_WAR_R10000_LLSC",
+            "# define SC_BEQZ\tbeqzl",
+            "#elif !defined(CONFIG_CC_HAS_BROKEN_INLINE_COMPAT_BRANCH)",
+            "# define SC_BEQZ\tbeqzc",
+            "#else",
+            "# define SC_BEQZ\tbeqz"
+          ]
+        }
+      ],
+      "disassembly_order": [
+        "<ipc_rcu_getref>:",
+        "ll\t$3, 0x0($4)",
+        "bne\t$3, $16",
+        "sc\t$1, 0x0($4)",
+        "beqz\t$1, 0xa34",
+        "bnez\t$2, 0xa2c"
+      ],
+      "verification_candidate": false,
+      "decision": "not_promoted",
+      "blocking_reason": "The selected MIPS32r2 LL/SC compare/exchange retries after conditional-store failure without a profile-bound finite failure guarantee."
     }
   ],
   "exclusions": [
     "No LL/SC profile is promoted to a kernel progress property by this capability audit.",
     "The hypothetical two-failure bound is diagnostic only and is not asserted of any CPU, emulator, compiler output or kernel configuration.",
-    "Native LSE and Zacas subpaths do not promote their mixed runtime-selectable ARM64 and RISC-V profiles while an unaccepted LL/SC path remains possible; the LoongArch final-put AMO likewise does not promote its LL/SC get path.",
+    "Native LSE and Zacas subpaths do not promote their mixed runtime-selectable ARM64 and RISC-V profiles while an unaccepted LL/SC path remains possible; the LoongArch final-put AMO likewise does not promote its LL/SC get path, and the MIPS32r2 mapping has only LL/SC paths.",
     "No scheduler fairness, unbounded lock-free progress, wait-freedom, interrupt/NMI progress, RCU progress or whole-kernel liveness is claimed."
   ]
 }

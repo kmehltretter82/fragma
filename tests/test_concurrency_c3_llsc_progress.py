@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class ConcurrencyC3LlscProgressTests(unittest.TestCase):
-    def test_manifest_has_seven_fail_closed_profile_assessments(self):
+    def test_manifest_has_eight_fail_closed_profile_assessments(self):
         manifest = concurrency_c3_llsc_progress.load_manifest(ROOT)
         self.assertEqual(
             [profile["id"] for profile in manifest["profiles"]],
@@ -24,6 +24,7 @@ class ConcurrencyC3LlscProgressTests(unittest.TestCase):
                 "sh-smp-ipc-refcount-c3",
                 "alpha-smp-ipc-refcount-c3",
                 "loongarch64-clang-ipc-refcount-c3",
+                "mips32el-clang-ipc-refcount-c3",
             ],
         )
         self.assertTrue(all(
@@ -49,8 +50,8 @@ class ConcurrencyC3LlscProgressTests(unittest.TestCase):
         excluded = " ".join(manifest["exclusions"]).lower()
         for boundary in (
             "no ll/sc profile", "hypothetical", "native lse", "zacas",
-            "loongarch", "scheduler fairness", "wait-freedom", "rcu progress",
-            "whole-kernel",
+            "loongarch", "mips", "scheduler fairness", "wait-freedom",
+            "rcu progress", "whole-kernel",
         ):
             with self.subTest(boundary=boundary):
                 self.assertIn(boundary, excluded)
@@ -69,6 +70,31 @@ class ConcurrencyC3LlscProgressTests(unittest.TestCase):
             actual["maximum_witness"]["failure_schedule"], [2, 2, 2, 2]
         )
         self.assertIs(diagnostic["verification_candidate"], False)
+
+    def test_summary_covers_mips_non_promotion(self):
+        manifest = concurrency_c3_llsc_progress.load_manifest(ROOT)
+        rendered = concurrency_c3_llsc_progress.render_summary({
+            "accepted": True,
+            "llsc_profile_assessment_count": len(manifest["profiles"]),
+            "kernel_verification_count": 0,
+            "progress_implementation_mapping_count": 0,
+            "detecting_control_count": 1,
+            "checks": [],
+            "profiles": [{
+                "id": profile["id"],
+                "implementation_kind": profile["implementation_kind"],
+                "decision": profile["decision"],
+                "passed": True,
+            } for profile in manifest["profiles"]],
+            "conditional_diagnostic": {
+                "actual": {
+                    "finite_schedules": 120,
+                    "max_store_conditional_attempts": 12,
+                },
+            },
+        })
+        self.assertIn("Assessed LL/SC profiles: **8**", rendered)
+        self.assertIn("MIPS32r2 exposes direct LL/SC retry paths", rendered)
 
     def test_unbounded_failure_control_detects_retry_cycle(self):
         manifest = concurrency_c3_llsc_progress.load_manifest(ROOT)

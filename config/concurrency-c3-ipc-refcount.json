@@ -51,6 +51,12 @@
       "build/sources/linux-b9b3e33b70b71/arch/loongarch/include/asm/cmpxchg.h": "d4379ee53c45ad865983f292e4b9ba3fc8a6a556a0ef8d2fb3eb098eabe2bdf6",
       "build/sources/linux-b9b3e33b70b71/arch/loongarch/include/asm/barrier.h": "8a509de398ed8e085ed1156e1b6094eccaa62c7ccd5d73f2e385e9a9d4c2d020",
       "build/sources/linux-b9b3e33b70b71/arch/loongarch/Kconfig": "12640e68c3c0628c08d9c5549a2eea27dd9fab09323e4ce43c9e3952420837ad",
+      "build/sources/linux-b9b3e33b70b71/arch/mips/include/asm/atomic.h": "5190d2be6bf3e50e7eb09622bf9ec7fe54171e5281f6ea5f5b9d2810b6ccf86c",
+      "build/sources/linux-b9b3e33b70b71/arch/mips/include/asm/cmpxchg.h": "551b52fb9216d64f2a8481db42b07e48dd78948759677856441315ffaded0449",
+      "build/sources/linux-b9b3e33b70b71/arch/mips/include/asm/barrier.h": "ddcffb0bcb9e1bfd6f7988e069a7509c1c991fecc53e5985ec8c12c0f09e955d",
+      "build/sources/linux-b9b3e33b70b71/arch/mips/include/asm/cpu-features.h": "9b214f4026aff73b4bb0d41d2296d86cb65a2d788f1183b75cebab6520086975",
+      "build/sources/linux-b9b3e33b70b71/arch/mips/include/asm/asm.h": "da92ec2427ae03a6085c7a87249471009f268d72d2ca556ecfad960fe13eb673",
+      "build/sources/linux-b9b3e33b70b71/arch/mips/Kconfig": "3475d8e5b5a0914d9a1042031f3a377ad7d5d312b0e42787e1b8920636992c9d",
       "build/sources/linux-b9b3e33b70b71/scripts/Makefile.clang": "c385b73ad4c36348bf4a7cd8ddc0f6afb88e4804579f8d5f3f18de0f1fa2c8d7",
       "build/sources/linux-b9b3e33b70b71/arch/um/Kconfig": "82c63a238de3a3013fac9a846d1ee55f0cb71f6b7d39ca5a460aa6084dd245b1",
       "build/sources/linux-b9b3e33b70b71/arch/um/Makefile": "0b723adb41e48d9b3033f5a65d3977af8b9efe751f0eaa9ec56c9e94602cc225",
@@ -1051,6 +1057,135 @@
     }
   },
   {
+    "id": "mips32el-clang-ipc-refcount-c3",
+    "arch": "mips",
+    "subarch": null,
+    "cross_compile": null,
+    "make_assignments": [
+      "LLVM=1",
+      "LLVM_IAS=1"
+    ],
+    "jobs": 8,
+    "build_directory": "build/kernel/mips32el-clang-ipc-refcount-c3",
+    "config": "build/kernel/mips32el-clang-ipc-refcount-c3/.config",
+    "config_sha256": "a45ad683e9c792341dbd8ae53afbfcd0ac919bcbaa3f34e988ff0b04fc3f7278",
+    "execution_scope": "smp-multicpu",
+    "configuration": {
+      "base_recipe": "malta_defconfig",
+      "mutations": [],
+      "finalize_recipe": "olddefconfig"
+    },
+    "required_config": {
+      "CONFIG_MIPS": "y",
+      "CONFIG_32BIT": "y",
+      "CONFIG_64BIT": "absent",
+      "CONFIG_CPU_MIPS32_R2": "y",
+      "CONFIG_CPU_LITTLE_ENDIAN": "y",
+      "CONFIG_CPU_BIG_ENDIAN": "n",
+      "CONFIG_MIPS_MT_SMP": "y",
+      "CONFIG_SMP": "y",
+      "CONFIG_SYSVIPC": "y",
+      "CONFIG_TREE_RCU": "y",
+      "CONFIG_PREEMPT_RCU": "absent",
+      "CONFIG_RCU_EXPERT": "n",
+      "CONFIG_KCSAN": "absent",
+      "CONFIG_CPU_HAS_SYNC": "y",
+      "CONFIG_WEAK_ORDERING": "absent",
+      "CONFIG_WEAK_REORDERING_BEYOND_LLSC": "absent",
+      "CONFIG_LTO_NONE": "y",
+      "CONFIG_CC_IS_GCC": "absent",
+      "CONFIG_CC_IS_CLANG": "y"
+    },
+    "allowed_diagnostics": {
+      "base-config": [],
+      "config-mutation": [],
+      "finalize-config": [],
+      "object": []
+    },
+    "make": {
+      "binary": "/usr/bin/make",
+      "realpath": "/usr/bin/make",
+      "sha256": "27c9f6d806aee15882b01c2c61848f7aa75caa14bc7b6f608ba422f9e46a7d49",
+      "version_line": "GNU Make 4.4.1"
+    },
+    "compiler": {
+      "binary": "/usr/bin/clang",
+      "realpath": "/usr/lib/llvm-21/bin/clang",
+      "sha256": "412bbe8c60571a1eb06f48fde89635033621caeb01a9b4ee76d46711bae8e932",
+      "version_line": "Ubuntu clang version 21.1.8 (6ubuntu1)",
+      "target": "mipsel-unknown-linux-gnu",
+      "target_args": [
+        "--target=mipsel-linux-gnu"
+      ]
+    },
+    "objdump": {
+      "binary": "/usr/bin/llvm-objdump",
+      "realpath": "/usr/lib/llvm-21/bin/llvm-objdump",
+      "sha256": "488163ed1ce6e9dcd82730dd1643e382ea811e835d41d4724b82bd34ccc0af8b",
+      "version_line": "Ubuntu LLVM version 21.1.8",
+      "disassemble_symbol_option": "--disassemble-symbols"
+    },
+    "configured_compile": {
+      "target": "ipc/util.o",
+      "object": "build/kernel/mips32el-clang-ipc-refcount-c3/ipc/util.o",
+      "command_file": "build/kernel/mips32el-clang-ipc-refcount-c3/ipc/.util.o.cmd",
+      "object_sha256": "bfc8d8134c04b6b892deb8ccf4ccbf451d1435e3fbd13eb60878acbd09b77ff8",
+      "command_sha256": "3a50e9baf3ed7a327de55118b7992513a1b867c1e39601ef789303d6f828bc4e",
+      "elf_class": 1,
+      "elf_data": 1,
+      "elf_machine": 8,
+      "required_command_tokens": [
+        "/usr/bin/clang",
+        "-D__KERNEL__",
+        "--target=mipsel-linux-gnu",
+        "-fintegrated-as",
+        "-std=gnu11",
+        "-mabi=32",
+        "-G 0",
+        "-mno-abicalls",
+        "-fno-pic",
+        "-msoft-float",
+        "-EL",
+        "-march=mips32r2",
+        "-Wa,--trap",
+        "-O2",
+        "ipc/util.o",
+        "ipc/util.c"
+      ],
+      "functions": {
+        "ipc_rcu_getref": {
+          "section": ".text",
+          "value": "00000a14",
+          "size": 148,
+          "disassembly_order": [
+            "<ipc_rcu_getref>:",
+            "ll\t$3, 0x0($4)",
+            "bne\t$3, $16",
+            "sc\t$1, 0x0($4)",
+            "beqz\t$1, 0xa34",
+            "bnez\t$2, 0xa2c",
+            "R_MIPS_26\trefcount_warn_saturate"
+          ]
+        },
+        "ipc_rcu_putref": {
+          "section": ".text",
+          "value": "00000aa8",
+          "size": 104,
+          "disassembly_order": [
+            "<ipc_rcu_putref>:",
+            "ll\t$3, 0x38($4)",
+            "sc\t$2, 0x38($4)",
+            "beqz\t$2, 0xab0",
+            "bne\t$2, $1",
+            "R_MIPS_26\tcall_rcu",
+            "blez\t$2",
+            "R_MIPS_26\trefcount_warn_saturate"
+          ]
+        }
+      }
+    }
+  },
+  {
     "id": "um-x86_64-smp-ipc-refcount-c3",
     "arch": "um",
     "subarch": "x86_64",
@@ -1188,7 +1323,7 @@
       "Saturation, overflow, underflow, warning paths and values outside zero, one and two are excluded.",
       "The acquire-after-control-dependency orders later destruction work but cannot change the selected same-refcount mutual-success outcome, so cross-object ordering is not claimed.",
       "The unsafe resurrection case is a detecting control and is permanently ineligible as verification evidence.",
-      "No architecture implementation other than the ten configured SMP x86-64, arm64, riscv64, s390x, ARM32, PowerPC32, SuperH, Alpha, LoongArch64 and UML x86-64 profiles is accepted by this source-linked pilot; every other architecture remains outside the claim.",
+      "No architecture implementation other than the eleven configured SMP x86-64, arm64, riscv64, s390x, ARM32, PowerPC32, SuperH, Alpha, LoongArch64, MIPS32 little-endian and UML x86-64 profiles is accepted by this source-linked pilot; every other architecture remains outside the claim.",
       "The lifetime mutual-exclusion model itself claims no progress, fairness or retry bound; only the separate bounded-quiescent progress property below is eligible, and it does not establish general lock-freedom, wait-freedom, whole-IPC correctness, whole-RCU correctness or whole-kernel race freedom."
     ]
   },

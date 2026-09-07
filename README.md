@@ -55,7 +55,7 @@ concurrent `atomic_inc()` operations on `failed_load_modules` cannot collapse to
 one. Its split once-access control permits the lost update, and an independent
 pair distinguishes fully ordered from relaxed increment-return operations. The
 [System V IPC refcount pilot](docs/CONCURRENCY-C3-REFCOUNT-20260907.md) then
-passes 937/937 gates and accepts two separate properties. The lifetime property
+passes 1036/1036 gates and accepts two separate properties. The lifetime property
 says that, from the sole reference, `ipc_rcu_putref()` cannot schedule
 destruction while a concurrent, locking-stabilized `ipc_rcu_getref()` also
 succeeds; its unsafe unconditional-increment control exposes a zero-refcount
@@ -65,20 +65,21 @@ loop terminates in at most four compare/exchange attempts after at most three
 counter observations and quiescence. Stale-expected, spurious-failure and
 unbounded-interference controls expose the excluded nontermination behaviors.
 Real `ipc/util.o` source/compiler/symbol/disassembly mappings pass for x86-64,
-arm64, riscv64, big-endian s390x, ARMv7, big-endian PowerPC32, SuperH, Alpha
-LoongArch64 and UML x86-64, including emitted alternative atomic paths, an
-explicit LLVM 21.1.8 LoongArch target route and UML's explicit `ARCH`/`SUBARCH`
-header route. All ten selected configurations are SMP; the
+arm64, riscv64, big-endian s390x, ARMv7, big-endian PowerPC32, SuperH, Alpha,
+LoongArch64, little-endian MIPS32r2 and UML x86-64, including emitted
+alternative atomic paths, explicit LLVM 21.1.8 LoongArch/MIPS target routes and
+UML's explicit `ARCH`/`SUBARCH` header route. All eleven selected configurations are SMP; the
 UP-only exploratory m68k object is not promoted into this claim. The lifetime
-implementation map covers all ten profiles; the progress mapping is
+implementation map covers all eleven profiles; the progress mapping is
 deliberately limited to native x86-64, s390x and UML x86-64 objects whose
 single-instruction `CMPXCHG`/`CS` retry paths are checked. The subsequent
 [LL/SC progress capability audit](docs/CONCURRENCY-C3-LLSC-PROGRESS-20260907.md)
-passes 556/556 gates over the seven LL/SC-bearing profiles' source and complete-object
+passes 609/609 gates over the eight LL/SC-bearing profiles' source and complete-object
 control flow. It promotes none: ARM64 and RISC-V retain runtime-selectable
 LL/SC alternatives, while ARM32, PowerPC32, SuperH and Alpha expose direct
 reservation loops and LoongArch64 combines an AMO decrement with an LL/SC get
-loop; none has an established finite conditional-store failure bound.
+loop; the MIPS32r2 get and put both use LL/SC retries. None has an established
+finite conditional-store failure bound.
 Its 120-schedule bounded diagnostic remains permanently ineligible, and an
 unbounded-failure control detects a one-state retry cycle. These checks confirm
 bounded production
@@ -86,6 +87,9 @@ weak-memory/atomic reasoning, not a new defect or general concurrency support.
 The [LoongArch mapping record](docs/CONCURRENCY-C3-LOONGARCH-20260907.md)
 separately documents the target-aware LLVM route and why this accepted object
 mapping is not yet a general Frama-C LoongArch profile.
+The [MIPS mapping record](docs/CONCURRENCY-C3-MIPS-20260907.md) does the same for
+the distinct little-endian O32/MIPS32r2 SMP route and keeps big-endian/64-bit
+MIPS and general Eva/WP support outside the claim.
 Unbounded progress, scheduler fairness, wait-freedom, architecture-backed LL/SC
 guarantees, remaining architecture mappings, broader lockless protocols,
 IRQ/NMI classes and explicit RCU grace-period reasoning remain open.
@@ -112,7 +116,7 @@ The new entry point is `python3 -m fragma` (`list`, `preflight`, `snapshot`,
 [architecture profiles](profiles/README.md). Verification never installs
 packages. No `sudo` installation is needed on the current machine for the
 ten configured general analyzer profiles, including s390x and UML x86-64, or
-for the separate LoongArch IPC object mapping described above.
+for the separate LoongArch and MIPS IPC object mappings described above.
 See [result semantics](docs/results.md) and [explicit-evidence coverage](docs/coverage.md)
 for the distinction between historical, current, incomplete and calibrated results.
 The [maintenance guide](docs/maintenance.md) covers adding targets, scoped reviews,

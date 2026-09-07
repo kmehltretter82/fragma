@@ -293,6 +293,40 @@ _PROFILE_SPECS = {
             "CONFIG_CC_IS_CLANG": "y",
         },
     },
+    "mips32el-clang-ipc-refcount-c3": {
+        "arch": "mips",
+        "subarch": None,
+        "cross_compile": None,
+        "make_assignments": ["LLVM=1", "LLVM_IAS=1"],
+        "base_recipe": "malta_defconfig",
+        "compiler": "/usr/bin/clang",
+        "compiler_target": "mipsel-unknown-linux-gnu",
+        "compiler_target_args": ["--target=mipsel-linux-gnu"],
+        "objdump": "/usr/bin/llvm-objdump",
+        "disassemble_symbol_option": "--disassemble-symbols",
+        "elf": [1, 1, 8],
+        "required_config": {
+            "CONFIG_MIPS": "y",
+            "CONFIG_32BIT": "y",
+            "CONFIG_64BIT": "absent",
+            "CONFIG_CPU_MIPS32_R2": "y",
+            "CONFIG_CPU_LITTLE_ENDIAN": "y",
+            "CONFIG_CPU_BIG_ENDIAN": "n",
+            "CONFIG_MIPS_MT_SMP": "y",
+            "CONFIG_SMP": "y",
+            "CONFIG_SYSVIPC": "y",
+            "CONFIG_TREE_RCU": "y",
+            "CONFIG_PREEMPT_RCU": "absent",
+            "CONFIG_RCU_EXPERT": "n",
+            "CONFIG_KCSAN": "absent",
+            "CONFIG_CPU_HAS_SYNC": "y",
+            "CONFIG_WEAK_ORDERING": "absent",
+            "CONFIG_WEAK_REORDERING_BEYOND_LLSC": "absent",
+            "CONFIG_LTO_NONE": "y",
+            "CONFIG_CC_IS_GCC": "absent",
+            "CONFIG_CC_IS_CLANG": "y",
+        },
+    },
     "um-x86_64-smp-ipc-refcount-c3": {
         "arch": "um",
         "subarch": "x86_64",
@@ -343,9 +377,9 @@ _PROFILE_DIAGNOSTICS = {
 
 
 _ARCHITECTURE_EXCLUSION = (
-    "No architecture implementation other than the ten configured SMP "
+    "No architecture implementation other than the eleven configured SMP "
     "x86-64, arm64, riscv64, s390x, ARM32, PowerPC32, SuperH, Alpha, "
-    "LoongArch64 and UML x86-64 "
+    "LoongArch64, MIPS32 little-endian and UML x86-64 "
     "profiles is accepted by this source-linked pilot; every other "
     "architecture remains outside the claim."
 )
@@ -752,7 +786,7 @@ def load_manifest(root: Path) -> dict[str, Any]:
             "source receipt is outside kernel source"
         ) from exc
     identities = kernel["source_identities"]
-    if not isinstance(identities, dict) or len(identities) != 53:
+    if not isinstance(identities, dict) or len(identities) != 59:
         raise ConcurrencyC3IpcRefcountError(
             "IPC refcount source identity set is not exact"
         )
@@ -1481,6 +1515,18 @@ def _semantic_checks(
         source_root / "arch/loongarch/include/asm/barrier.h"
     ).read_text()
     loongarch_kconfig = (source_root / "arch/loongarch/Kconfig").read_text()
+    mips_atomic = (source_root / "arch/mips/include/asm/atomic.h").read_text()
+    mips_cmpxchg = (
+        source_root / "arch/mips/include/asm/cmpxchg.h"
+    ).read_text()
+    mips_barrier = (
+        source_root / "arch/mips/include/asm/barrier.h"
+    ).read_text()
+    mips_cpu_features = (
+        source_root / "arch/mips/include/asm/cpu-features.h"
+    ).read_text()
+    mips_asm = (source_root / "arch/mips/include/asm/asm.h").read_text()
+    mips_kconfig = (source_root / "arch/mips/Kconfig").read_text()
     clang_makefile = (source_root / "scripts/Makefile.clang").read_text()
     um_kconfig = (source_root / "arch/um/Kconfig").read_text()
     um_makefile = (source_root / "arch/um/Makefile").read_text()
@@ -1757,6 +1803,62 @@ def _semantic_checks(
                    "depends on 64BIT",
                    "config CPU_HAS_AMO",
                    "default 64BIT",
+               ])),
+        _check("MIPS Clang route pins the kernel target triple", True,
+               "CLANG_TARGET_FLAGS_mips\t\t:= mipsel-linux-gnu"
+               in clang_makefile),
+        _check("MIPS32r2 selects the LL/SC capability path", True,
+               _ordered(mips_cpu_features, [
+                   "#ifndef cpu_has_llsc",
+                   "#define cpu_has_llsc\t\t__isa_ge_or_opt(1, MIPS_CPU_LLSC)",
+                   "#ifndef kernel_uses_llsc",
+                   "#define kernel_uses_llsc\tcpu_has_llsc",
+               ])),
+        _check("MIPS fetch-sub uses an LL/SC retry", True,
+               _ordered(mips_atomic, [
+                   "#define ATOMIC_FETCH_OP(pfx, op, type, c_op, asm_op, ll, sc)",
+                   '"1:\t" #ll',
+                   '"\t" #sc',
+                   "__stringify(SC_BEQZ)",
+                   "ATOMIC_OPS(atomic, sub, int, -=, subu, ll, sc)",
+                   "#define arch_atomic_fetch_sub_relaxed",
+               ])),
+        _check("MIPS compare/exchange uses an LL/SC retry", True,
+               _ordered(mips_cmpxchg, [
+                   "#define __cmpxchg_asm(ld, st, m, old, new)",
+                   '"1:\t" ld',
+                   '"\tbne\t%0, %z3, 2f',
+                   'st "\t$1, %1',
+                   "__stringify(SC_BEQZ)",
+                   'return __cmpxchg_asm("ll", "sc"',
+               ])),
+        _check("MIPS selected SC retry branch is explicit", True,
+               _ordered(mips_asm, [
+                   "#ifdef CONFIG_WAR_R10000_LLSC",
+                   "# define SC_BEQZ\tbeqzl",
+                   "#elif !defined(CONFIG_CC_HAS_BROKEN_INLINE_COMPAT_BRANCH)",
+                   "# define SC_BEQZ\tbeqzc",
+                   "#else",
+                   "# define SC_BEQZ\tbeqz",
+               ])),
+        _check("MIPS LL/SC ordering boundary is explicit", True,
+               _ordered(mips_barrier, [
+                   "#if defined(CONFIG_WEAK_REORDERING_BEYOND_LLSC) && defined(CONFIG_SMP)",
+                   "# define smp_llsc_mb()",
+                   "# define __LLSC_CLOBBER",
+                   "#else",
+                   "# define smp_llsc_mb()\t\tdo { } while (0)",
+                   "# define __LLSC_CLOBBER\t\t\"memory\"",
+                   "#define __smp_mb__after_atomic()\tsmp_llsc_mb()",
+               ])),
+        _check("MIPS MT configuration selects SMP", True,
+               _ordered(mips_kconfig, [
+                   "config MIPS_MT_SMP",
+                   "select SYNC_R4K",
+                   "select SMP",
+                   "select SYS_SUPPORTS_SMP",
+                   "config SMP",
+                   "depends on SYS_SUPPORTS_SMP",
                ])),
         _check("UML x86-64 explicitly supports SMP", True,
                _ordered(um_kconfig, [
@@ -2175,9 +2277,8 @@ def render_summary(result: dict[str, Any]) -> str:
         "separately expose one-state and two-state cycles.",
         "",
         "The gate pins the IPC helper and locking contract, refcount implementation,",
-        "LKMM RMW axiom, and ten configured SMP profiles: x86-64, arm64,",
-        "riscv64, s390x, ARM32, PowerPC32, SuperH, Alpha, LoongArch64, and",
-        "UML x86-64.",
+        f"LKMM RMW axiom, and all {len(result['profiles'])} configured SMP profiles",
+        "listed above.",
         "Each mapping pins both function symbols and target disassembly,",
         "including alternative atomic paths where the architecture emits them.",
         "The bounded progress mapping is limited to native x86-64, s390x, and",
@@ -2427,7 +2528,7 @@ def run_c3_ipc_refcount(
         "c3_stage_complete": False,
         "remaining_c3": [
             "Unbounded progress, scheduler fairness, wait-freedom and LL/SC implementation liveness",
-            "Implementation mappings for Linux architectures beyond x86-64, arm64, riscv64, s390x, ARM32, PowerPC32, SuperH, Alpha, LoongArch64, and UML x86-64",
+            "Implementation mappings for Linux architectures beyond x86-64, arm64, riscv64, s390x, ARM32, PowerPC32, SuperH, Alpha, LoongArch64, MIPS32 little-endian, and UML x86-64",
             "Broader lock-free functional protocol coverage",
         ],
         "call_rcu_modeled": False,
