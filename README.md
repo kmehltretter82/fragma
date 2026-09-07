@@ -43,8 +43,16 @@ same accesses as unprotected. The separate
 site-based process/hard-IRQ property on a configured SMP ARM profile: selected
 critical accesses share `hdq-spinlock`, with independent same-CPU mask-elided
 and remote-CPU spin-elided controls. The handler's unlocked status read remains
-visible and outside the accepted claim. Broader IRQ/NMI classes, functional
-protocols, weak memory and RCU remain open.
+visible and outside the accepted claim. The new
+[C3 LKMM baseline](docs/CONCURRENCY-C3-LKMM-20260907.md) pins herd7 7.58, the
+kernel model and four detecting weak/ordered calibrations. The separate
+[trace tgid-map pilot](docs/CONCURRENCY-C3-TRACE-20260907.md) accepts one narrow
+source-linked release/acquire ordering property on configured SMP x86-64; its
+once-access negative permits the stale-payload outcome and reports a data race.
+This confirms bounded production weak-memory checking, not a new defect or
+general concurrency support. Atomic/RMW, lock-free lifetime/progress, other
+architecture mappings, broader IRQ/NMI classes, functional protocols and RCU
+remain open.
 The [renewed s390x pilot](s390/L2-RENEWAL-20260907.md) establishes scoped L2 support
 for seven C helpers. The [freshly renewed common24 baselines](common/L2-CLANG-RENEWAL-20260907.md)
 cover four helpers on ARM32, PowerPC32, m68k, ARM64, RISC-V64, SH, Alpha,
@@ -60,7 +68,8 @@ they are not the acceptance baseline for the new runner and checked profiles.
 
 The new entry point is `python3 -m fragma` (`list`, `preflight`, `snapshot`,
 `prepare`, `run`, `compare`, `coverage`, `concurrency-c0`, `concurrency-c1`,
-`concurrency-c2`, `concurrency-c2-irq`, `rv32-zeropad-audit`). See
+`concurrency-c2`, `concurrency-c2-irq`, `concurrency-c3-lkmm`,
+`concurrency-c3-trace`, `rv32-zeropad-audit`). See
 [toolchain setup](docs/toolchain.md) and
 [architecture profiles](profiles/README.md). Verification never installs
 packages. No `sudo` installation is needed on the current machine for the

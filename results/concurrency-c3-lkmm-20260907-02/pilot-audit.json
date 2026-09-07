@@ -1,0 +1,1445 @@
+{
+  "accepted": true,
+  "c3_capability_baseline_complete": true,
+  "c3_stage_complete": false,
+  "calibration_count": 4,
+  "cases": [
+    {
+      "checks": [
+        {
+          "actual": "15f94aa6220215d31f238a9f9713aea53a396186f17be7a3a0f7ed8ba4724456",
+          "expected": "15f94aa6220215d31f238a9f9713aea53a396186f17be7a3a0f7ed8ba4724456",
+          "name": "litmus identity",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "timed out",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "exit code",
+          "passed": true
+        },
+        {
+          "actual": "",
+          "expected": "",
+          "name": "stderr empty",
+          "passed": true
+        },
+        {
+          "actual": null,
+          "expected": null,
+          "name": "parse error",
+          "passed": true
+        },
+        {
+          "actual": {
+            "condition": "exists (1:r0=1 /\\ 1:r1=0)",
+            "disposition": "Allowed",
+            "hash": "c0ebd8ca556580d772ac73303c4c4f84",
+            "marker": "Ok",
+            "negative": 3,
+            "observation": "Sometimes",
+            "positive": 1,
+            "states": 4,
+            "test": "MP+poonceonces"
+          },
+          "expected": {
+            "condition": "exists (1:r0=1 /\\ 1:r1=0)",
+            "disposition": "Allowed",
+            "hash": "c0ebd8ca556580d772ac73303c4c4f84",
+            "marker": "Ok",
+            "negative": 3,
+            "observation": "Sometimes",
+            "positive": 1,
+            "states": 4,
+            "test": "MP+poonceonces"
+          },
+          "name": "semantic result",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "required operation: READ_ONCE",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "required operation: WRITE_ONCE",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "forbidden operation: smp_store_release",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "forbidden operation: smp_load_acquire",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "forbidden operation: smp_mb",
+          "passed": true
+        }
+      ],
+      "id": "mp_once_once",
+      "parse_error": null,
+      "parsed": {
+        "condition": "exists (1:r0=1 /\\ 1:r1=0)",
+        "disposition": "Allowed",
+        "hash": "c0ebd8ca556580d772ac73303c4c4f84",
+        "marker": "Ok",
+        "negative": 3,
+        "observation": "Sometimes",
+        "positive": 1,
+        "seconds": 0.01,
+        "state_values": [
+          "1:r0=0; 1:r1=0;",
+          "1:r0=0; 1:r1=1;",
+          "1:r0=1; 1:r1=0;",
+          "1:r0=1; 1:r1=1;"
+        ],
+        "states": 4,
+        "test": "MP+poonceonces"
+      },
+      "passed": true,
+      "path": "litmus-tests/MP+poonceonces.litmus",
+      "returncode": 0,
+      "role": "weakened_control",
+      "timed_out": false,
+      "verification_candidate": false
+    },
+    {
+      "checks": [
+        {
+          "actual": "fbfcb4210aa3593ab07e564b2c362734cfaf670c1cb34dad1c6b483f7f41d8c3",
+          "expected": "fbfcb4210aa3593ab07e564b2c362734cfaf670c1cb34dad1c6b483f7f41d8c3",
+          "name": "litmus identity",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "timed out",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "exit code",
+          "passed": true
+        },
+        {
+          "actual": "",
+          "expected": "",
+          "name": "stderr empty",
+          "passed": true
+        },
+        {
+          "actual": null,
+          "expected": null,
+          "name": "parse error",
+          "passed": true
+        },
+        {
+          "actual": {
+            "condition": "exists (1:r0=1 /\\ 1:r1=0)",
+            "disposition": "Allowed",
+            "hash": "f259d8efc86e0b40c7168bf58524ab49",
+            "marker": "No",
+            "negative": 3,
+            "observation": "Never",
+            "positive": 0,
+            "states": 3,
+            "test": "MP+pooncerelease+poacquireonce"
+          },
+          "expected": {
+            "condition": "exists (1:r0=1 /\\ 1:r1=0)",
+            "disposition": "Allowed",
+            "hash": "f259d8efc86e0b40c7168bf58524ab49",
+            "marker": "No",
+            "negative": 3,
+            "observation": "Never",
+            "positive": 0,
+            "states": 3,
+            "test": "MP+pooncerelease+poacquireonce"
+          },
+          "name": "semantic result",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "required operation: READ_ONCE",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "required operation: WRITE_ONCE",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "required operation: smp_store_release",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "required operation: smp_load_acquire",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "forbidden operation: smp_mb",
+          "passed": true
+        }
+      ],
+      "id": "mp_release_acquire",
+      "parse_error": null,
+      "parsed": {
+        "condition": "exists (1:r0=1 /\\ 1:r1=0)",
+        "disposition": "Allowed",
+        "hash": "f259d8efc86e0b40c7168bf58524ab49",
+        "marker": "No",
+        "negative": 3,
+        "observation": "Never",
+        "positive": 0,
+        "seconds": 0.01,
+        "state_values": [
+          "1:r0=0; 1:r1=0;",
+          "1:r0=0; 1:r1=1;",
+          "1:r0=1; 1:r1=1;"
+        ],
+        "states": 3,
+        "test": "MP+pooncerelease+poacquireonce"
+      },
+      "passed": true,
+      "path": "litmus-tests/MP+pooncerelease+poacquireonce.litmus",
+      "returncode": 0,
+      "role": "ordered_calibration",
+      "timed_out": false,
+      "verification_candidate": false
+    },
+    {
+      "checks": [
+        {
+          "actual": "a9b498362b29cc0ccd79d998b587a7763ba42d7d47c6dd588c9fb19e6f9d1a89",
+          "expected": "a9b498362b29cc0ccd79d998b587a7763ba42d7d47c6dd588c9fb19e6f9d1a89",
+          "name": "litmus identity",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "timed out",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "exit code",
+          "passed": true
+        },
+        {
+          "actual": "",
+          "expected": "",
+          "name": "stderr empty",
+          "passed": true
+        },
+        {
+          "actual": null,
+          "expected": null,
+          "name": "parse error",
+          "passed": true
+        },
+        {
+          "actual": {
+            "condition": "exists (0:r0=0 /\\ 1:r0=0)",
+            "disposition": "Allowed",
+            "hash": "d2b6ca86cddfad6178a05767f57fafbf",
+            "marker": "Ok",
+            "negative": 3,
+            "observation": "Sometimes",
+            "positive": 1,
+            "states": 4,
+            "test": "SB+poonceonces"
+          },
+          "expected": {
+            "condition": "exists (0:r0=0 /\\ 1:r0=0)",
+            "disposition": "Allowed",
+            "hash": "d2b6ca86cddfad6178a05767f57fafbf",
+            "marker": "Ok",
+            "negative": 3,
+            "observation": "Sometimes",
+            "positive": 1,
+            "states": 4,
+            "test": "SB+poonceonces"
+          },
+          "name": "semantic result",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "required operation: READ_ONCE",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "required operation: WRITE_ONCE",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "forbidden operation: smp_store_release",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "forbidden operation: smp_load_acquire",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "forbidden operation: smp_mb",
+          "passed": true
+        }
+      ],
+      "id": "sb_once_once",
+      "parse_error": null,
+      "parsed": {
+        "condition": "exists (0:r0=0 /\\ 1:r0=0)",
+        "disposition": "Allowed",
+        "hash": "d2b6ca86cddfad6178a05767f57fafbf",
+        "marker": "Ok",
+        "negative": 3,
+        "observation": "Sometimes",
+        "positive": 1,
+        "seconds": 0.01,
+        "state_values": [
+          "0:r0=0; 1:r0=0;",
+          "0:r0=0; 1:r0=1;",
+          "0:r0=1; 1:r0=0;",
+          "0:r0=1; 1:r0=1;"
+        ],
+        "states": 4,
+        "test": "SB+poonceonces"
+      },
+      "passed": true,
+      "path": "litmus-tests/SB+poonceonces.litmus",
+      "returncode": 0,
+      "role": "weakened_control",
+      "timed_out": false,
+      "verification_candidate": false
+    },
+    {
+      "checks": [
+        {
+          "actual": "11dbee9bc79de6594e8e4275fbb4937981f6656c39a524030fd2df2a18f63405",
+          "expected": "11dbee9bc79de6594e8e4275fbb4937981f6656c39a524030fd2df2a18f63405",
+          "name": "litmus identity",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "timed out",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "exit code",
+          "passed": true
+        },
+        {
+          "actual": "",
+          "expected": "",
+          "name": "stderr empty",
+          "passed": true
+        },
+        {
+          "actual": null,
+          "expected": null,
+          "name": "parse error",
+          "passed": true
+        },
+        {
+          "actual": {
+            "condition": "exists (0:r0=0 /\\ 1:r0=0)",
+            "disposition": "Allowed",
+            "hash": "d66d99523e2cac6b06e66f4c995ebb48",
+            "marker": "No",
+            "negative": 3,
+            "observation": "Never",
+            "positive": 0,
+            "states": 3,
+            "test": "SB+fencembonceonces"
+          },
+          "expected": {
+            "condition": "exists (0:r0=0 /\\ 1:r0=0)",
+            "disposition": "Allowed",
+            "hash": "d66d99523e2cac6b06e66f4c995ebb48",
+            "marker": "No",
+            "negative": 3,
+            "observation": "Never",
+            "positive": 0,
+            "states": 3,
+            "test": "SB+fencembonceonces"
+          },
+          "name": "semantic result",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "required operation: READ_ONCE",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "required operation: WRITE_ONCE",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "required operation: smp_mb",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "forbidden operation: smp_store_release",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "forbidden operation: smp_load_acquire",
+          "passed": true
+        }
+      ],
+      "id": "sb_full_barrier",
+      "parse_error": null,
+      "parsed": {
+        "condition": "exists (0:r0=0 /\\ 1:r0=0)",
+        "disposition": "Allowed",
+        "hash": "d66d99523e2cac6b06e66f4c995ebb48",
+        "marker": "No",
+        "negative": 3,
+        "observation": "Never",
+        "positive": 0,
+        "seconds": 0.01,
+        "state_values": [
+          "0:r0=0; 1:r0=1;",
+          "0:r0=1; 1:r0=0;",
+          "0:r0=1; 1:r0=1;"
+        ],
+        "states": 3,
+        "test": "SB+fencembonceonces"
+      },
+      "passed": true,
+      "path": "litmus-tests/SB+fencembonceonces.litmus",
+      "returncode": 0,
+      "role": "ordered_calibration",
+      "timed_out": false,
+      "verification_candidate": false
+    }
+  ],
+  "checks": [
+    {
+      "actual": "93cffd1d937e730bf3010bfc904db8ce5c8ebc8df6e8d610032dda667c2950bd",
+      "expected": "93cffd1d937e730bf3010bfc904db8ce5c8ebc8df6e8d610032dda667c2950bd",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/.fragma-source.json",
+      "passed": true
+    },
+    {
+      "actual": "95bc588aa5f32509c15e00731cfb5b98ffc627f6e2d3971f21def66c2492b107",
+      "expected": "95bc588aa5f32509c15e00731cfb5b98ffc627f6e2d3971f21def66c2492b107",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/tools/memory-model/README",
+      "passed": true
+    },
+    {
+      "actual": "f7a5804c230527695aa4fe6ed62135a7f64d7485bf933a0a8b4a465e68fbfa76",
+      "expected": "f7a5804c230527695aa4fe6ed62135a7f64d7485bf933a0a8b4a465e68fbfa76",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/tools/memory-model/Documentation/litmus-tests.txt",
+      "passed": true
+    },
+    {
+      "actual": "250207709250d308e0a0a6f391c4eda0bbf4876cbc55eccbfbcd495676a179be",
+      "expected": "250207709250d308e0a0a6f391c4eda0bbf4876cbc55eccbfbcd495676a179be",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/tools/memory-model/linux-kernel.cat",
+      "passed": true
+    },
+    {
+      "actual": "ab57943799d445327c3c7cf0a1ca9f9fae8e7379e45b9fc90312993bb038e23f",
+      "expected": "ab57943799d445327c3c7cf0a1ca9f9fae8e7379e45b9fc90312993bb038e23f",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/tools/memory-model/linux-kernel.bell",
+      "passed": true
+    },
+    {
+      "actual": "37c57d82291113c5a4a170f3f6b5b8f01bc18403d701b8e5a6db43aae62d6b32",
+      "expected": "37c57d82291113c5a4a170f3f6b5b8f01bc18403d701b8e5a6db43aae62d6b32",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/tools/memory-model/linux-kernel.cfg",
+      "passed": true
+    },
+    {
+      "actual": "a04911d85fd86f5dbcf8ed436c7a2570fcc615f768c0c19b0a101f6212d2504c",
+      "expected": "a04911d85fd86f5dbcf8ed436c7a2570fcc615f768c0c19b0a101f6212d2504c",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/tools/memory-model/linux-kernel.def",
+      "passed": true
+    },
+    {
+      "actual": "a51a7f04ae3afea610253a04f4c930eced36c6141ba834517f9b0e2755057a79",
+      "expected": "a51a7f04ae3afea610253a04f4c930eced36c6141ba834517f9b0e2755057a79",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/tools/memory-model/lock.cat",
+      "passed": true
+    },
+    {
+      "actual": "5d8a5818161ab38b77226b7caa758fde63f1aaabdf87ea773e1620b62a5b9537",
+      "expected": "5d8a5818161ab38b77226b7caa758fde63f1aaabdf87ea773e1620b62a5b9537",
+      "name": "library identity: third_party/herdtools7-7.58/LICENSE.txt",
+      "passed": true
+    },
+    {
+      "actual": "3ed9c01d1d9917c29039560a6b86dd48db7283f0ba8451d21fa54c12cfe42ba7",
+      "expected": "3ed9c01d1d9917c29039560a6b86dd48db7283f0ba8451d21fa54c12cfe42ba7",
+      "name": "library identity: third_party/herdtools7-7.58/README.md",
+      "passed": true
+    },
+    {
+      "actual": "46c6eb7b5eb8820760d20b557280e9399ba247e30343ab8ad7e8cb72eee93624",
+      "expected": "46c6eb7b5eb8820760d20b557280e9399ba247e30343ab8ad7e8cb72eee93624",
+      "name": "library identity: third_party/herdtools7-7.58/libdir/stdlib.cat",
+      "passed": true
+    },
+    {
+      "actual": "8b2dbe9cc3175d5bd8067ab80b4c6024949c743d16e47b13f8230c52ca06bbde",
+      "expected": "8b2dbe9cc3175d5bd8067ab80b4c6024949c743d16e47b13f8230c52ca06bbde",
+      "name": "library identity: third_party/herdtools7-7.58/libdir/cross.cat",
+      "passed": true
+    },
+    {
+      "actual": "587b1a119119e8f6d4aec2fddf3df34245f09eb1cbcc374671f6951b1e604779",
+      "expected": "587b1a119119e8f6d4aec2fddf3df34245f09eb1cbcc374671f6951b1e604779",
+      "name": "library identity: third_party/herdtools7-7.58/libdir/cos-opt.cat",
+      "passed": true
+    },
+    {
+      "actual": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+      "expected": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+      "name": "source receipt revision",
+      "passed": true
+    },
+    {
+      "actual": "054b6818c409ab20ae89b1031a1a7c358f673d87",
+      "expected": "054b6818c409ab20ae89b1031a1a7c358f673d87",
+      "name": "source receipt tree",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "source receipt requires content rechecks",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "kernel documents compatible herdtools minimum",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "kernel documents small-state exhaustive exploration",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "config selects exact CAT model",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "config selects exact Bell model",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "config selects exact macro definitions",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "CAT model imports lock model",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "CAT model defines release/acquire order",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "CAT model defines full-barrier order",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "inventory version timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "inventory version exit",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "inventory compiled_default_libdir timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "inventory compiled_default_libdir exit",
+      "passed": true
+    },
+    {
+      "actual": "/usr/bin/herd7",
+      "expected": "/usr/bin/herd7",
+      "name": "herd7 realpath",
+      "passed": true
+    },
+    {
+      "actual": "f398c4ba11ee87226e104efc77e64873cf775292e16b90e1e71015962969060b",
+      "expected": "f398c4ba11ee87226e104efc77e64873cf775292e16b90e1e71015962969060b",
+      "name": "herd7 binary identity",
+      "passed": true
+    },
+    {
+      "actual": "7.58, Rev: exported",
+      "expected": "7.58, Rev: exported",
+      "name": "herd7 exact version",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "herd7 satisfies kernel minimum",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "explicit CAT library differs from compiled default",
+      "passed": true
+    },
+    {
+      "actual": "-set-libdir",
+      "expected": "-set-libdir",
+      "name": "invocation starts with explicit library option",
+      "passed": true
+    },
+    {
+      "actual": "/home/karl/linux-work/fragma/third_party/herdtools7-7.58/libdir",
+      "expected": "/home/karl/linux-work/fragma/third_party/herdtools7-7.58/libdir",
+      "name": "invocation uses authenticated library",
+      "passed": true
+    },
+    {
+      "actual": [
+        "-conf",
+        "linux-kernel.cfg"
+      ],
+      "expected": [
+        "-conf",
+        "linux-kernel.cfg"
+      ],
+      "name": "invocation uses pinned kernel config",
+      "passed": true
+    },
+    {
+      "actual": "15f94aa6220215d31f238a9f9713aea53a396186f17be7a3a0f7ed8ba4724456",
+      "expected": "15f94aa6220215d31f238a9f9713aea53a396186f17be7a3a0f7ed8ba4724456",
+      "name": "litmus identity",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "exit code",
+      "passed": true
+    },
+    {
+      "actual": "",
+      "expected": "",
+      "name": "stderr empty",
+      "passed": true
+    },
+    {
+      "actual": null,
+      "expected": null,
+      "name": "parse error",
+      "passed": true
+    },
+    {
+      "actual": {
+        "condition": "exists (1:r0=1 /\\ 1:r1=0)",
+        "disposition": "Allowed",
+        "hash": "c0ebd8ca556580d772ac73303c4c4f84",
+        "marker": "Ok",
+        "negative": 3,
+        "observation": "Sometimes",
+        "positive": 1,
+        "states": 4,
+        "test": "MP+poonceonces"
+      },
+      "expected": {
+        "condition": "exists (1:r0=1 /\\ 1:r1=0)",
+        "disposition": "Allowed",
+        "hash": "c0ebd8ca556580d772ac73303c4c4f84",
+        "marker": "Ok",
+        "negative": 3,
+        "observation": "Sometimes",
+        "positive": 1,
+        "states": 4,
+        "test": "MP+poonceonces"
+      },
+      "name": "semantic result",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "required operation: READ_ONCE",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "required operation: WRITE_ONCE",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "forbidden operation: smp_store_release",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "forbidden operation: smp_load_acquire",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "forbidden operation: smp_mb",
+      "passed": true
+    },
+    {
+      "actual": "fbfcb4210aa3593ab07e564b2c362734cfaf670c1cb34dad1c6b483f7f41d8c3",
+      "expected": "fbfcb4210aa3593ab07e564b2c362734cfaf670c1cb34dad1c6b483f7f41d8c3",
+      "name": "litmus identity",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "exit code",
+      "passed": true
+    },
+    {
+      "actual": "",
+      "expected": "",
+      "name": "stderr empty",
+      "passed": true
+    },
+    {
+      "actual": null,
+      "expected": null,
+      "name": "parse error",
+      "passed": true
+    },
+    {
+      "actual": {
+        "condition": "exists (1:r0=1 /\\ 1:r1=0)",
+        "disposition": "Allowed",
+        "hash": "f259d8efc86e0b40c7168bf58524ab49",
+        "marker": "No",
+        "negative": 3,
+        "observation": "Never",
+        "positive": 0,
+        "states": 3,
+        "test": "MP+pooncerelease+poacquireonce"
+      },
+      "expected": {
+        "condition": "exists (1:r0=1 /\\ 1:r1=0)",
+        "disposition": "Allowed",
+        "hash": "f259d8efc86e0b40c7168bf58524ab49",
+        "marker": "No",
+        "negative": 3,
+        "observation": "Never",
+        "positive": 0,
+        "states": 3,
+        "test": "MP+pooncerelease+poacquireonce"
+      },
+      "name": "semantic result",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "required operation: READ_ONCE",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "required operation: WRITE_ONCE",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "required operation: smp_store_release",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "required operation: smp_load_acquire",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "forbidden operation: smp_mb",
+      "passed": true
+    },
+    {
+      "actual": "a9b498362b29cc0ccd79d998b587a7763ba42d7d47c6dd588c9fb19e6f9d1a89",
+      "expected": "a9b498362b29cc0ccd79d998b587a7763ba42d7d47c6dd588c9fb19e6f9d1a89",
+      "name": "litmus identity",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "exit code",
+      "passed": true
+    },
+    {
+      "actual": "",
+      "expected": "",
+      "name": "stderr empty",
+      "passed": true
+    },
+    {
+      "actual": null,
+      "expected": null,
+      "name": "parse error",
+      "passed": true
+    },
+    {
+      "actual": {
+        "condition": "exists (0:r0=0 /\\ 1:r0=0)",
+        "disposition": "Allowed",
+        "hash": "d2b6ca86cddfad6178a05767f57fafbf",
+        "marker": "Ok",
+        "negative": 3,
+        "observation": "Sometimes",
+        "positive": 1,
+        "states": 4,
+        "test": "SB+poonceonces"
+      },
+      "expected": {
+        "condition": "exists (0:r0=0 /\\ 1:r0=0)",
+        "disposition": "Allowed",
+        "hash": "d2b6ca86cddfad6178a05767f57fafbf",
+        "marker": "Ok",
+        "negative": 3,
+        "observation": "Sometimes",
+        "positive": 1,
+        "states": 4,
+        "test": "SB+poonceonces"
+      },
+      "name": "semantic result",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "required operation: READ_ONCE",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "required operation: WRITE_ONCE",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "forbidden operation: smp_store_release",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "forbidden operation: smp_load_acquire",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "forbidden operation: smp_mb",
+      "passed": true
+    },
+    {
+      "actual": "11dbee9bc79de6594e8e4275fbb4937981f6656c39a524030fd2df2a18f63405",
+      "expected": "11dbee9bc79de6594e8e4275fbb4937981f6656c39a524030fd2df2a18f63405",
+      "name": "litmus identity",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "exit code",
+      "passed": true
+    },
+    {
+      "actual": "",
+      "expected": "",
+      "name": "stderr empty",
+      "passed": true
+    },
+    {
+      "actual": null,
+      "expected": null,
+      "name": "parse error",
+      "passed": true
+    },
+    {
+      "actual": {
+        "condition": "exists (0:r0=0 /\\ 1:r0=0)",
+        "disposition": "Allowed",
+        "hash": "d66d99523e2cac6b06e66f4c995ebb48",
+        "marker": "No",
+        "negative": 3,
+        "observation": "Never",
+        "positive": 0,
+        "states": 3,
+        "test": "SB+fencembonceonces"
+      },
+      "expected": {
+        "condition": "exists (0:r0=0 /\\ 1:r0=0)",
+        "disposition": "Allowed",
+        "hash": "d66d99523e2cac6b06e66f4c995ebb48",
+        "marker": "No",
+        "negative": 3,
+        "observation": "Never",
+        "positive": 0,
+        "states": 3,
+        "test": "SB+fencembonceonces"
+      },
+      "name": "semantic result",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "required operation: READ_ONCE",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "required operation: WRITE_ONCE",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "required operation: smp_mb",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "forbidden operation: smp_store_release",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "forbidden operation: smp_load_acquire",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "both pair members passed",
+      "passed": true
+    },
+    {
+      "actual": "Sometimes->Never",
+      "expected": "Sometimes->Never",
+      "name": "observation transition",
+      "passed": true
+    },
+    {
+      "actual": "exists (1:r0=1 /\\ 1:r1=0)",
+      "expected": "exists (1:r0=1 /\\ 1:r1=0)",
+      "name": "condition preserved",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "ordered variant removes bad witnesses",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "weakened control exposes bad witness",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "pair hashes differ",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "both pair members passed",
+      "passed": true
+    },
+    {
+      "actual": "Sometimes->Never",
+      "expected": "Sometimes->Never",
+      "name": "observation transition",
+      "passed": true
+    },
+    {
+      "actual": "exists (0:r0=0 /\\ 1:r0=0)",
+      "expected": "exists (0:r0=0 /\\ 1:r0=0)",
+      "name": "condition preserved",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "ordered variant removes bad witnesses",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "weakened control exposes bad witness",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "pair hashes differ",
+      "passed": true
+    }
+  ],
+  "generated_at": "2026-09-07T10:33:26.994353+00:00",
+  "input_identities": {
+    "/usr/bin/herd7": {
+      "realpath": "/usr/bin/herd7",
+      "sha256": "f398c4ba11ee87226e104efc77e64873cf775292e16b90e1e71015962969060b",
+      "size": 18087120
+    },
+    "build/sources/linux-b9b3e33b70b71/.fragma-source.json": {
+      "sha256": "93cffd1d937e730bf3010bfc904db8ce5c8ebc8df6e8d610032dda667c2950bd",
+      "size": 227
+    },
+    "build/sources/linux-b9b3e33b70b71/tools/memory-model/Documentation/litmus-tests.txt": {
+      "sha256": "f7a5804c230527695aa4fe6ed62135a7f64d7485bf933a0a8b4a465e68fbfa76",
+      "size": 39936
+    },
+    "build/sources/linux-b9b3e33b70b71/tools/memory-model/README": {
+      "sha256": "95bc588aa5f32509c15e00731cfb5b98ffc627f6e2d3971f21def66c2492b107",
+      "size": 7411
+    },
+    "build/sources/linux-b9b3e33b70b71/tools/memory-model/linux-kernel.bell": {
+      "sha256": "ab57943799d445327c3c7cf0a1ca9f9fae8e7379e45b9fc90312993bb038e23f",
+      "size": 3619
+    },
+    "build/sources/linux-b9b3e33b70b71/tools/memory-model/linux-kernel.cat": {
+      "sha256": "250207709250d308e0a0a6f391c4eda0bbf4876cbc55eccbfbcd495676a179be",
+      "size": 8391
+    },
+    "build/sources/linux-b9b3e33b70b71/tools/memory-model/linux-kernel.cfg": {
+      "sha256": "37c57d82291113c5a4a170f3f6b5b8f01bc18403d701b8e5a6db43aae62d6b32",
+      "size": 406
+    },
+    "build/sources/linux-b9b3e33b70b71/tools/memory-model/linux-kernel.def": {
+      "sha256": "a04911d85fd86f5dbcf8ed436c7a2570fcc615f768c0c19b0a101f6212d2504c",
+      "size": 6357
+    },
+    "build/sources/linux-b9b3e33b70b71/tools/memory-model/litmus-tests/MP+poonceonces.litmus": {
+      "sha256": "15f94aa6220215d31f238a9f9713aea53a396186f17be7a3a0f7ed8ba4724456",
+      "size": 386
+    },
+    "build/sources/linux-b9b3e33b70b71/tools/memory-model/litmus-tests/MP+pooncerelease+poacquireonce.litmus": {
+      "sha256": "fbfcb4210aa3593ab07e564b2c362734cfaf670c1cb34dad1c6b483f7f41d8c3",
+      "size": 464
+    },
+    "build/sources/linux-b9b3e33b70b71/tools/memory-model/litmus-tests/SB+fencembonceonces.litmus": {
+      "sha256": "11dbee9bc79de6594e8e4275fbb4937981f6656c39a524030fd2df2a18f63405",
+      "size": 499
+    },
+    "build/sources/linux-b9b3e33b70b71/tools/memory-model/litmus-tests/SB+poonceonces.litmus": {
+      "sha256": "a9b498362b29cc0ccd79d998b587a7763ba42d7d47c6dd588c9fb19e6f9d1a89",
+      "size": 423
+    },
+    "build/sources/linux-b9b3e33b70b71/tools/memory-model/lock.cat": {
+      "sha256": "a51a7f04ae3afea610253a04f4c930eced36c6141ba834517f9b0e2755057a79",
+      "size": 5206
+    },
+    "config/concurrency-c3-lkmm.json": {
+      "sha256": "579d0603c2d473b0b9891176dbd4d3266332e2a17e0cba338b98aedee6b655d3",
+      "size": 7711
+    },
+    "fragma/__main__.py": {
+      "sha256": "7b8a9d9603792a97b8659e617fea434981ca8a0d0baa962e80cda3aed3351a32",
+      "size": 11316
+    },
+    "fragma/concurrency_c3_lkmm.py": {
+      "sha256": "94594734735ff28b68b6f4553273b1be03f6feeb65eed4ce14fb4787b4f58dd6",
+      "size": 34925
+    },
+    "tests/test_concurrency_c3_lkmm.py": {
+      "sha256": "ffa3d5e957a7f70e29a9e76767f0b40573be2cd04fd1b88085d9754882397b49",
+      "size": 9340
+    },
+    "third_party/herdtools7-7.58/LICENSE.txt": {
+      "sha256": "5d8a5818161ab38b77226b7caa758fde63f1aaabdf87ea773e1620b62a5b9537",
+      "size": 22456
+    },
+    "third_party/herdtools7-7.58/README.md": {
+      "sha256": "3ed9c01d1d9917c29039560a6b86dd48db7283f0ba8451d21fa54c12cfe42ba7",
+      "size": 1583
+    },
+    "third_party/herdtools7-7.58/libdir/cos-opt.cat": {
+      "sha256": "587b1a119119e8f6d4aec2fddf3df34245f09eb1cbcc374671f6951b1e604779",
+      "size": 779
+    },
+    "third_party/herdtools7-7.58/libdir/cross.cat": {
+      "sha256": "8b2dbe9cc3175d5bd8067ab80b4c6024949c743d16e47b13f8230c52ca06bbde",
+      "size": 754
+    },
+    "third_party/herdtools7-7.58/libdir/stdlib.cat": {
+      "sha256": "46c6eb7b5eb8820760d20b557280e9399ba247e30343ab8ad7e8cb72eee93624",
+      "size": 1588
+    }
+  },
+  "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+  "kernel_tree": "054b6818c409ab20ae89b1031a1a7c358f673d87",
+  "kernel_verification_count": 0,
+  "kind": "linux-lkmm-herd7-c3-semantic-calibration",
+  "klitmus_or_runtime_used": false,
+  "model_directory": "/home/karl/linux-work/fragma/build/sources/linux-b9b3e33b70b71/tools/memory-model",
+  "output": "/home/karl/linux-work/fragma/results/concurrency-c3-lkmm-20260907-02",
+  "pairs": [
+    {
+      "checks": [
+        {
+          "actual": true,
+          "expected": true,
+          "name": "both pair members passed",
+          "passed": true
+        },
+        {
+          "actual": "Sometimes->Never",
+          "expected": "Sometimes->Never",
+          "name": "observation transition",
+          "passed": true
+        },
+        {
+          "actual": "exists (1:r0=1 /\\ 1:r1=0)",
+          "expected": "exists (1:r0=1 /\\ 1:r1=0)",
+          "name": "condition preserved",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "ordered variant removes bad witnesses",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "weakened control exposes bad witness",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "pair hashes differ",
+          "passed": true
+        }
+      ],
+      "expected_transition": "Sometimes->Never",
+      "id": "message_passing_release_acquire",
+      "ordered_calibration": "mp_release_acquire",
+      "ordering_primitives": [
+        "smp_store_release",
+        "smp_load_acquire"
+      ],
+      "passed": true,
+      "weakened_control": "mp_once_once"
+    },
+    {
+      "checks": [
+        {
+          "actual": true,
+          "expected": true,
+          "name": "both pair members passed",
+          "passed": true
+        },
+        {
+          "actual": "Sometimes->Never",
+          "expected": "Sometimes->Never",
+          "name": "observation transition",
+          "passed": true
+        },
+        {
+          "actual": "exists (0:r0=0 /\\ 1:r0=0)",
+          "expected": "exists (0:r0=0 /\\ 1:r0=0)",
+          "name": "condition preserved",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "ordered variant removes bad witnesses",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "weakened control exposes bad witness",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "pair hashes differ",
+          "passed": true
+        }
+      ],
+      "expected_transition": "Sometimes->Never",
+      "id": "store_buffering_full_barrier",
+      "ordered_calibration": "sb_full_barrier",
+      "ordering_primitives": [
+        "smp_mb"
+      ],
+      "passed": true,
+      "weakened_control": "sb_once_once"
+    }
+  ],
+  "provider": {
+    "binary": "/usr/bin/herd7",
+    "compiled_default_libdir": "/sbuild-nonexistent/share/herdtools7/herd",
+    "explicit_library_directory": "/home/karl/linux-work/fragma/third_party/herdtools7-7.58/libdir",
+    "library_upstream": {
+      "commit": "1ca343e16a2038e406d1ac674e7e3a1b722b36c7",
+      "git_tree": "271f7849890bbcc80d7f1b2106caa94cc18624ac",
+      "license": "CeCILL-B",
+      "repository": "https://github.com/herd/herdtools7",
+      "tag": "7.58"
+    },
+    "realpath": "/usr/bin/herd7",
+    "sha256": "f398c4ba11ee87226e104efc77e64873cf775292e16b90e1e71015962969060b",
+    "version": "7.58, Rev: exported"
+  },
+  "raw_artifacts": {
+    "cases/mp_once_once/command.json": {
+      "sha256": "3af36ca7a985a7b074114d31d47bc15b18715d9dad625785a5c5888a75287999",
+      "size": 431
+    },
+    "cases/mp_once_once/result.json": {
+      "sha256": "9646f61050edb396d58b27bc9c0d057bb41cdfc5c2ee01ba74f248ccabccadf1",
+      "size": 2705
+    },
+    "cases/mp_once_once/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "cases/mp_once_once/stdout.txt": {
+      "sha256": "f69c2afa16b89f41a6dbdcd072701762fed87c57cd170c331eb0e5167e876ad1",
+      "size": 279
+    },
+    "cases/mp_release_acquire/command.json": {
+      "sha256": "274651f22fc8ea90f994735a85cc3278a17f0a9a3a2c50f1ee444bbd5b23d940",
+      "size": 447
+    },
+    "cases/mp_release_acquire/result.json": {
+      "sha256": "73291c678bc7c162ee53d9d85e9877cbabe9687a4f212295b0440a85bc737d43",
+      "size": 2735
+    },
+    "cases/mp_release_acquire/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "cases/mp_release_acquire/stdout.txt": {
+      "sha256": "3321c832dc867194bca2a2d9d9c3bf76ac1d420671d06f650a2a9fbd01fbbc33",
+      "size": 307
+    },
+    "cases/sb_full_barrier/command.json": {
+      "sha256": "cee9ca5930c6ee99c7d893f57d4396b35b25299bbbb73cd72ef5c900ca2e18cb",
+      "size": 436
+    },
+    "cases/sb_full_barrier/result.json": {
+      "sha256": "764a24fc5a62f946229ea828be8be569d0a5825edfa9f9d3efb13b34098dd14e",
+      "size": 2691
+    },
+    "cases/sb_full_barrier/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "cases/sb_full_barrier/stdout.txt": {
+      "sha256": "03b8b5e45f8d38a17dbb57d02b5d8ec9ac5010390ca095e5d121bb712b4f2960",
+      "size": 274
+    },
+    "cases/sb_once_once/command.json": {
+      "sha256": "99962708438b0b68fe9b8b8d40b9f2a83b6a96a55864eb3644941073b98f0556",
+      "size": 431
+    },
+    "cases/sb_once_once/result.json": {
+      "sha256": "73af6d270914bfacde6821b61cb5e72c05efe33d189f92dae40fe409e59f738e",
+      "size": 2705
+    },
+    "cases/sb_once_once/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "cases/sb_once_once/stdout.txt": {
+      "sha256": "9bf2e9d586be355ec43b9775ebbe12e126156b73b6e69fa6881cf5300aa965d4",
+      "size": 279
+    },
+    "input-identities.json": {
+      "sha256": "6bafb028c398e978fe40d93d098a6e025e13401b26b820cc9918032ef736cdc5",
+      "size": 3739
+    },
+    "inventory/compiled_default_libdir/command.json": {
+      "sha256": "d8e3f2c08677da4a655cfbe9edb132c7efc31c8e4fc5dd3afc0a65e183d34b9e",
+      "size": 224
+    },
+    "inventory/compiled_default_libdir/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "inventory/compiled_default_libdir/stdout.txt": {
+      "sha256": "3b25ea9c2ac75d141272ee29e50a4db97dcd828dde8b27f8dfe12418888b2be2",
+      "size": 42
+    },
+    "inventory/version/command.json": {
+      "sha256": "27e78ff4c5853cb981d0393c5a7973f7b32eba412da8005683ce6a930bd003ea",
+      "size": 225
+    },
+    "inventory/version/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "inventory/version/stdout.txt": {
+      "sha256": "f15276a3b23c96214a896647d44dc59e11636c50d363388a26210aec3a6a0471",
+      "size": 20
+    },
+    "manifest.json": {
+      "sha256": "2842665b78f908165a72f376901184dca7c3a46f00c946809d9c0f5beee163c8",
+      "size": 7711
+    }
+  },
+  "remaining_c3": [
+    "Production source-to-litmus correspondence and property acceptance",
+    "Compiler and architecture lowering evidence for selected primitives",
+    "Lock-free functional and lifetime properties",
+    "Any separately claimed progress guarantee"
+  ],
+  "schema_version": 1,
+  "scope": {
+    "accepted_capabilities": [
+      "The exact herd7 7.58 executable can run the exact pinned Linux Kernel Memory Model with an explicit authenticated generic CAT library.",
+      "The model distinguishes two canonical unordered outcomes from their release/acquire and full-barrier counterparts.",
+      "The selected READ_ONCE, WRITE_ONCE, smp_store_release, smp_load_acquire and smp_mb spellings are consumed as Linux litmus-test primitives."
+    ],
+    "evidence_kind": "semantic_calibration",
+    "exclusions": [
+      "These four kernel-owned litmus tests are semantic calibrations, not production kernel functions or discovered defects.",
+      "No production source-to-litmus correspondence, object lifetime, lock-free functional property or progress guarantee is established.",
+      "No compiler lowering or architecture-specific implementation is checked by this architecture-independent LKMM run.",
+      "A Never outcome is conditional on the exact litmus test, model and provider identities; it is not a whole-kernel proof.",
+      "No klitmus7 module generation, running-kernel execution, package installation or privileged action is included."
+    ]
+  },
+  "sudo_or_install_used": false,
+  "target": "linux-lkmm-herd7-c3-calibration"
+}

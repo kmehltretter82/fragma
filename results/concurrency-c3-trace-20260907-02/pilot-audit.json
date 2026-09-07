@@ -1,0 +1,1694 @@
+{
+  "accepted": true,
+  "baseline": {
+    "accepted": true,
+    "checks": 92,
+    "output": "/home/karl/linux-work/fragma/results/concurrency-c3-trace-20260907-02/baseline"
+  },
+  "c3_source_linked_pilot_complete": true,
+  "c3_stage_complete": false,
+  "cases": [
+    {
+      "checks": [
+        {
+          "actual": false,
+          "expected": false,
+          "name": "timed out",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "exit code",
+          "passed": true
+        },
+        {
+          "actual": "",
+          "expected": "",
+          "name": "stderr empty",
+          "passed": true
+        },
+        {
+          "actual": null,
+          "expected": null,
+          "name": "parse error",
+          "passed": true
+        },
+        {
+          "actual": {
+            "condition": "exists (1:r0=1 /\\ 1:r1=0)",
+            "disposition": "Allowed",
+            "flags": [],
+            "hash": "868c22e0c5c98f4b52efe08c4bf1686f",
+            "marker": "No",
+            "negative": 2,
+            "observation": "Never",
+            "positive": 0,
+            "states": 2,
+            "test": "Fragma-trace-tgid-release-acquire"
+          },
+          "expected": {
+            "condition": "exists (1:r0=1 /\\ 1:r1=0)",
+            "disposition": "Allowed",
+            "flags": [],
+            "hash": "868c22e0c5c98f4b52efe08c4bf1686f",
+            "marker": "No",
+            "negative": 2,
+            "observation": "Never",
+            "positive": 0,
+            "states": 2,
+            "test": "Fragma-trace-tgid-release-acquire"
+          },
+          "name": "semantic result",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "case cannot change verification role",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "required operation: smp_store_release",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "required operation: smp_load_acquire",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "forbidden operation: WRITE_ONCE",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "forbidden operation: READ_ONCE",
+          "passed": true
+        }
+      ],
+      "control_for": null,
+      "id": "release_acquire_positive",
+      "parse_error": null,
+      "parsed": {
+        "condition": "exists (1:r0=1 /\\ 1:r1=0)",
+        "disposition": "Allowed",
+        "flags": [],
+        "hash": "868c22e0c5c98f4b52efe08c4bf1686f",
+        "marker": "No",
+        "negative": 2,
+        "observation": "Never",
+        "positive": 0,
+        "seconds": 0.01,
+        "state_values": [
+          "1:r0=0; 1:r1=0;",
+          "1:r0=1; 1:r1=1;"
+        ],
+        "states": 2,
+        "test": "Fragma-trace-tgid-release-acquire"
+      },
+      "passed": true,
+      "returncode": 0,
+      "role": "verification_candidate",
+      "timed_out": false,
+      "verification_candidate": true
+    },
+    {
+      "checks": [
+        {
+          "actual": false,
+          "expected": false,
+          "name": "timed out",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "exit code",
+          "passed": true
+        },
+        {
+          "actual": "",
+          "expected": "",
+          "name": "stderr empty",
+          "passed": true
+        },
+        {
+          "actual": null,
+          "expected": null,
+          "name": "parse error",
+          "passed": true
+        },
+        {
+          "actual": {
+            "condition": "exists (1:r0=1 /\\ 1:r1=0)",
+            "disposition": "Allowed",
+            "flags": [
+              "data-race"
+            ],
+            "hash": "cecf17890512f70a358b2c47dba3edaa",
+            "marker": "Ok",
+            "negative": 2,
+            "observation": "Sometimes",
+            "positive": 1,
+            "states": 3,
+            "test": "Fragma-trace-tgid-once-once"
+          },
+          "expected": {
+            "condition": "exists (1:r0=1 /\\ 1:r1=0)",
+            "disposition": "Allowed",
+            "flags": [
+              "data-race"
+            ],
+            "hash": "cecf17890512f70a358b2c47dba3edaa",
+            "marker": "Ok",
+            "negative": 2,
+            "observation": "Sometimes",
+            "positive": 1,
+            "states": 3,
+            "test": "Fragma-trace-tgid-once-once"
+          },
+          "name": "semantic result",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "case cannot change verification role",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "required operation: WRITE_ONCE",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "required operation: READ_ONCE",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "forbidden operation: smp_store_release",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "forbidden operation: smp_load_acquire",
+          "passed": true
+        }
+      ],
+      "control_for": "release_acquire_positive",
+      "id": "once_once_negative",
+      "parse_error": null,
+      "parsed": {
+        "condition": "exists (1:r0=1 /\\ 1:r1=0)",
+        "disposition": "Allowed",
+        "flags": [
+          "data-race"
+        ],
+        "hash": "cecf17890512f70a358b2c47dba3edaa",
+        "marker": "Ok",
+        "negative": 2,
+        "observation": "Sometimes",
+        "positive": 1,
+        "seconds": 0.01,
+        "state_values": [
+          "1:r0=0; 1:r1=0;",
+          "1:r0=1; 1:r1=0;",
+          "1:r0=1; 1:r1=1;"
+        ],
+        "states": 3,
+        "test": "Fragma-trace-tgid-once-once"
+      },
+      "passed": true,
+      "returncode": 0,
+      "role": "required_weakened_control",
+      "timed_out": false,
+      "verification_candidate": false
+    }
+  ],
+  "checks": [
+    {
+      "actual": "linux-lkmm-herd7-c3-calibration",
+      "expected": "linux-lkmm-herd7-c3-calibration",
+      "name": "baseline target",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "baseline capability accepted",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "baseline accepts no kernel property",
+      "passed": true
+    },
+    {
+      "actual": "93cffd1d937e730bf3010bfc904db8ce5c8ebc8df6e8d610032dda667c2950bd",
+      "expected": "93cffd1d937e730bf3010bfc904db8ce5c8ebc8df6e8d610032dda667c2950bd",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/.fragma-source.json",
+      "passed": true
+    },
+    {
+      "actual": "9ca1826f72101586daf1380abc378e50416249cce3df1241af7ce5a63764dd4d",
+      "expected": "9ca1826f72101586daf1380abc378e50416249cce3df1241af7ce5a63764dd4d",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/kernel/trace/trace_sched_switch.c",
+      "passed": true
+    },
+    {
+      "actual": "092e8c0da0bb84c70707ab23e8b22f115d07e538f594b227fe82d5268a2afb9e",
+      "expected": "092e8c0da0bb84c70707ab23e8b22f115d07e538f594b227fe82d5268a2afb9e",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/kernel/trace/trace.c",
+      "passed": true
+    },
+    {
+      "actual": "43c19dc49d675f13300725e0af01c02a61bdacef2ed861c26f4105a576dc9400",
+      "expected": "43c19dc49d675f13300725e0af01c02a61bdacef2ed861c26f4105a576dc9400",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/kernel/trace/Makefile",
+      "passed": true
+    },
+    {
+      "actual": "3f17ad65634ba1edd07e0fe83a84b588269005fbd90f43a68578312837b52733",
+      "expected": "3f17ad65634ba1edd07e0fe83a84b588269005fbd90f43a68578312837b52733",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/kernel/trace/Kconfig",
+      "passed": true
+    },
+    {
+      "actual": "a4319b017e8c3594a181153c75ce5546c89e05d8eb441fd2a34d648a2c69cfc6",
+      "expected": "a4319b017e8c3594a181153c75ce5546c89e05d8eb441fd2a34d648a2c69cfc6",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/kernel/pid.c",
+      "passed": true
+    },
+    {
+      "actual": "ac7161de729d183418eee161e1d0bbc2253839139d20e1d8a278510b6108d130",
+      "expected": "ac7161de729d183418eee161e1d0bbc2253839139d20e1d8a278510b6108d130",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/include/linux/threads.h",
+      "passed": true
+    },
+    {
+      "actual": "6665bb567ad0247c0247efa8473844fe68f5e720c946e8c5b99a36c1db8efa57",
+      "expected": "6665bb567ad0247c0247efa8473844fe68f5e720c946e8c5b99a36c1db8efa57",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/arch/x86/include/asm/barrier.h",
+      "passed": true
+    },
+    {
+      "actual": "72ccf9fddb2f4f34161641eb4af082b6d01a2b256ad0bf80770858aecbdcf410",
+      "expected": "72ccf9fddb2f4f34161641eb4af082b6d01a2b256ad0bf80770858aecbdcf410",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/include/asm-generic/barrier.h",
+      "passed": true
+    },
+    {
+      "actual": "e572c666ad9efa7eca68a005337a2f04fbb39d541b9a111c48955db6ec903531",
+      "expected": "e572c666ad9efa7eca68a005337a2f04fbb39d541b9a111c48955db6ec903531",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/include/asm-generic/rwonce.h",
+      "passed": true
+    },
+    {
+      "actual": "090db2834c75aff44a528204c8072640e01efe51f1ac44e54a1d89efe1714a5c",
+      "expected": "090db2834c75aff44a528204c8072640e01efe51f1ac44e54a1d89efe1714a5c",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/Documentation/memory-barriers.txt",
+      "passed": true
+    },
+    {
+      "actual": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+      "expected": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+      "name": "source receipt revision",
+      "passed": true
+    },
+    {
+      "actual": "054b6818c409ab20ae89b1031a1a7c358f673d87",
+      "expected": "054b6818c409ab20ae89b1031a1a7c358f673d87",
+      "name": "source receipt tree",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "source receipt requires content rechecks",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "unique source role: producer_payload",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "unique model role: producer_payload",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "unique source role: producer_publish",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "unique model role: producer_publish",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "unique source role: consumer_observe",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "unique model role: consumer_observe",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "unique source role: consumer_payload",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "unique model role: consumer_payload",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "producer payload/allocation/publication source order",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "consumer acquire/guard/payload source order",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "tgid_map has static zero initialization",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "tgid_map_max has static zero initialization",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "tgid_map_max has one explicit assignment",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "published map has no direct NULL replacement",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "published map has no direct deallocation",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "positive PID maximum abstraction",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "initial namespace uses positive PID maximum",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "source documents exact release/acquire pairing",
+      "passed": true
+    },
+    {
+      "actual": [
+        {
+          "count": 1,
+          "path": "kernel/trace/trace.c"
+        },
+        {
+          "count": 1,
+          "path": "kernel/trace/trace_sched_switch.c"
+        }
+      ],
+      "expected": [
+        {
+          "count": 1,
+          "path": "kernel/trace/trace.c"
+        },
+        {
+          "count": 1,
+          "path": "kernel/trace/trace_sched_switch.c"
+        }
+      ],
+      "name": "allocator definition/callsite inventory",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "callsite has required event-mutex assertion",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "callsite invokes allocator only in function once",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "allocator preserves already-published pointer",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "kernel contract names load acquire",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "kernel contract names store release",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "kernel contract guarantees prior-release visibility",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "generic SMP API routes store release",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "generic SMP API routes load acquire",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "x86 release is compiler barrier then WRITE_ONCE",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "x86 acquire is READ_ONCE then compiler barrier",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "READ_ONCE is volatile scalar access",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "WRITE_ONCE is volatile scalar access",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "make_version timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "make_version exit",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "compiler_version timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "compiler_version exit",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "compiler_target timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "compiler_target exit",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "objdump_version timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "objdump_version exit",
+      "passed": true
+    },
+    {
+      "actual": "/usr/bin/make",
+      "expected": "/usr/bin/make",
+      "name": "make realpath",
+      "passed": true
+    },
+    {
+      "actual": "27c9f6d806aee15882b01c2c61848f7aa75caa14bc7b6f608ba422f9e46a7d49",
+      "expected": "27c9f6d806aee15882b01c2c61848f7aa75caa14bc7b6f608ba422f9e46a7d49",
+      "name": "make identity",
+      "passed": true
+    },
+    {
+      "actual": "/usr/bin/x86_64-linux-gnu-gcc-15",
+      "expected": "/usr/bin/x86_64-linux-gnu-gcc-15",
+      "name": "compiler realpath",
+      "passed": true
+    },
+    {
+      "actual": "b5f1b773a7c733738352000c92a077dc5852a1a2fc6d836b1e411be1e9ec5f88",
+      "expected": "b5f1b773a7c733738352000c92a077dc5852a1a2fc6d836b1e411be1e9ec5f88",
+      "name": "compiler identity",
+      "passed": true
+    },
+    {
+      "actual": "/usr/bin/x86_64-linux-gnu-objdump",
+      "expected": "/usr/bin/x86_64-linux-gnu-objdump",
+      "name": "objdump realpath",
+      "passed": true
+    },
+    {
+      "actual": "44f07f8da860b15bd4dec909f229dec536595fb170a616fe3ab29c7b21c9736f",
+      "expected": "44f07f8da860b15bd4dec909f229dec536595fb170a616fe3ab29c7b21c9736f",
+      "name": "objdump identity",
+      "passed": true
+    },
+    {
+      "actual": "GNU Make 4.4.1",
+      "expected": "GNU Make 4.4.1",
+      "name": "make version line",
+      "passed": true
+    },
+    {
+      "actual": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+      "expected": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+      "name": "compiler version line",
+      "passed": true
+    },
+    {
+      "actual": "x86_64-linux-gnu",
+      "expected": "x86_64-linux-gnu",
+      "name": "compiler target",
+      "passed": true
+    },
+    {
+      "actual": "GNU objdump (GNU Binutils for Ubuntu) 2.46",
+      "expected": "GNU objdump (GNU Binutils for Ubuntu) 2.46",
+      "name": "objdump version line",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "configured profile timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "configured profile exit",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured profile produced config",
+      "passed": true
+    },
+    {
+      "actual": "c1d909f833602f5d8fb7fba52322c1f411c44fe4e41a44b52ac5d897e3f3033e",
+      "expected": "c1d909f833602f5d8fb7fba52322c1f411c44fe4e41a44b52ac5d897e3f3033e",
+      "name": "configured config identity",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "kernel config: CONFIG_64BIT",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "kernel config: CONFIG_X86_64",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "kernel config: CONFIG_SMP",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "kernel config: CONFIG_CONTEXT_SWITCH_TRACER",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "kernel config: CONFIG_TRACING",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "kernel config: CONFIG_FTRACE",
+      "passed": true
+    },
+    {
+      "actual": "n",
+      "expected": "n",
+      "name": "kernel config: CONFIG_KCSAN",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "kernel config: CONFIG_CC_IS_GCC",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "configured object build timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "configured object build exit",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured object exists",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured object is ELF",
+      "passed": true
+    },
+    {
+      "actual": 2,
+      "expected": 2,
+      "name": "configured object class",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "configured object byte order",
+      "passed": true
+    },
+    {
+      "actual": 62,
+      "expected": 62,
+      "name": "configured object machine",
+      "passed": true
+    },
+    {
+      "actual": "31801117ba52a3275f9803d6e8b62beadffef9e3c6da7f245984bd44f8063b8e",
+      "expected": "31801117ba52a3275f9803d6e8b62beadffef9e3c6da7f245984bd44f8063b8e",
+      "name": "configured object identity",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command exists",
+      "passed": true
+    },
+    {
+      "actual": "f61a5f6da8c54857cf93cead8234f07ae70abf3e5b3126a2e9056b218b64f006",
+      "expected": "f61a5f6da8c54857cf93cead8234f07ae70abf3e5b3126a2e9056b218b64f006",
+      "name": "configured command identity",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: /usr/bin/gcc",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: -D__KERNEL__",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: -std=gnu11",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: -m64",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: -march=x86-64",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: -O2",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: -fno-allow-store-data-races",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: kernel/trace/trace_sched_switch.o",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: kernel/trace/trace_sched_switch.c",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "disassembly timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "disassembly exit",
+      "passed": true
+    },
+    {
+      "actual": "",
+      "expected": "",
+      "name": "disassembly stderr empty",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "symbol inventory timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "symbol inventory exit",
+      "passed": true
+    },
+    {
+      "actual": "",
+      "expected": "",
+      "name": "symbol inventory stderr empty",
+      "passed": true
+    },
+    {
+      "actual": null,
+      "expected": null,
+      "name": "disassembly parser error",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "producer instruction/relocation order",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "consumer instruction/relocation order",
+      "passed": true
+    },
+    {
+      "actual": {
+        "tgid_map": {
+          "section": ".bss",
+          "size": 8,
+          "value": "0000000000000018"
+        },
+        "tgid_map_max": {
+          "section": ".bss",
+          "size": 8,
+          "value": "0000000000000010"
+        }
+      },
+      "expected": {
+        "tgid_map": {
+          "section": ".bss",
+          "size": 8,
+          "value": "0000000000000018"
+        },
+        "tgid_map_max": {
+          "section": ".bss",
+          "size": 8,
+          "value": "0000000000000010"
+        }
+      },
+      "name": "local publication symbols",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "exit code",
+      "passed": true
+    },
+    {
+      "actual": "",
+      "expected": "",
+      "name": "stderr empty",
+      "passed": true
+    },
+    {
+      "actual": null,
+      "expected": null,
+      "name": "parse error",
+      "passed": true
+    },
+    {
+      "actual": {
+        "condition": "exists (1:r0=1 /\\ 1:r1=0)",
+        "disposition": "Allowed",
+        "flags": [],
+        "hash": "868c22e0c5c98f4b52efe08c4bf1686f",
+        "marker": "No",
+        "negative": 2,
+        "observation": "Never",
+        "positive": 0,
+        "states": 2,
+        "test": "Fragma-trace-tgid-release-acquire"
+      },
+      "expected": {
+        "condition": "exists (1:r0=1 /\\ 1:r1=0)",
+        "disposition": "Allowed",
+        "flags": [],
+        "hash": "868c22e0c5c98f4b52efe08c4bf1686f",
+        "marker": "No",
+        "negative": 2,
+        "observation": "Never",
+        "positive": 0,
+        "states": 2,
+        "test": "Fragma-trace-tgid-release-acquire"
+      },
+      "name": "semantic result",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "case cannot change verification role",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "required operation: smp_store_release",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "required operation: smp_load_acquire",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "forbidden operation: WRITE_ONCE",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "forbidden operation: READ_ONCE",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "exit code",
+      "passed": true
+    },
+    {
+      "actual": "",
+      "expected": "",
+      "name": "stderr empty",
+      "passed": true
+    },
+    {
+      "actual": null,
+      "expected": null,
+      "name": "parse error",
+      "passed": true
+    },
+    {
+      "actual": {
+        "condition": "exists (1:r0=1 /\\ 1:r1=0)",
+        "disposition": "Allowed",
+        "flags": [
+          "data-race"
+        ],
+        "hash": "cecf17890512f70a358b2c47dba3edaa",
+        "marker": "Ok",
+        "negative": 2,
+        "observation": "Sometimes",
+        "positive": 1,
+        "states": 3,
+        "test": "Fragma-trace-tgid-once-once"
+      },
+      "expected": {
+        "condition": "exists (1:r0=1 /\\ 1:r1=0)",
+        "disposition": "Allowed",
+        "flags": [
+          "data-race"
+        ],
+        "hash": "cecf17890512f70a358b2c47dba3edaa",
+        "marker": "Ok",
+        "negative": 2,
+        "observation": "Sometimes",
+        "positive": 1,
+        "states": 3,
+        "test": "Fragma-trace-tgid-once-once"
+      },
+      "name": "semantic result",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "case cannot change verification role",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "required operation: WRITE_ONCE",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "required operation: READ_ONCE",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "forbidden operation: smp_store_release",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "forbidden operation: smp_load_acquire",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "positive and negative cases passed",
+      "passed": true
+    },
+    {
+      "actual": "Never",
+      "expected": "Never",
+      "name": "positive forbids stale outcome",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "positive has no bad witnesses",
+      "passed": true
+    },
+    {
+      "actual": [],
+      "expected": [],
+      "name": "positive has no LKMM flag",
+      "passed": true
+    },
+    {
+      "actual": "Sometimes",
+      "expected": "Sometimes",
+      "name": "negative exposes stale outcome",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "negative has a bad witness",
+      "passed": true
+    },
+    {
+      "actual": [
+        "data-race"
+      ],
+      "expected": [
+        "data-race"
+      ],
+      "name": "negative exposes data race",
+      "passed": true
+    },
+    {
+      "actual": "exists (1:r0=1 /\\ 1:r1=0)",
+      "expected": "exists (1:r0=1 /\\ 1:r1=0)",
+      "name": "A/B condition is identical",
+      "passed": true
+    }
+  ],
+  "configured_config_sha256": "c1d909f833602f5d8fb7fba52322c1f411c44fe4e41a44b52ac5d897e3f3033e",
+  "configured_object": {
+    "class": 2,
+    "data": 1,
+    "elf": true,
+    "machine": 62,
+    "sha256": "31801117ba52a3275f9803d6e8b62beadffef9e3c6da7f245984bd44f8063b8e",
+    "size": 23768
+  },
+  "generated_at": "2026-09-07T11:03:40.179354+00:00",
+  "input_identities": {
+    "/usr/bin/gcc": {
+      "realpath": "/usr/bin/x86_64-linux-gnu-gcc-15",
+      "sha256": "b5f1b773a7c733738352000c92a077dc5852a1a2fc6d836b1e411be1e9ec5f88",
+      "size": 1305304
+    },
+    "/usr/bin/herd7": {
+      "realpath": "/usr/bin/herd7",
+      "sha256": "f398c4ba11ee87226e104efc77e64873cf775292e16b90e1e71015962969060b",
+      "size": 18087120
+    },
+    "/usr/bin/make": {
+      "realpath": "/usr/bin/make",
+      "sha256": "27c9f6d806aee15882b01c2c61848f7aa75caa14bc7b6f608ba422f9e46a7d49",
+      "size": 295120
+    },
+    "/usr/bin/objdump": {
+      "realpath": "/usr/bin/x86_64-linux-gnu-objdump",
+      "sha256": "44f07f8da860b15bd4dec909f229dec536595fb170a616fe3ab29c7b21c9736f",
+      "size": 415760
+    },
+    "build/sources/linux-b9b3e33b70b71/.fragma-source.json": {
+      "sha256": "93cffd1d937e730bf3010bfc904db8ce5c8ebc8df6e8d610032dda667c2950bd",
+      "size": 227
+    },
+    "build/sources/linux-b9b3e33b70b71/Documentation/memory-barriers.txt": {
+      "sha256": "090db2834c75aff44a528204c8072640e01efe51f1ac44e54a1d89efe1714a5c",
+      "size": 114239
+    },
+    "build/sources/linux-b9b3e33b70b71/arch/x86/include/asm/barrier.h": {
+      "sha256": "6665bb567ad0247c0247efa8473844fe68f5e720c946e8c5b99a36c1db8efa57",
+      "size": 2419
+    },
+    "build/sources/linux-b9b3e33b70b71/include/asm-generic/barrier.h": {
+      "sha256": "72ccf9fddb2f4f34161641eb4af082b6d01a2b256ad0bf80770858aecbdcf410",
+      "size": 7553
+    },
+    "build/sources/linux-b9b3e33b70b71/include/asm-generic/rwonce.h": {
+      "sha256": "e572c666ad9efa7eca68a005337a2f04fbb39d541b9a111c48955db6ec903531",
+      "size": 3205
+    },
+    "build/sources/linux-b9b3e33b70b71/include/linux/threads.h": {
+      "sha256": "ac7161de729d183418eee161e1d0bbc2253839139d20e1d8a278510b6108d130",
+      "size": 1338
+    },
+    "build/sources/linux-b9b3e33b70b71/kernel/pid.c": {
+      "sha256": "a4319b017e8c3594a181153c75ce5546c89e05d8eb441fd2a34d648a2c69cfc6",
+      "size": 24460
+    },
+    "build/sources/linux-b9b3e33b70b71/kernel/trace/Kconfig": {
+      "sha256": "3f17ad65634ba1edd07e0fe83a84b588269005fbd90f43a68578312837b52733",
+      "size": 44196
+    },
+    "build/sources/linux-b9b3e33b70b71/kernel/trace/Makefile": {
+      "sha256": "43c19dc49d675f13300725e0af01c02a61bdacef2ed861c26f4105a576dc9400",
+      "size": 6238
+    },
+    "build/sources/linux-b9b3e33b70b71/kernel/trace/trace.c": {
+      "sha256": "092e8c0da0bb84c70707ab23e8b22f115d07e538f594b227fe82d5268a2afb9e",
+      "size": 252495
+    },
+    "build/sources/linux-b9b3e33b70b71/kernel/trace/trace_sched_switch.c": {
+      "sha256": "9ca1826f72101586daf1380abc378e50416249cce3df1241af7ce5a63764dd4d",
+      "size": 14857
+    },
+    "concurrency/c3/trace_tgid_once_once.litmus": {
+      "sha256": "f17a7fb444226433bbd33c117e77ebe84634eaac9921e8b8f1872121938695c1",
+      "size": 511
+    },
+    "concurrency/c3/trace_tgid_release_acquire.litmus": {
+      "sha256": "1b2cda842920a41593e52325d4dfe12cf3b07a0e3bf6d810fe0f09d1a48da966",
+      "size": 612
+    },
+    "config/concurrency-c3-lkmm.json": {
+      "sha256": "53fd6e82ef11744765f527befefed6be7d98ad28dcf1c74e288c3b0f4dd60e8e",
+      "size": 7795
+    },
+    "config/concurrency-c3-trace-tgid.json": {
+      "sha256": "98bd64258f56d4479f35f61ccff696193405805ec3cf55227589b42f39c8b19b",
+      "size": 11880
+    },
+    "fragma/__main__.py": {
+      "sha256": "233547a3510ce316d2dd7c90c6794844232deb74c387534c3bd866f18367d59e",
+      "size": 12178
+    },
+    "fragma/concurrency_c2.py": {
+      "sha256": "c837512a00bc9bce2f6950a7f95631a6c4024a81e199c59110e7b47c4a3cffe0",
+      "size": 36640
+    },
+    "fragma/concurrency_c2_irq.py": {
+      "sha256": "c59fb8ade3a74de810b268cbd0c5fdb850e27a912351e08727a142583e6b5b3d",
+      "size": 51550
+    },
+    "fragma/concurrency_c3_lkmm.py": {
+      "sha256": "f34b704cde42c2139056989a1c2dfdf7312bc1f120dc109a724efbd731200f22",
+      "size": 35417
+    },
+    "fragma/concurrency_c3_trace.py": {
+      "sha256": "69a33e2bd171e8534aefbafb5617db6b26f931d253d97346cd927cda21d27c7b",
+      "size": 46278
+    },
+    "tests/test_concurrency_c3_lkmm.py": {
+      "sha256": "316c1fd7ee9f2948830b74c77c6be4e0863d9ec750318df7500356f135a3f5d8",
+      "size": 9788
+    },
+    "tests/test_concurrency_c3_trace.py": {
+      "sha256": "58c8940d5bf7caa0da58cdaa7bc2283b9b9515dd513bea351017d908bd592a9f",
+      "size": 8119
+    }
+  },
+  "kernel_profile": "x86_64-trace-c3",
+  "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+  "kernel_tree": "054b6818c409ab20ae89b1031a1a7c358f673d87",
+  "kernel_verification_count": 1,
+  "kind": "trace-tgid-c3-release-acquire-pilot",
+  "klitmus_or_runtime_used": false,
+  "model_abstraction": {
+    "consumer_guard": "The payload read executes only after the publication read returns nonzero.",
+    "omitted": "Allocation internals, array contents and unrelated tracing state cannot affect the selected two-location ordering property.",
+    "tgid_map": "0 is NULL and 1 is the single successfully allocated non-NULL pointer.",
+    "tgid_map_max": "0 is static pre-initialization state and 1 is the positive assigned value."
+  },
+  "output": "/home/karl/linux-work/fragma/results/concurrency-c3-trace-20260907-02",
+  "pair_checks": [
+    {
+      "actual": true,
+      "expected": true,
+      "name": "positive and negative cases passed",
+      "passed": true
+    },
+    {
+      "actual": "Never",
+      "expected": "Never",
+      "name": "positive forbids stale outcome",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "positive has no bad witnesses",
+      "passed": true
+    },
+    {
+      "actual": [],
+      "expected": [],
+      "name": "positive has no LKMM flag",
+      "passed": true
+    },
+    {
+      "actual": "Sometimes",
+      "expected": "Sometimes",
+      "name": "negative exposes stale outcome",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "negative has a bad witness",
+      "passed": true
+    },
+    {
+      "actual": [
+        "data-race"
+      ],
+      "expected": [
+        "data-race"
+      ],
+      "name": "negative exposes data race",
+      "passed": true
+    },
+    {
+      "actual": "exists (1:r0=1 /\\ 1:r1=0)",
+      "expected": "exists (1:r0=1 /\\ 1:r1=0)",
+      "name": "A/B condition is identical",
+      "passed": true
+    }
+  ],
+  "property": {
+    "claim": "On the configured SMP x86-64 profile, if trace_find_tgid_ptr() observes the non-NULL tgid_map value published by a successful trace_alloc_tgid_map(), its following tgid_map_max access cannot observe the pre-publication zero value.",
+    "compiler_architecture_argument": {
+      "architecture_mapping": "The accepted scope relies on the Linux x86-64 implementation satisfying LKMM release/acquire semantics; the object inspection confirms this selected build but is not a proof of the x86 ISA or arbitrary compiler versions.",
+      "compiler_mapping": "The pinned x86 macros place compiler barriers around volatile WRITE_ONCE/READ_ONCE operations, and the configured object preserves payload-before-publication and publication-before-payload-read instruction order.",
+      "kernel_contract": "The pinned memory-barriers documentation guarantees that accesses before a release become visible after an acquire that reads the same published value."
+    },
+    "consumer": "trace_find_tgid_ptr",
+    "exclusions": [
+      "No tgid_map element contents, pid bounds, allocation arithmetic, tracing API behavior or whole-function memory safety is verified.",
+      "No architecture other than the configured SMP x86-64 profile is accepted by this pilot.",
+      "The model does not establish progress, fairness, allocation success, lock freedom or wait freedom.",
+      "Future pointer replacement or reclamation would invalidate the retained lifetime argument and must fail source identities.",
+      "The model checks one successful publisher and one reader; it is not a whole tracing-subsystem concurrency proof."
+    ],
+    "kind": "kernel_release_acquire_publication_ordering",
+    "lifetime": {
+      "allocation": "The published pointer comes from a successful kvzalloc_objs() call.",
+      "reclamation": "The translation unit contains no later NULL assignment or deallocation of tgid_map.",
+      "scope": "Only the max-publication ordering before any hypothetical future source change that adds replacement or reclamation.",
+      "storage": "Both publication variables are translation-unit-local static objects."
+    },
+    "payload_object": "tgid_map_max",
+    "producer": "trace_alloc_tgid_map",
+    "producer_serialization": {
+      "argument": "The sole callsite is the RECORD_TGID arm of set_tracer_flag(), whose matching arm asserts event_mutex ownership. The allocator returns immediately after publication on later calls.",
+      "callsite_file": "build/sources/linux-b9b3e33b70b71/kernel/trace/trace.c",
+      "callsite_function": "set_tracer_flag",
+      "required_call": "trace_alloc_tgid_map",
+      "required_guard": "lockdep_assert_held(&event_mutex)"
+    },
+    "published_object": "tgid_map",
+    "source_roles": {
+      "consumer_observe": {
+        "argument": "The model observes the same publication variable and represents NULL/non-NULL by 0/1.",
+        "file": "build/sources/linux-b9b3e33b70b71/kernel/trace/trace_sched_switch.c",
+        "function": "trace_find_tgid_ptr",
+        "model_snippet": "r0 = smp_load_acquire(tgid_map);",
+        "source_snippet": "int *map = smp_load_acquire(&tgid_map);"
+      },
+      "consumer_payload": {
+        "argument": "C short-circuiting reads tgid_map_max only when map is non-NULL. The model preserves that guard and asks only whether this read can see old zero.",
+        "file": "build/sources/linux-b9b3e33b70b71/kernel/trace/trace_sched_switch.c",
+        "function": "trace_find_tgid_ptr",
+        "model_snippet": "if (r0)\n\t\tr1 = *tgid_map_max;",
+        "source_snippet": "if (unlikely(!map || pid > tgid_map_max))"
+      },
+      "producer_payload": {
+        "argument": "Both objects have static zero initialization. PID_MAX_DEFAULT is positive; the model value 1 distinguishes the assigned maximum from its old zero value without depending on its magnitude.",
+        "file": "build/sources/linux-b9b3e33b70b71/kernel/trace/trace_sched_switch.c",
+        "function": "trace_alloc_tgid_map",
+        "model_snippet": "*tgid_map_max = 1;",
+        "source_snippet": "tgid_map_max = init_pid_ns.pid_max;"
+      },
+      "producer_publish": {
+        "argument": "The condition selects only a successful allocation and abstracts its non-NULL pointer as 1.",
+        "file": "build/sources/linux-b9b3e33b70b71/kernel/trace/trace_sched_switch.c",
+        "function": "trace_alloc_tgid_map",
+        "model_snippet": "smp_store_release(tgid_map, 1);",
+        "source_snippet": "smp_store_release(&tgid_map, map);"
+      }
+    }
+  },
+  "raw_artifacts": {
+    "baseline/cases/mp_once_once/command.json": {
+      "sha256": "3af36ca7a985a7b074114d31d47bc15b18715d9dad625785a5c5888a75287999",
+      "size": 431
+    },
+    "baseline/cases/mp_once_once/result.json": {
+      "sha256": "7c67f5ca5bb4ce07cb5a53f5079ef27e013b985a9905d8350e4257882b58d313",
+      "size": 2764
+    },
+    "baseline/cases/mp_once_once/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "baseline/cases/mp_once_once/stdout.txt": {
+      "sha256": "f69c2afa16b89f41a6dbdcd072701762fed87c57cd170c331eb0e5167e876ad1",
+      "size": 279
+    },
+    "baseline/cases/mp_release_acquire/command.json": {
+      "sha256": "274651f22fc8ea90f994735a85cc3278a17f0a9a3a2c50f1ee444bbd5b23d940",
+      "size": 447
+    },
+    "baseline/cases/mp_release_acquire/result.json": {
+      "sha256": "0bfa21c1d641750005afe88b42b30d54dfe3780c66bf67b09dfaa62d8e9eece9",
+      "size": 2794
+    },
+    "baseline/cases/mp_release_acquire/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "baseline/cases/mp_release_acquire/stdout.txt": {
+      "sha256": "3321c832dc867194bca2a2d9d9c3bf76ac1d420671d06f650a2a9fbd01fbbc33",
+      "size": 307
+    },
+    "baseline/cases/sb_full_barrier/command.json": {
+      "sha256": "cee9ca5930c6ee99c7d893f57d4396b35b25299bbbb73cd72ef5c900ca2e18cb",
+      "size": 436
+    },
+    "baseline/cases/sb_full_barrier/result.json": {
+      "sha256": "b0e84f25f1283843ca5e457a33fc0ad7f2965839b565c81f525fade63a58d102",
+      "size": 2750
+    },
+    "baseline/cases/sb_full_barrier/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "baseline/cases/sb_full_barrier/stdout.txt": {
+      "sha256": "03b8b5e45f8d38a17dbb57d02b5d8ec9ac5010390ca095e5d121bb712b4f2960",
+      "size": 274
+    },
+    "baseline/cases/sb_once_once/command.json": {
+      "sha256": "99962708438b0b68fe9b8b8d40b9f2a83b6a96a55864eb3644941073b98f0556",
+      "size": 431
+    },
+    "baseline/cases/sb_once_once/result.json": {
+      "sha256": "33e5609e0c1319f9370aff47f7702fe180f7cf245b3a7123eef923cc61b7cf8d",
+      "size": 2764
+    },
+    "baseline/cases/sb_once_once/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "baseline/cases/sb_once_once/stdout.txt": {
+      "sha256": "9bf2e9d586be355ec43b9775ebbe12e126156b73b6e69fa6881cf5300aa965d4",
+      "size": 279
+    },
+    "baseline/input-identities.json": {
+      "sha256": "316a1c1b50f66b8d215bb0a8d40b04c4ffd60170a6b5e3e85e09bfeb04965917",
+      "size": 3739
+    },
+    "baseline/inventory/compiled_default_libdir/command.json": {
+      "sha256": "d8e3f2c08677da4a655cfbe9edb132c7efc31c8e4fc5dd3afc0a65e183d34b9e",
+      "size": 224
+    },
+    "baseline/inventory/compiled_default_libdir/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "baseline/inventory/compiled_default_libdir/stdout.txt": {
+      "sha256": "3b25ea9c2ac75d141272ee29e50a4db97dcd828dde8b27f8dfe12418888b2be2",
+      "size": 42
+    },
+    "baseline/inventory/version/command.json": {
+      "sha256": "27e78ff4c5853cb981d0393c5a7973f7b32eba412da8005683ce6a930bd003ea",
+      "size": 225
+    },
+    "baseline/inventory/version/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "baseline/inventory/version/stdout.txt": {
+      "sha256": "f15276a3b23c96214a896647d44dc59e11636c50d363388a26210aec3a6a0471",
+      "size": 20
+    },
+    "baseline/manifest.json": {
+      "sha256": "fb256b96a66b561ea077fb55468f051acd99920ce8ea9410f0b55d0002c84dc2",
+      "size": 7795
+    },
+    "baseline/pilot-audit.json": {
+      "sha256": "a0bee564c8f3c6066219f89f4beb25b6ead0d2e04eb2e60bc9c651c6db8acdc0",
+      "size": 43394
+    },
+    "build/compiler_target/command.json": {
+      "sha256": "804bc8337e86469a8ff62235c8ea7683ee4334d669a5240b25718b6aa6fd4cba",
+      "size": 227
+    },
+    "build/compiler_target/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "build/compiler_target/stdout.txt": {
+      "sha256": "08cababdf891ccbf96eb376f1e84f279f70302fb13d84e5f98637becdfc6d989",
+      "size": 17
+    },
+    "build/compiler_version/command.json": {
+      "sha256": "ec921881d45675b06318b21133611eca327f96410cc9d5a928236ad2ea8420f3",
+      "size": 224
+    },
+    "build/compiler_version/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "build/compiler_version/stdout.txt": {
+      "sha256": "6e876a25bb7fdb71ab2914e8f1eeaa00cc61d20a36a6c2981ab7d4d7ceab42f8",
+      "size": 239
+    },
+    "build/configure/command.json": {
+      "sha256": "b16917750777eee1f061a85b5d4e038dca808af770f8d25428c7eca71a0e9b14",
+      "size": 421
+    },
+    "build/configure/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "build/configure/stdout.txt": {
+      "sha256": "59ab932931fc2a609f6e9af45976469bfda1e4ea68cd4f3bd1db7c3ee32be660",
+      "size": 381
+    },
+    "build/disassembly/command.json": {
+      "sha256": "b38670099d853061f4bb38a79007d3a5cb3e531a47b74fca3377cfc68ef391aa",
+      "size": 347
+    },
+    "build/disassembly/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "build/disassembly/stdout.txt": {
+      "sha256": "0745f4f4a18babcf2a2f210b70d70157eb8b63a1282f779d613299db4b6a7c74",
+      "size": 55300
+    },
+    "build/make_version/command.json": {
+      "sha256": "f3532e5c4d72dc6e060e85613a949f979f0281c15e6032cb63ca86eec1c8edfa",
+      "size": 225
+    },
+    "build/make_version/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "build/make_version/stdout.txt": {
+      "sha256": "cb84250d994234272d0a465014ce2931be76e9e0cb114b9bffa078c3c211e8eb",
+      "size": 300
+    },
+    "build/objdump_version/command.json": {
+      "sha256": "71e9a3c19ad80818f1fbc068c40da88a614f17c8c9bb2471e5c88b7ee417539c",
+      "size": 228
+    },
+    "build/objdump_version/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "build/objdump_version/stdout.txt": {
+      "sha256": "9e64f2a24ea3a3c22b070d14eb2dcbe381044179b53c84323c1b7f00c3b13282",
+      "size": 288
+    },
+    "build/object/command.json": {
+      "sha256": "9ff5908ef93b107aa6390fb1d36252358541ff0526a329ea17d91d23535fefa1",
+      "size": 449
+    },
+    "build/object/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "build/object/stdout.txt": {
+      "sha256": "344dcdd0911d3b050efddac048b6838dc31d34bfb456756c31dbc4b794a58984",
+      "size": 372
+    },
+    "build/selected-disassembly.json": {
+      "sha256": "67355d0092f54e4a0ce63b9429b71c98e4624d097ca7b64c5ccc6e974880f1cb",
+      "size": 3138
+    },
+    "build/symbols/command.json": {
+      "sha256": "1bb9da04da0ea4c9b0386b67125463c109c209c6243bc3f47e3dd3172ed73197",
+      "size": 320
+    },
+    "build/symbols/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "build/symbols/stdout.txt": {
+      "sha256": "3aa8908ccf532e5d5463cf55b0d7104e7d5d227059dcf3945105e282da4177e6",
+      "size": 6769
+    },
+    "cases/once_once_negative/command.json": {
+      "sha256": "63b9f6978346bba0b0ef6d43f07cc31828e272a29df3cc39e4048b7c7df3b8ac",
+      "size": 468
+    },
+    "cases/once_once_negative/result.json": {
+      "sha256": "9c878db606f68fffcb5f8ae152097d86a6a829dec36c3b6f4cd86f4a30c52c54",
+      "size": 2647
+    },
+    "cases/once_once_negative/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "cases/once_once_negative/stdout.txt": {
+      "sha256": "3c4c3fd5d54716eaed5de8cd9c7715b6028e22ad792dc5b2f106090d3c4bafc3",
+      "size": 317
+    },
+    "cases/release_acquire_positive/command.json": {
+      "sha256": "ccf954ef0ae1cdeb09f9a29087f812e7e38de8a5d89c2b46f66e0f0a3158e95b",
+      "size": 474
+    },
+    "cases/release_acquire_positive/result.json": {
+      "sha256": "cecdcd922dbe5d2ad5c9cdb21bd6b162bb716524bdfdab2b369a91e35996a720",
+      "size": 2521
+    },
+    "cases/release_acquire_positive/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "cases/release_acquire_positive/stdout.txt": {
+      "sha256": "baff795abd0374f7d2ed0cb9068f0b7b2e01b244c22647577fe0c344fe34c55a",
+      "size": 300
+    },
+    "input-identities.json": {
+      "sha256": "b15059152e22834b100e96e16800f25e8fe780859d849f803f506adcfe6dbd13",
+      "size": 4159
+    },
+    "manifest.json": {
+      "sha256": "c841788a5d76751564541504030e77626ef55fe2ca5145c3cfc9aa9a205da517",
+      "size": 11880
+    },
+    "source-model-evidence.json": {
+      "sha256": "7ad2f011c60704e25ab78720cca88873d8fad86981d938eb31172d1b47682b90",
+      "size": 1802
+    }
+  },
+  "remaining_c3": [
+    "Additional atomic/RMW and lock-free functional cases",
+    "An explicitly scoped lifetime-sensitive lock-free case",
+    "Any separately claimed progress property",
+    "Architecture mappings beyond configured SMP x86-64"
+  ],
+  "schema_version": 1,
+  "source_model_evidence": {
+    "allocator_token_inventory": [
+      {
+        "count": 1,
+        "path": "kernel/trace/trace.c"
+      },
+      {
+        "count": 1,
+        "path": "kernel/trace/trace_sched_switch.c"
+      }
+    ],
+    "consumer_tokens": 42,
+    "producer_tokens": 56,
+    "roles": {
+      "consumer_observe": {
+        "argument": "The model observes the same publication variable and represents NULL/non-NULL by 0/1.",
+        "model_snippet_count": 1,
+        "source_file": "build/sources/linux-b9b3e33b70b71/kernel/trace/trace_sched_switch.c",
+        "source_function": "trace_find_tgid_ptr",
+        "source_snippet_count": 1
+      },
+      "consumer_payload": {
+        "argument": "C short-circuiting reads tgid_map_max only when map is non-NULL. The model preserves that guard and asks only whether this read can see old zero.",
+        "model_snippet_count": 1,
+        "source_file": "build/sources/linux-b9b3e33b70b71/kernel/trace/trace_sched_switch.c",
+        "source_function": "trace_find_tgid_ptr",
+        "source_snippet_count": 1
+      },
+      "producer_payload": {
+        "argument": "Both objects have static zero initialization. PID_MAX_DEFAULT is positive; the model value 1 distinguishes the assigned maximum from its old zero value without depending on its magnitude.",
+        "model_snippet_count": 1,
+        "source_file": "build/sources/linux-b9b3e33b70b71/kernel/trace/trace_sched_switch.c",
+        "source_function": "trace_alloc_tgid_map",
+        "source_snippet_count": 1
+      },
+      "producer_publish": {
+        "argument": "The condition selects only a successful allocation and abstracts its non-NULL pointer as 1.",
+        "model_snippet_count": 1,
+        "source_file": "build/sources/linux-b9b3e33b70b71/kernel/trace/trace_sched_switch.c",
+        "source_function": "trace_alloc_tgid_map",
+        "source_snippet_count": 1
+      }
+    }
+  },
+  "sudo_or_install_used": false,
+  "target": "linux-trace-tgid-publication-x86_64-c3"
+}

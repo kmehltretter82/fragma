@@ -4,12 +4,15 @@ Requested: 2026-09-07, after the current bounded kernel-source review.
 Status: C0 capability calibration, C1 evidence/scope infrastructure and two
 narrow C2 properties accepted on 2026-09-07: the UP/process-context mutex slice
 and the ARM SMP process/hard-IRQ spinlock slice. The limited C2 pilot milestone
-is complete; C3-C4, broader interrupt contexts and functional protocols remain
-open.
+is complete. C3 now has a pinned four-case LKMM baseline and one source-linked
+SMP x86-64 release/acquire property; atomic/RMW, lock-free lifetime/progress,
+other architecture mappings and C4 remain open.
 See the [C0 evidence record](CONCURRENCY-C0-20260907.md) and
 [C1 evidence record](CONCURRENCY-C1-20260907.md), followed by the
 [C2 mutex pilot](CONCURRENCY-C2-20260907.md) and
-[C2 IRQ pilot](CONCURRENCY-C2-IRQ-20260907.md).
+[C2 IRQ pilot](CONCURRENCY-C2-IRQ-20260907.md). The C3 evidence is split into
+the [LKMM capability baseline](CONCURRENCY-C3-LKMM-20260907.md) and the
+[trace tgid-map source pilot](CONCURRENCY-C3-TRACE-20260907.md).
 Parent goal: [execute PLAN.md](../PLAN.md). This work does not replace the
 remaining sequential-suite, architecture or coverage requirements.
 
@@ -133,14 +136,23 @@ see the [IRQ scope record](CONCURRENCY-C2-IRQ-20260907.md).
 
 ## C3 — Add weak-memory, atomics and lock-free reasoning
 
-- [ ] Evaluate the [Linux Kernel Memory Model and herd7](https://docs.kernel.org/dev-tools/lkmm/readme.html)
+- [x] Evaluate the [Linux Kernel Memory Model and herd7](https://docs.kernel.org/dev-tools/lkmm/readme.html)
   as a complementary backend for small, source-linked ordering models. Pin both
   the model and compatible tool version, and document abstraction limits.
-- [ ] Distinguish ordinary interleavings from weak-memory outcomes. Validate
-  the exact selected READ_ONCE/WRITE_ONCE, acquire/release, barrier and atomic
-  operations; parsing an atomic builtin does not establish its ordering rules.
-- [ ] Record the argument connecting each model to the kernel source and its
-  required compiler/architecture guarantees. ABI matching alone is insufficient.
+- [x] Distinguish ordinary interleavings from weak-memory outcomes for selected
+  `READ_ONCE`/`WRITE_ONCE`, acquire/release and full-barrier cases. The two
+  canonical A/B pairs detect `Sometimes` to `Never` transitions under the exact
+  pinned model/provider.
+- [x] Record one reviewed argument connecting a model to production kernel
+  source and required compiler/architecture evidence. The trace tgid-map pilot
+  binds exact statements, caller/lifetime facts, x86 macro definitions and a
+  configured SMP x86-64 object to a detecting release/acquire A/B pair.
+- [ ] Add independent atomic read-modify-write calibration and at least one
+  source-linked atomic/RMW property. Parsing an atomic builtin does not establish
+  its ordering rules.
+- [ ] Extend implementation evidence beyond the first configured SMP x86-64
+  mapping. ABI matching alone is insufficient; each activated architecture
+  needs source/macro/compiler evidence appropriate to its claimed property.
 - [ ] For lock-free algorithms, state and check the intended functional and
   lifetime properties, and separately any claimed progress guarantee. A
   mutex-oriented race analysis cannot supply these claims implicitly.
@@ -148,6 +160,18 @@ see the [IRQ scope record](CONCURRENCY-C2-IRQ-20260907.md).
 Acceptance: the supported ordering/atomic cases have independent semantic
 calibrations, explicit source-to-model links and retained results. Unmodeled
 ordering, progress or architecture guarantees remain outstanding requirements.
+
+C3 partial decision: the
+[92-check capability baseline](../results/concurrency-c3-lkmm-20260907-03/SUMMARY.md)
+accepts four semantic calibrations and zero production properties. The separate
+[135-check trace pilot](../results/concurrency-c3-trace-20260907-02/SUMMARY.md)
+accepts one production ordering property: after `trace_find_tgid_ptr()` observes
+the `tgid_map` pointer published by a successful `trace_alloc_tgid_map()` release,
+its guarded max read cannot see the old zero on the configured SMP x86-64
+profile. Removing release/acquire makes the outcome `Sometimes` and exposes
+`Flag data-race`. This confirms usable bounded bug-search infrastructure, not a
+new defect or completed C3 stage. Atomic/RMW, lifetime-sensitive lock-free
+behavior, progress and other architecture mappings remain open.
 
 ## C4 — Extend to RCU and maintain honest combined coverage
 
@@ -172,10 +196,12 @@ its required model or validation evidence.
 
 ## Execution order and reporting
 
-The bounded static review and limited C0-C2 pilot are complete. Continue with
-C3 weak-memory/atomic/lock-free reasoning and then C4 RCU/lifetime/combined
-coverage. Broader interrupt and functional-protocol extensions remain visible
-backlog and need not wait for every architecture port or all sequential proofs.
+The bounded static review and limited C0-C2 pilot are complete. Continue C3
+from its accepted LKMM baseline and first source-linked release/acquire pilot:
+atomic/RMW semantics, a lifetime-sensitive lock-free case and additional
+architecture mappings come next, followed by C4 RCU/lifetime/combined coverage.
+Broader interrupt and functional-protocol extensions remain visible backlog and
+need not wait for every architecture port or all sequential proofs.
 No system installation, running-kernel modification or new backend execution is
 authorized merely by this planning document.
 

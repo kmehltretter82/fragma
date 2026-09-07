@@ -1,0 +1,27 @@
+C Fragma-trace-tgid-release-acquire
+
+(*
+ * Source-linked model for trace_alloc_tgid_map() and trace_find_tgid_ptr().
+ * A non-NULL tgid_map is abstracted as 1 and its associated positive maximum
+ * as 1.  The bad outcome observes the published map but the old maximum.
+ *)
+
+{}
+
+P0(int *tgid_map, int *tgid_map_max) // trace_alloc_tgid_map
+{
+	*tgid_map_max = 1;
+	smp_store_release(tgid_map, 1);
+}
+
+P1(int *tgid_map, int *tgid_map_max) // trace_find_tgid_ptr
+{
+	int r0;
+	int r1;
+
+	r0 = smp_load_acquire(tgid_map);
+	if (r0)
+		r1 = *tgid_map_max;
+}
+
+exists (1:r0=1 /\ 1:r1=0) (* Published map with stale maximum. *)

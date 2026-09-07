@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 
 from . import (build, concurrency, concurrency_c2, concurrency_c2_irq,
+               concurrency_c3_lkmm, concurrency_c3_trace,
                concurrency_evidence, profiles, rv32_zeropad, sources, suite,
                toolchain)
 
@@ -60,6 +61,30 @@ def main(argv=None):
         help="new C2 IRQ evidence directory; existing paths are never overwritten",
     )
     c2_irq.add_argument(
+        "--timeout", type=int, default=120,
+        help="wall-clock limit in seconds for each build/provider invocation",
+    )
+    c3_lkmm = sub.add_parser(
+        "concurrency-c3-lkmm",
+        help="run pinned Linux LKMM/herd7 weak-memory semantic calibrations",
+    )
+    c3_lkmm.add_argument(
+        "--output", type=Path,
+        help="new C3 LKMM evidence directory; existing paths are never overwritten",
+    )
+    c3_lkmm.add_argument(
+        "--timeout", type=int, default=120,
+        help="wall-clock limit in seconds for each provider invocation",
+    )
+    c3_trace = sub.add_parser(
+        "concurrency-c3-trace",
+        help="run the source-linked trace tgid-map release/acquire A/B pilot",
+    )
+    c3_trace.add_argument(
+        "--output", type=Path,
+        help="new C3 trace evidence directory; existing paths are never overwritten",
+    )
+    c3_trace.add_argument(
         "--timeout", type=int, default=120,
         help="wall-clock limit in seconds for each build/provider invocation",
     )
@@ -122,6 +147,18 @@ def main(argv=None):
         if args.command == "concurrency-c2-irq":
             output = args.output or concurrency_c2_irq.default_output(root)
             result = concurrency_c2_irq.run_c2_irq(root, output, args.timeout)
+            print(f"{'passed' if result['accepted'] else 'failed'}: {output}")
+            return 0 if result["accepted"] else 1
+        if args.command == "concurrency-c3-lkmm":
+            output = args.output or concurrency_c3_lkmm.default_output(root)
+            result = concurrency_c3_lkmm.run_c3_lkmm(root, output, args.timeout)
+            print(f"{'passed' if result['accepted'] else 'failed'}: {output}")
+            return 0 if result["accepted"] else 1
+        if args.command == "concurrency-c3-trace":
+            output = args.output or concurrency_c3_trace.default_output(root)
+            result = concurrency_c3_trace.run_c3_trace(
+                root, output, args.timeout
+            )
             print(f"{'passed' if result['accepted'] else 'failed'}: {output}")
             return 0 if result["accepted"] else 1
         if args.command == "rv32-zeropad-audit":

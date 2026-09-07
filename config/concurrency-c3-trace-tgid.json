@@ -1,0 +1,244 @@
+{
+  "schema_version": 1,
+  "id": "linux-trace-tgid-publication-x86_64-c3",
+  "kernel": {
+    "revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+    "git_tree": "054b6818c409ab20ae89b1031a1a7c358f673d87",
+    "source_root": "build/sources/linux-b9b3e33b70b71",
+    "source_receipt": "build/sources/linux-b9b3e33b70b71/.fragma-source.json",
+    "source_identities": {
+      "build/sources/linux-b9b3e33b70b71/.fragma-source.json": "93cffd1d937e730bf3010bfc904db8ce5c8ebc8df6e8d610032dda667c2950bd",
+      "build/sources/linux-b9b3e33b70b71/kernel/trace/trace_sched_switch.c": "9ca1826f72101586daf1380abc378e50416249cce3df1241af7ce5a63764dd4d",
+      "build/sources/linux-b9b3e33b70b71/kernel/trace/trace.c": "092e8c0da0bb84c70707ab23e8b22f115d07e538f594b227fe82d5268a2afb9e",
+      "build/sources/linux-b9b3e33b70b71/kernel/trace/Makefile": "43c19dc49d675f13300725e0af01c02a61bdacef2ed861c26f4105a576dc9400",
+      "build/sources/linux-b9b3e33b70b71/kernel/trace/Kconfig": "3f17ad65634ba1edd07e0fe83a84b588269005fbd90f43a68578312837b52733",
+      "build/sources/linux-b9b3e33b70b71/kernel/pid.c": "a4319b017e8c3594a181153c75ce5546c89e05d8eb441fd2a34d648a2c69cfc6",
+      "build/sources/linux-b9b3e33b70b71/include/linux/threads.h": "ac7161de729d183418eee161e1d0bbc2253839139d20e1d8a278510b6108d130",
+      "build/sources/linux-b9b3e33b70b71/arch/x86/include/asm/barrier.h": "6665bb567ad0247c0247efa8473844fe68f5e720c946e8c5b99a36c1db8efa57",
+      "build/sources/linux-b9b3e33b70b71/include/asm-generic/barrier.h": "72ccf9fddb2f4f34161641eb4af082b6d01a2b256ad0bf80770858aecbdcf410",
+      "build/sources/linux-b9b3e33b70b71/include/asm-generic/rwonce.h": "e572c666ad9efa7eca68a005337a2f04fbb39d541b9a111c48955db6ec903531",
+      "build/sources/linux-b9b3e33b70b71/Documentation/memory-barriers.txt": "090db2834c75aff44a528204c8072640e01efe51f1ac44e54a1d89efe1714a5c"
+    }
+  },
+  "baseline": {
+    "manifest": "config/concurrency-c3-lkmm.json",
+    "id": "linux-lkmm-herd7-c3-calibration",
+    "required_capability": "c3_capability_baseline_complete"
+  },
+  "profile": {
+    "id": "x86_64-trace-c3",
+    "arch": "x86_64",
+    "config_recipe": "x86_64_defconfig",
+    "jobs": 8,
+    "build_directory": "build/kernel/x86_64-trace-c3",
+    "config": "build/kernel/x86_64-trace-c3/.config",
+    "config_sha256": "c1d909f833602f5d8fb7fba52322c1f411c44fe4e41a44b52ac5d897e3f3033e",
+    "required_config": {
+      "CONFIG_64BIT": "y",
+      "CONFIG_X86_64": "y",
+      "CONFIG_SMP": "y",
+      "CONFIG_CONTEXT_SWITCH_TRACER": "y",
+      "CONFIG_TRACING": "y",
+      "CONFIG_FTRACE": "y",
+      "CONFIG_KCSAN": "n",
+      "CONFIG_CC_IS_GCC": "y"
+    },
+    "make": {
+      "binary": "/usr/bin/make",
+      "realpath": "/usr/bin/make",
+      "sha256": "27c9f6d806aee15882b01c2c61848f7aa75caa14bc7b6f608ba422f9e46a7d49",
+      "version_line": "GNU Make 4.4.1"
+    },
+    "compiler": {
+      "binary": "/usr/bin/gcc",
+      "realpath": "/usr/bin/x86_64-linux-gnu-gcc-15",
+      "sha256": "b5f1b773a7c733738352000c92a077dc5852a1a2fc6d836b1e411be1e9ec5f88",
+      "version_line": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+      "target": "x86_64-linux-gnu"
+    },
+    "objdump": {
+      "binary": "/usr/bin/objdump",
+      "realpath": "/usr/bin/x86_64-linux-gnu-objdump",
+      "sha256": "44f07f8da860b15bd4dec909f229dec536595fb170a616fe3ab29c7b21c9736f",
+      "version_line": "GNU objdump (GNU Binutils for Ubuntu) 2.46"
+    },
+    "configured_compile": {
+      "target": "kernel/trace/trace_sched_switch.o",
+      "object": "build/kernel/x86_64-trace-c3/kernel/trace/trace_sched_switch.o",
+      "command_file": "build/kernel/x86_64-trace-c3/kernel/trace/.trace_sched_switch.o.cmd",
+      "object_sha256": "31801117ba52a3275f9803d6e8b62beadffef9e3c6da7f245984bd44f8063b8e",
+      "command_sha256": "f61a5f6da8c54857cf93cead8234f07ae70abf3e5b3126a2e9056b218b64f006",
+      "elf_class": 2,
+      "elf_data": 1,
+      "elf_machine": 62,
+      "required_command_tokens": [
+        "/usr/bin/gcc",
+        "-D__KERNEL__",
+        "-std=gnu11",
+        "-m64",
+        "-march=x86-64",
+        "-O2",
+        "-fno-allow-store-data-races",
+        "kernel/trace/trace_sched_switch.o",
+        "kernel/trace/trace_sched_switch.c"
+      ],
+      "producer_disassembly_order": [
+        "init_pid_ns+0xb0",
+        ".bss+0xc",
+        "__kvmalloc_node_noprof",
+        ".bss+0x14"
+      ],
+      "consumer_disassembly_order": [
+        ".bss+0x14",
+        "test   %rax,%rax",
+        ".bss+0xc"
+      ],
+      "local_symbols": {
+        "tgid_map": {
+          "section": ".bss",
+          "value": "0000000000000018",
+          "size": 8
+        },
+        "tgid_map_max": {
+          "section": ".bss",
+          "value": "0000000000000010",
+          "size": 8
+        }
+      }
+    }
+  },
+  "property": {
+    "kind": "kernel_release_acquire_publication_ordering",
+    "claim": "On the configured SMP x86-64 profile, if trace_find_tgid_ptr() observes the non-NULL tgid_map value published by a successful trace_alloc_tgid_map(), its following tgid_map_max access cannot observe the pre-publication zero value.",
+    "producer": "trace_alloc_tgid_map",
+    "consumer": "trace_find_tgid_ptr",
+    "published_object": "tgid_map",
+    "payload_object": "tgid_map_max",
+    "source_roles": {
+      "producer_payload": {
+        "file": "build/sources/linux-b9b3e33b70b71/kernel/trace/trace_sched_switch.c",
+        "function": "trace_alloc_tgid_map",
+        "source_snippet": "tgid_map_max = init_pid_ns.pid_max;",
+        "model_snippet": "*tgid_map_max = 1;",
+        "argument": "Both objects have static zero initialization. PID_MAX_DEFAULT is positive; the model value 1 distinguishes the assigned maximum from its old zero value without depending on its magnitude."
+      },
+      "producer_publish": {
+        "file": "build/sources/linux-b9b3e33b70b71/kernel/trace/trace_sched_switch.c",
+        "function": "trace_alloc_tgid_map",
+        "source_snippet": "smp_store_release(&tgid_map, map);",
+        "model_snippet": "smp_store_release(tgid_map, 1);",
+        "argument": "The condition selects only a successful allocation and abstracts its non-NULL pointer as 1."
+      },
+      "consumer_observe": {
+        "file": "build/sources/linux-b9b3e33b70b71/kernel/trace/trace_sched_switch.c",
+        "function": "trace_find_tgid_ptr",
+        "source_snippet": "int *map = smp_load_acquire(&tgid_map);",
+        "model_snippet": "r0 = smp_load_acquire(tgid_map);",
+        "argument": "The model observes the same publication variable and represents NULL/non-NULL by 0/1."
+      },
+      "consumer_payload": {
+        "file": "build/sources/linux-b9b3e33b70b71/kernel/trace/trace_sched_switch.c",
+        "function": "trace_find_tgid_ptr",
+        "source_snippet": "if (unlikely(!map || pid > tgid_map_max))",
+        "model_snippet": "if (r0)\n\t\tr1 = *tgid_map_max;",
+        "argument": "C short-circuiting reads tgid_map_max only when map is non-NULL. The model preserves that guard and asks only whether this read can see old zero."
+      }
+    },
+    "producer_serialization": {
+      "callsite_file": "build/sources/linux-b9b3e33b70b71/kernel/trace/trace.c",
+      "callsite_function": "set_tracer_flag",
+      "required_call": "trace_alloc_tgid_map",
+      "required_guard": "lockdep_assert_held(&event_mutex)",
+      "argument": "The sole callsite is the RECORD_TGID arm of set_tracer_flag(), whose matching arm asserts event_mutex ownership. The allocator returns immediately after publication on later calls."
+    },
+    "lifetime": {
+      "storage": "Both publication variables are translation-unit-local static objects.",
+      "allocation": "The published pointer comes from a successful kvzalloc_objs() call.",
+      "reclamation": "The translation unit contains no later NULL assignment or deallocation of tgid_map.",
+      "scope": "Only the max-publication ordering before any hypothetical future source change that adds replacement or reclamation."
+    },
+    "compiler_architecture_argument": {
+      "kernel_contract": "The pinned memory-barriers documentation guarantees that accesses before a release become visible after an acquire that reads the same published value.",
+      "compiler_mapping": "The pinned x86 macros place compiler barriers around volatile WRITE_ONCE/READ_ONCE operations, and the configured object preserves payload-before-publication and publication-before-payload-read instruction order.",
+      "architecture_mapping": "The accepted scope relies on the Linux x86-64 implementation satisfying LKMM release/acquire semantics; the object inspection confirms this selected build but is not a proof of the x86 ISA or arbitrary compiler versions."
+    },
+    "exclusions": [
+      "No tgid_map element contents, pid bounds, allocation arithmetic, tracing API behavior or whole-function memory safety is verified.",
+      "No architecture other than the configured SMP x86-64 profile is accepted by this pilot.",
+      "The model does not establish progress, fairness, allocation success, lock freedom or wait freedom.",
+      "Future pointer replacement or reclamation would invalidate the retained lifetime argument and must fail source identities.",
+      "The model checks one successful publisher and one reader; it is not a whole tracing-subsystem concurrency proof."
+    ]
+  },
+  "model": {
+    "ordered_path": "concurrency/c3/trace_tgid_release_acquire.litmus",
+    "ordered_sha256": "1b2cda842920a41593e52325d4dfe12cf3b07a0e3bf6d810fe0f09d1a48da966",
+    "weakened_path": "concurrency/c3/trace_tgid_once_once.litmus",
+    "weakened_sha256": "f17a7fb444226433bbd33c117e77ebe84634eaac9921e8b8f1872121938695c1",
+    "same_condition": "exists (1:r0=1 /\\ 1:r1=0)",
+    "abstraction": {
+      "tgid_map": "0 is NULL and 1 is the single successfully allocated non-NULL pointer.",
+      "tgid_map_max": "0 is static pre-initialization state and 1 is the positive assigned value.",
+      "consumer_guard": "The payload read executes only after the publication read returns nonzero.",
+      "omitted": "Allocation internals, array contents and unrelated tracing state cannot affect the selected two-location ordering property."
+    },
+    "cases": [
+      {
+        "id": "release_acquire_positive",
+        "path": "concurrency/c3/trace_tgid_release_acquire.litmus",
+        "role": "verification_candidate",
+        "verification_candidate": true,
+        "control_for": null,
+        "required_operations": [
+          "smp_store_release",
+          "smp_load_acquire"
+        ],
+        "forbidden_operations": [
+          "WRITE_ONCE",
+          "READ_ONCE"
+        ],
+        "expected": {
+          "test": "Fragma-trace-tgid-release-acquire",
+          "disposition": "Allowed",
+          "states": 2,
+          "marker": "No",
+          "positive": 0,
+          "negative": 2,
+          "flags": [],
+          "condition": "exists (1:r0=1 /\\ 1:r1=0)",
+          "observation": "Never",
+          "hash": "868c22e0c5c98f4b52efe08c4bf1686f"
+        }
+      },
+      {
+        "id": "once_once_negative",
+        "path": "concurrency/c3/trace_tgid_once_once.litmus",
+        "role": "required_weakened_control",
+        "verification_candidate": false,
+        "control_for": "release_acquire_positive",
+        "required_operations": [
+          "WRITE_ONCE",
+          "READ_ONCE"
+        ],
+        "forbidden_operations": [
+          "smp_store_release",
+          "smp_load_acquire"
+        ],
+        "expected": {
+          "test": "Fragma-trace-tgid-once-once",
+          "disposition": "Allowed",
+          "states": 3,
+          "marker": "Ok",
+          "positive": 1,
+          "negative": 2,
+          "flags": [
+            "data-race"
+          ],
+          "condition": "exists (1:r0=1 /\\ 1:r1=0)",
+          "observation": "Sometimes",
+          "hash": "cecf17890512f70a358b2c47dba3edaa"
+        }
+      }
+    ]
+  }
+}

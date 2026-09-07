@@ -1,0 +1,195 @@
+{
+  "schema_version": 1,
+  "id": "linux-lkmm-herd7-c3-calibration",
+  "kernel": {
+    "revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+    "git_tree": "054b6818c409ab20ae89b1031a1a7c358f673d87",
+    "source_root": "build/sources/linux-b9b3e33b70b71",
+    "source_receipt": "build/sources/linux-b9b3e33b70b71/.fragma-source.json",
+    "model_directory": "build/sources/linux-b9b3e33b70b71/tools/memory-model",
+    "minimum_herdtools_version": "7.58",
+    "source_identities": {
+      "build/sources/linux-b9b3e33b70b71/.fragma-source.json": "93cffd1d937e730bf3010bfc904db8ce5c8ebc8df6e8d610032dda667c2950bd",
+      "build/sources/linux-b9b3e33b70b71/tools/memory-model/README": "95bc588aa5f32509c15e00731cfb5b98ffc627f6e2d3971f21def66c2492b107",
+      "build/sources/linux-b9b3e33b70b71/tools/memory-model/Documentation/litmus-tests.txt": "f7a5804c230527695aa4fe6ed62135a7f64d7485bf933a0a8b4a465e68fbfa76",
+      "build/sources/linux-b9b3e33b70b71/tools/memory-model/linux-kernel.cat": "250207709250d308e0a0a6f391c4eda0bbf4876cbc55eccbfbcd495676a179be",
+      "build/sources/linux-b9b3e33b70b71/tools/memory-model/linux-kernel.bell": "ab57943799d445327c3c7cf0a1ca9f9fae8e7379e45b9fc90312993bb038e23f",
+      "build/sources/linux-b9b3e33b70b71/tools/memory-model/linux-kernel.cfg": "37c57d82291113c5a4a170f3f6b5b8f01bc18403d701b8e5a6db43aae62d6b32",
+      "build/sources/linux-b9b3e33b70b71/tools/memory-model/linux-kernel.def": "a04911d85fd86f5dbcf8ed436c7a2570fcc615f768c0c19b0a101f6212d2504c",
+      "build/sources/linux-b9b3e33b70b71/tools/memory-model/lock.cat": "a51a7f04ae3afea610253a04f4c930eced36c6141ba834517f9b0e2755057a79"
+    }
+  },
+  "provider": {
+    "binary": "/usr/bin/herd7",
+    "binary_realpath": "/usr/bin/herd7",
+    "binary_sha256": "f398c4ba11ee87226e104efc77e64873cf775292e16b90e1e71015962969060b",
+    "expected_version": "7.58, Rev: exported",
+    "library_directory": "third_party/herdtools7-7.58/libdir",
+    "library_upstream": {
+      "repository": "https://github.com/herd/herdtools7",
+      "tag": "7.58",
+      "commit": "1ca343e16a2038e406d1ac674e7e3a1b722b36c7",
+      "git_tree": "271f7849890bbcc80d7f1b2106caa94cc18624ac",
+      "license": "CeCILL-B"
+    },
+    "library_identities": {
+      "third_party/herdtools7-7.58/LICENSE.txt": "5d8a5818161ab38b77226b7caa758fde63f1aaabdf87ea773e1620b62a5b9537",
+      "third_party/herdtools7-7.58/README.md": "3ed9c01d1d9917c29039560a6b86dd48db7283f0ba8451d21fa54c12cfe42ba7",
+      "third_party/herdtools7-7.58/libdir/stdlib.cat": "46c6eb7b5eb8820760d20b557280e9399ba247e30343ab8ad7e8cb72eee93624",
+      "third_party/herdtools7-7.58/libdir/cross.cat": "8b2dbe9cc3175d5bd8067ab80b4c6024949c743d16e47b13f8230c52ca06bbde",
+      "third_party/herdtools7-7.58/libdir/cos-opt.cat": "587b1a119119e8f6d4aec2fddf3df34245f09eb1cbcc374671f6951b1e604779"
+    },
+    "fixed_arguments": [
+      "-set-libdir",
+      "{library_directory}",
+      "-conf",
+      "linux-kernel.cfg"
+    ]
+  },
+  "scope": {
+    "evidence_kind": "semantic_calibration",
+    "accepted_capabilities": [
+      "The exact herd7 7.58 executable can run the exact pinned Linux Kernel Memory Model with an explicit authenticated generic CAT library.",
+      "The model distinguishes two canonical unordered outcomes from their release/acquire and full-barrier counterparts.",
+      "The selected READ_ONCE, WRITE_ONCE, smp_store_release, smp_load_acquire and smp_mb spellings are consumed as Linux litmus-test primitives."
+    ],
+    "exclusions": [
+      "These four kernel-owned litmus tests are semantic calibrations, not production kernel functions or discovered defects.",
+      "No production source-to-litmus correspondence, object lifetime, lock-free functional property or progress guarantee is established.",
+      "No compiler lowering or architecture-specific implementation is checked by this architecture-independent LKMM run.",
+      "A Never outcome is conditional on the exact litmus test, model and provider identities; it is not a whole-kernel proof.",
+      "No klitmus7 module generation, running-kernel execution, package installation or privileged action is included."
+    ]
+  },
+  "pairs": [
+    {
+      "id": "message_passing_release_acquire",
+      "weakened_control": "mp_once_once",
+      "ordered_calibration": "mp_release_acquire",
+      "ordering_primitives": [
+        "smp_store_release",
+        "smp_load_acquire"
+      ],
+      "expected_transition": "Sometimes->Never"
+    },
+    {
+      "id": "store_buffering_full_barrier",
+      "weakened_control": "sb_once_once",
+      "ordered_calibration": "sb_full_barrier",
+      "ordering_primitives": [
+        "smp_mb"
+      ],
+      "expected_transition": "Sometimes->Never"
+    }
+  ],
+  "cases": [
+    {
+      "id": "mp_once_once",
+      "path": "litmus-tests/MP+poonceonces.litmus",
+      "sha256": "15f94aa6220215d31f238a9f9713aea53a396186f17be7a3a0f7ed8ba4724456",
+      "role": "weakened_control",
+      "required_operations": [
+        "READ_ONCE",
+        "WRITE_ONCE"
+      ],
+      "forbidden_operations": [
+        "smp_store_release",
+        "smp_load_acquire",
+        "smp_mb"
+      ],
+      "expected": {
+        "test": "MP+poonceonces",
+        "disposition": "Allowed",
+        "states": 4,
+        "marker": "Ok",
+        "positive": 1,
+        "negative": 3,
+        "flags": [],
+        "condition": "exists (1:r0=1 /\\ 1:r1=0)",
+        "observation": "Sometimes",
+        "hash": "c0ebd8ca556580d772ac73303c4c4f84"
+      }
+    },
+    {
+      "id": "mp_release_acquire",
+      "path": "litmus-tests/MP+pooncerelease+poacquireonce.litmus",
+      "sha256": "fbfcb4210aa3593ab07e564b2c362734cfaf670c1cb34dad1c6b483f7f41d8c3",
+      "role": "ordered_calibration",
+      "required_operations": [
+        "READ_ONCE",
+        "WRITE_ONCE",
+        "smp_store_release",
+        "smp_load_acquire"
+      ],
+      "forbidden_operations": [
+        "smp_mb"
+      ],
+      "expected": {
+        "test": "MP+pooncerelease+poacquireonce",
+        "disposition": "Allowed",
+        "states": 3,
+        "marker": "No",
+        "positive": 0,
+        "negative": 3,
+        "flags": [],
+        "condition": "exists (1:r0=1 /\\ 1:r1=0)",
+        "observation": "Never",
+        "hash": "f259d8efc86e0b40c7168bf58524ab49"
+      }
+    },
+    {
+      "id": "sb_once_once",
+      "path": "litmus-tests/SB+poonceonces.litmus",
+      "sha256": "a9b498362b29cc0ccd79d998b587a7763ba42d7d47c6dd588c9fb19e6f9d1a89",
+      "role": "weakened_control",
+      "required_operations": [
+        "READ_ONCE",
+        "WRITE_ONCE"
+      ],
+      "forbidden_operations": [
+        "smp_store_release",
+        "smp_load_acquire",
+        "smp_mb"
+      ],
+      "expected": {
+        "test": "SB+poonceonces",
+        "disposition": "Allowed",
+        "states": 4,
+        "marker": "Ok",
+        "positive": 1,
+        "negative": 3,
+        "flags": [],
+        "condition": "exists (0:r0=0 /\\ 1:r0=0)",
+        "observation": "Sometimes",
+        "hash": "d2b6ca86cddfad6178a05767f57fafbf"
+      }
+    },
+    {
+      "id": "sb_full_barrier",
+      "path": "litmus-tests/SB+fencembonceonces.litmus",
+      "sha256": "11dbee9bc79de6594e8e4275fbb4937981f6656c39a524030fd2df2a18f63405",
+      "role": "ordered_calibration",
+      "required_operations": [
+        "READ_ONCE",
+        "WRITE_ONCE",
+        "smp_mb"
+      ],
+      "forbidden_operations": [
+        "smp_store_release",
+        "smp_load_acquire"
+      ],
+      "expected": {
+        "test": "SB+fencembonceonces",
+        "disposition": "Allowed",
+        "states": 3,
+        "marker": "No",
+        "positive": 0,
+        "negative": 3,
+        "flags": [],
+        "condition": "exists (0:r0=0 /\\ 1:r0=0)",
+        "observation": "Never",
+        "hash": "d66d99523e2cac6b06e66f4c995ebb48"
+      }
+    }
+  ]
+}
