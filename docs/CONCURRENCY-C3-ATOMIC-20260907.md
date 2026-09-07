@@ -4,7 +4,7 @@ Status: accepted for one narrow production atomicity property; C3 remains
 incomplete.
 
 The current standalone evidence is
-[`results/concurrency-c3-module-stats-20260907-03`](../results/concurrency-c3-module-stats-20260907-03/SUMMARY.md).
+[`results/concurrency-c3-module-stats-20260907-04`](../results/concurrency-c3-module-stats-20260907-04/SUMMARY.md).
 It passes all 162 gates, accepts one source-linked kernel property, and includes
 two additional return-value ordering calibrations. It found no new Linux defect:
 the selected source uses `atomic_inc()` correctly.
@@ -14,7 +14,8 @@ counter as process-wide in one manifest argument. Run `-02` corrected that scope
 wording to kernel-wide. The current `-03` run additionally includes the pinned
 kernel `scripts/config` executable in its top-level input inventory; it was
 already hash-checked by the earlier runs. No source, model, build or outcome
-changed across these provenance-only renewals.
+changed across these provenance-only renewals. Run `-04` renews only the CLI
+identity after adding the IPC refcount command.
 
 ## Accepted property
 
@@ -126,9 +127,11 @@ wait freedom, or whole-kernel race freedom.
 The source-linked implementation mapping is x86-64 only. LKMM and the generic
 atomic API are architecture-independent contracts, but another architecture is
 not promoted by that fact alone; it needs its own source/macro/compiler/object
-evidence. C3 next needs a lifetime-sensitive lock-free functional case, any
-separately justified progress property, and implementation mappings beyond
-x86-64. C4 RCU remains separate.
+evidence. The subsequent
+[System V IPC refcount pilot](CONCURRENCY-C3-REFCOUNT-20260907.md) supplies one
+bounded lifetime-sensitive functional case. C3 still needs any separately
+justified progress property, broader lockless protocols and implementation
+mappings beyond x86-64. C4 RCU remains separate.
 
 Reproduce with:
 

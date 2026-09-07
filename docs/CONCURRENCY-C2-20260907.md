@@ -62,7 +62,7 @@ state, patching or ordering claim is accepted.
 
 ## Positive/negative evidence
 
-The current [63-check A/B result](../results/concurrency-c2-20260907-07/SUMMARY.md)
+The current [63-check A/B result](../results/concurrency-c2-20260907-08/SUMMARY.md)
 passes:
 
 | Run | Local assertions | Final `done` classification | Acceptance role |

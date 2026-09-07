@@ -1,0 +1,31 @@
+C Fragma-refcount-resurrection
+
+(*
+ * Required unsafe control.  Replacing get-unless-zero with an unconditional
+ * relaxed increment permits a final put to release the object and a later
+ * increment to resurrect its zero refcount.
+ *)
+
+{
+	atomic_t refs = ATOMIC_INIT(1);
+}
+
+P0(atomic_t *refs)
+{
+	int old;
+	int released;
+
+	old = atomic_fetch_sub_release(1, refs);
+	released = (old == 1);
+}
+
+P1(atomic_t *refs)
+{
+	int old;
+	int acquired;
+
+	old = atomic_fetch_inc_relaxed(refs);
+	acquired = (old == 0);
+}
+
+exists (0:released=1 /\ 1:acquired=1)

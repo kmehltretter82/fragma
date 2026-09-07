@@ -1,0 +1,1743 @@
+{
+  "accepted": true,
+  "baseline": {
+    "accepted": true,
+    "checks": 92,
+    "output": "/home/karl/linux-work/fragma/results/concurrency-c3-ipc-refcount-20260907-02/baseline"
+  },
+  "c3_lifetime_functional_pilot_complete": true,
+  "c3_stage_complete": false,
+  "call_rcu_modeled": false,
+  "cases": [
+    {
+      "checks": [
+        {
+          "actual": "df60c96b3365df18c8af00938dd6f2dda2cb67fa136aaba0b2d17e774f1fe5d8",
+          "expected": "df60c96b3365df18c8af00938dd6f2dda2cb67fa136aaba0b2d17e774f1fe5d8",
+          "name": "model identity",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "timed out",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "exit code",
+          "passed": true
+        },
+        {
+          "actual": "",
+          "expected": "",
+          "name": "stderr empty",
+          "passed": true
+        },
+        {
+          "actual": null,
+          "expected": null,
+          "name": "parse error",
+          "passed": true
+        },
+        {
+          "actual": {
+            "condition": "exists (0:released=1 /\\ 1:acquired=1)",
+            "disposition": "Allowed",
+            "flags": [],
+            "hash": "e315d2aff7685cce1c97f736d48946c0",
+            "marker": "No",
+            "negative": 2,
+            "observation": "Never",
+            "positive": 0,
+            "states": 2,
+            "test": "Fragma-refcount-put-get"
+          },
+          "expected": {
+            "condition": "exists (0:released=1 /\\ 1:acquired=1)",
+            "disposition": "Allowed",
+            "flags": [],
+            "hash": "e315d2aff7685cce1c97f736d48946c0",
+            "marker": "No",
+            "negative": 2,
+            "observation": "Never",
+            "positive": 0,
+            "states": 2,
+            "test": "Fragma-refcount-put-get"
+          },
+          "name": "semantic result",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "only positive case is verification candidate",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "required operation: atomic_fetch_sub_release",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "required operation: atomic_cmpxchg_relaxed",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "forbidden operation: atomic_fetch_inc_relaxed",
+          "passed": true
+        }
+      ],
+      "control_for": null,
+      "id": "refcount_put_get_positive",
+      "parse_error": null,
+      "parsed": {
+        "condition": "exists (0:released=1 /\\ 1:acquired=1)",
+        "disposition": "Allowed",
+        "flags": [],
+        "hash": "e315d2aff7685cce1c97f736d48946c0",
+        "marker": "No",
+        "negative": 2,
+        "observation": "Never",
+        "positive": 0,
+        "seconds": 0.01,
+        "state_values": [
+          "0:released=0; 1:acquired=1;",
+          "0:released=1; 1:acquired=0;"
+        ],
+        "states": 2,
+        "test": "Fragma-refcount-put-get"
+      },
+      "passed": true,
+      "returncode": 0,
+      "role": "verification_candidate",
+      "timed_out": false,
+      "verification_candidate": true
+    },
+    {
+      "checks": [
+        {
+          "actual": "ca3d5dd2b924df2d4a0bff14351c7de6ab59817a09206b9356ab456c6d45bc33",
+          "expected": "ca3d5dd2b924df2d4a0bff14351c7de6ab59817a09206b9356ab456c6d45bc33",
+          "name": "model identity",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "timed out",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "exit code",
+          "passed": true
+        },
+        {
+          "actual": "",
+          "expected": "",
+          "name": "stderr empty",
+          "passed": true
+        },
+        {
+          "actual": null,
+          "expected": null,
+          "name": "parse error",
+          "passed": true
+        },
+        {
+          "actual": {
+            "condition": "exists (0:released=1 /\\ 1:acquired=1)",
+            "disposition": "Allowed",
+            "flags": [],
+            "hash": "ff8861bc39ed551fc8e17a2363b6da9c",
+            "marker": "Ok",
+            "negative": 1,
+            "observation": "Sometimes",
+            "positive": 1,
+            "states": 2,
+            "test": "Fragma-refcount-resurrection"
+          },
+          "expected": {
+            "condition": "exists (0:released=1 /\\ 1:acquired=1)",
+            "disposition": "Allowed",
+            "flags": [],
+            "hash": "ff8861bc39ed551fc8e17a2363b6da9c",
+            "marker": "Ok",
+            "negative": 1,
+            "observation": "Sometimes",
+            "positive": 1,
+            "states": 2,
+            "test": "Fragma-refcount-resurrection"
+          },
+          "name": "semantic result",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "only positive case is verification candidate",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "required operation: atomic_fetch_sub_release",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "required operation: atomic_fetch_inc_relaxed",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "forbidden operation: atomic_cmpxchg_relaxed",
+          "passed": true
+        }
+      ],
+      "control_for": "refcount_put_get_positive",
+      "id": "unconditional_resurrection_negative",
+      "parse_error": null,
+      "parsed": {
+        "condition": "exists (0:released=1 /\\ 1:acquired=1)",
+        "disposition": "Allowed",
+        "flags": [],
+        "hash": "ff8861bc39ed551fc8e17a2363b6da9c",
+        "marker": "Ok",
+        "negative": 1,
+        "observation": "Sometimes",
+        "positive": 1,
+        "seconds": 0.01,
+        "state_values": [
+          "0:released=0; 1:acquired=0;",
+          "0:released=1; 1:acquired=1;"
+        ],
+        "states": 2,
+        "test": "Fragma-refcount-resurrection"
+      },
+      "passed": true,
+      "returncode": 0,
+      "role": "required_unsafe_control",
+      "timed_out": false,
+      "verification_candidate": false
+    }
+  ],
+  "checks": [
+    {
+      "actual": "linux-lkmm-herd7-c3-calibration",
+      "expected": "linux-lkmm-herd7-c3-calibration",
+      "name": "baseline target",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "baseline capability accepted",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "baseline accepts no kernel property",
+      "passed": true
+    },
+    {
+      "actual": "93cffd1d937e730bf3010bfc904db8ce5c8ebc8df6e8d610032dda667c2950bd",
+      "expected": "93cffd1d937e730bf3010bfc904db8ce5c8ebc8df6e8d610032dda667c2950bd",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/.fragma-source.json",
+      "passed": true
+    },
+    {
+      "actual": "5f4e4b0eb08ce302dae805703340052eb8406d5c1b0cf7856a24eb8909ad3a5e",
+      "expected": "5f4e4b0eb08ce302dae805703340052eb8406d5c1b0cf7856a24eb8909ad3a5e",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/ipc/util.c",
+      "passed": true
+    },
+    {
+      "actual": "660560ebc799c8b47b15fc6fbdf2471652bb8e80031320438571f91fcc8804cd",
+      "expected": "660560ebc799c8b47b15fc6fbdf2471652bb8e80031320438571f91fcc8804cd",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/ipc/util.h",
+      "passed": true
+    },
+    {
+      "actual": "90addad9f42eafc5f475a54631006c7317ebe60c6546ce1278a594674e2d4612",
+      "expected": "90addad9f42eafc5f475a54631006c7317ebe60c6546ce1278a594674e2d4612",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/ipc/Makefile",
+      "passed": true
+    },
+    {
+      "actual": "a43f09d89309a6bd7036c96e0836c30c021f2d56b042be288a15533dd9e944bd",
+      "expected": "a43f09d89309a6bd7036c96e0836c30c021f2d56b042be288a15533dd9e944bd",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/init/Kconfig",
+      "passed": true
+    },
+    {
+      "actual": "fcfc732fc56a2e05da4d9b23d86904687860ecdac2e249ee95621db93b77d6fc",
+      "expected": "fcfc732fc56a2e05da4d9b23d86904687860ecdac2e249ee95621db93b77d6fc",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/include/linux/refcount.h",
+      "passed": true
+    },
+    {
+      "actual": "1cd15b66e38dc4408329d4bd61ec605222a5c440dde64a0af7e73dcfc1a2472f",
+      "expected": "1cd15b66e38dc4408329d4bd61ec605222a5c440dde64a0af7e73dcfc1a2472f",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/include/linux/refcount_types.h",
+      "passed": true
+    },
+    {
+      "actual": "74ee85eb1b442f9f7a864d660545180225dd60a09ce8462f4a7166d9382ebd22",
+      "expected": "74ee85eb1b442f9f7a864d660545180225dd60a09ce8462f4a7166d9382ebd22",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/Documentation/core-api/refcount-vs-atomic.rst",
+      "passed": true
+    },
+    {
+      "actual": "6fd766b72f7a633593d83e559998112ce49355273a55f79c0a6187d688b48f22",
+      "expected": "6fd766b72f7a633593d83e559998112ce49355273a55f79c0a6187d688b48f22",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/include/linux/atomic/atomic-instrumented.h",
+      "passed": true
+    },
+    {
+      "actual": "df526d6b93b043fb2a25296d82b0c4e4187ef8ddeb4d6789897989f7ad7ed6d0",
+      "expected": "df526d6b93b043fb2a25296d82b0c4e4187ef8ddeb4d6789897989f7ad7ed6d0",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/include/linux/atomic/atomic-arch-fallback.h",
+      "passed": true
+    },
+    {
+      "actual": "1ba1e1ef1403c9be2f00494c1ba22cff87044d442ef90a5da18a863877e88b18",
+      "expected": "1ba1e1ef1403c9be2f00494c1ba22cff87044d442ef90a5da18a863877e88b18",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/arch/x86/include/asm/atomic.h",
+      "passed": true
+    },
+    {
+      "actual": "70dc12e5c2f1bf7b3ff0fcc4f7bf908a9d2a79786ef86d8b3ba71c3e04d3ec9c",
+      "expected": "70dc12e5c2f1bf7b3ff0fcc4f7bf908a9d2a79786ef86d8b3ba71c3e04d3ec9c",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/arch/x86/include/asm/cmpxchg.h",
+      "passed": true
+    },
+    {
+      "actual": "72ccf9fddb2f4f34161641eb4af082b6d01a2b256ad0bf80770858aecbdcf410",
+      "expected": "72ccf9fddb2f4f34161641eb4af082b6d01a2b256ad0bf80770858aecbdcf410",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/include/asm-generic/barrier.h",
+      "passed": true
+    },
+    {
+      "actual": "a04911d85fd86f5dbcf8ed436c7a2570fcc615f768c0c19b0a101f6212d2504c",
+      "expected": "a04911d85fd86f5dbcf8ed436c7a2570fcc615f768c0c19b0a101f6212d2504c",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/tools/memory-model/linux-kernel.def",
+      "passed": true
+    },
+    {
+      "actual": "250207709250d308e0a0a6f391c4eda0bbf4876cbc55eccbfbcd495676a179be",
+      "expected": "250207709250d308e0a0a6f391c4eda0bbf4876cbc55eccbfbcd495676a179be",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/tools/memory-model/linux-kernel.cat",
+      "passed": true
+    },
+    {
+      "actual": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+      "expected": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+      "name": "source receipt revision",
+      "passed": true
+    },
+    {
+      "actual": "054b6818c409ab20ae89b1031a1a7c358f673d87",
+      "expected": "054b6818c409ab20ae89b1031a1a7c358f673d87",
+      "name": "source receipt tree",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "source receipt requires content rechecks",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "unique IPC get operation",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "unique IPC put test",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "unique IPC destroy scheduling",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "put test precedes RCU destruction decision",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "IPC contract starts objects at one",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "IPC contract binds zero to RCU destruction",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "IPC contract requires caller locking",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "IPC source initializes refcount to one",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "inc-not-zero reads current count",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "inc-not-zero rejects zero before CAS",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "inc-not-zero retries relaxed CAS",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "inc-not-zero reports original nonzero value",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "one-reference helper adds one",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "public get wrapper selects helper",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "final put uses release fetch-sub",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "final put tests exact transition",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "successful final put has acquire-after-control",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "public put wrapper subtracts one",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "refcount header states get stability prerequisite",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "refcount header states decrement ordering",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "IPC Makefile selects util for SYSVIPC",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "SYSVIPC has a boolean Kconfig entry",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "refcount documentation preserves atomicity when relaxed",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "documentation names inc-not-zero mapping",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "documentation names final-decrement mapping",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "documentation records pointer-ordering prerequisite",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "instrumented fetch-sub routes to raw operation",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "instrumented try-CAS routes to raw operation",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "fallback fetch-sub reaches architecture atomic",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "fallback relaxed try-CAS reaches architecture atomic",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "x86 decrement routes through locked xadd",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "x86 try-CAS routes to architecture cmpxchg",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "x86 try-CAS uses LOCK_PREFIX",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "x86 xadd uses LOCK_PREFIX",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "generic acquire-after-control is explicit",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "LKMM defines release fetch-sub",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "LKMM defines relaxed compare/exchange",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "LKMM does not directly spell try-CAS",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "LKMM enforces RMW atomicity",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "positive model initializes sole reference",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "positive model has one final decrement",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "positive model has one bounded relaxed CAS",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "positive model exposes mutual-success condition",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "positive model does not model RCU callback",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "unsafe control preserves final decrement",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "unsafe control has one unconditional resurrection",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "unsafe control exposes identical condition",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "make_version timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "make_version exit",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "compiler_version timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "compiler_version exit",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "compiler_target timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "compiler_target exit",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "objdump_version timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "objdump_version exit",
+      "passed": true
+    },
+    {
+      "actual": "/usr/bin/make",
+      "expected": "/usr/bin/make",
+      "name": "make realpath",
+      "passed": true
+    },
+    {
+      "actual": "27c9f6d806aee15882b01c2c61848f7aa75caa14bc7b6f608ba422f9e46a7d49",
+      "expected": "27c9f6d806aee15882b01c2c61848f7aa75caa14bc7b6f608ba422f9e46a7d49",
+      "name": "make identity",
+      "passed": true
+    },
+    {
+      "actual": "/usr/bin/x86_64-linux-gnu-gcc-15",
+      "expected": "/usr/bin/x86_64-linux-gnu-gcc-15",
+      "name": "compiler realpath",
+      "passed": true
+    },
+    {
+      "actual": "b5f1b773a7c733738352000c92a077dc5852a1a2fc6d836b1e411be1e9ec5f88",
+      "expected": "b5f1b773a7c733738352000c92a077dc5852a1a2fc6d836b1e411be1e9ec5f88",
+      "name": "compiler identity",
+      "passed": true
+    },
+    {
+      "actual": "/usr/bin/x86_64-linux-gnu-objdump",
+      "expected": "/usr/bin/x86_64-linux-gnu-objdump",
+      "name": "objdump realpath",
+      "passed": true
+    },
+    {
+      "actual": "44f07f8da860b15bd4dec909f229dec536595fb170a616fe3ab29c7b21c9736f",
+      "expected": "44f07f8da860b15bd4dec909f229dec536595fb170a616fe3ab29c7b21c9736f",
+      "name": "objdump identity",
+      "passed": true
+    },
+    {
+      "actual": "GNU Make 4.4.1",
+      "expected": "GNU Make 4.4.1",
+      "name": "make version line",
+      "passed": true
+    },
+    {
+      "actual": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+      "expected": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+      "name": "compiler version line",
+      "passed": true
+    },
+    {
+      "actual": "x86_64-linux-gnu",
+      "expected": "x86_64-linux-gnu",
+      "name": "compiler target",
+      "passed": true
+    },
+    {
+      "actual": "GNU objdump (GNU Binutils for Ubuntu) 2.46",
+      "expected": "GNU objdump (GNU Binutils for Ubuntu) 2.46",
+      "name": "objdump version line",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "base_config timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "base_config exit",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "finalize_config timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "finalize_config exit",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured profile produced config",
+      "passed": true
+    },
+    {
+      "actual": "c1d909f833602f5d8fb7fba52322c1f411c44fe4e41a44b52ac5d897e3f3033e",
+      "expected": "c1d909f833602f5d8fb7fba52322c1f411c44fe4e41a44b52ac5d897e3f3033e",
+      "name": "configured config identity",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "kernel config: CONFIG_64BIT",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "kernel config: CONFIG_X86_64",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "kernel config: CONFIG_SMP",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "kernel config: CONFIG_SYSVIPC",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "kernel config: CONFIG_TREE_RCU",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "kernel config: CONFIG_PREEMPT_RCU",
+      "passed": true
+    },
+    {
+      "actual": "n",
+      "expected": "n",
+      "name": "kernel config: CONFIG_RCU_EXPERT",
+      "passed": true
+    },
+    {
+      "actual": "n",
+      "expected": "n",
+      "name": "kernel config: CONFIG_KCSAN",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "kernel config: CONFIG_CC_IS_GCC",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "configured object build timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "configured object build exit",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured object exists",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured object is ELF",
+      "passed": true
+    },
+    {
+      "actual": 2,
+      "expected": 2,
+      "name": "configured object class",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "configured object byte order",
+      "passed": true
+    },
+    {
+      "actual": 62,
+      "expected": 62,
+      "name": "configured object machine",
+      "passed": true
+    },
+    {
+      "actual": "00b7dfa8b08c8d76546e13cc8adb5e5102480225c444902ea46aa6c993525d6d",
+      "expected": "00b7dfa8b08c8d76546e13cc8adb5e5102480225c444902ea46aa6c993525d6d",
+      "name": "configured object identity",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command exists",
+      "passed": true
+    },
+    {
+      "actual": "d1ab093851e723a995bced4f6380b3cb9a8c15717166eb8665b98d3736d9b8a5",
+      "expected": "d1ab093851e723a995bced4f6380b3cb9a8c15717166eb8665b98d3736d9b8a5",
+      "name": "configured command identity",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: /usr/bin/gcc",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: -D__KERNEL__",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: -std=gnu11",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: -m64",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: -march=x86-64",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: -O2",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: -fno-allow-store-data-races",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: ipc/util.o",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command token: ipc/util.c",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "disassembly timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "disassembly exit",
+      "passed": true
+    },
+    {
+      "actual": "",
+      "expected": "",
+      "name": "disassembly stderr empty",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "symbol inventory timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "symbol inventory exit",
+      "passed": true
+    },
+    {
+      "actual": "",
+      "expected": "",
+      "name": "symbol inventory stderr empty",
+      "passed": true
+    },
+    {
+      "actual": null,
+      "expected": null,
+      "name": "ipc_rcu_getref disassembly parser error",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "ipc_rcu_getref instruction order",
+      "passed": true
+    },
+    {
+      "actual": null,
+      "expected": null,
+      "name": "ipc_rcu_putref disassembly parser error",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "ipc_rcu_putref instruction order",
+      "passed": true
+    },
+    {
+      "actual": {
+        "ipc_rcu_getref": {
+          "section": ".text",
+          "size": 84,
+          "value": "0000000000000bf0"
+        },
+        "ipc_rcu_putref": {
+          "section": ".text",
+          "size": 54,
+          "value": "0000000000000c60"
+        }
+      },
+      "expected": {
+        "ipc_rcu_getref": {
+          "section": ".text",
+          "size": 84,
+          "value": "0000000000000bf0"
+        },
+        "ipc_rcu_putref": {
+          "section": ".text",
+          "size": 54,
+          "value": "0000000000000c60"
+        }
+      },
+      "name": "configured function symbols",
+      "passed": true
+    },
+    {
+      "actual": "df60c96b3365df18c8af00938dd6f2dda2cb67fa136aaba0b2d17e774f1fe5d8",
+      "expected": "df60c96b3365df18c8af00938dd6f2dda2cb67fa136aaba0b2d17e774f1fe5d8",
+      "name": "model identity",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "exit code",
+      "passed": true
+    },
+    {
+      "actual": "",
+      "expected": "",
+      "name": "stderr empty",
+      "passed": true
+    },
+    {
+      "actual": null,
+      "expected": null,
+      "name": "parse error",
+      "passed": true
+    },
+    {
+      "actual": {
+        "condition": "exists (0:released=1 /\\ 1:acquired=1)",
+        "disposition": "Allowed",
+        "flags": [],
+        "hash": "e315d2aff7685cce1c97f736d48946c0",
+        "marker": "No",
+        "negative": 2,
+        "observation": "Never",
+        "positive": 0,
+        "states": 2,
+        "test": "Fragma-refcount-put-get"
+      },
+      "expected": {
+        "condition": "exists (0:released=1 /\\ 1:acquired=1)",
+        "disposition": "Allowed",
+        "flags": [],
+        "hash": "e315d2aff7685cce1c97f736d48946c0",
+        "marker": "No",
+        "negative": 2,
+        "observation": "Never",
+        "positive": 0,
+        "states": 2,
+        "test": "Fragma-refcount-put-get"
+      },
+      "name": "semantic result",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "only positive case is verification candidate",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "required operation: atomic_fetch_sub_release",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "required operation: atomic_cmpxchg_relaxed",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "forbidden operation: atomic_fetch_inc_relaxed",
+      "passed": true
+    },
+    {
+      "actual": "ca3d5dd2b924df2d4a0bff14351c7de6ab59817a09206b9356ab456c6d45bc33",
+      "expected": "ca3d5dd2b924df2d4a0bff14351c7de6ab59817a09206b9356ab456c6d45bc33",
+      "name": "model identity",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "exit code",
+      "passed": true
+    },
+    {
+      "actual": "",
+      "expected": "",
+      "name": "stderr empty",
+      "passed": true
+    },
+    {
+      "actual": null,
+      "expected": null,
+      "name": "parse error",
+      "passed": true
+    },
+    {
+      "actual": {
+        "condition": "exists (0:released=1 /\\ 1:acquired=1)",
+        "disposition": "Allowed",
+        "flags": [],
+        "hash": "ff8861bc39ed551fc8e17a2363b6da9c",
+        "marker": "Ok",
+        "negative": 1,
+        "observation": "Sometimes",
+        "positive": 1,
+        "states": 2,
+        "test": "Fragma-refcount-resurrection"
+      },
+      "expected": {
+        "condition": "exists (0:released=1 /\\ 1:acquired=1)",
+        "disposition": "Allowed",
+        "flags": [],
+        "hash": "ff8861bc39ed551fc8e17a2363b6da9c",
+        "marker": "Ok",
+        "negative": 1,
+        "observation": "Sometimes",
+        "positive": 1,
+        "states": 2,
+        "test": "Fragma-refcount-resurrection"
+      },
+      "name": "semantic result",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "only positive case is verification candidate",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "required operation: atomic_fetch_sub_release",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "required operation: atomic_fetch_inc_relaxed",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "forbidden operation: atomic_cmpxchg_relaxed",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "A/B cases both pass",
+      "passed": true
+    },
+    {
+      "actual": "Never",
+      "expected": "Never",
+      "name": "positive forbids mutual success",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "positive has zero bad witnesses",
+      "passed": true
+    },
+    {
+      "actual": "Sometimes",
+      "expected": "Sometimes",
+      "name": "unsafe control exposes mutual success",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "unsafe control has a bad witness",
+      "passed": true
+    },
+    {
+      "actual": "exists (0:released=1 /\\ 1:acquired=1)",
+      "expected": "exists (0:released=1 /\\ 1:acquired=1)",
+      "name": "A/B condition is identical",
+      "passed": true
+    }
+  ],
+  "configured_config_sha256": "c1d909f833602f5d8fb7fba52322c1f411c44fe4e41a44b52ac5d897e3f3033e",
+  "configured_object": {
+    "class": 2,
+    "data": 1,
+    "elf": true,
+    "machine": 62,
+    "sha256": "00b7dfa8b08c8d76546e13cc8adb5e5102480225c444902ea46aa6c993525d6d",
+    "size": 20816
+  },
+  "detecting_control_count": 1,
+  "generated_at": "2026-09-07T12:35:53.366496+00:00",
+  "input_identities": {
+    "/usr/bin/gcc": {
+      "realpath": "/usr/bin/x86_64-linux-gnu-gcc-15",
+      "sha256": "b5f1b773a7c733738352000c92a077dc5852a1a2fc6d836b1e411be1e9ec5f88",
+      "size": 1305304
+    },
+    "/usr/bin/herd7": {
+      "realpath": "/usr/bin/herd7",
+      "sha256": "f398c4ba11ee87226e104efc77e64873cf775292e16b90e1e71015962969060b",
+      "size": 18087120
+    },
+    "/usr/bin/make": {
+      "realpath": "/usr/bin/make",
+      "sha256": "27c9f6d806aee15882b01c2c61848f7aa75caa14bc7b6f608ba422f9e46a7d49",
+      "size": 295120
+    },
+    "/usr/bin/objdump": {
+      "realpath": "/usr/bin/x86_64-linux-gnu-objdump",
+      "sha256": "44f07f8da860b15bd4dec909f229dec536595fb170a616fe3ab29c7b21c9736f",
+      "size": 415760
+    },
+    "build/sources/linux-b9b3e33b70b71/.fragma-source.json": {
+      "sha256": "93cffd1d937e730bf3010bfc904db8ce5c8ebc8df6e8d610032dda667c2950bd",
+      "size": 227
+    },
+    "build/sources/linux-b9b3e33b70b71/Documentation/core-api/refcount-vs-atomic.rst": {
+      "sha256": "74ee85eb1b442f9f7a864d660545180225dd60a09ce8462f4a7166d9382ebd22",
+      "size": 6373
+    },
+    "build/sources/linux-b9b3e33b70b71/arch/x86/include/asm/atomic.h": {
+      "sha256": "1ba1e1ef1403c9be2f00494c1ba22cff87044d442ef90a5da18a863877e88b18",
+      "size": 4514
+    },
+    "build/sources/linux-b9b3e33b70b71/arch/x86/include/asm/cmpxchg.h": {
+      "sha256": "70dc12e5c2f1bf7b3ff0fcc4f7bf908a9d2a79786ef86d8b3ba71c3e04d3ec9c",
+      "size": 7428
+    },
+    "build/sources/linux-b9b3e33b70b71/include/asm-generic/barrier.h": {
+      "sha256": "72ccf9fddb2f4f34161641eb4af082b6d01a2b256ad0bf80770858aecbdcf410",
+      "size": 7553
+    },
+    "build/sources/linux-b9b3e33b70b71/include/linux/atomic/atomic-arch-fallback.h": {
+      "sha256": "df526d6b93b043fb2a25296d82b0c4e4187ef8ddeb4d6789897989f7ad7ed6d0",
+      "size": 129321
+    },
+    "build/sources/linux-b9b3e33b70b71/include/linux/atomic/atomic-instrumented.h": {
+      "sha256": "6fd766b72f7a633593d83e559998112ce49355273a55f79c0a6187d688b48f22",
+      "size": 138196
+    },
+    "build/sources/linux-b9b3e33b70b71/include/linux/refcount.h": {
+      "sha256": "fcfc732fc56a2e05da4d9b23d86904687860ecdac2e249ee95621db93b77d6fc",
+      "size": 16754
+    },
+    "build/sources/linux-b9b3e33b70b71/include/linux/refcount_types.h": {
+      "sha256": "1cd15b66e38dc4408329d4bd61ec605222a5c440dde64a0af7e73dcfc1a2472f",
+      "size": 512
+    },
+    "build/sources/linux-b9b3e33b70b71/init/Kconfig": {
+      "sha256": "a43f09d89309a6bd7036c96e0836c30c021f2d56b042be288a15533dd9e944bd",
+      "size": 74156
+    },
+    "build/sources/linux-b9b3e33b70b71/ipc/Makefile": {
+      "sha256": "90addad9f42eafc5f475a54631006c7317ebe60c6546ce1278a594674e2d4612",
+      "size": 361
+    },
+    "build/sources/linux-b9b3e33b70b71/ipc/util.c": {
+      "sha256": "5f4e4b0eb08ce302dae805703340052eb8406d5c1b0cf7856a24eb8909ad3a5e",
+      "size": 24726
+    },
+    "build/sources/linux-b9b3e33b70b71/ipc/util.h": {
+      "sha256": "660560ebc799c8b47b15fc6fbdf2471652bb8e80031320438571f91fcc8804cd",
+      "size": 8996
+    },
+    "build/sources/linux-b9b3e33b70b71/tools/memory-model/linux-kernel.cat": {
+      "sha256": "250207709250d308e0a0a6f391c4eda0bbf4876cbc55eccbfbcd495676a179be",
+      "size": 8391
+    },
+    "build/sources/linux-b9b3e33b70b71/tools/memory-model/linux-kernel.def": {
+      "sha256": "a04911d85fd86f5dbcf8ed436c7a2570fcc615f768c0c19b0a101f6212d2504c",
+      "size": 6357
+    },
+    "concurrency/c3/refcount_put_get.litmus": {
+      "sha256": "df60c96b3365df18c8af00938dd6f2dda2cb67fa136aaba0b2d17e774f1fe5d8",
+      "size": 620
+    },
+    "concurrency/c3/refcount_resurrection.litmus": {
+      "sha256": "ca3d5dd2b924df2d4a0bff14351c7de6ab59817a09206b9356ab456c6d45bc33",
+      "size": 542
+    },
+    "config/concurrency-c3-ipc-refcount.json": {
+      "sha256": "3a01fdebe6ced63e130f3f6811d34dcff9bfeaa9f174a6ea5db5ac9cbe47fcab",
+      "size": 11439
+    },
+    "config/concurrency-c3-lkmm.json": {
+      "sha256": "53fd6e82ef11744765f527befefed6be7d98ad28dcf1c74e288c3b0f4dd60e8e",
+      "size": 7795
+    },
+    "fragma/__main__.py": {
+      "sha256": "80297fe825d059f119908420636e6fc22e45a71d33e32a12ccd64de5aa535d18",
+      "size": 13976
+    },
+    "fragma/concurrency_c2.py": {
+      "sha256": "c837512a00bc9bce2f6950a7f95631a6c4024a81e199c59110e7b47c4a3cffe0",
+      "size": 36640
+    },
+    "fragma/concurrency_c2_irq.py": {
+      "sha256": "c59fb8ade3a74de810b268cbd0c5fdb850e27a912351e08727a142583e6b5b3d",
+      "size": 51550
+    },
+    "fragma/concurrency_c3_ipc_refcount.py": {
+      "sha256": "d1188402cd6f073e8361c231daf99a1c75cf2de5612784121d3d4ac0ca081b8c",
+      "size": 49133
+    },
+    "fragma/concurrency_c3_lkmm.py": {
+      "sha256": "a3de87b29f950ffe31b3edfd06c8f321c4178ad597b7613d8cd496e2df8b5ee0",
+      "size": 35177
+    },
+    "fragma/concurrency_c3_module_stats.py": {
+      "sha256": "e453451a3416107ab56d4170d4746fe3be19ad1b5d699c03de6271b633453f39",
+      "size": 50161
+    },
+    "fragma/concurrency_c3_trace.py": {
+      "sha256": "eb8600ec30a4242ade8e1e2b7987467238a963d9d19643f26545403ea62aad36",
+      "size": 46122
+    },
+    "tests/test_concurrency_c3_ipc_refcount.py": {
+      "sha256": "b8db4d470cc9ab2c96e375b1b49cf1c731998660eb2ce01364abd6349ca42eb3",
+      "size": 8742
+    }
+  },
+  "kernel_profile": "x86_64-ipc-refcount-c3",
+  "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+  "kernel_tree": "054b6818c409ab20ae89b1031a1a7c358f673d87",
+  "kernel_verification_count": 1,
+  "kind": "ipc-refcount-c3-lifetime-functional-pilot",
+  "klitmus_or_runtime_used": false,
+  "model_abstraction": {
+    "control": "The unsafe control replaces the conditional get with an unconditional relaxed atomic increment and records acquisition when it resurrects zero.",
+    "get": "ipc_rcu_getref's successful bounded inc-not-zero loop is represented by acquired=1 after a relaxed 1-to-2 compare/exchange.",
+    "omitted": "The IPC payload, locks, RCU callback body, grace period, warning branches and all unrelated refcount traffic are outside the selected functional question.",
+    "put": "ipc_rcu_putref's successful refcount_dec_and_test and ensuing call_rcu scheduling decision are represented by released=1 after an old value of one.",
+    "refcount": "ptr->refcount is represented by refs and initialized to the IPC contract's value one."
+  },
+  "output": "/home/karl/linux-work/fragma/results/concurrency-c3-ipc-refcount-20260907-02",
+  "pair_checks": [
+    {
+      "actual": true,
+      "expected": true,
+      "name": "A/B cases both pass",
+      "passed": true
+    },
+    {
+      "actual": "Never",
+      "expected": "Never",
+      "name": "positive forbids mutual success",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "positive has zero bad witnesses",
+      "passed": true
+    },
+    {
+      "actual": "Sometimes",
+      "expected": "Sometimes",
+      "name": "unsafe control exposes mutual success",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "unsafe control has a bad witness",
+      "passed": true
+    },
+    {
+      "actual": "exists (0:released=1 /\\ 1:acquired=1)",
+      "expected": "exists (0:released=1 /\\ 1:acquired=1)",
+      "name": "A/B condition is identical",
+      "passed": true
+    }
+  ],
+  "property": {
+    "claim": "For a locking-stabilized System V IPC object whose refcount starts at one, one selected ipc_rcu_putref() and one concurrent selected ipc_rcu_getref() cannot both schedule last-reference RCU destruction and return a successful reference acquisition.",
+    "contract_file": "build/sources/linux-b9b3e33b70b71/ipc/util.h",
+    "exclusions": [
+      "The caller-locking and pointer-stability prerequisite is assumed, not proved; an attempt through already reclaimed storage is outside the property.",
+      "The initial refcount is exactly one, there is one selected get and one selected put, and no third refcount update is modeled.",
+      "RCU grace periods, callback execution, allocator reuse, ABA and SLAB_TYPESAFE_BY_RCU behavior are not modeled; call_rcu is represented only by the successful final-put decision.",
+      "Saturation, overflow, underflow, warning paths and values outside zero, one and two are excluded.",
+      "The acquire-after-control-dependency orders later destruction work but cannot change the selected same-refcount mutual-success outcome, so cross-object ordering is not claimed.",
+      "The unsafe resurrection case is a detecting control and is permanently ineligible as verification evidence.",
+      "No architecture implementation other than the configured SMP x86-64 profile is accepted by this source-linked pilot.",
+      "No progress, fairness, retry bound, lock-freedom, wait-freedom, whole-IPC correctness, whole-RCU correctness or whole-kernel race-freedom property is claimed."
+    ],
+    "get_function": "ipc_rcu_getref",
+    "get_source": "return refcount_inc_not_zero(&ptr->refcount);",
+    "implementation_argument": "The pinned LKMM treats the selected updates as indivisible RMWs, and the configured x86-64 object lowers the get to lock cmpxchg and the put to lock xadd before its call_rcu branch.",
+    "initial_refcount": 1,
+    "kind": "kernel_refcount_final_put_vs_get_unless_zero",
+    "lifetime_argument": "The final decrement schedules RCU destruction only when refcount_dec_and_test() observes the 1-to-0 transition; refcount_inc_not_zero() cannot acquire a reference from zero.",
+    "model_argument": "With initial value one and exactly one competing get, the refcount get loop can succeed only in its first compare/exchange from 1 to 2; a failed compare means the sole decrement already installed zero, so the single relaxed cmpxchg is behaviorally exact for this outcome.",
+    "put_destroy_source": "call_rcu(&ptr->rcu, func);",
+    "put_function": "ipc_rcu_putref",
+    "put_test_source": "if (!refcount_dec_and_test(&ptr->refcount))",
+    "refcount_file": "build/sources/linux-b9b3e33b70b71/include/linux/refcount.h",
+    "source_file": "build/sources/linux-b9b3e33b70b71/ipc/util.c",
+    "stability_argument": "The pinned IPC contract requires caller locking; the property assumes that prerequisite keeps ptr and its refcount storage valid for both selected operations."
+  },
+  "raw_artifacts": {
+    "baseline/cases/mp_once_once/command.json": {
+      "sha256": "3af36ca7a985a7b074114d31d47bc15b18715d9dad625785a5c5888a75287999",
+      "size": 431
+    },
+    "baseline/cases/mp_once_once/result.json": {
+      "sha256": "7c67f5ca5bb4ce07cb5a53f5079ef27e013b985a9905d8350e4257882b58d313",
+      "size": 2764
+    },
+    "baseline/cases/mp_once_once/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "baseline/cases/mp_once_once/stdout.txt": {
+      "sha256": "f69c2afa16b89f41a6dbdcd072701762fed87c57cd170c331eb0e5167e876ad1",
+      "size": 279
+    },
+    "baseline/cases/mp_release_acquire/command.json": {
+      "sha256": "274651f22fc8ea90f994735a85cc3278a17f0a9a3a2c50f1ee444bbd5b23d940",
+      "size": 447
+    },
+    "baseline/cases/mp_release_acquire/result.json": {
+      "sha256": "0bfa21c1d641750005afe88b42b30d54dfe3780c66bf67b09dfaa62d8e9eece9",
+      "size": 2794
+    },
+    "baseline/cases/mp_release_acquire/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "baseline/cases/mp_release_acquire/stdout.txt": {
+      "sha256": "3321c832dc867194bca2a2d9d9c3bf76ac1d420671d06f650a2a9fbd01fbbc33",
+      "size": 307
+    },
+    "baseline/cases/sb_full_barrier/command.json": {
+      "sha256": "cee9ca5930c6ee99c7d893f57d4396b35b25299bbbb73cd72ef5c900ca2e18cb",
+      "size": 436
+    },
+    "baseline/cases/sb_full_barrier/result.json": {
+      "sha256": "b0e84f25f1283843ca5e457a33fc0ad7f2965839b565c81f525fade63a58d102",
+      "size": 2750
+    },
+    "baseline/cases/sb_full_barrier/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "baseline/cases/sb_full_barrier/stdout.txt": {
+      "sha256": "03b8b5e45f8d38a17dbb57d02b5d8ec9ac5010390ca095e5d121bb712b4f2960",
+      "size": 274
+    },
+    "baseline/cases/sb_once_once/command.json": {
+      "sha256": "99962708438b0b68fe9b8b8d40b9f2a83b6a96a55864eb3644941073b98f0556",
+      "size": 431
+    },
+    "baseline/cases/sb_once_once/result.json": {
+      "sha256": "33e5609e0c1319f9370aff47f7702fe180f7cf245b3a7123eef923cc61b7cf8d",
+      "size": 2764
+    },
+    "baseline/cases/sb_once_once/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "baseline/cases/sb_once_once/stdout.txt": {
+      "sha256": "9bf2e9d586be355ec43b9775ebbe12e126156b73b6e69fa6881cf5300aa965d4",
+      "size": 279
+    },
+    "baseline/input-identities.json": {
+      "sha256": "f80fa0bb690ed3b8b26919be19c44494cea9b0dbb1305837291889aa6fde2d6c",
+      "size": 3740
+    },
+    "baseline/inventory/compiled_default_libdir/command.json": {
+      "sha256": "d8e3f2c08677da4a655cfbe9edb132c7efc31c8e4fc5dd3afc0a65e183d34b9e",
+      "size": 224
+    },
+    "baseline/inventory/compiled_default_libdir/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "baseline/inventory/compiled_default_libdir/stdout.txt": {
+      "sha256": "3b25ea9c2ac75d141272ee29e50a4db97dcd828dde8b27f8dfe12418888b2be2",
+      "size": 42
+    },
+    "baseline/inventory/version/command.json": {
+      "sha256": "27e78ff4c5853cb981d0393c5a7973f7b32eba412da8005683ce6a930bd003ea",
+      "size": 225
+    },
+    "baseline/inventory/version/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "baseline/inventory/version/stdout.txt": {
+      "sha256": "f15276a3b23c96214a896647d44dc59e11636c50d363388a26210aec3a6a0471",
+      "size": 20
+    },
+    "baseline/manifest.json": {
+      "sha256": "fb256b96a66b561ea077fb55468f051acd99920ce8ea9410f0b55d0002c84dc2",
+      "size": 7795
+    },
+    "baseline/pilot-audit.json": {
+      "sha256": "0837d00c7e703bf8c6096ac6d10884a0a2bc9485f815f8e397320de8e4aff764",
+      "size": 43402
+    },
+    "build/base_config/command.json": {
+      "sha256": "740c72313de29060c1a39c7b76f7ce5888b0ec5ac0543f6a977db787d2e4b8a3",
+      "size": 428
+    },
+    "build/base_config/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "build/base_config/stdout.txt": {
+      "sha256": "eb171f514c44cfec85b2f0b751de4fd29452a98d766f4d867c645edc65124847",
+      "size": 395
+    },
+    "build/compiler_target/command.json": {
+      "sha256": "804bc8337e86469a8ff62235c8ea7683ee4334d669a5240b25718b6aa6fd4cba",
+      "size": 227
+    },
+    "build/compiler_target/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "build/compiler_target/stdout.txt": {
+      "sha256": "08cababdf891ccbf96eb376f1e84f279f70302fb13d84e5f98637becdfc6d989",
+      "size": 17
+    },
+    "build/compiler_version/command.json": {
+      "sha256": "ec921881d45675b06318b21133611eca327f96410cc9d5a928236ad2ea8420f3",
+      "size": 224
+    },
+    "build/compiler_version/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "build/compiler_version/stdout.txt": {
+      "sha256": "6e876a25bb7fdb71ab2914e8f1eeaa00cc61d20a36a6c2981ab7d4d7ceab42f8",
+      "size": 239
+    },
+    "build/disassembly/command.json": {
+      "sha256": "f1f24cafbe17f6835a8692256e4ff4af38a5ec50e4e7bbf0200bf3cf19d9f45c",
+      "size": 331
+    },
+    "build/disassembly/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "build/disassembly/stdout.txt": {
+      "sha256": "6f5b4ce44e307e00c0ba5610e0cf25e9430bd3f83ec2ed7d1e869f34b5da8731",
+      "size": 56137
+    },
+    "build/finalize_config/command.json": {
+      "sha256": "8ca60a34ea4a38ab2e192eb804a927867d35e9ebaa918cdd96450a8d60bb5630",
+      "size": 424
+    },
+    "build/finalize_config/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "build/finalize_config/stdout.txt": {
+      "sha256": "eb171f514c44cfec85b2f0b751de4fd29452a98d766f4d867c645edc65124847",
+      "size": 395
+    },
+    "build/make_version/command.json": {
+      "sha256": "f3532e5c4d72dc6e060e85613a949f979f0281c15e6032cb63ca86eec1c8edfa",
+      "size": 225
+    },
+    "build/make_version/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "build/make_version/stdout.txt": {
+      "sha256": "cb84250d994234272d0a465014ce2931be76e9e0cb114b9bffa078c3c211e8eb",
+      "size": 300
+    },
+    "build/objdump_version/command.json": {
+      "sha256": "71e9a3c19ad80818f1fbc068c40da88a614f17c8c9bb2471e5c88b7ee417539c",
+      "size": 228
+    },
+    "build/objdump_version/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "build/objdump_version/stdout.txt": {
+      "sha256": "9e64f2a24ea3a3c22b070d14eb2dcbe381044179b53c84323c1b7f00c3b13282",
+      "size": 288
+    },
+    "build/object/command.json": {
+      "sha256": "f4a2efac5338f660fa979a7a4be55f57d4ce618c24a91f98db0e5c04970f2ec2",
+      "size": 433
+    },
+    "build/object/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "build/object/stdout.txt": {
+      "sha256": "46d3191af98bfa003fcc2367510f2cc8f6bd554f38a427e37e1ac7e1d7835dae",
+      "size": 386
+    },
+    "build/selected-disassembly.json": {
+      "sha256": "4a6345f083216aca4cd887505059c12756c111e68bcc3ce8446daf23409d9660",
+      "size": 2695
+    },
+    "build/symbols/command.json": {
+      "sha256": "6bc4c8cb70ac591dc0b5283f8cd2dbab296183c22d08a76cab40e8580a34fc77",
+      "size": 304
+    },
+    "build/symbols/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "build/symbols/stdout.txt": {
+      "sha256": "d0efa548a2c46f19ea8f22e4b4cfbd948cee70308161b59ff9bfe94e82b2daf4",
+      "size": 6873
+    },
+    "cases/refcount_put_get_positive/command.json": {
+      "sha256": "0d859328ebcc0df03d4629cc0ff93e137cfcf9bd191f7f22ee884b146dbf179a",
+      "size": 464
+    },
+    "cases/refcount_put_get_positive/result.json": {
+      "sha256": "d7423a0a93bf866557efa57fc71cb80b2978bbeb1b727757abe725d626004d56",
+      "size": 2693
+    },
+    "cases/refcount_put_get_positive/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "cases/refcount_put_get_positive/stdout.txt": {
+      "sha256": "baf77a7873c785c6c72fa17d4fb6c36699d872755aa8df8608fc380e69859984",
+      "size": 306
+    },
+    "cases/unconditional_resurrection_negative/command.json": {
+      "sha256": "dd05597b188588b409ca5725d72bd6b84d1d33cd9406dd70298a62c4d3df0592",
+      "size": 469
+    },
+    "cases/unconditional_resurrection_negative/result.json": {
+      "sha256": "ee4c3427908bd8e433cfdb55d64d06005a14ee695255f27e84925e6c46b895a4",
+      "size": 2757
+    },
+    "cases/unconditional_resurrection_negative/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "cases/unconditional_resurrection_negative/stdout.txt": {
+      "sha256": "2e351f1c65df3ab833cfdd930a613b821880347f4dec44ea79b9b0467f4faf6c",
+      "size": 325
+    },
+    "input-identities.json": {
+      "sha256": "7e847e4a151e9a2de66aca288d2b82a2e18d2f2f0c252dbb48cc30c049065a12",
+      "size": 5033
+    },
+    "manifest.json": {
+      "sha256": "ace0746cdc17bfc124a0f50cab39d86e929ba34c9459d282ec59209647aa58b0",
+      "size": 11439
+    },
+    "source-model-evidence.json": {
+      "sha256": "b5cbc9c851da66a91adf20b69d3f5ca1de2093420a596fdecc475ca3b9e43f86",
+      "size": 324
+    }
+  },
+  "remaining_c3": [
+    "Any separately justified progress property",
+    "Refcount and other C3 implementation mappings beyond x86-64",
+    "Broader lock-free functional protocol coverage"
+  ],
+  "schema_version": 1,
+  "source_model_evidence": {
+    "dec_and_test_implementation_tokens": 82,
+    "get_function_tokens": 19,
+    "inc_not_zero_implementation_tokens": 87,
+    "negative_resurrection_count": 1,
+    "positive_decrement_count": 1,
+    "positive_get_count": 1,
+    "put_function_tokens": 45,
+    "source_destroy_count": 1,
+    "source_get_count": 1,
+    "source_put_count": 1
+  },
+  "sudo_or_install_used": false,
+  "target": "linux-ipc-refcount-lifetime-x86_64-c3"
+}

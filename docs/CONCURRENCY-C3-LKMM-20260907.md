@@ -4,7 +4,9 @@ Status: **accepted as a semantic capability calibration; 92/92 checks pass;
 zero production-kernel properties and zero defects are claimed**.
 
 The current result is
-[`results/concurrency-c3-lkmm-20260907-04`](../results/concurrency-c3-lkmm-20260907-04/SUMMARY.md).
+[`results/concurrency-c3-lkmm-20260907-05`](../results/concurrency-c3-lkmm-20260907-05/SUMMARY.md).
+This renewal changes only the recorded CLI identity after adding the IPC
+refcount command; the four semantic outcomes are unchanged.
 It establishes that the exact local `herd7` executable can run the exact model
 from the pinned Linux snapshot and distinguish canonical weak outcomes from
 their ordered counterparts. It is the prerequisite for source-linked C3 work,

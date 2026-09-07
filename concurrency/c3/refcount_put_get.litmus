@@ -1,0 +1,32 @@
+C Fragma-refcount-put-get
+
+(*
+ * Source-linked functional abstraction of refcount_dec_and_test() racing with
+ * refcount_inc_not_zero(), starting with the sole reference.  Under this
+ * bounded initial state and one competing get, the get loop is equivalent to
+ * one relaxed compare/exchange from 1 to 2.
+ *)
+
+{
+	atomic_t refs = ATOMIC_INIT(1);
+}
+
+P0(atomic_t *refs)
+{
+	int old;
+	int released;
+
+	old = atomic_fetch_sub_release(1, refs);
+	released = (old == 1);
+}
+
+P1(atomic_t *refs)
+{
+	int old;
+	int acquired;
+
+	old = atomic_cmpxchg_relaxed(refs, 1, 2);
+	acquired = (old == 1);
+}
+
+exists (0:released=1 /\ 1:acquired=1)

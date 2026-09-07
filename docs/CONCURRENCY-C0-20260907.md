@@ -30,7 +30,9 @@ the Linux Kernel Memory Model are soundly modeled.
 The runner refuses an existing output path. It retains version/help inventory,
 argv, stdout, stderr, Frama-C report CSV, parsed results, and SHA-256 identities
 locally. The compact accepted result is
-[results/concurrency-c0-20260907-08/SUMMARY.md](../results/concurrency-c0-20260907-08/SUMMARY.md).
+[results/concurrency-c0-20260907-09/SUMMARY.md](../results/concurrency-c0-20260907-09/SUMMARY.md).
+This renewal changes only the recorded CLI identity after adding the IPC
+refcount command; all nine capability outcomes are unchanged.
 
 ## Empirically established behavior
 

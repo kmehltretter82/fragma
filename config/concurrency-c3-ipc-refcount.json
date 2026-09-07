@@ -1,0 +1,220 @@
+{
+  "schema_version": 1,
+  "id": "linux-ipc-refcount-lifetime-x86_64-c3",
+  "kernel": {
+    "revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+    "git_tree": "054b6818c409ab20ae89b1031a1a7c358f673d87",
+    "source_root": "build/sources/linux-b9b3e33b70b71",
+    "source_receipt": "build/sources/linux-b9b3e33b70b71/.fragma-source.json",
+    "source_identities": {
+      "build/sources/linux-b9b3e33b70b71/.fragma-source.json": "93cffd1d937e730bf3010bfc904db8ce5c8ebc8df6e8d610032dda667c2950bd",
+      "build/sources/linux-b9b3e33b70b71/ipc/util.c": "5f4e4b0eb08ce302dae805703340052eb8406d5c1b0cf7856a24eb8909ad3a5e",
+      "build/sources/linux-b9b3e33b70b71/ipc/util.h": "660560ebc799c8b47b15fc6fbdf2471652bb8e80031320438571f91fcc8804cd",
+      "build/sources/linux-b9b3e33b70b71/ipc/Makefile": "90addad9f42eafc5f475a54631006c7317ebe60c6546ce1278a594674e2d4612",
+      "build/sources/linux-b9b3e33b70b71/init/Kconfig": "a43f09d89309a6bd7036c96e0836c30c021f2d56b042be288a15533dd9e944bd",
+      "build/sources/linux-b9b3e33b70b71/include/linux/refcount.h": "fcfc732fc56a2e05da4d9b23d86904687860ecdac2e249ee95621db93b77d6fc",
+      "build/sources/linux-b9b3e33b70b71/include/linux/refcount_types.h": "1cd15b66e38dc4408329d4bd61ec605222a5c440dde64a0af7e73dcfc1a2472f",
+      "build/sources/linux-b9b3e33b70b71/Documentation/core-api/refcount-vs-atomic.rst": "74ee85eb1b442f9f7a864d660545180225dd60a09ce8462f4a7166d9382ebd22",
+      "build/sources/linux-b9b3e33b70b71/include/linux/atomic/atomic-instrumented.h": "6fd766b72f7a633593d83e559998112ce49355273a55f79c0a6187d688b48f22",
+      "build/sources/linux-b9b3e33b70b71/include/linux/atomic/atomic-arch-fallback.h": "df526d6b93b043fb2a25296d82b0c4e4187ef8ddeb4d6789897989f7ad7ed6d0",
+      "build/sources/linux-b9b3e33b70b71/arch/x86/include/asm/atomic.h": "1ba1e1ef1403c9be2f00494c1ba22cff87044d442ef90a5da18a863877e88b18",
+      "build/sources/linux-b9b3e33b70b71/arch/x86/include/asm/cmpxchg.h": "70dc12e5c2f1bf7b3ff0fcc4f7bf908a9d2a79786ef86d8b3ba71c3e04d3ec9c",
+      "build/sources/linux-b9b3e33b70b71/include/asm-generic/barrier.h": "72ccf9fddb2f4f34161641eb4af082b6d01a2b256ad0bf80770858aecbdcf410",
+      "build/sources/linux-b9b3e33b70b71/tools/memory-model/linux-kernel.def": "a04911d85fd86f5dbcf8ed436c7a2570fcc615f768c0c19b0a101f6212d2504c",
+      "build/sources/linux-b9b3e33b70b71/tools/memory-model/linux-kernel.cat": "250207709250d308e0a0a6f391c4eda0bbf4876cbc55eccbfbcd495676a179be"
+    }
+  },
+  "baseline": {
+    "manifest": "config/concurrency-c3-lkmm.json",
+    "id": "linux-lkmm-herd7-c3-calibration",
+    "required_capability": "c3_capability_baseline_complete"
+  },
+  "profile": {
+    "id": "x86_64-ipc-refcount-c3",
+    "arch": "x86_64",
+    "jobs": 8,
+    "build_directory": "build/kernel/x86_64-ipc-refcount-c3",
+    "config": "build/kernel/x86_64-ipc-refcount-c3/.config",
+    "config_sha256": "c1d909f833602f5d8fb7fba52322c1f411c44fe4e41a44b52ac5d897e3f3033e",
+    "configuration": {
+      "base_recipe": "x86_64_defconfig",
+      "finalize_recipe": "olddefconfig"
+    },
+    "required_config": {
+      "CONFIG_64BIT": "y",
+      "CONFIG_X86_64": "y",
+      "CONFIG_SMP": "y",
+      "CONFIG_SYSVIPC": "y",
+      "CONFIG_TREE_RCU": "y",
+      "CONFIG_PREEMPT_RCU": "y",
+      "CONFIG_RCU_EXPERT": "n",
+      "CONFIG_KCSAN": "n",
+      "CONFIG_CC_IS_GCC": "y"
+    },
+    "make": {
+      "binary": "/usr/bin/make",
+      "realpath": "/usr/bin/make",
+      "sha256": "27c9f6d806aee15882b01c2c61848f7aa75caa14bc7b6f608ba422f9e46a7d49",
+      "version_line": "GNU Make 4.4.1"
+    },
+    "compiler": {
+      "binary": "/usr/bin/gcc",
+      "realpath": "/usr/bin/x86_64-linux-gnu-gcc-15",
+      "sha256": "b5f1b773a7c733738352000c92a077dc5852a1a2fc6d836b1e411be1e9ec5f88",
+      "version_line": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+      "target": "x86_64-linux-gnu"
+    },
+    "objdump": {
+      "binary": "/usr/bin/objdump",
+      "realpath": "/usr/bin/x86_64-linux-gnu-objdump",
+      "sha256": "44f07f8da860b15bd4dec909f229dec536595fb170a616fe3ab29c7b21c9736f",
+      "version_line": "GNU objdump (GNU Binutils for Ubuntu) 2.46"
+    },
+    "configured_compile": {
+      "target": "ipc/util.o",
+      "object": "build/kernel/x86_64-ipc-refcount-c3/ipc/util.o",
+      "command_file": "build/kernel/x86_64-ipc-refcount-c3/ipc/.util.o.cmd",
+      "object_sha256": "00b7dfa8b08c8d76546e13cc8adb5e5102480225c444902ea46aa6c993525d6d",
+      "command_sha256": "d1ab093851e723a995bced4f6380b3cb9a8c15717166eb8665b98d3736d9b8a5",
+      "elf_class": 2,
+      "elf_data": 1,
+      "elf_machine": 62,
+      "required_command_tokens": [
+        "/usr/bin/gcc",
+        "-D__KERNEL__",
+        "-std=gnu11",
+        "-m64",
+        "-march=x86-64",
+        "-O2",
+        "-fno-allow-store-data-races",
+        "ipc/util.o",
+        "ipc/util.c"
+      ],
+      "functions": {
+        "ipc_rcu_getref": {
+          "section": ".text",
+          "value": "0000000000000bf0",
+          "size": 84,
+          "disassembly_order": [
+            "<ipc_rcu_getref>:",
+            "test   %edx,%edx",
+            "lock cmpxchg",
+            "sete",
+            "refcount_warn_saturate"
+          ]
+        },
+        "ipc_rcu_putref": {
+          "section": ".text",
+          "value": "0000000000000c60",
+          "size": 54,
+          "disassembly_order": [
+            "<ipc_rcu_putref>:",
+            "lock xadd",
+            "cmp    $0x1,%eax",
+            "call_rcu-0x4",
+            "refcount_warn_saturate"
+          ]
+        }
+      }
+    }
+  },
+  "property": {
+    "kind": "kernel_refcount_final_put_vs_get_unless_zero",
+    "claim": "For a locking-stabilized System V IPC object whose refcount starts at one, one selected ipc_rcu_putref() and one concurrent selected ipc_rcu_getref() cannot both schedule last-reference RCU destruction and return a successful reference acquisition.",
+    "source_file": "build/sources/linux-b9b3e33b70b71/ipc/util.c",
+    "contract_file": "build/sources/linux-b9b3e33b70b71/ipc/util.h",
+    "refcount_file": "build/sources/linux-b9b3e33b70b71/include/linux/refcount.h",
+    "get_function": "ipc_rcu_getref",
+    "put_function": "ipc_rcu_putref",
+    "get_source": "return refcount_inc_not_zero(&ptr->refcount);",
+    "put_test_source": "if (!refcount_dec_and_test(&ptr->refcount))",
+    "put_destroy_source": "call_rcu(&ptr->rcu, func);",
+    "initial_refcount": 1,
+    "stability_argument": "The pinned IPC contract requires caller locking; the property assumes that prerequisite keeps ptr and its refcount storage valid for both selected operations.",
+    "lifetime_argument": "The final decrement schedules RCU destruction only when refcount_dec_and_test() observes the 1-to-0 transition; refcount_inc_not_zero() cannot acquire a reference from zero.",
+    "model_argument": "With initial value one and exactly one competing get, the refcount get loop can succeed only in its first compare/exchange from 1 to 2; a failed compare means the sole decrement already installed zero, so the single relaxed cmpxchg is behaviorally exact for this outcome.",
+    "implementation_argument": "The pinned LKMM treats the selected updates as indivisible RMWs, and the configured x86-64 object lowers the get to lock cmpxchg and the put to lock xadd before its call_rcu branch.",
+    "exclusions": [
+      "The caller-locking and pointer-stability prerequisite is assumed, not proved; an attempt through already reclaimed storage is outside the property.",
+      "The initial refcount is exactly one, there is one selected get and one selected put, and no third refcount update is modeled.",
+      "RCU grace periods, callback execution, allocator reuse, ABA and SLAB_TYPESAFE_BY_RCU behavior are not modeled; call_rcu is represented only by the successful final-put decision.",
+      "Saturation, overflow, underflow, warning paths and values outside zero, one and two are excluded.",
+      "The acquire-after-control-dependency orders later destruction work but cannot change the selected same-refcount mutual-success outcome, so cross-object ordering is not claimed.",
+      "The unsafe resurrection case is a detecting control and is permanently ineligible as verification evidence.",
+      "No architecture implementation other than the configured SMP x86-64 profile is accepted by this source-linked pilot.",
+      "No progress, fairness, retry bound, lock-freedom, wait-freedom, whole-IPC correctness, whole-RCU correctness or whole-kernel race-freedom property is claimed."
+    ]
+  },
+  "model": {
+    "condition": "exists (0:released=1 /\\ 1:acquired=1)",
+    "abstraction": {
+      "refcount": "ptr->refcount is represented by refs and initialized to the IPC contract's value one.",
+      "put": "ipc_rcu_putref's successful refcount_dec_and_test and ensuing call_rcu scheduling decision are represented by released=1 after an old value of one.",
+      "get": "ipc_rcu_getref's successful bounded inc-not-zero loop is represented by acquired=1 after a relaxed 1-to-2 compare/exchange.",
+      "control": "The unsafe control replaces the conditional get with an unconditional relaxed atomic increment and records acquisition when it resurrects zero.",
+      "omitted": "The IPC payload, locks, RCU callback body, grace period, warning branches and all unrelated refcount traffic are outside the selected functional question."
+    },
+    "pair": {
+      "id": "ipc_refcount_no_final_put_get_overlap",
+      "positive": "refcount_put_get_positive",
+      "negative": "unconditional_resurrection_negative",
+      "expected_transition": "Sometimes->Never"
+    },
+    "cases": [
+      {
+        "id": "refcount_put_get_positive",
+        "path": "concurrency/c3/refcount_put_get.litmus",
+        "sha256": "df60c96b3365df18c8af00938dd6f2dda2cb67fa136aaba0b2d17e774f1fe5d8",
+        "role": "verification_candidate",
+        "verification_candidate": true,
+        "control_for": null,
+        "required_operations": [
+          "atomic_fetch_sub_release",
+          "atomic_cmpxchg_relaxed"
+        ],
+        "forbidden_operations": [
+          "atomic_fetch_inc_relaxed"
+        ],
+        "expected": {
+          "test": "Fragma-refcount-put-get",
+          "disposition": "Allowed",
+          "states": 2,
+          "marker": "No",
+          "positive": 0,
+          "negative": 2,
+          "flags": [],
+          "condition": "exists (0:released=1 /\\ 1:acquired=1)",
+          "observation": "Never",
+          "hash": "e315d2aff7685cce1c97f736d48946c0"
+        }
+      },
+      {
+        "id": "unconditional_resurrection_negative",
+        "path": "concurrency/c3/refcount_resurrection.litmus",
+        "sha256": "ca3d5dd2b924df2d4a0bff14351c7de6ab59817a09206b9356ab456c6d45bc33",
+        "role": "required_unsafe_control",
+        "verification_candidate": false,
+        "control_for": "refcount_put_get_positive",
+        "required_operations": [
+          "atomic_fetch_sub_release",
+          "atomic_fetch_inc_relaxed"
+        ],
+        "forbidden_operations": [
+          "atomic_cmpxchg_relaxed"
+        ],
+        "expected": {
+          "test": "Fragma-refcount-resurrection",
+          "disposition": "Allowed",
+          "states": 2,
+          "marker": "Ok",
+          "positive": 1,
+          "negative": 1,
+          "flags": [],
+          "condition": "exists (0:released=1 /\\ 1:acquired=1)",
+          "observation": "Sometimes",
+          "hash": "ff8861bc39ed551fc8e17a2363b6da9c"
+        }
+      }
+    ]
+  }
+}

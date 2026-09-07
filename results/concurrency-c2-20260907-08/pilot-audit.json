@@ -1,0 +1,869 @@
+{
+  "accepted": true,
+  "c2_stage_complete": false,
+  "cases": [
+    {
+      "assertions": {
+        "c2_done_published_before_unlock": "valid",
+        "c2_mutex_lock_succeeds": "valid",
+        "c2_mutex_unlock_succeeds": "valid",
+        "c2_start_true_path_done_false": "valid"
+      },
+      "checks": [
+        {
+          "actual": false,
+          "expected": false,
+          "name": "timed out",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "exit code",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "report present",
+          "passed": true
+        },
+        {
+          "actual": {
+            "c2_done_published_before_unlock": "valid",
+            "c2_mutex_lock_succeeds": "valid",
+            "c2_mutex_unlock_succeeds": "valid",
+            "c2_start_true_path_done_false": "valid"
+          },
+          "expected": {
+            "c2_done_published_before_unlock": "valid",
+            "c2_mutex_lock_succeeds": "valid",
+            "c2_mutex_unlock_succeeds": "valid",
+            "c2_start_true_path_done_false": "valid"
+          },
+          "name": "assertions",
+          "passed": true
+        },
+        {
+          "actual": "protected",
+          "expected": "protected",
+          "name": "final shared-object protection",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "analysis fixpoint",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "positive mutex initialization",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "positive no manual synchronization gap",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "positive no invalid mutex warning",
+          "passed": true
+        }
+      ],
+      "id": "linux_mutex_positive",
+      "passed": true,
+      "protection": "protected",
+      "returncode": 0,
+      "timed_out": false,
+      "verification_candidate": true
+    },
+    {
+      "assertions": {
+        "c2_done_published_before_unlock": "valid",
+        "c2_start_true_path_done_false": "unknown"
+      },
+      "checks": [
+        {
+          "actual": false,
+          "expected": false,
+          "name": "timed out",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "expected": 0,
+          "name": "exit code",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "report present",
+          "passed": true
+        },
+        {
+          "actual": {
+            "c2_done_published_before_unlock": "valid",
+            "c2_start_true_path_done_false": "unknown"
+          },
+          "expected": {
+            "c2_done_published_before_unlock": "valid",
+            "c2_start_true_path_done_false": "unknown"
+          },
+          "name": "assertions",
+          "passed": true
+        },
+        {
+          "actual": "unprotected",
+          "expected": "unprotected",
+          "name": "final shared-object protection",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "analysis fixpoint",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "negative adapter selected",
+          "passed": true
+        },
+        {
+          "actual": true,
+          "expected": true,
+          "name": "negative manual synchronization gap",
+          "passed": true
+        },
+        {
+          "actual": false,
+          "expected": false,
+          "name": "negative cannot be verification candidate",
+          "passed": true
+        }
+      ],
+      "id": "lock_elided_negative",
+      "passed": true,
+      "protection": "unprotected",
+      "returncode": 0,
+      "timed_out": false,
+      "verification_candidate": false
+    }
+  ],
+  "checks": [
+    {
+      "actual": "f5f60f54f941c7b9d9ea21ab8bf49b2e104a07b9cd91f3668b354779b65e5e39",
+      "expected": "f5f60f54f941c7b9d9ea21ab8bf49b2e104a07b9cd91f3668b354779b65e5e39",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/lib/once.c",
+      "passed": true
+    },
+    {
+      "actual": "6db57d3fb47c31574446ab9fdceeffc197d412ab8e7c37954dde1a2cc0ac2722",
+      "expected": "6db57d3fb47c31574446ab9fdceeffc197d412ab8e7c37954dde1a2cc0ac2722",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/include/linux/once.h",
+      "passed": true
+    },
+    {
+      "actual": "b1258cbbaa568dca5c876518669166f70fad6294bc956c860b3ead5d0efc384f",
+      "expected": "b1258cbbaa568dca5c876518669166f70fad6294bc956c860b3ead5d0efc384f",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/include/linux/mutex.h",
+      "passed": true
+    },
+    {
+      "actual": "24d4ef87c331699dbd6892f2934e0f315720b89ffbe6cd45d06828bb8be556a5",
+      "expected": "24d4ef87c331699dbd6892f2934e0f315720b89ffbe6cd45d06828bb8be556a5",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/kernel/locking/mutex.c",
+      "passed": true
+    },
+    {
+      "actual": "e953f9a58c2666ed7f4c871bbfaf64b67d11730d9992bcc9a0e5d0228233131f",
+      "expected": "e953f9a58c2666ed7f4c871bbfaf64b67d11730d9992bcc9a0e5d0228233131f",
+      "name": "source identity: build/sources/linux-b9b3e33b70b71/Documentation/locking/mutex-design.rst",
+      "passed": true
+    },
+    {
+      "actual": "5ca9da49e465a9dafaa68be88b0a7ea14155a86c8e01422c2f3490af447062b2",
+      "expected": "5ca9da49e465a9dafaa68be88b0a7ea14155a86c8e01422c2f3490af447062b2",
+      "name": "source identity: build/kernel/x86_64-gcc/.config",
+      "passed": true
+    },
+    {
+      "actual": "04152fe199764c6691f04ddc6f9d62c6fa7a8b08e022316b9a9d9ab743c09883",
+      "expected": "04152fe199764c6691f04ddc6f9d62c6fa7a8b08e022316b9a9d9ab743c09883",
+      "name": "source identity: build/kernel/x86_64-gcc/fragma-build.json",
+      "passed": true
+    },
+    {
+      "actual": "1e4bed539fdfaf9793da8f3cbd14bfba5d8d2eeb0f364c58ebaa77a0108c4cbf",
+      "expected": "1e4bed539fdfaf9793da8f3cbd14bfba5d8d2eeb0f364c58ebaa77a0108c4cbf",
+      "name": "fixture identity",
+      "passed": true
+    },
+    {
+      "actual": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+      "expected": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+      "name": "build receipt revision",
+      "passed": true
+    },
+    {
+      "actual": "x86_64-gcc",
+      "expected": "x86_64-gcc",
+      "name": "build receipt profile",
+      "passed": true
+    },
+    {
+      "actual": "/home/karl/linux-work/fragma/build/sources/linux-b9b3e33b70b71",
+      "expected": "/home/karl/linux-work/fragma/build/sources/linux-b9b3e33b70b71",
+      "name": "build receipt source",
+      "passed": true
+    },
+    {
+      "actual": "prepared",
+      "expected": "prepared",
+      "name": "build receipt status",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "kernel config: CONFIG_64BIT",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "kernel config: CONFIG_X86_64",
+      "passed": true
+    },
+    {
+      "actual": "n",
+      "expected": "n",
+      "name": "kernel config: CONFIG_SMP",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "kernel config: CONFIG_PREEMPTION",
+      "passed": true
+    },
+    {
+      "actual": "y",
+      "expected": "y",
+      "name": "kernel config: CONFIG_PREEMPT_LAZY",
+      "passed": true
+    },
+    {
+      "actual": "n",
+      "expected": "n",
+      "name": "kernel config: CONFIG_DEBUG_MUTEXES",
+      "passed": true
+    },
+    {
+      "actual": "n",
+      "expected": "n",
+      "name": "kernel config: CONFIG_DEBUG_LOCK_ALLOC",
+      "passed": true
+    },
+    {
+      "actual": "absent",
+      "expected": "absent",
+      "name": "kernel config: CONFIG_MUTEX_SPIN_ON_OWNER",
+      "passed": true
+    },
+    {
+      "actual": "n",
+      "expected": "n",
+      "name": "kernel config: CONFIG_PREEMPT_RT",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "token-identical body: __do_once_sleepable_start",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "token-identical body: __do_once_sleepable_done",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "same static once_mutex declaration",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "caller macro ordered start/callback/done",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "documented single owner",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "documented interrupt exclusion",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured lock fast path",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured lock slow path",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured unlock fast path",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "unlock lifetime warning",
+      "passed": true
+    },
+    {
+      "actual": "supported",
+      "expected": "supported",
+      "name": "scoped mutex dimension support",
+      "passed": true
+    },
+    {
+      "actual": "supported",
+      "expected": "supported",
+      "name": "mutex adapter supported only through scoped gate",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "mutex adapter is not an empty stub",
+      "passed": true
+    },
+    {
+      "actual": "excluded",
+      "expected": "excluded",
+      "name": "static key remains excluded",
+      "passed": true
+    },
+    {
+      "actual": "815c916df2361e7af5a18125c97b37665e4eed91e76daa185d571706563e7ef2",
+      "expected": "815c916df2361e7af5a18125c97b37665e4eed91e76daa185d571706563e7ef2",
+      "name": "provider binary identity",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "configured build timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "configured build exit",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured object is ELF",
+      "passed": true
+    },
+    {
+      "actual": 2,
+      "expected": 2,
+      "name": "configured object ELF class",
+      "passed": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "name": "configured object ELF byte order",
+      "passed": true
+    },
+    {
+      "actual": 62,
+      "expected": 62,
+      "name": "configured object ELF machine",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command names once.c",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command uses pinned compiler",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "configured command is x86_64",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "exit code",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "report present",
+      "passed": true
+    },
+    {
+      "actual": {
+        "c2_done_published_before_unlock": "valid",
+        "c2_mutex_lock_succeeds": "valid",
+        "c2_mutex_unlock_succeeds": "valid",
+        "c2_start_true_path_done_false": "valid"
+      },
+      "expected": {
+        "c2_done_published_before_unlock": "valid",
+        "c2_mutex_lock_succeeds": "valid",
+        "c2_mutex_unlock_succeeds": "valid",
+        "c2_start_true_path_done_false": "valid"
+      },
+      "name": "assertions",
+      "passed": true
+    },
+    {
+      "actual": "protected",
+      "expected": "protected",
+      "name": "final shared-object protection",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "analysis fixpoint",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "positive mutex initialization",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "positive no manual synchronization gap",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "positive no invalid mutex warning",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "timed out",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "exit code",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "report present",
+      "passed": true
+    },
+    {
+      "actual": {
+        "c2_done_published_before_unlock": "valid",
+        "c2_start_true_path_done_false": "unknown"
+      },
+      "expected": {
+        "c2_done_published_before_unlock": "valid",
+        "c2_start_true_path_done_false": "unknown"
+      },
+      "name": "assertions",
+      "passed": true
+    },
+    {
+      "actual": "unprotected",
+      "expected": "unprotected",
+      "name": "final shared-object protection",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "analysis fixpoint",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "negative adapter selected",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "negative manual synchronization gap",
+      "passed": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "name": "negative cannot be verification candidate",
+      "passed": true
+    }
+  ],
+  "configured_object": {
+    "class": 2,
+    "data": 1,
+    "elf": true,
+    "machine": 62,
+    "sha256": "578b3c036144895833fb6f89b04acb8ba76da14ca080de5988fb03e3824f4a76",
+    "size": 3440
+  },
+  "context": {
+    "inter_cpu": "excluded by CONFIG_SMP=n",
+    "interrupts": "excluded because Linux mutex_lock/mutex_unlock are forbidden in hardware and software interrupt contexts",
+    "lifetime": "once_mutex, done, key and harness module objects are static and remain live for both entries",
+    "ordinary_tasks": "two process-context entries with arbitrary Mthread interference",
+    "preemption": "CONFIG_PREEMPT_LAZY=y task interleavings are included abstractly; exact scheduler points and liveness are not modeled"
+  },
+  "gate_decision": {
+    "blocking_support": [],
+    "calibration_accepted": false,
+    "evidence_accepted": true,
+    "verification_accepted": true
+  },
+  "generated_at": "2026-09-07T12:38:49.754101+00:00",
+  "input_identities": {
+    "build/kernel/x86_64-gcc/.config": {
+      "sha256": "5ca9da49e465a9dafaa68be88b0a7ea14155a86c8e01422c2f3490af447062b2",
+      "size": 39215
+    },
+    "build/kernel/x86_64-gcc/fragma-build.json": {
+      "sha256": "04152fe199764c6691f04ddc6f9d62c6fa7a8b08e022316b9a9d9ab743c09883",
+      "size": 2168
+    },
+    "build/sources/linux-b9b3e33b70b71/Documentation/locking/mutex-design.rst": {
+      "sha256": "e953f9a58c2666ed7f4c871bbfaf64b67d11730d9992bcc9a0e5d0228233131f",
+      "size": 7019
+    },
+    "build/sources/linux-b9b3e33b70b71/include/linux/mutex.h": {
+      "sha256": "b1258cbbaa568dca5c876518669166f70fad6294bc956c860b3ead5d0efc384f",
+      "size": 8924
+    },
+    "build/sources/linux-b9b3e33b70b71/include/linux/once.h": {
+      "sha256": "6db57d3fb47c31574446ab9fdceeffc197d412ab8e7c37954dde1a2cc0ac2722",
+      "size": 2726
+    },
+    "build/sources/linux-b9b3e33b70b71/kernel/locking/mutex.c": {
+      "sha256": "24d4ef87c331699dbd6892f2934e0f315720b89ffbe6cd45d06828bb8be556a5",
+      "size": 34157
+    },
+    "build/sources/linux-b9b3e33b70b71/lib/once.c": {
+      "sha256": "f5f60f54f941c7b9d9ea21ab8bf49b2e104a07b9cd91f3668b354779b65e5e39",
+      "size": 2269
+    },
+    "concurrency/c2/once_sleepable.c": {
+      "sha256": "1e4bed539fdfaf9793da8f3cbd14bfba5d8d2eeb0f364c58ebaa77a0108c4cbf",
+      "size": 3334
+    },
+    "config/concurrency-c0.json": {
+      "sha256": "125ca11849bcdb688d3452560e21666fa59ca48e7435b7a10c3ee3e6395f93c8",
+      "size": 7342
+    },
+    "config/concurrency-c2.json": {
+      "sha256": "b765faf3877e39af4e802ec63b121635c88f95369c675a2c386e67bd4675eef9",
+      "size": 8962
+    },
+    "config/concurrency-models.json": {
+      "sha256": "3c3420c44e985f23994c419a079deede24b78513270491795c1bcc9a8f82a26f",
+      "size": 6268
+    },
+    "config/concurrency-scopes.json": {
+      "sha256": "3ab9da7eaf16dda7b4b9b6b2f65a198dfea6b475d1dadb638d4f547f75692a0a",
+      "size": 11938
+    },
+    "fragma/__main__.py": {
+      "sha256": "80297fe825d059f119908420636e6fc22e45a71d33e32a12ccd64de5aa535d18",
+      "size": 13976
+    },
+    "fragma/concurrency.py": {
+      "sha256": "5cde045e5c58eb111759acb7feb94940c4d55b5f19e62fa4f278695fa6a3fd2a",
+      "size": 17293
+    },
+    "fragma/concurrency_c2.py": {
+      "sha256": "c837512a00bc9bce2f6950a7f95631a6c4024a81e199c59110e7b47c4a3cffe0",
+      "size": 36640
+    },
+    "fragma/concurrency_evidence.py": {
+      "sha256": "150fa86294c68006492f42218e8e0ce542c41a9284b0aec53d228bbc5377de47",
+      "size": 28930
+    },
+    "tests/test_concurrency_c2.py": {
+      "sha256": "33c6e2fa748fdb136cbf5ff1b22a189efc53a0f035b7ddf2332a6a29dec82ff9",
+      "size": 5750
+    },
+    "toolchain/lock.json": {
+      "sha256": "0d3557b20e4a0ed16e6a4fe8622aa3ecd1572b9b30d490c7c69b4be82d7f47cb",
+      "size": 61074
+    },
+    "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_analysis_fixpoint.ml": {
+      "sha256": "3006aca5d6879a1aeaa3ff5af62fa643251aa81a1f48f707565d88ae84f743b4",
+      "size": 14674
+    },
+    "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_analysis_hooks.ml": {
+      "sha256": "276a2dc69a72881fd05029087cf785555d79618af7b87b57b7ddee742ffe9149",
+      "size": 34987
+    },
+    "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_lib.ml": {
+      "sha256": "585f86b6dc1597953228bf6f285bff3adacbcc6dacca2495a79c30a54b11595a",
+      "size": 3835
+    },
+    "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_main.ml": {
+      "sha256": "e5b00b819cdf56cc5f01285160b0fc72d70d8f676c1214432254de853449ff79",
+      "size": 6181
+    },
+    "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_mutexes.ml": {
+      "sha256": "ce144b7f99e6b00f1b7eba4842985445c17fd0b24d5875c2302f12a5f287d7c8",
+      "size": 6654
+    },
+    "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/eva/src/mthread/mt_thread.ml": {
+      "sha256": "2738f976a10f210458f0582b7d5222e848f49bebca0c057b70dbbde2fb2322d3",
+      "size": 13184
+    },
+    "toolchain/verified-prefix/opam/fragma/bin/frama-c": {
+      "sha256": "815c916df2361e7af5a18125c97b37665e4eed91e76daa185d571706563e7ef2",
+      "size": 43167392
+    },
+    "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread.c": {
+      "sha256": "be21be9f394bd94bd6d6255ed803ce71dfdebb8f481ce7c31ca7d5f5c366db3e",
+      "size": 855
+    },
+    "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread.h": {
+      "sha256": "362a97492be137b7205bd6a7fa77497f291da18eb1a382d0ffc31d805e464948",
+      "size": 2905
+    },
+    "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_interrupts.c": {
+      "sha256": "7c39f147cea35a5fba6957173405c942e0f3b1b69ed247ae30636f1d17cfda7a",
+      "size": 1420
+    },
+    "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_interrupts.h": {
+      "sha256": "7ae33c342f032814634a94569d7981f10f7b23e47d57ee9d4964178cf5fc90f3",
+      "size": 921
+    },
+    "toolchain/verified-prefix/opam/fragma/share/frama-c/share/mt/mthread_pthread.c": {
+      "sha256": "c0c2836795c8ba99657f243046357e39e27d7042ea4bbd69e82684ed7bbdc51e",
+      "size": 3881
+    }
+  },
+  "kernel_profile": "x86_64-gcc",
+  "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+  "kernel_verification_count": 1,
+  "kind": "linux-once-sleepable-c2-mutex-pilot",
+  "model": {
+    "provider": "framac-33-mthread-eva-c0",
+    "provider_version": "33.0 (Arsenic)",
+    "static_key_abstraction": {
+      "conservative_argument": "For done-access protection, retaining later slow-path attempts overapproximates the real key disabling those attempts; each added attempt still traverses the selected mutex-protected done check.",
+      "limitations": [
+        "No static-branch state, patching, ordering or performance property is checked."
+      ],
+      "semantics": "The model records a monitored event but always permits another slow-path attempt.",
+      "status": "excluded"
+    },
+    "verification_gate": {
+      "dimensions": {
+        "mutex_protected_concurrency": {
+          "limitations": [
+            "No other Linux mutex user, IRQ/NMI caller, SMP execution, lock implementation proof or unlocked state is covered."
+          ],
+          "scope": "Only protection of modeled_done in the token-identical Linux sleepable-once helpers, with two paired process-context entries on the pinned UP profile.",
+          "status": "supported"
+        },
+        "sequential": {
+          "limitations": [
+            "No end-to-end exactly-once, callback, termination or arbitrary-C claim follows."
+          ],
+          "scope": "The four named local Eva assertions in the exact C2 fixture and no other sequential property.",
+          "status": "supported"
+        }
+      },
+      "primitive_models": {
+        "linux_once_mutex": {
+          "conservative_argument": "The configured Linux mutex contract admits at most one task owner. Mthread analyzes both task entries with arbitrary shared-write interference, while the fixture initializes one abstract lock before either entry and routes every selected done access through it. For data-race protection of done only, this admits at least the relevant CONFIG_SMP=n task-preemption schedules; blocking, fairness, progress and memory ordering are excluded.",
+          "empty_stub_allowed": false,
+          "limitations": [
+            "The kernel mutex implementation itself is source-reviewed and configured-compiled, not proved from its atomic owner field.",
+            "No IRQ, softirq, NMI, inter-CPU, weak-memory, lock-free, deadlock, progress or termination claim is made.",
+            "The static-key operation and callback side effects are outside the selected property."
+          ],
+          "semantics": "A successful Frama_C_mutex_lock acquisition and matching unlock represent exclusive ownership of the configured Linux once_mutex between process-context callers.",
+          "status": "supported"
+        },
+        "two_process_context_entries": {
+          "conservative_argument": "For the selected two-caller safety property, arbitrary cross-entry interference includes the relevant CONFIG_SMP=n task-preemption orderings; creation success is checked and no completion or join fact is consumed.",
+          "empty_stub_allowed": false,
+          "limitations": [
+            "This is an analysis entry enumeration, not a model of a particular kernel task-creation API, scheduler fairness, completion or lifetime handoff."
+          ],
+          "semantics": "The main and one discovered Mthread entry independently execute the same paired slow-path caller, with shared-write interference iterated to a fixpoint.",
+          "status": "supported"
+        }
+      },
+      "target": {
+        "evidence_kind": "verification",
+        "required_dimensions": [
+          "sequential",
+          "mutex_protected_concurrency"
+        ],
+        "required_primitives": [
+          "two_process_context_entries",
+          "linux_once_mutex"
+        ]
+      }
+    }
+  },
+  "output": "/home/karl/linux-work/fragma/results/concurrency-c2-20260907-08",
+  "property": {
+    "accepted_assertions": [
+      "c2_mutex_lock_succeeds",
+      "c2_mutex_unlock_succeeds",
+      "c2_start_true_path_done_false",
+      "c2_done_published_before_unlock"
+    ],
+    "claim": "In the token-identical __do_once_sleepable_start/done bodies, two correctly paired process-context slow-path callers access their shared done flag only while the same configured Linux mutex abstraction is held.",
+    "exclusions": [
+      "End-to-end exactly-once callback execution is not an automated result.",
+      "Callback data, failures and side effects are not modeled.",
+      "The static-key fast path and static_branch_disable semantics are not verified.",
+      "Actual subsystem call sites outside the DO_ONCE_SLEEPABLE pairing contract are not verified.",
+      "Interrupt, NMI, SMP, weak-memory, atomic, RCU and lock-free behavior is not verified.",
+      "Deadlock freedom, fairness, progress, termination and post-join final state are not verified."
+    ],
+    "kind": "kernel_shared_access_protection",
+    "required_mutex": "linux-once-mutex",
+    "shared_object": "modeled_done"
+  },
+  "provenance": {
+    "__do_once_sleepable_done": {
+      "identical": true,
+      "token_count": 39,
+      "token_sha256": "637b33a971c49b936f57ad6a3edf9719ee491f100aca9be7a0f31f6c27a5ec0c"
+    },
+    "__do_once_sleepable_start": {
+      "identical": true,
+      "token_count": 43,
+      "token_sha256": "b9e531c7528c7dcf5a790483daacc012508886f805e81b45b8ea35e34160cf69"
+    }
+  },
+  "raw_artifacts": {
+    "results/concurrency-c2-20260907-08/build/command.json": {
+      "sha256": "40c0ad5be6ddf6a92c656af4754ecbd683f3e38feb1411067ea0e33cd540a9a2",
+      "size": 361
+    },
+    "results/concurrency-c2-20260907-08/build/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "results/concurrency-c2-20260907-08/build/stdout.txt": {
+      "sha256": "96b7edf5ba4a1472745bacf475d6ab419682f24176e35e308f93e9932d8b51df",
+      "size": 362
+    },
+    "results/concurrency-c2-20260907-08/cases/linux_mutex_positive/command.json": {
+      "sha256": "2315d39f3c817064bfcc8eaf97cf7e22ed803a4ee20072c39f5ed071f83f7972",
+      "size": 922
+    },
+    "results/concurrency-c2-20260907-08/cases/linux_mutex_positive/report.csv": {
+      "sha256": "47bd22f1cd5300393ba0afafbb722b6457c52ca9a4447274d7853b29416f7193",
+      "size": 4117
+    },
+    "results/concurrency-c2-20260907-08/cases/linux_mutex_positive/result.json": {
+      "sha256": "84d740f598f7aaec014f1435aabe95cc92fa2a45bee4d32fa4ab535a0632de65",
+      "size": 1844
+    },
+    "results/concurrency-c2-20260907-08/cases/linux_mutex_positive/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "results/concurrency-c2-20260907-08/cases/linux_mutex_positive/stdout.txt": {
+      "sha256": "1544fc83a082accd22edd8745037cf40a5c8f42989c94dd8ee818319704b0a64",
+      "size": 27407
+    },
+    "results/concurrency-c2-20260907-08/cases/lock_elided_negative/command.json": {
+      "sha256": "f2c012430c6d0577cffaa203a2cd67c57a5923b083b703aae41a49bfed3befc1",
+      "size": 978
+    },
+    "results/concurrency-c2-20260907-08/cases/lock_elided_negative/report.csv": {
+      "sha256": "26bd26138ff9a86eb27aff0e8f0026a5496a050f21dc71ea2ddb55f156270ef4",
+      "size": 3955
+    },
+    "results/concurrency-c2-20260907-08/cases/lock_elided_negative/result.json": {
+      "sha256": "52adb9db994e8f7dcf4e39c6302d2658d399d044ebe142c9add6635aae01a21f",
+      "size": 1600
+    },
+    "results/concurrency-c2-20260907-08/cases/lock_elided_negative/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "results/concurrency-c2-20260907-08/cases/lock_elided_negative/stdout.txt": {
+      "sha256": "45ec49e406b46030290d753a41d23b19249606523c210bf6577eca724546bfc4",
+      "size": 22722
+    },
+    "results/concurrency-c2-20260907-08/input-identities.json": {
+      "sha256": "d740a1b17aa4ce5acc785070eaafdbc2137c373a9fc6e8b7c38faed9566e34ee",
+      "size": 5128
+    },
+    "results/concurrency-c2-20260907-08/manifest.json": {
+      "sha256": "2dd2576a6b360fbeefc822aa3966c07832d148f9e9a5c7f970de014d3ce2ca49",
+      "size": 8962
+    }
+  },
+  "remaining_c2": [
+    "A separate Linux spinlock/IRQ masking pilot with handler interference",
+    "Any SMP/inter-CPU extension of this UP-only mutex property",
+    "End-to-end functional once semantics beyond access protection"
+  ],
+  "schema_version": 1,
+  "target": "linux-once-sleepable-up-c2"
+}

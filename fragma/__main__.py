@@ -6,8 +6,8 @@ import os
 from pathlib import Path
 
 from . import (build, concurrency, concurrency_c2, concurrency_c2_irq,
-               concurrency_c3_lkmm, concurrency_c3_module_stats,
-               concurrency_c3_trace,
+               concurrency_c3_ipc_refcount, concurrency_c3_lkmm,
+               concurrency_c3_module_stats, concurrency_c3_trace,
                concurrency_evidence, profiles, rv32_zeropad, sources, suite,
                toolchain)
 
@@ -101,6 +101,18 @@ def main(argv=None):
         "--timeout", type=int, default=120,
         help="wall-clock limit in seconds for each build/provider invocation",
     )
+    c3_refcount = sub.add_parser(
+        "concurrency-c3-ipc-refcount",
+        help="run the source-linked IPC refcount lifetime A/B pilot",
+    )
+    c3_refcount.add_argument(
+        "--output", type=Path,
+        help="new C3 lifetime evidence directory; existing paths are never overwritten",
+    )
+    c3_refcount.add_argument(
+        "--timeout", type=int, default=120,
+        help="wall-clock limit in seconds for each build/provider invocation",
+    )
     rv32 = sub.add_parser(
         "rv32-zeropad-audit",
         help="audit the retained RV32 load_unaligned_zeropad A/B evidence",
@@ -177,6 +189,13 @@ def main(argv=None):
         if args.command == "concurrency-c3-module-stats":
             output = args.output or concurrency_c3_module_stats.default_output(root)
             result = concurrency_c3_module_stats.run_c3_module_stats(
+                root, output, args.timeout
+            )
+            print(f"{'passed' if result['accepted'] else 'failed'}: {output}")
+            return 0 if result["accepted"] else 1
+        if args.command == "concurrency-c3-ipc-refcount":
+            output = args.output or concurrency_c3_ipc_refcount.default_output(root)
+            result = concurrency_c3_ipc_refcount.run_c3_ipc_refcount(
                 root, output, args.timeout
             )
             print(f"{'passed' if result['accepted'] else 'failed'}: {output}")

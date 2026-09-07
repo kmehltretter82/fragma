@@ -53,10 +53,16 @@ The new [module-statistics atomic/RMW pilot](docs/CONCURRENCY-C3-ATOMIC-20260907
 passes 162/162 gates and accepts a second C3 production property: two selected
 concurrent `atomic_inc()` operations on `failed_load_modules` cannot collapse to
 one. Its split once-access control permits the lost update, and an independent
-pair distinguishes fully ordered from relaxed increment-return operations. This
-confirms bounded production weak-memory/atomic checking, not a new defect or
-general concurrency support. Lock-free lifetime/progress, other architecture
-mappings, broader IRQ/NMI classes, functional protocols and RCU remain open.
+pair distinguishes fully ordered from relaxed increment-return operations. The
+[System V IPC refcount pilot](docs/CONCURRENCY-C3-REFCOUNT-20260907.md) then
+passes 157/157 gates and accepts one lifetime-sensitive functional property:
+from the sole reference, `ipc_rcu_putref()` cannot schedule destruction while a
+concurrent, locking-stabilized `ipc_rcu_getref()` also succeeds. Its unsafe
+unconditional-increment control exposes a zero-refcount resurrection witness.
+These checks confirm bounded production weak-memory/atomic reasoning, not a new
+defect or general concurrency support. Progress, other architecture mappings,
+broader lockless protocols, IRQ/NMI classes and explicit RCU grace-period
+reasoning remain open.
 The [renewed s390x pilot](s390/L2-RENEWAL-20260907.md) establishes scoped L2 support
 for seven C helpers. The [freshly renewed common24 baselines](common/L2-CLANG-RENEWAL-20260907.md)
 cover four helpers on ARM32, PowerPC32, m68k, ARM64, RISC-V64, SH, Alpha,
@@ -74,6 +80,7 @@ The new entry point is `python3 -m fragma` (`list`, `preflight`, `snapshot`,
 `prepare`, `run`, `compare`, `coverage`, `concurrency-c0`, `concurrency-c1`,
 `concurrency-c2`, `concurrency-c2-irq`, `concurrency-c3-lkmm`,
 `concurrency-c3-trace`, `concurrency-c3-module-stats`,
+`concurrency-c3-ipc-refcount`,
 `rv32-zeropad-audit`). See
 [toolchain setup](docs/toolchain.md) and
 [architecture profiles](profiles/README.md). Verification never installs

@@ -4,15 +4,17 @@ Status: **accepted for one source-linked kernel ordering property on one
 configured SMP x86-64 profile; 135/135 checks pass**.
 
 The retained result is
-[`results/concurrency-c3-trace-20260907-03`](../results/concurrency-c3-trace-20260907-03/SUMMARY.md).
+[`results/concurrency-c3-trace-20260907-04`](../results/concurrency-c3-trace-20260907-04/SUMMARY.md).
 This is evidence that bounded production-code weak-memory checking is now
 usable. It confirms correct synchronization in the selected source; it is not a
 new kernel bug.
 
 The preceding `results/concurrency-c3-trace-20260907-01` also passed, but a
-subsequent no-semantics-change cleanup altered a hashed test input. The `-02`
-rerun is therefore the current receipt; the older compact record remains
-history rather than silently being treated as fresh.
+subsequent no-semantics-change cleanup altered a hashed test input. Later
+receipts renewed parser and CLI identities; current run `-04` records the new
+IPC refcount command. Source, model, build and outcomes are unchanged, and the
+older compact records remain history rather than silently being treated as
+fresh.
 
 ## Accepted property
 
@@ -98,8 +100,10 @@ behavior, architecture profiles other than this SMP x86-64 build, future
 reclamation, lock-free progress, fairness, wait freedom, or whole-subsystem race
 freedom. The subsequent
 [module-statistics atomic/RMW pilot](CONCURRENCY-C3-ATOMIC-20260907.md) supplies
-the first source-linked atomic property. C3 still requires a genuinely
-lifetime-sensitive lock-free case; other architectures require their own
+the first source-linked atomic property, and the later
+[System V IPC refcount pilot](CONCURRENCY-C3-REFCOUNT-20260907.md) supplies one
+bounded lifetime-sensitive functional case. C3 still requires any separately
+justified progress claim, broader lockless protocols and per-architecture
 configured implementation evidence. C4 RCU remains separate.
 
 Reproduce with:
