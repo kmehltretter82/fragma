@@ -12,7 +12,7 @@ from fragma.sources import sha256
 
 
 class SuitePolicyTests(unittest.TestCase):
-    def test_registered_reviews_bind_explicit_current_model_and_pipeline(self):
+    def test_registered_reviews_expose_current_or_dated_identity(self):
         root = Path(__file__).resolve().parents[1]
         _, targets, ledger = suite.load_registry(root)
         configured = profiles.load_profiles(root)
@@ -21,24 +21,25 @@ class SuitePolicyTests(unittest.TestCase):
         first_common = {"common.unaligned24.arm", "common.unaligned24.powerpc32", "common.unaligned24.m68k"}
         next_common = {"common.unaligned24.arm64", "common.unaligned24.riscv64", "common.unaligned24.sh"}
         third_common = {"common.unaligned24.alpha", "common.unaligned24.x86_64", "common.unaligned24.um-x86_64"}
-        common = first_common | next_common | third_common
+        mips_common = {"common.unaligned24.mips32el"}
+        common = first_common | next_common | third_common | mips_common
         self.assertEqual(set(reviewed), {"string.verified.strnchr", "string.verified.strlcat",
             "s390.unaligned24", "s390.unaligned48", "s390.tod_to_ns",
             "riscv.base-encoders", "arm64.cpuid"} | common)
-        self.assertEqual(len(reviewed), 16)
+        self.assertEqual(len(reviewed), 17)
         for name, target in reviewed.items():
             with self.subTest(target=name):
                 context = target["review_context"]
                 self.assertEqual(context["analysis"],
                     analysis_policy.model_identity(configured[target["profile"]]["analysis"]))
                 self.assertEqual(context["analysis_pipeline"], analysis_policy.pipeline_identity(target))
-                review_docs = ["common/REVIEW-WAVE3-20260906.md"] if name in common else ["docs/pointer-policy-review.md"]
+                review_docs = (["common/REVIEW-MIPS32EL-20260907.md"] if name in mips_common
+                               else ["common/REVIEW-WAVE3-20260906.md"] if name in common
+                               else ["docs/pointer-policy-review.md"])
                 if name in first_common | next_common:
                     review_docs.append("common/REVIEW-WAVE2-20260906.md")
                 if name in first_common:
                     review_docs.append("common/REVIEW-20260906.md")
-                for filename in ("fragma/analysis_policy.py", *review_docs):
-                    self.assertEqual(context["file_hashes"][filename], sha256(root / filename))
                 for review_doc in review_docs:
                     self.assertIn(review_doc, context["review_evidence"])
                 if name in common:
@@ -46,10 +47,6 @@ class SuitePolicyTests(unittest.TestCase):
                     self.assertEqual(context["preprocessing"]["frontend_policy"], frontend_policy.identity(target))
                     self.assertEqual(target["reviewed_smoke"], [])
                     self.assertEqual(len(target["reviewed_warnings"]), 6 if name.endswith("powerpc32") else 5)
-                    for filename in common24_calibration.required_files(target):
-                        self.assertEqual(context["file_hashes"][filename], sha256(root / filename))
-                    for filename in context["review_evidence"]:
-                        self.assertEqual(context["file_hashes"][filename], sha256(root / filename))
                     for assumption in target["assumptions"]:
                         self.assertEqual(ledger[assumption]["review_status"], "reviewed-assumption")
                         self.assertIs(ledger[assumption]["implementation_proved"], False)
@@ -62,6 +59,29 @@ class SuitePolicyTests(unittest.TestCase):
                                              {"alpha-gcc", "x86_64-gcc", "um-x86_64-gcc"})
                             self.assertIn("common/REVIEW-WAVE3-20260906.md",
                                           ledger[assumption]["review_evidence"])
+                    if name in mips_common:
+                        self.assertEqual(target["assumptions"],
+                                         ["common24-mips-types", "common24-mips-frontend"])
+                        for assumption in target["assumptions"]:
+                            self.assertEqual(ledger[assumption]["reviewed_profiles"],
+                                             ["mips32el-clang"])
+                            self.assertIn("common/REVIEW-MIPS32EL-20260907.md",
+                                          ledger[assumption]["review_evidence"])
+                drift = [filename for filename, expected in context["file_hashes"].items()
+                         if not (root / filename).is_file() or
+                         sha256(root / filename) != expected]
+                if name in mips_common:
+                    self.assertEqual(drift, [])
+                    for filename in ("fragma/analysis_policy.py", *review_docs,
+                                     *common24_calibration.required_files(target),
+                                     *context["review_evidence"]):
+                        self.assertEqual(context["file_hashes"][filename],
+                                         sha256(root / filename))
+                else:
+                    # MIPS profile/lock integration and the shared Clang
+                    # diagnostic/ELF additions deliberately date every older
+                    # review.  Do not refresh those approvals without replay.
+                    self.assertTrue(drift)
 
     def execute(self, *, analysis="eva", pipeline=None, audit_pointer="true"):
         with tempfile.TemporaryDirectory(prefix="fragma pipeline ") as temporary:

@@ -12,8 +12,11 @@ from fragma import elf, frontend_policy
 CALIBRATION_NAME = b"fragma_common24_compiler_calibration"
 
 
-def calibration_elf(*, bits=32, little_endian=True, machine=40, arm_unwind=False, relocation_addend=False):
+def calibration_elf(*, bits=32, little_endian=True, machine=40, arm_unwind=False,
+                    relocation_addend=False, mips_metadata=False):
     """Data-only ET_REL for orchestration tests; the bytes are not ISA claims."""
+    if mips_metadata and (bits != 32 or not little_endian or machine != 8 or arm_unwind):
+        raise ValueError("synthetic MIPS metadata requires its exact ELF32 little-endian route")
     endian, wide = ("<" if little_endian else ">"), bits == 64
     header_size, section_size, symbol_size = (64, 64, 24) if wide else (52, 40, 16)
     strings = bytearray(b"\0")
@@ -28,6 +31,9 @@ def calibration_elf(*, bits=32, little_endian=True, machine=40, arm_unwind=False
     if arm_unwind:
         section_names += [name(b".ARM.exidx"), name(b".rel.ARM.exidx")]
         unwind_name = name(b"__aeabi_unwind_cpp_pr0")
+    if mips_metadata:
+        section_names += [name(b".reginfo"), name(b".MIPS.abiflags"),
+                          name(b".llvm_addrsig")]
     data = bytearray(header_size)
     sections = [(0,) * 10]
 
@@ -60,12 +66,25 @@ def calibration_elf(*, bits=32, little_endian=True, machine=40, arm_unwind=False
         reloc_offset = append(reloc, 8 if wide else 4)
         sections.append((section_names[5], 4 if relocation_addend else 9, 0x40, 0, reloc_offset, len(reloc), 3, 4,
                          8 if wide else 4, len(reloc)))
+    if mips_metadata:
+        reginfo = struct.pack("<6I", 0x80000001, 0, 0, 0, 0, 0)
+        reginfo_offset = append(reginfo, 4)
+        sections.append((section_names[4], 0x70000006, 2, 0, reginfo_offset,
+                         len(reginfo), 0, 0, 4, 24))
+        abi = struct.pack("<HBBBBBBIIII", 0, 32, 2, 1, 0, 0, 3, 0, 0, 1, 0)
+        abi_offset = append(abi, 8)
+        sections.append((section_names[5], 0x7000002a, 2, 0, abi_offset,
+                         len(abi), 0, 0, 8, 24))
+        sections.append((section_names[6], 0x6fff4c03, 0x80000000, 0,
+                         len(data), 0, 3, 0, 1, 0))
     data.extend(bytes(-len(data) % (8 if wide else 4)))
     section_offset = len(data)
     for section in sections:
         data.extend(struct.pack(endian + ("IIQQQQIIQQ" if wide else "IIIIIIIIII"), *section))
     ident = b"\x7fELF" + bytes((2 if wide else 1, 1 if little_endian else 2, 1)) + bytes(9)
-    header = (1, machine, 1, 0, 0, section_offset, 0, header_size, 0, 0, section_size, len(sections), 2)
+    flags = 0x70001001 if mips_metadata else 0
+    header = (1, machine, 1, 0, 0, section_offset, flags, header_size, 0, 0,
+              section_size, len(sections), 2)
     data[:header_size] = ident + struct.pack(endian + ("HHIQQQIHHHHHH" if wide else "HHIIIIIHHHHHH"), *header)
     return bytes(data)
 

@@ -5,8 +5,8 @@ project round-trip witnesses. It preserves their full contracts and all 16
 intermediate assertions. Adding profile variants does not add unique kernel
 functions or count the witnesses as kernel code.
 
-Nine registered profile variants now have fresh accepted normal runs and
-independent retained-evidence/replay checks. The
+Nine GCC profile variants retain accepted normal runs and independent
+retained-evidence/replay checks at their exact pre-MIPS project identity. The
 [2026-09-07 L2 renewal](L2-CLANG-RENEWAL-20260907.md) covers exactly these four helpers
 under ARM32, PowerPC32, m68k, ARM64, RISC-V64, SH, Alpha, hardware x86-64 and
 UML x86-64. The final audit checks 846 ordinary goals, 738 selected properties
@@ -31,6 +31,13 @@ still cover the same four helpers, not nine new function sets. Original
 outside matrix history. The preserved first coverage audit and its narrow
 successor distinguish nine old contexts' unavailable current validation from
 the new accepted proofs; see the [renewal record](L2-CLANG-RENEWAL-20260907.md).
+
+A tenth registered variant, `common.unaligned24.mips32el`, now has a fresh
+post-registration [scoped L2 result](L2-MIPS32EL-20260907.md). Its exact
+MT7621 O32/little-endian MIPS32r2 run passes 19 L1 gates, 94 ordinary goals,
+82 selected properties, 22 compiler mutations and both fixture controls. This
+does not refresh the nine GCC receipts and does not add distinct kernel
+functions.
 
 The initial registered variants are `common.unaligned24.arm`,
 `common.unaligned24.powerpc32`, and `common.unaligned24.m68k`. Their dated run
@@ -73,6 +80,7 @@ FRAGMA_TOOLCHAIN_PREFIX="$PWD/toolchain/verified-prefix" python3 -m fragma run \
   --target common.unaligned24.riscv64 --target common.unaligned24.sh \
   --target common.unaligned24.alpha --target common.unaligned24.x86_64 \
   --target common.unaligned24.um-x86_64 \
+  --target common.unaligned24.mips32el \
   --output results/common24-new-run \
   --timeout 1 --wall-timeout 600 --jobs 2
 ```
@@ -98,11 +106,11 @@ evidence or L3 corroboration.
 
 The [next-profile queue](NEXT-PROFILES.md) records these completed ports and
 the narrowly reviewed Alpha metadata and genuine size-optimization changes.
-Nine freshly renewed common24 architecture scopes plus the
-[renewed s390 pilot](../s390/L2-RENEWAL-20260907.md) make ten current named
-architecture baselines, not ten fully supported architectures. S390's three
-WP groups and mandatory byte-order Eva case are separately rechecked; its
-runtime and caller limitations remain. The
-[eleven unconfigured architectures](../profiles/NEXT-WAVE.md) have separate
+Nine dated GCC common24 architecture scopes, the separately renewed s390 pilot,
+and the new current MIPS32el scope make eleven documented named architecture
+baselines, not eleven fully supported architectures. S390's three WP groups
+and mandatory byte-order Eva case are separately rechecked; its runtime and
+caller limitations remain. The
+[ten unconfigured architectures](../profiles/NEXT-WAVE.md) have separate
 toolchain and model prerequisites. Each needs fresh profile-specific gates and
 a documented scope decision; availability or registration is not support.

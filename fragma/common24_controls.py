@@ -35,6 +35,10 @@ DIAGNOSTICS = {
                    (34, "common24 exact LE24 write signature")),
     "wrong-inline": ((39, "common24 exact effective inline expansion"),),
 }
+CLANG_NOTES = {
+    "wrong-type": (),
+    "wrong-inline": ((40, 61, "expression evaluates to '-1 == 0'"),),
+}
 BOUNDARY = {"observation": "two-genuine-compiler-static-assertion-rejections",
             "positive_gate_authenticated_by_caller": True,
             "negative_dependencies": "unchanged-source closure from authenticated positive fixture",
@@ -177,26 +181,55 @@ def command_plan(context, target, output):
     ]
 
 
-def validate_diagnostics(name, fixture, command, stderr, stdout, object_exists):
-    """Require the exact five/one static-assert diagnostics, not a substring."""
+def validate_diagnostics(name, fixture, command, stderr, stdout, object_exists,
+                         *, compiler_family="gcc"):
+    """Require the exact five/one GCC or Clang static-assert diagnostics."""
     require(name in NAMES and type(command.get("returncode")) is int and command["returncode"] == 1 and
             command.get("timed_out") is False and object_exists is False and stdout == "",
             "control process/stdout/object outcome differs")
+    require(compiler_family in {"gcc", "clang"}, "unknown compiler diagnostic family")
     require(isinstance(stderr, str) and not any(char in stderr for char in ("\x1b", "\x00", "\r")),
             "unsupported diagnostic encoding")
-    observed = []
-    for line in stderr.splitlines():
-        diagnostic = re.fullmatch(r"(.+):(\d+):(\d+): (fatal error|error|warning): (.*)", line)
+    observed, summaries = [], []
+    lines = stderr.splitlines()
+    for index, line in enumerate(lines):
+        diagnostic = re.fullmatch(
+            r"(.+):(\d+):(\d+): (fatal error|error|warning|note): (.*)", line)
         if diagnostic:
             observed.append((diagnostic[1], int(diagnostic[2]), int(diagnostic[3]), diagnostic[4], diagnostic[5]))
+        elif compiler_family == "clang" and (summary := re.fullmatch(r"(\d+) errors? generated\.", line)):
+            summaries.append((index, int(summary[1])))
         else:
             require(not re.search(r"\b(?:fatal error|error|warning):", line, re.I), "additional compiler diagnostic")
             require(line == "" or re.fullmatch(r"\s*\d+\s*\|.*", line) or re.fullmatch(r"\s*\|[\s^~]*", line),
                     "unexpected compiler diagnostic continuation")
-    expected = [(str(fixture), line, 1, "error", 'static assertion failed: "' + message + '"')
-                for line, message in DIAGNOSTICS[name]]
-    require(observed == expected, "control lacks its exact ordered intended diagnostics")
-    return {"name": name, "expected_errors": len(expected), "observed_errors": len(observed)}
+    expected_sites = [(str(fixture), line, message) for line, message in DIAGNOSTICS[name]]
+    if compiler_family == "gcc":
+        expected = [(path, line, 1, "error", 'static assertion failed: "' + message + '"')
+                    for path, line, message in expected_sites]
+        require(observed == expected and summaries == [],
+                "control lacks its exact ordered intended GCC diagnostics")
+    else:
+        errors = [row for row in observed if row[3] == "error"]
+        notes = [row for row in observed if row[3] == "note"]
+        require(not any(row[3] not in {"error", "note"} for row in observed) and
+                [(path, line, column, severity)
+                 for path, line, column, severity, _ in errors] ==
+                [(path, line, 16, "error") for path, line, _ in expected_sites],
+                "control lacks its exact ordered intended Clang diagnostic sites")
+        for actual, (_, _, message) in zip(errors, expected_sites, strict=True):
+            require(re.fullmatch(
+                r"static assertion failed due to requirement '.+': " + re.escape(message),
+                actual[4]) is not None,
+                "control lacks its exact intended Clang diagnostic message")
+        require(notes == [(str(fixture), line, column, "note", message)
+                          for line, column, message in CLANG_NOTES[name]],
+                "Clang diagnostic notes differ")
+        require(summaries == [(len(lines) - 1, len(expected_sites))],
+                "Clang diagnostic summary count or position differs")
+    expected = expected_sites
+    return {"name": name, "expected_errors": len(expected),
+            "observed_errors": sum(row[3] == "error" for row in observed)}
 
 
 def _artifacts(output):
@@ -249,8 +282,10 @@ def validate(root, kernel, target, model, build, binding, gate, receipt_path, *,
         require(same(actual["stdout"], record(stdout)) and same(actual["stderr"], record(stderr)) and
                 actual["log"] == str(stderr) and actual["log_sha256"] == sources.sha256(stderr), "control raw stream identity differs")
         obj = output / (name + ".o")
-        observations.append(validate_diagnostics(name, current["fixture"], actual, stderr.read_text(), stdout.read_text(),
-                                                obj.exists() or obj.is_symlink()))
+        family = model.get("compiler", {}).get("compiler_family", "gcc")
+        observations.append(validate_diagnostics(name, current["fixture"], actual,
+            stderr.read_text(), stdout.read_text(), obj.exists() or obj.is_symlink(),
+            compiler_family=family))
     artifacts = _artifacts(output)
     require([Path(row["absolute_path"]).name for row in artifacts] ==
             sorted(name + "." + stream for name in NAMES for stream in ("stderr", "stdout")) and
@@ -290,8 +325,10 @@ def run(root, kernel, target, model, build, binding, gate, output, *, timeout=60
             row = {"name": name, **command}; saved["commands"].append(row)
             row.update(stdout=record(stdout), stderr=record(stderr)); _write(receipt, saved)
             obj = output / (name + ".o")
-            validate_diagnostics(name, current["fixture"], row, stderr.read_text(), stdout.read_text(),
-                                 obj.exists() or obj.is_symlink())
+            family = model.get("compiler", {}).get("compiler_family", "gcc")
+            validate_diagnostics(name, current["fixture"], row, stderr.read_text(),
+                                 stdout.read_text(), obj.exists() or obj.is_symlink(),
+                                 compiler_family=family)
         saved["status"] = RECORDED
     except BaseException as exc:
         interruption = exc if not isinstance(exc, Exception) else None

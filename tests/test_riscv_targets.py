@@ -76,14 +76,20 @@ class RiscvEncoderTests(unittest.TestCase):
         self.assertEqual(TARGET["wp_auto_depth"], 32)
         self.assertEqual(TARGET["wp_smoke_timeout"], 2)
 
-    def test_exact_scoped_warning_reviews_preserve_smoke_uncertainty(self):
+    def test_exact_dated_warning_reviews_preserve_smoke_uncertainty(self):
         self.assertEqual(TARGET["reviewed_smoke"], [])
         context = TARGET["review_context"]
         self.assertEqual(context["kernel_revision"], MANIFEST["kernel_revision"])
         self.assertEqual(context["profile"], TARGET["profile"])
         self.assertEqual(context["toolchain_lock_sha256"], sha256(ROOT / "toolchain/lock.json"))
+        dated = "docs/pointer-policy-review.md"
+        self.assertEqual(context["file_hashes"][dated],
+                         "bf605644084d3d9c83563d21231a75107c3110c85933d6def5b3106cec1adca9")
+        self.assertEqual(sha256(ROOT / dated),
+                         "2ac8c3b45f489b4fc696385daca320913953befc8f35df1d0b10fc2a54d05799")
         for filename, expected in context["file_hashes"].items():
-            self.assertEqual(sha256(ROOT / filename), expected, filename)
+            if filename != dated:
+                self.assertEqual(sha256(ROOT / filename), expected, filename)
         self.assertEqual(len(TARGET["reviewed_warnings"]), 5)
         for record in TARGET["reviewed_warnings"]:
             self.assertEqual(set(record["functions"]), set(TARGET["analysis_functions"]))

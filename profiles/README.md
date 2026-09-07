@@ -63,8 +63,10 @@ The preserved [MIPS32el candidate checkpoint](MIPS32EL-MACHDEP-20260907.md) led
 to the registered [MT7621 profile](MIPS32EL-MT7621-L1-20260907.md). The normal
 workflow binds authenticated generator headers, exact Clang/LLVM identities, a
 hash-locked MT7621 SMP/CPS seed, a genuine `lib/string.c` command/object and all
-19 L1 gates. This is one exact sequential C model, not general MIPS, L2 or
-runtime support. The [hardware priority note](MIPS-HARDWARE-TARGETS.md) keeps
+19 L1 gates. The separate [common24 result](../common/L2-MIPS32EL-20260907.md)
+now establishes scoped L2 for four explicit-byte helpers and two project
+witnesses. This is not general MIPS or runtime support. The
+[hardware priority note](MIPS-HARDWARE-TARGETS.md) keeps
 ath79, OCTEON and other materially different MIPS families separate.
 
 The [Hexagon LLVM compiler-build milestone](LLVM-BUILD-20260906.md) passes
@@ -175,9 +177,11 @@ for the nine unchanged false-specification observations. The
 records 16 proof variants, nine calibrations and six legacy nonpasses at its
 exact pre-MIPS identity, covering 18 of 24 distinct kernel functions there.
 Earlier [six-profile evidence](../common/L2-WAVE2-20260906.md)
-remains dated, not retroactively renewed. Nine freshly renewed common24 scopes plus
-the separately renewed s390 pilot name ten dated architecture baselines; eleven roster families
-still have no L2 baseline. Neither the 21-entry roster nor these narrow scopes
+remains dated, not retroactively renewed. Nine common24 GCC scopes plus the
+separately renewed s390 pilot name ten dated pre-registration architecture
+baselines. The fresh MIPS32el common24 scope adds an eleventh documented
+baseline; ten roster families still have no L2 baseline. Neither the 21-entry
+roster nor these narrow scopes
 means whole-architecture support, and no L3 has been established.
 The s390 scope decision checks all four mandatory targets across two authentic
 completed summaries; its revalidated finite QEMU `max` receipt is not full z13

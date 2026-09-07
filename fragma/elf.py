@@ -149,14 +149,83 @@ def _alpha_function_metadata(obj, symbol):
             and symbol.value + symbol.size <= section.size)
 
 
+def _header_flags(obj):
+    endian = "<" if obj.little else ">"
+    return struct.unpack_from(endian + "I", obj.data, 36 if obj.bits == 32 else 48)[0]
+
+
+def _mips_calibration_metadata(obj):
+    """Admit only the exact fixed-input Clang MIPS32el/O32 metadata family.
+
+    These sections do not establish instruction semantics.  They merely keep
+    the complete-table calibration gate closed around the metadata emitted by
+    the locked compiler for this one profile and command.
+    """
+    kinds = {b".reginfo": 0x70000006, b".MIPS.abiflags": 0x7000002a,
+             b".llvm_addrsig": 0x6fff4c03}
+    marked = [section for section in obj.sections
+              if section.name in kinds or section.kind in kinds.values()]
+    exact_route = (obj.bits == 32 and obj.little and obj.machine == 8
+                   and _header_flags(obj) == 0x70001001)
+    if not exact_route:
+        require(not marked, "MIPS calibration metadata outside exact MIPS32el/O32 route")
+        return None
+
+    selected = {}
+    for name, kind in kinds.items():
+        matches = [section for section in obj.sections
+                   if section.name == name or section.kind == kind]
+        require(len(matches) == 1 and matches[0].name == name and matches[0].kind == kind,
+                "missing, duplicate or mismatched MIPS calibration metadata")
+        selected[name] = matches[0]
+    require(len(marked) == len(kinds), "unexpected extra MIPS calibration metadata")
+
+    reginfo = selected[b".reginfo"]
+    require((reginfo.flags, reginfo.address, reginfo.size, reginfo.link, reginfo.info,
+             reginfo.alignment, reginfo.entry_size) == (2, 0, 24, 0, 0, 4, 24),
+            "unexpected MIPS reginfo section shape")
+    registers = struct.unpack("<6I", obj.section_bytes(obj.sections.index(reginfo)))
+    require(registers == (0x80000001, 0, 0, 0, 0, 0),
+            "unexpected MIPS reginfo contents")
+
+    abi = selected[b".MIPS.abiflags"]
+    require((abi.flags, abi.address, abi.size, abi.link, abi.info,
+             abi.alignment, abi.entry_size) == (2, 0, 24, 0, 0, 8, 24),
+            "unexpected MIPS ABI-flags section shape")
+    abi_fields = struct.unpack("<HBBBBBBIIII", obj.section_bytes(obj.sections.index(abi)))
+    require(abi_fields == (0, 32, 2, 1, 0, 0, 3, 0, 0, 1, 0),
+            "unexpected MIPS ABI-flags contents")
+
+    addrsig = selected[b".llvm_addrsig"]
+    require((addrsig.flags, addrsig.address, addrsig.size, addrsig.link, addrsig.info,
+             addrsig.alignment, addrsig.entry_size) ==
+            (0x80000000, 0, 0, obj.symbol_table, 0, 1, 0),
+            "unexpected LLVM address-significance section shape")
+    return {
+        "header_flags": "0x70001001",
+        "sections": [".reginfo", ".MIPS.abiflags", ".llvm_addrsig"],
+        "reginfo": {"gpr_mask": "0x80000001", "cpr_masks": [0, 0, 0, 0],
+                    "gp_value": "0x00000000"},
+        "abi_flags": {"version": 0, "isa_level": 32, "isa_revision": 2,
+                      "gpr_size_encoding": 1, "cpr1_size_encoding": 0,
+                      "cpr2_size_encoding": 0, "fp_abi_encoding": 3,
+                      "isa_extension": 0, "ases": 0, "flags1": 1, "flags2": 0},
+        "scope": "Exact MIPS32el/O32 container metadata only; no instruction, linker or runtime proof",
+    }
+
+
 def _complete_tables(obj):
     """Bound every section/symbol/REL[A] entry used by this small object family."""
     sections, symbols = obj.sections, obj.symbols
+    mips_metadata = _mips_calibration_metadata(obj)
     ranges = [(0, obj.header_size),
               (obj.section_offset, obj.section_offset + len(sections) * obj.section_size)]
     for index, section in enumerate(sections[1:], 1):
-        require(section.kind in (1, 2, 3, 4, 7, 8, 9, 0x70000001, 0x70000003)
-                and (section.kind < 0x70000000 or obj.machine == 40),
+        generic = section.kind in (1, 2, 3, 4, 7, 8, 9)
+        arm_metadata = obj.machine == 40 and section.kind in (0x70000001, 0x70000003)
+        mips_kind = mips_metadata is not None and section.kind in (
+            0x6fff4c03, 0x70000006, 0x7000002a)
+        require(generic or arm_metadata or mips_kind,
                 "unsupported calibration ELF section kind")
         require(section.address == 0 and not section.flags & (0x200 | 0x400 | 0x800),
                 "unsupported calibration ELF section address/group/TLS/compression")
@@ -218,7 +287,7 @@ def _complete_tables(obj):
             require(symbol < len(symbols) and address < target.size,
                     "ELF relocation symbol/offset is out of bounds")
             relocations.append((index, section.info, address, symbol, kind))
-    return relocations
+    return relocations, mips_metadata
 
 
 def calibration_object(data: bytes, model: dict, fixture_observation: dict) -> dict:
@@ -239,7 +308,7 @@ requires the source/command and all 22 compiler-negative controls at the caller.
             and fixture_observation.get("byte_order") == ("little" if obj.little else "big")
             and fixture_observation["machine_observed"] == obj.machine,
             "positive object differs from genuine fixture class/byte-order/machine")
-    relocations = _complete_tables(obj)
+    relocations, mips_metadata = _complete_tables(obj)
     name = b"fragma_common24_compiler_calibration"
     matches = [symbol for symbol in obj.symbols if symbol.name == name]
     require(len(matches) == 1, "missing or duplicate calibration definition")
@@ -283,4 +352,6 @@ requires the source/command and all 22 compiler-negative controls at the caller.
                 for item in obj.symbols if _alpha_function_metadata(obj, item)]
     if metadata:
         observed["alpha_symbol_metadata"] = metadata
+    if mips_metadata is not None:
+        observed["mips_abi_metadata"] = mips_metadata
     return observed

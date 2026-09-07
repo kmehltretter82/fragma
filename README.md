@@ -4,8 +4,11 @@ Verification and calibration rig for selected Linux kernel C functions.
 Frama-C/ACSL checks conditional correctness claims; deliberately wrong contracts
 and altered control examples test whether the verification setup detects them.
 This is not a whole-kernel proof. One Linux RV32 wrong-result defect has now been
-dynamically reproduced; the user sent the prepared fix manually. Upstream review
-or acknowledgement is not yet recorded, and this project does not send email.
+dynamically reproduced; it was found by LLM-assisted source review, not by
+Frama-C. The user sent the prepared fix manually. Upstream review or
+acknowledgement is not yet recorded, and this project does not send email. The
+[Fragma-first bug-search protocol](docs/BUG-SEARCH-PLAN.md) preserves that
+distinction and makes configured ARM32 the first analyzer-led campaign.
 
 The public repository contains the authored runner, specifications, tests,
 plans, compact result summaries, and experimental provider patches. Downloaded
@@ -97,8 +100,10 @@ has now advanced to a registered
 O32 little-endian MIPS32r2 route passes 19/19 L1 gates against a genuine MT7621
 SMP/CPS `lib/string.c` build. The other ten configured profiles were also
 [renewed](results/l1-mips-registration-renewal-20260907/SUMMARY.md), giving
-201/201 current L1 checks across 11 profiles. MIPS L2, runtime evidence,
-big-endian MIPS and MIPS64 remain open.
+201/201 current L1 checks across 11 profiles. The new
+[MIPS32el common24 result](common/L2-MIPS32EL-20260907.md) adds a current scoped
+L2 target with 94/94 ordinary goals and 82/82 selected properties. Runtime
+evidence, kernel callers, big-endian MIPS and MIPS64 remain open.
 Unbounded progress, scheduler fairness, wait-freedom, architecture-backed LL/SC
 guarantees, remaining architecture mappings, broader lockless protocols,
 IRQ/NMI classes and explicit RCU grace-period reasoning remain open.
@@ -175,7 +180,7 @@ actual bounded Linux kernel correctness review. No profile or accepted count
 changes; these are private tool/model observations and are unrelated to the
 separately confirmed RV32 finding.
 The [pre-MIPS coverage matrix](results/coverage-calibrations-clang-renewed-20260907/coverage.md)
-retains all 31 targets: 16 accepted proofs, nine accepted Eva calibrations and
+retains its then-complete 31-target registry: 16 accepted proofs, nine accepted Eva calibrations and
 six legacy nonpasses at that exact identity. Eighteen of 24 distinct kernel
 functions had accepted variants; six lacked one. The seven renewed proof targets
 pass 74 L1 checks, 418 ordinary goals and 331 selected properties, with 2,031
@@ -187,7 +192,9 @@ first coverage audit and distinguishes unavailable old-context validation from
 the nine then-current common24 proofs. The combined matrix preserves those
 histories and adds the seven renewed non-common proofs and nine renewed
 calibrations. The lock extension dates that acceptance until replay; it did not
-add a new architecture proof or L3.
+add a new architecture proof or L3. The current registry has 32 targets after
+the separately accepted MIPS32el common24 target; a new combined coverage
+matrix remains to be generated.
 See the [configured-profile queue](common/NEXT-PROFILES.md) and
 [remaining architecture prerequisites](profiles/NEXT-WAVE.md) for subsequent work.
 

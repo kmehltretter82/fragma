@@ -65,15 +65,21 @@ class Arm64CpuidTests(unittest.TestCase):
             self.assertIn(text, source)
         self.assertIn("typedef int (*signed_field_fn)(u64, int, int) __attribute_const__;", source)
 
-    def test_scoped_reviews_bind_current_inputs_and_do_not_waive_smoke(self):
+    def test_scoped_reviews_retain_exact_dated_input_and_do_not_waive_smoke(self):
         context = TARGET["review_context"]
         self.assertEqual(context["kernel_revision"], MANIFEST["kernel_revision"])
         self.assertEqual(context["profile"], TARGET["profile"])
         self.assertEqual(context["toolchain_lock_sha256"], sources.sha256(ROOT / "toolchain/lock.json"))
         self.assertEqual(TARGET["reviewed_smoke"], [])
         self.assertEqual(len(TARGET["reviewed_warnings"]), 4)
+        dated = "docs/pointer-policy-review.md"
+        self.assertEqual(context["file_hashes"][dated],
+                         "bf605644084d3d9c83563d21231a75107c3110c85933d6def5b3106cec1adca9")
+        self.assertEqual(sources.sha256(ROOT / dated),
+                         "2ac8c3b45f489b4fc696385daca320913953befc8f35df1d0b10fc2a54d05799")
         for filename, expected in context["file_hashes"].items():
-            self.assertEqual(sources.sha256(ROOT / filename), expected, filename)
+            if filename != dated:
+                self.assertEqual(sources.sha256(ROOT / filename), expected, filename)
         for warning in TARGET["reviewed_warnings"]:
             self.assertEqual(warning["functions"], TARGET["functions"])
             self.assertEqual(warning["file_hashes"], context["file_hashes"])

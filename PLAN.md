@@ -65,6 +65,20 @@ receipts remain exact evidence at their preceding project identity; they are
 not relabeled current under the new lock and target-review contexts until a
 fresh proof renewal is completed.
 
+The first post-registration proof target is now complete. The
+[MIPS32el common24 L2 result](common/L2-MIPS32EL-20260907.md) passes the exact
+MT7621 O32/little-endian MIPS32r2 profile with 19/19 L1 gates, 94/94 ordinary
+WP goals and 82/82 selected properties. This adds one current scoped L2 target
+and brings the registry to 32 targets; it does not refresh the preceding 25
+accepted targets or establish runtime, big-endian MIPS or MIPS64 support.
+
+The first analyzer-led bug-search campaign is explicitly restricted to the
+configured 32-bit ARMv7 `arm-gcc` profile. The
+[Fragma-first protocol](docs/BUG-SEARCH-PLAN.md) requires candidate selection
+before body review, unchanged-source Eva/RTE and WP evidence, and a concrete
+original/fixed A/B witness before a lead can be called a Fragma-found bug. The
+RV32 defect remains correctly classified as review-found.
+
 The [nine-calibration renewal](docs/CALIBRATION-RENEWAL-20260907.md) now passes
 both normal Eva batches: 38 model checks, 55 positive selected properties and
 nine deliberately false assertions corroborated by revalidated retained native
@@ -188,8 +202,8 @@ identity. The subsequent additive MIPS lock entry dates those receipts pending
 replay. No old receipt or scoped review was rewritten; the six legacy nonpasses
 still need current runs and resolution.
 
-The preceding [wave-three continuation](common/WAVE3-20260906.md) adds Alpha,
-hardware x86-64 and UML x86-64 common24 variants: the registry is now 31 targets
+The preceding [wave-three continuation](common/WAVE3-20260906.md) added Alpha,
+hardware x86-64 and UML x86-64 common24 variants: the registry was 31 targets
 and still 24 distinct kernel functions. Exact Alpha ELF metadata and genuine
 `-Os` compiler support are narrowly reviewed and tested, without replacing C,
 compiler flags or the existing source-derived assertion identities. All
@@ -226,10 +240,11 @@ The [renewed nine common24 baselines](common/L2-CLANG-RENEWAL-20260907.md) estab
 for four byte helpers on ARM32, PowerPC32, m68k, ARM64, RISC-V64, SH, Alpha,
 hardware x86-64 and UML x86-64. The
 [s390 renewal](s390/L2-RENEWAL-20260907.md) completed its separate four-target
-scope checks across two authentic summaries. These are ten dated named
+scope checks across two authentic summaries. Those are ten dated named
 architecture baselines pending post-registration replay, not ten fully
-supported architectures or whole-profile suites. Eleven architectures still
-lack a documented L2 baseline.
+supported architectures or whole-profile suites. The new MIPS32el common24
+result adds an eleventh documented architecture baseline at the current
+identity. Ten architecture families still lack a documented L2 baseline.
 
 The shared pointer-policy refresh includes ten fresh models, seven renewed
 reviews and both freshly bound native providers. An actual EVA builtin-audit
@@ -527,6 +542,17 @@ Draw initial candidates from the existing annotated directories and follow-up
 items in [mpi/FINDINGS.md](mpi/FINDINGS.md) and
 [arm64/FINDINGS.md](arm64/FINDINGS.md).
 
+The first new bug-search batch uses only the configured 32-bit ARMv7
+`arm-gcc` profile. Candidate names are frozen mechanically before detailed body
+inspection. Follow the [Fragma-first classification and A/B protocol](docs/BUG-SEARCH-PLAN.md);
+an alarm, timeout or failed proof alone is not a kernel defect.
+
+- [ ] Execute the first ARM32 Fragma-first campaign: freeze 5–10 unchanged
+  functions, run bounded Eva/RTE before manual source diagnosis, add
+  independently sourced WP properties, classify every lead, and concretely A/B
+  reproduce any confirmed violation. Publish zero confirmed bugs if none
+  survive the gates.
+
 - [ ] Select an initial batch of small functions with clear APIs and manageable
   dependencies. Consider the MPI shift helpers and existing encoding/decoding
   clusters before introducing unrelated subsystems.
@@ -681,6 +707,12 @@ all-architecture and additional ABI coverage remain open.
   configured profiles for a total of 201/201 L1 checks. The
   [production checkpoint](profiles/MIPS32EL-MT7621-L1-20260907.md) does not
   cover L2, runtime execution, big-endian MIPS or MIPS64.
+- [x] Establish the first scoped MIPS32el L2 target for the four explicit-byte
+  24-bit helpers and two project witnesses. The fresh
+  [acceptance record](common/L2-MIPS32EL-20260907.md) passes 19 L1 checks,
+  94 ordinary goals, 82 properties, all compiler controls and the exact O32
+  metadata gate. Kernel callers, runtime, big-endian MIPS and MIPS64 remain
+  separate work.
 - [x] Extend the C3 IPC refcount implementation map from four to eleven exact
   SMP profiles. The accepted set now spans 32/64-bit and little/big-endian
   objects on x86-64, arm64, riscv64, s390x, ARMv7, PowerPC32, SuperH, Alpha and
@@ -759,7 +791,7 @@ all-architecture and additional ABI coverage remain open.
   The [nine-profile L2 renewal](common/L2-WAVE3-20260906.md) completes that fresh
   acceptance and independent replay/coverage audit for all nine profiles.
   The [remaining architecture queue](profiles/NEXT-WAVE.md) now has ten families
-  without configured L1; eleven architectures still lack L2. Further LLVM
+  without configured L1 and ten without a documented L2 baseline. Further LLVM
   support where selected and a separate pre-15 compiler pin for Nios II remain
   required. This all-profile task remains open.
 - [x] Add the first explicit LLVM compiler-build route, preserving GCC behavior:

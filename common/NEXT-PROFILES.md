@@ -70,9 +70,11 @@ benign model-native `-O2` fixture is separate from its nonexecuted common24
 
 The existing s390 pilot already covers these four source helpers in its own
 seven-helper scope; adding a common-provider variant there would not add an
-architecture baseline or distinct function. Nine dated common24 scopes plus
-the dated s390 pilot make ten named architecture baselines; the other eleven
-families have no L2 baseline. The pinned 21-architecture roster is not a claim
-of complete support. Those eleven unconfigured families remain in the
+architecture baseline or distinct function. Nine dated GCC common24 scopes,
+the dated s390 pilot and the fresh
+[MIPS32el common24 result](L2-MIPS32EL-20260907.md) make eleven named
+architecture baselines; the other ten families have no L2 baseline. The pinned
+21-architecture roster is not a claim of complete support. Those ten
+unconfigured families remain in the
 [separate toolchain/LLVM readiness queue](../profiles/NEXT-WAVE.md),
 including Nios II's need for a pre-GCC-15 toolchain.

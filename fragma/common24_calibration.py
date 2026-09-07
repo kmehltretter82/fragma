@@ -34,6 +34,16 @@ CASES = (
     "discarded_le_0", "discarded_le_1", "discarded_le_2", "discarded_roundtrip",
     "memory_0", "memory_1", "memory_2", "memory_3",
 )
+CASE_LINES = dict(zip(CASES, (46, 47, *range(50, 58), *range(59, 63),
+                              *range(64, 72)), strict=True))
+CLANG_NOTE_MESSAGES = (
+    "expanded from macro 'FRAGMA_CHECK'",
+    "expanded from macro 'BUILD_BUG_ON_MSG'",
+    "expanded from macro 'compiletime_assert'",
+    "expanded from macro '_compiletime_assert'",
+    "expanded from macro '__compiletime_assert'",
+    "expanded from here",
+)
 HELPERS = ("__get_unaligned_be24", "__get_unaligned_le24",
            "__put_unaligned_be24", "__put_unaligned_le24")
 BOUNDARY = {"observation": "compiler-eliminated-fixed-input-predicates",
@@ -184,7 +194,8 @@ def assertion_symbols(expanded):
     return dict(declarations)
 
 
-def validate_wrong(case, command, stderr, stdout, object_exists, *, symbol):
+def validate_wrong(case, command, stderr, stdout, object_exists, *, symbol,
+                   compiler_family="gcc"):
     require(case in CASES, "unknown fixed-input observation")
     require(isinstance(symbol, str)
             and re.fullmatch(r"__compiletime_assert_(?:0|[1-9][0-9]*)", symbol) is not None,
@@ -192,13 +203,46 @@ def validate_wrong(case, command, stderr, stdout, object_exists, *, symbol):
     require(type(command.get("returncode")) is int and command["returncode"] == 1
             and command.get("timed_out") is False and object_exists is False and stdout == "",
             "negative control process/output mismatch")
-    require(isinstance(stderr, str) and "\x1b" not in stderr and "\x00" not in stderr,
+    require(compiler_family in {"gcc", "clang"}, "unknown compiler diagnostic family")
+    require(isinstance(stderr, str) and not any(char in stderr for char in ("\x1b", "\x00", "\r")),
             "unsupported diagnostic encoding")
-    diagnostics = re.findall(r"^[^\r\n]*?\b(fatal error|error|warning):[ \t]*(.*)$",
-                             stderr, re.M | re.I)
+    if compiler_family == "gcc":
+        diagnostics = re.findall(r"^[^\r\n]*?\b(fatal error|error|warning):[ \t]*(.*)$",
+                                 stderr, re.M | re.I)
+        expected = ("call to '" + symbol
+                    + "' declared with attribute error: fragma common24 " + case)
+        require(diagnostics == [("error", expected)],
+                "negative lacks its sole intended GCC diagnostic")
+        return
+
+    argv = command.get("argv")
+    require(isinstance(argv, list) and argv.count("-c") == 1 and
+            argv.index("-c") + 1 < len(argv), "Clang negative lacks its source command")
+    source = argv[argv.index("-c") + 1]
+    observed, summaries = [], []
+    lines = stderr.splitlines()
+    for index, line in enumerate(lines):
+        diagnostic = re.fullmatch(
+            r"(.+):(\d+):(\d+): (fatal error|error|warning|note): (.*)", line)
+        if diagnostic:
+            observed.append((diagnostic[1], int(diagnostic[2]), int(diagnostic[3]),
+                             diagnostic[4], diagnostic[5]))
+        elif summary := re.fullmatch(r"(\d+) errors? generated\.", line):
+            summaries.append((index, int(summary[1])))
+        else:
+            require(line == "" or re.fullmatch(r"\s*\d+\s*\|.*", line) or
+                    re.fullmatch(r"\s*\|[\s^~]*", line),
+                    "unexpected Clang diagnostic continuation")
+    errors = [row for row in observed if row[3] != "note"]
+    notes = [row for row in observed if row[3] == "note"]
     expected = ("call to '" + symbol
-                + "' declared with attribute error: fragma common24 " + case)
-    require(diagnostics == [("error", expected)], "negative lacks its sole intended diagnostic")
+                + "' declared with 'error' attribute: fragma common24 " + case)
+    require(errors == [(source, CASE_LINES[case], 2, "error", expected)],
+            "negative lacks its sole intended Clang diagnostic")
+    require([row[4] for row in notes] == list(CLANG_NOTE_MESSAGES),
+            "Clang macro-expansion diagnostic chain differs")
+    require(summaries == [(len(lines) - 1, 1)],
+            "Clang diagnostic summary count or position differs")
 
 
 def optimization_mode(base_argv):
@@ -324,7 +368,7 @@ def validate_gate(root, kernel, binding, build, gate, output, *, target=None, mo
             "inputs": consumed, "fixture": record(binding["fixture"]), "object_identity": object_identity}
 
 
-def validate_commands(binding, output, commands):
+def validate_commands(binding, output, commands, *, compiler_family="gcc"):
     """Exact raw command/stream inventory; a passed label is never sufficient."""
     output = Path(output).resolve()
     plan = command_plan(binding, output)
@@ -355,7 +399,7 @@ def validate_commands(binding, output, commands):
         else:
             obj = output / (name + ".o")
             validate_wrong(CASES[i - 3], command, stderr, stdout, obj.exists() or obj.is_symlink(),
-                           symbol=symbols[CASES[i - 3]])
+                           symbol=symbols[CASES[i - 3]], compiler_family=compiler_family)
     return symbols
 
 
@@ -484,7 +528,8 @@ def validate(root, target, model, build, kernel, revision, receipt_path,
     require([str(Path(item["absolute_path"]).relative_to(output)) for item in actual_artifacts]
             == required_artifacts(binding, output), "required compiler artifacts missing or unexpected")
     require(same(saved["artifacts"], actual_artifacts), "saved artifact inventory differs")
-    symbols = validate_commands(binding, output, saved["commands"])
+    family = model.get("compiler", {}).get("compiler_family", "gcc")
+    symbols = validate_commands(binding, output, saved["commands"], compiler_family=family)
     initial = integrity.merge_records(_initial(binding, gate), controls["tracked_files"])
     consumed = _consumed(root, kernel, binding, build, output)
     final = integrity.merge_records(initial, integrity.metadata_records(consumed))
@@ -575,9 +620,12 @@ def run(root, target, model, build, kernel, revision, output, env,
                     symbols = assertion_symbols(stdout.read_text())
             else:
                 obj = output / (name + ".o")
+                family = model.get("compiler", {}).get("compiler_family", "gcc")
                 validate_wrong(CASES[index - 3], command, stderr.read_text(), stdout.read_text(),
-                               obj.exists() or obj.is_symlink(), symbol=symbols[CASES[index - 3]])
-        validate_commands(binding, output, saved["commands"])
+                               obj.exists() or obj.is_symlink(), symbol=symbols[CASES[index - 3]],
+                               compiler_family=family)
+        family = model.get("compiler", {}).get("compiler_family", "gcc")
+        validate_commands(binding, output, saved["commands"], compiler_family=family)
         saved["consumed_inputs"] = _consumed(root, kernel, binding, build, output)
         saved["positive_object"] = positive_object((output / "positive.o").read_bytes(), model, gate["object_identity"])
         saved["status"] = RECORD_STATUS

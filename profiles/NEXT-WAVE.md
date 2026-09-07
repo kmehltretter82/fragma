@@ -4,7 +4,8 @@ Read-only local readiness check, 2026-09-06, for pinned Linux
 `b9b3e33b70b71e516930117e21de3ad2a7723747`. Ten architecture families still
 lack configured L1: `arc`, `csky`, `hexagon`, `loongarch`, `microblaze`,
 `nios2`, `openrisc`, `parisc`, `sparc` and `xtensa`. Tool availability is not a
-build, model or L2 claim. Eleven architectures, including MIPS, still lack L2.
+build, model or L2 claim. Ten architectures still lack a documented L2
+baseline; MIPS now has one exact scoped common24 result.
 
 The planned GCC executables for `arc`, `csky`, `loongarch`, `microblaze`,
 `mips`, `nios2`, `openrisc`, `parisc`, `sparc` and `xtensa` were not found on
@@ -32,8 +33,10 @@ command and LL/SC lowering are checked. A later, separately scoped
 [MIPS32el candidate](MIPS32EL-MACHDEP-20260907.md) provisioned authenticated
 generator headers and passed type/layout, parser and Eva calibration. The later
 [MT7621 checkpoint](MIPS32EL-MT7621-L1-20260907.md) registers that exact route
-and passes genuine configured-kernel L1. MIPS leaves the L1 queue but remains
-in the L2 and variant queues; big-endian and 64-bit MIPS are still open.
+and passes genuine configured-kernel L1. Its separate
+[common24 result](../common/L2-MIPS32EL-20260907.md) supplies one narrow L2
+scope. MIPS leaves the initial L1/L2 queues but remains in the caller, runtime
+and variant queues; big-endian and 64-bit MIPS are still open.
 
 The subsequent [LLVM metadata assessment](../build/llvm-readiness-20260906/REPORT.md)
 confirms the installed compiler, linker and LLVM utility suite at version
@@ -79,12 +82,13 @@ include the following useful candidates:
 | --- | --- | --- |
 | Hexagon | `hexagon-linux-musl` | Compiler/build/header identities, full candidate generation and source-derived compiler/analyzer layout agreement exist. Resolve extended-alignment mismatch, integrate the profile route, then pass genuine-kernel L1/L2; requested/observed triples remain separately bound. |
 | LoongArch | `loongarch64-linux-gnusf` | The distinct LLVM C3 IPC object mapping is now checked. Keep it separate from the planned GCC profile; add generated-header ABI/model calibration and genuine L1/L2 before general activation. |
-| MIPS | `mipsel-linux-gnu` | MT7621 O32/little-endian MIPS32r2 now passes registered genuine-kernel L1. Add a source-gated L2 scope next; big-endian MIPS32 and MIPS64 remain separate profiles. |
+| MIPS | `mipsel-linux-gnu` | MT7621 O32/little-endian MIPS32r2 passes registered genuine-kernel L1 and one four-helper scoped L2 result. Add callers/runtime separately; big-endian MIPS32 and MIPS64 remain separate profiles. |
 | Sparc64 | `sparc64-linux-gnu` | The documented LLVM route also needs external GNU assembler support; that cross-prefix is missing locally. |
 
 Continue from the Hexagon adapter's explicit extended-alignment gate through
 profile integration and model calibration. For MIPS, continue from the
-registered MT7621 L1 through a fresh source-gated proof scope;
+registered MT7621 L1 and common24 L2 scope to callers/runtime and separate ABI
+variants;
 LoongArch still needs its machine-model candidate. Preserve the planned GCC
 routes as separate profile work. Required acceptance remains: compiler identity,
 target-aware version/macros, pinned tools and generator headers, genuine build,

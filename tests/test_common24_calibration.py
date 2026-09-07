@@ -154,6 +154,31 @@ class CalibrationTests(unittest.TestCase):
         MOD.validate_wrong("decode_be", {"returncode": 1, "timed_out": False}, self.error(), "", False,
                            symbol="__compiletime_assert_0")
 
+    def test_exact_clang_diagnostic_and_expansion_chain(self):
+        source = "/workspace/common/annotated/compiler-calibration.c"
+        command = {"returncode": 1, "timed_out": False,
+                   "argv": ["clang", "-c", source, "-o", "wrong.o"]}
+        error = (f"{source}:46:2: error: call to '__compiletime_assert_0' declared "
+                 "with 'error' attribute: fragma common24 decode_be\n")
+        notes = "".join(
+            f"fixture-{index}.h:1:1: note: {message}\n   1 | synthetic\n      | ^~~~\n"
+            for index, message in enumerate(MOD.CLANG_NOTE_MESSAGES))
+        good = error + notes + "1 error generated.\n"
+        MOD.validate_wrong("decode_be", command, good, "", False,
+                           symbol="__compiletime_assert_0", compiler_family="clang")
+        for bad in (
+                good.replace(":46:2: error:", ":47:2: error:", 1),
+                good.replace("with 'error' attribute", "with attribute error", 1),
+                good.replace(MOD.CLANG_NOTE_MESSAGES[0], "expanded from another macro", 1),
+                good.replace("1 error generated.", "2 errors generated."),
+                good + "unexpected continuation\n"):
+            with self.subTest(bad=bad[:60]), self.assertRaises(MOD.CalibrationError):
+                MOD.validate_wrong("decode_be", command, bad, "", False,
+                                   symbol="__compiletime_assert_0", compiler_family="clang")
+        with self.assertRaises(MOD.CalibrationError):
+            MOD.validate_wrong("decode_be", command, good, "", False,
+                               symbol="__compiletime_assert_0", compiler_family="unknown")
+
     @staticmethod
     def error():
         return "fixture.c:1:1: error: call to '__compiletime_assert_0' declared with attribute error: fragma common24 decode_be\n"

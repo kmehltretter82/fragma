@@ -1,0 +1,459 @@
+{
+  "schema_version": 1,
+  "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+  "targets": [
+    {
+      "id": "common.unaligned24.mips32el",
+      "suite": "extended",
+      "role": "proof",
+      "profile": "mips32el-clang",
+      "source": "include/linux/unaligned.h",
+      "harness": "common/annotated/unaligned24.verified.c",
+      "kernel_model_check": "common/annotated/kernel-model-check.c",
+      "wp_strategy_file": "common/annotated/byteproof.h",
+      "analysis": "wp",
+      "input_mode": "standalone",
+      "provenance": {"mode": "functions"},
+      "functions": [
+        "__get_unaligned_be24",
+        "__get_unaligned_le24",
+        "__put_unaligned_be24",
+        "__put_unaligned_le24"
+      ],
+      "analysis_functions": [
+        "__get_unaligned_be24",
+        "__get_unaligned_le24",
+        "__put_unaligned_be24",
+        "__put_unaligned_le24",
+        "fragma_roundtrip_be24",
+        "fragma_roundtrip_le24"
+      ],
+      "project_functions": [
+        "fragma_roundtrip_be24",
+        "fragma_roundtrip_le24"
+      ],
+      "required_properties": [
+        "get_unaligned_be24_ensures_decoded_value",
+        "get_unaligned_be24_ensures_decoded_range",
+        "get_unaligned_le24_ensures_decoded_value",
+        "get_unaligned_le24_ensures_decoded_range",
+        "put_unaligned_be24_ensures_byte_0",
+        "put_unaligned_be24_ensures_byte_1",
+        "put_unaligned_be24_ensures_byte_2",
+        "put_unaligned_le24_ensures_byte_0",
+        "put_unaligned_le24_ensures_byte_1",
+        "put_unaligned_le24_ensures_byte_2",
+        "fragma_roundtrip_be24_ensures_roundtrip",
+        "fragma_roundtrip_le24_ensures_roundtrip"
+      ],
+      "claims": [
+        "runtime-safety",
+        "functional",
+        "termination",
+        "encode-decode-roundtrip"
+      ],
+      "caller_coverage": "project-witnesses-require-proof; kernel-callers-unverified",
+      "wp_strategy": "fragma_byte_decompose",
+      "wp_strategy_provers": ["alt-ergo", "z3"],
+      "wp_auto_depth": 64,
+      "wp_smoke_timeout": 2,
+      "require_smoke": true,
+      "frontend_policy": {
+        "schema_version": 1,
+        "kind": "common24-inline",
+        "variant": "no-instrument"
+      },
+      "compiler_calibration": {
+        "kind": "common24-fixed22",
+        "source": "common/annotated/compiler-calibration.c"
+      },
+      "assumptions": [
+        "common24-mips-types",
+        "common24-mips-frontend"
+      ],
+      "reviewed_smoke": [],
+      "reviewed_warnings": [
+        {
+          "plugin": "kernel:attrs:unknown",
+          "message": "Ignoring unknown attribute: __gnu_inline__",
+          "severity": "warning",
+          "functions": [
+            "__get_unaligned_be24",
+            "__get_unaligned_le24",
+            "__put_unaligned_be24",
+            "__put_unaligned_le24",
+            "fragma_roundtrip_be24",
+            "fragma_roundtrip_le24"
+          ],
+          "reason": "The exact MIPS Clang inline spelling and no-instrument policy are checked separately by the real-header fixture and wrong-inline control. This review covers only the four selected static sequential C bodies and their direct project-witness calls; it makes no linkage, instrumentation or emitted-code claim.",
+          "file_hashes": {
+            "common/annotated/unaligned24.verified.c": "8d107e0e195c1ebfd7142f03e0ab3564e864fa7bc952d0e4fc94b18373e948fd",
+            "common/annotated/kernel-model-check.c": "860b5d09ec735ea48f67e8480d40af8bfd00db494cb01b247ac2eb33dbf49a9d",
+            "common/annotated/byteproof.h": "9a9c584c56d36329f866e060500d5d64557c63ffc538cf9551fe073b94d53017",
+            "common/annotated/inline-policy.h": "12c7cbf03ddb8d3cebbbb09aee714c761c75b80c0724fcb72c57210c07ef9041",
+            "common/annotated/compiler-calibration.c": "84a5ffce5e314761a57769837f13550323d4bfbaa7e9126cecf70a029fac157d",
+            "common/REVIEW-MIPS32EL-20260907.md": "69523cae777179254af57e1195f8614e1eadabdececd2c805646e64195c068fa",
+            "fragma/analysis_policy.py": "b674caa823c2e703ae81e4972967ac5ce8b6a8b34b6f5203e9b39e2b4dd618ff",
+            "fragma/common24.py": "f8d768a0f64b7f9202936cc0df84a5e36f5787be092971cca2feadc49c28edcd",
+            "fragma/frontend_policy.py": "d17c86c778455e75556723374b1027f8d60fb78552f524282efec91c1b974a47",
+            "fragma/common24_calibration.py": "a005446207641f082f4b9c20eb59f5d781e88586eb362d509e2c087125f116af",
+            "fragma/common24_controls.py": "55b9572633b5e165ab451f6462ccbf9634f978241fae9afa234659a2497a370f",
+            "fragma/elf.py": "16caf6371904fb5dda99284de2493edc959e570ae1948bb5c26cc1f7568a6365",
+            "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/kernel_internals/typing/cabs2cil.ml": "624907038cda23f5a12555760173271b198c9219cf1828611a362506bdd20e79",
+            "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/result.json": "456e5ccf51af5e9fb937740086430fe0b09a97b9ecc6bc218de910015b94988e",
+            "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/analysis.log": "c52a7911ad7bc62b8bfe5c72cf9a56c4c96fa164032d121c556aea74d58d0159"
+          },
+          "review_evidence": [
+            "common/REVIEW-MIPS32EL-20260907.md",
+            "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/result.json",
+            "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/analysis.log"
+          ],
+          "reviewed_by": "Codex AI assistant; not a human approval",
+          "file": "common/annotated/unaligned24.verified.c",
+          "line": 23
+        },
+        {
+          "plugin": "wp",
+          "message": "Skipped RTE guards: unaligned pointers (\\aligned not supported)",
+          "severity": "warning",
+          "functions": [
+            "__get_unaligned_be24",
+            "__get_unaligned_le24",
+            "__put_unaligned_be24",
+            "__put_unaligned_le24",
+            "fragma_roundtrip_be24",
+            "fragma_roundtrip_le24"
+          ],
+          "reason": "Every dereference in this exact six-function graph is through genuine alignment-one u8, with no word load or wider-pointer cast. Exactly three readable or writable bytes suffice, and every emitted memory-access and pointer-formation goal is retained and valid; no alignment exception is granted to another target.",
+          "file_hashes": {
+            "common/annotated/unaligned24.verified.c": "8d107e0e195c1ebfd7142f03e0ab3564e864fa7bc952d0e4fc94b18373e948fd",
+            "common/annotated/kernel-model-check.c": "860b5d09ec735ea48f67e8480d40af8bfd00db494cb01b247ac2eb33dbf49a9d",
+            "common/annotated/byteproof.h": "9a9c584c56d36329f866e060500d5d64557c63ffc538cf9551fe073b94d53017",
+            "common/annotated/inline-policy.h": "12c7cbf03ddb8d3cebbbb09aee714c761c75b80c0724fcb72c57210c07ef9041",
+            "common/annotated/compiler-calibration.c": "84a5ffce5e314761a57769837f13550323d4bfbaa7e9126cecf70a029fac157d",
+            "common/REVIEW-MIPS32EL-20260907.md": "69523cae777179254af57e1195f8614e1eadabdececd2c805646e64195c068fa",
+            "fragma/analysis_policy.py": "b674caa823c2e703ae81e4972967ac5ce8b6a8b34b6f5203e9b39e2b4dd618ff",
+            "fragma/common24.py": "f8d768a0f64b7f9202936cc0df84a5e36f5787be092971cca2feadc49c28edcd",
+            "fragma/frontend_policy.py": "d17c86c778455e75556723374b1027f8d60fb78552f524282efec91c1b974a47",
+            "fragma/common24_calibration.py": "a005446207641f082f4b9c20eb59f5d781e88586eb362d509e2c087125f116af",
+            "fragma/common24_controls.py": "55b9572633b5e165ab451f6462ccbf9634f978241fae9afa234659a2497a370f",
+            "fragma/elf.py": "16caf6371904fb5dda99284de2493edc959e570ae1948bb5c26cc1f7568a6365",
+            "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/wp/wpRTE.ml": "965ef16094a23b6ce6efd849820ee818843d94d079bbe9e00c02374084d4c030",
+            "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/result.json": "456e5ccf51af5e9fb937740086430fe0b09a97b9ecc6bc218de910015b94988e",
+            "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/analysis.log": "c52a7911ad7bc62b8bfe5c72cf9a56c4c96fa164032d121c556aea74d58d0159"
+          },
+          "review_evidence": [
+            "common/REVIEW-MIPS32EL-20260907.md",
+            "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/result.json",
+            "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/analysis.log"
+          ],
+          "reviewed_by": "Codex AI assistant; not a human approval"
+        },
+        {
+          "plugin": "wp",
+          "message": "Skipped RTE guards: invalid function pointer calls (\\valid_function not supported)",
+          "severity": "warning",
+          "functions": [
+            "__get_unaligned_be24",
+            "__get_unaligned_le24",
+            "__put_unaligned_be24",
+            "__put_unaligned_le24",
+            "fragma_roundtrip_be24",
+            "fragma_roundtrip_le24"
+          ],
+          "reason": "The exact six-body source graph has no indirect call. Its four direct witness calls and all direct-call preconditions remain in the unconditional dependency closure. This review does not approve function-pointer callers or waive a generated goal.",
+          "file_hashes": {
+            "common/annotated/unaligned24.verified.c": "8d107e0e195c1ebfd7142f03e0ab3564e864fa7bc952d0e4fc94b18373e948fd",
+            "common/annotated/kernel-model-check.c": "860b5d09ec735ea48f67e8480d40af8bfd00db494cb01b247ac2eb33dbf49a9d",
+            "common/annotated/byteproof.h": "9a9c584c56d36329f866e060500d5d64557c63ffc538cf9551fe073b94d53017",
+            "common/annotated/inline-policy.h": "12c7cbf03ddb8d3cebbbb09aee714c761c75b80c0724fcb72c57210c07ef9041",
+            "common/annotated/compiler-calibration.c": "84a5ffce5e314761a57769837f13550323d4bfbaa7e9126cecf70a029fac157d",
+            "common/REVIEW-MIPS32EL-20260907.md": "69523cae777179254af57e1195f8614e1eadabdececd2c805646e64195c068fa",
+            "fragma/analysis_policy.py": "b674caa823c2e703ae81e4972967ac5ce8b6a8b34b6f5203e9b39e2b4dd618ff",
+            "fragma/common24.py": "f8d768a0f64b7f9202936cc0df84a5e36f5787be092971cca2feadc49c28edcd",
+            "fragma/frontend_policy.py": "d17c86c778455e75556723374b1027f8d60fb78552f524282efec91c1b974a47",
+            "fragma/common24_calibration.py": "a005446207641f082f4b9c20eb59f5d781e88586eb362d509e2c087125f116af",
+            "fragma/common24_controls.py": "55b9572633b5e165ab451f6462ccbf9634f978241fae9afa234659a2497a370f",
+            "fragma/elf.py": "16caf6371904fb5dda99284de2493edc959e570ae1948bb5c26cc1f7568a6365",
+            "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/wp/wpRTE.ml": "965ef16094a23b6ce6efd849820ee818843d94d079bbe9e00c02374084d4c030",
+            "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/result.json": "456e5ccf51af5e9fb937740086430fe0b09a97b9ecc6bc218de910015b94988e",
+            "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/analysis.log": "c52a7911ad7bc62b8bfe5c72cf9a56c4c96fa164032d121c556aea74d58d0159"
+          },
+          "review_evidence": [
+            "common/REVIEW-MIPS32EL-20260907.md",
+            "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/result.json",
+            "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/analysis.log"
+          ],
+          "reviewed_by": "Codex AI assistant; not a human approval"
+        },
+        {
+          "plugin": "wp",
+          "message": "-wp-rte can annotate signed overflow because -warn-signed-overflow is not set",
+          "severity": "warning",
+          "functions": [
+            "__get_unaligned_be24",
+            "__get_unaligned_le24",
+            "__put_unaligned_be24",
+            "__put_unaligned_le24",
+            "fragma_roundtrip_be24",
+            "fragma_roundtrip_le24"
+          ],
+          "reason": "Under the exact checked MIPS32el type model, unsigned-char promotion is 0 through 255, the largest signed getter term is 255 << 16, and the sum is at most 0xffffff within int32. Writer shifts are unsigned and stores are masked to one byte. All selected shift, access, pointer and call obligations remain mandatory; disabled signed-overflow annotations are not claimed as generated.",
+          "file_hashes": {
+            "common/annotated/unaligned24.verified.c": "8d107e0e195c1ebfd7142f03e0ab3564e864fa7bc952d0e4fc94b18373e948fd",
+            "common/annotated/kernel-model-check.c": "860b5d09ec735ea48f67e8480d40af8bfd00db494cb01b247ac2eb33dbf49a9d",
+            "common/annotated/byteproof.h": "9a9c584c56d36329f866e060500d5d64557c63ffc538cf9551fe073b94d53017",
+            "common/annotated/inline-policy.h": "12c7cbf03ddb8d3cebbbb09aee714c761c75b80c0724fcb72c57210c07ef9041",
+            "common/annotated/compiler-calibration.c": "84a5ffce5e314761a57769837f13550323d4bfbaa7e9126cecf70a029fac157d",
+            "common/REVIEW-MIPS32EL-20260907.md": "69523cae777179254af57e1195f8614e1eadabdececd2c805646e64195c068fa",
+            "fragma/analysis_policy.py": "b674caa823c2e703ae81e4972967ac5ce8b6a8b34b6f5203e9b39e2b4dd618ff",
+            "fragma/common24.py": "f8d768a0f64b7f9202936cc0df84a5e36f5787be092971cca2feadc49c28edcd",
+            "fragma/frontend_policy.py": "d17c86c778455e75556723374b1027f8d60fb78552f524282efec91c1b974a47",
+            "fragma/common24_calibration.py": "a005446207641f082f4b9c20eb59f5d781e88586eb362d509e2c087125f116af",
+            "fragma/common24_controls.py": "55b9572633b5e165ab451f6462ccbf9634f978241fae9afa234659a2497a370f",
+            "fragma/elf.py": "16caf6371904fb5dda99284de2493edc959e570ae1948bb5c26cc1f7568a6365",
+            "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/wp/register.ml": "e4e0b524e4364f475f33fd618c542d4ddc86c2c35f8b6ba223ea704896bc019e",
+            "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/result.json": "456e5ccf51af5e9fb937740086430fe0b09a97b9ecc6bc218de910015b94988e",
+            "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/analysis.log": "c52a7911ad7bc62b8bfe5c72cf9a56c4c96fa164032d121c556aea74d58d0159"
+          },
+          "review_evidence": [
+            "common/REVIEW-MIPS32EL-20260907.md",
+            "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/result.json",
+            "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/analysis.log"
+          ],
+          "reviewed_by": "Codex AI assistant; not a human approval"
+        },
+        {
+          "plugin": "wp",
+          "message": "Missing RTE guards",
+          "severity": "warning",
+          "functions": [
+            "__get_unaligned_be24",
+            "__get_unaligned_le24",
+            "__put_unaligned_be24",
+            "__put_unaligned_le24",
+            "fragma_roundtrip_be24",
+            "fragma_roundtrip_le24"
+          ],
+          "reason": "The complete operation map and raw goal/property inventories are reviewed with every companion diagnostic. Frama-C computes this aggregate status separately from its unsupported alignment/call categories and from disabled arithmetic annotations. No missing goal, smoke inconsistency, caller obligation or unselected source is waived.",
+          "file_hashes": {
+            "common/annotated/unaligned24.verified.c": "8d107e0e195c1ebfd7142f03e0ab3564e864fa7bc952d0e4fc94b18373e948fd",
+            "common/annotated/kernel-model-check.c": "860b5d09ec735ea48f67e8480d40af8bfd00db494cb01b247ac2eb33dbf49a9d",
+            "common/annotated/byteproof.h": "9a9c584c56d36329f866e060500d5d64557c63ffc538cf9551fe073b94d53017",
+            "common/annotated/inline-policy.h": "12c7cbf03ddb8d3cebbbb09aee714c761c75b80c0724fcb72c57210c07ef9041",
+            "common/annotated/compiler-calibration.c": "84a5ffce5e314761a57769837f13550323d4bfbaa7e9126cecf70a029fac157d",
+            "common/REVIEW-MIPS32EL-20260907.md": "69523cae777179254af57e1195f8614e1eadabdececd2c805646e64195c068fa",
+            "fragma/analysis_policy.py": "b674caa823c2e703ae81e4972967ac5ce8b6a8b34b6f5203e9b39e2b4dd618ff",
+            "fragma/common24.py": "f8d768a0f64b7f9202936cc0df84a5e36f5787be092971cca2feadc49c28edcd",
+            "fragma/frontend_policy.py": "d17c86c778455e75556723374b1027f8d60fb78552f524282efec91c1b974a47",
+            "fragma/common24_calibration.py": "a005446207641f082f4b9c20eb59f5d781e88586eb362d509e2c087125f116af",
+            "fragma/common24_controls.py": "55b9572633b5e165ab451f6462ccbf9634f978241fae9afa234659a2497a370f",
+            "fragma/elf.py": "16caf6371904fb5dda99284de2493edc959e570ae1948bb5c26cc1f7568a6365",
+            "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/wp/wpRTE.ml": "965ef16094a23b6ce6efd849820ee818843d94d079bbe9e00c02374084d4c030",
+            "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/wp/cfgGenerator.ml": "79ab312d242ce736240b666e48f10e8a14fe7e6ce599b03256e415d911b1c680",
+            "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/result.json": "456e5ccf51af5e9fb937740086430fe0b09a97b9ecc6bc218de910015b94988e",
+            "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/analysis.log": "c52a7911ad7bc62b8bfe5c72cf9a56c4c96fa164032d121c556aea74d58d0159"
+          },
+          "review_evidence": [
+            "common/REVIEW-MIPS32EL-20260907.md",
+            "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/result.json",
+            "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/analysis.log"
+          ],
+          "reviewed_by": "Codex AI assistant; not a human approval"
+        }
+      ],
+      "review_context": {
+        "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+        "profile": "mips32el-clang",
+        "toolchain_lock_sha256": "9dd17cba107f42c860360d693dbb8e8d956d9c22197ae753154b2d6f97377fe5",
+        "analysis": {
+          "wp_model": "Typed",
+          "arithmetic_flags": [
+            "-no-warn-signed-overflow",
+            "-no-warn-unsigned-overflow",
+            "-no-warn-signed-downcast",
+            "-no-warn-unsigned-downcast",
+            "-no-warn-right-shift-negative"
+          ],
+          "runtime_checks": {
+            "pointer_formation": "object-or-null"
+          }
+        },
+        "analysis_pipeline": {
+          "kind": "wp-rte",
+          "functions": [
+            "__get_unaligned_be24",
+            "__get_unaligned_le24",
+            "__put_unaligned_be24",
+            "__put_unaligned_le24",
+            "fragma_roundtrip_be24",
+            "fragma_roundtrip_le24"
+          ]
+        },
+        "preprocessing": {
+          "cpp_command": "/usr/bin/clang-21 --target=mipsel-linux-gnu -mabi=32 -EL -march=mips32r2 -msoft-float -std=gnu11 -funsigned-char -fshort-wchar -fno-strict-overflow -fno-strict-aliasing -ffreestanding -nostdinc -D__KERNEL__ -DFRAGMA_COMMON24_INLINE_POLICY=1 -E -C",
+          "annotations": "Frama-C native -pp-annot with target compiler",
+          "input_mode": "standalone",
+          "extra_args": [
+            "-std=gnu11"
+          ],
+          "frontend_policy": {
+            "schema_version": 1,
+            "kind": "common24-inline",
+            "variant": "no-instrument"
+          }
+        },
+        "proof_search": {
+          "wp_strategy": "fragma_byte_decompose",
+          "wp_strategy_file": "common/annotated/byteproof.h",
+          "wp_strategy_provers": [
+            "alt-ergo",
+            "z3"
+          ],
+          "wp_auto_depth": 64,
+          "wp_smoke_timeout": 2
+        },
+        "compiler_calibration": {
+          "kind": "fragma-common24-compiler-sensitivity",
+          "setting": {
+            "kind": "common24-fixed22",
+            "source": "common/annotated/compiler-calibration.c"
+          },
+          "environment_policy": "common24-compiler-clean-v1",
+          "cases": [
+            "decode_be",
+            "decode_le",
+            "store_be_0",
+            "store_be_1",
+            "store_be_2",
+            "store_le_0",
+            "store_le_1",
+            "store_le_2",
+            "roundtrip_be",
+            "roundtrip_le",
+            "maximum_be_0",
+            "maximum_be_1",
+            "maximum_be_2",
+            "maximum_roundtrip",
+            "discarded_le_0",
+            "discarded_le_1",
+            "discarded_le_2",
+            "discarded_roundtrip",
+            "memory_0",
+            "memory_1",
+            "memory_2",
+            "memory_3"
+          ],
+          "fixture_controls": [
+            "wrong-type",
+            "wrong-inline"
+          ]
+        },
+        "file_hashes": {
+          "common/annotated/unaligned24.verified.c": "8d107e0e195c1ebfd7142f03e0ab3564e864fa7bc952d0e4fc94b18373e948fd",
+          "common/annotated/kernel-model-check.c": "860b5d09ec735ea48f67e8480d40af8bfd00db494cb01b247ac2eb33dbf49a9d",
+          "common/annotated/byteproof.h": "9a9c584c56d36329f866e060500d5d64557c63ffc538cf9551fe073b94d53017",
+          "fragma/analysis_policy.py": "b674caa823c2e703ae81e4972967ac5ce8b6a8b34b6f5203e9b39e2b4dd618ff",
+          "fragma/common24.py": "f8d768a0f64b7f9202936cc0df84a5e36f5787be092971cca2feadc49c28edcd",
+          "common/annotated/inline-policy.h": "12c7cbf03ddb8d3cebbbb09aee714c761c75b80c0724fcb72c57210c07ef9041",
+          "fragma/frontend_policy.py": "d17c86c778455e75556723374b1027f8d60fb78552f524282efec91c1b974a47",
+          "fragma/elf.py": "16caf6371904fb5dda99284de2493edc959e570ae1948bb5c26cc1f7568a6365",
+          "common/annotated/compiler-calibration.c": "84a5ffce5e314761a57769837f13550323d4bfbaa7e9126cecf70a029fac157d",
+          "fragma/common24_calibration.py": "a005446207641f082f4b9c20eb59f5d781e88586eb362d509e2c087125f116af",
+          "fragma/common24_controls.py": "55b9572633b5e165ab451f6462ccbf9634f978241fae9afa234659a2497a370f",
+          "build/sources/linux-b9b3e33b70b71/include/linux/unaligned.h": "877cc68addf72f84834a7da87c09fc54b86cb383d6a3d93f2a97a16e751458ce",
+          "build/sources/linux-b9b3e33b70b71/include/linux/types.h": "b12aab0f1569ba0dd6843839aa15515a414c171d3fedd583c9aa835a81b4561b",
+          "build/sources/linux-b9b3e33b70b71/include/linux/compiler_types.h": "879a8d3fe36bcf8b7b4a6de88c17f8297599d9aea5cd9d9336bb87dd4902e535",
+          "build/sources/linux-b9b3e33b70b71/include/linux/compiler_attributes.h": "04eed061289a2cd0c88591e581238276443ab31420c6a83471af7e59db3612d0",
+          "build/kernel/mips32el-clang/fragma-build.json": "08d6f70c4e0379ef86dd28100106353937b7f8414282f363c7bbedce4ce68873",
+          "build/common24-mips-l2-initial-20260907/run-7/profile-mips32el-clang/mips32el-clang.yaml": "a090dad6b9d35cbb5ef13a36a6081dd531975765c70118b8e56b396cf92fea67",
+            "common/REVIEW-MIPS32EL-20260907.md": "69523cae777179254af57e1195f8614e1eadabdececd2c805646e64195c068fa",
+          "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/kernel_internals/typing/cabs2cil.ml": "624907038cda23f5a12555760173271b198c9219cf1828611a362506bdd20e79",
+          "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/wp/wpRTE.ml": "965ef16094a23b6ce6efd849820ee818843d94d079bbe9e00c02374084d4c030",
+          "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/wp/cfgGenerator.ml": "79ab312d242ce736240b666e48f10e8a14fe7e6ce599b03256e415d911b1c680",
+          "toolchain/verified-prefix/opam/fragma/.opam-switch/sources/frama-c.33.0/src/plugins/wp/register.ml": "e4e0b524e4364f475f33fd618c542d4ddc86c2c35f8b6ba223ea704896bc019e",
+          "tests/test_elf_mips.py": "de60567472fdae28fcd380ab08d0bb3b491b9d9ed0ced27341d43fd56b00ff10",
+          "tests/test_common24_calibration.py": "17ba746b0eb91924db0a5ed6d0d45166211fafd3bcb313e21957a191ad12b648",
+          "tests/test_common24_controls.py": "b60ea4cc31f7202cc382057cde7fe319cc71876e8f45617d6580d222b3e0045b",
+          "tests/test_common24_mips.py": "ab20a53a62309e42bb9a7abb5a05d0a96144001e4f25886d28237e613455577a",
+          "tests/test_suite_policy.py": "366361b91726875bb0cf42dab1618a24c34f80925d20aba99e76a0e541a68b62",
+          "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/result.json": "456e5ccf51af5e9fb937740086430fe0b09a97b9ecc6bc218de910015b94988e",
+          "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/analysis.log": "c52a7911ad7bc62b8bfe5c72cf9a56c4c96fa164032d121c556aea74d58d0159",
+          "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/audit.json": "226386654efb5a79aa805654465cafd6c0b0f98a13bbc093b6957ced7bc500d4",
+          "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/wp.json": "9d4aefcfd0b4a6f9195822bf794565b0090f384424c8fdd6d2a6617f139f57aa",
+          "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/properties.tsv": "19f31c29c14aaef9e322b03908712c051c0e97522adbcade95efe1f2da595149",
+          "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/compiler-calibration/receipt.json": "506058b46f1d4d54511f93ca3d447a1d5a2aeca641a330a88f6c3c4acdb63e78",
+          "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/compiler-controls/receipt.json": "9e5da46247832f95819c1dd70a8d34de0a825b98bb1d5a869d44ce792190c7bd"
+        },
+        "reviewed_by": "Codex AI assistant; not a human approval",
+        "reviewed_at": "2026-09-07",
+        "review_evidence": [
+          "common/REVIEW-MIPS32EL-20260907.md",
+          "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/result.json",
+          "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/analysis.log",
+          "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/audit.json",
+          "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/wp.json",
+          "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/properties.tsv",
+          "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/compiler-calibration/receipt.json",
+          "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/compiler-controls/receipt.json"
+        ]
+      }
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "common24-mips-types",
+      "kind": "type-model",
+      "files": [
+        "common/annotated/unaligned24.verified.c",
+        "common/annotated/kernel-model-check.c"
+      ],
+      "kernel_files": [
+        "include/linux/types.h",
+        "include/linux/unaligned.h"
+      ],
+      "symbols": ["u8", "u32"],
+      "scope": "Exactly four explicit-byte 24-bit helpers and two project round trips under mips32el-clang; genuine unsigned-char/u32 types, 32-bit int promotion range, byte alignment and signatures are checked afresh.",
+      "justification": "The scoped AI review in common/REVIEW-MIPS32EL-20260907.md covers the fresh configured MIPS type/frontend context, exact Clang controls and initial proof inventory. Implementation remains unproved, and every current source/model/build/compiler/proof/dependency gate remains mandatory. No review from another profile, emitted-code/runtime claim or L2/L3 result is inherited.",
+      "review_status": "reviewed-assumption",
+      "implementation_proved": false,
+      "reviewed_profiles": ["mips32el-clang"],
+      "reviewed_by": "Codex AI assistant; not a human approval",
+      "reviewed_at": "2026-09-07",
+      "review_evidence": [
+        "common/REVIEW-MIPS32EL-20260907.md",
+        "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/result.json",
+        "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/compiler-calibration/receipt.json",
+        "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/compiler-controls/receipt.json"
+      ]
+    },
+    {
+      "id": "common24-mips-frontend",
+      "kind": "frontend-model",
+      "files": [
+        "common/annotated/unaligned24.verified.c",
+        "common/annotated/inline-policy.h",
+        "common/annotated/kernel-model-check.c",
+        "fragma/frontend_policy.py"
+      ],
+      "kernel_files": [
+        "include/linux/compiler_attributes.h",
+        "include/linux/compiler_types.h"
+      ],
+      "symbols": ["inline"],
+      "scope": "Explicit target-local no-instrument inline spelling for the four selected static helpers and two direct project round trips under mips32el-clang only.",
+      "justification": "The scoped AI review in common/REVIEW-MIPS32EL-20260907.md covers the genuine MIPS compiler fixture, exact wrong-inline/type diagnostics and fail-closed ELF metadata. This remains a sequential-C abstraction; implementation is unproved and no instrumentation, emitted-code, runtime, caller, L2 or L3 claim is inherited.",
+      "review_status": "reviewed-assumption",
+      "implementation_proved": false,
+      "reviewed_profiles": ["mips32el-clang"],
+      "reviewed_by": "Codex AI assistant; not a human approval",
+      "reviewed_at": "2026-09-07",
+      "review_evidence": [
+        "common/REVIEW-MIPS32EL-20260907.md",
+        "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/result.json",
+        "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/compiler-calibration/receipt.json",
+        "build/common24-mips-l2-initial-20260907/run-7/common.unaligned24.mips32el/compiler-controls/receipt.json"
+      ]
+    }
+  ]
+}

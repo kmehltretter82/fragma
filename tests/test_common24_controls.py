@@ -40,6 +40,24 @@ class ControlsTests(unittest.TestCase):
                 lines += [f" {line:4} | _Static_assert(synthetic_expression,", "      | ^~~~~~~~~~~~~~"]
         return "\n".join(lines) + "\n"
 
+    @staticmethod
+    def clang_diagnostics(name, fixture, *, excerpts=False):
+        lines = []
+        for line, message in controls.DIAGNOSTICS[name]:
+            lines.append(f"{fixture}:{line}:16: error: static assertion failed due to "
+                         f"requirement 'synthetic expression': {message}")
+            if excerpts:
+                lines += [f" {line:4} | _Static_assert(synthetic_expression,",
+                          "      |                ^~~~~~~~~~~~~~~~~~~~"]
+        for line, column, message in controls.CLANG_NOTES[name]:
+            lines.append(f"{fixture}:{line}:{column}: note: {message}")
+            if excerpts:
+                lines += [f" {line:4} | synthetic continuation",
+                          "      |                 ^~~~"]
+        count = len(controls.DIAGNOSTICS[name])
+        lines.append(f"{count} {'error' if count == 1 else 'errors'} generated.")
+        return "\n".join(lines) + "\n"
+
     def mock_compiler(self, argv, *, cwd, env, log, stdout_file, timeout):
         name = log.name.removesuffix(".stderr")
         self.assertIn(name, controls.NAMES)
@@ -127,6 +145,29 @@ class ControlsTests(unittest.TestCase):
             with self.subTest(values=(code, timeout, stdout, obj)), self.assertRaises(ValueError):
                 controls.validate_diagnostics("wrong-inline", fixture,
                     {"returncode": code, "timed_out": timeout}, good, stdout, obj)
+
+    def test_clang_diagnostics_have_exact_sites_messages_and_summary(self):
+        fixture = self.fixture.root / controls.frontend_policy.FIXTURE
+        command = {"returncode": 1, "timed_out": False}
+        for name in controls.NAMES:
+            good = self.clang_diagnostics(name, fixture, excerpts=True)
+            result = controls.validate_diagnostics(name, fixture, command, good, "", False,
+                                                   compiler_family="clang")
+            self.assertEqual(result["observed_errors"], len(controls.DIAGNOSTICS[name]))
+            bad = [
+                good.replace(":16: error:", ":1: error:", 1),
+                good.replace("synthetic expression", "", 1),
+                good.replace(controls.DIAGNOSTICS[name][0][1], "unrelated", 1),
+                good.replace(" generated.\n", " reported.\n"),
+                good + "unexpected continuation\n",
+            ]
+            for text in bad:
+                with self.subTest(name=name, text=text[:50]), self.assertRaises(ValueError):
+                    controls.validate_diagnostics(name, fixture, command, text, "", False,
+                                                  compiler_family="clang")
+            with self.assertRaises(ValueError):
+                controls.validate_diagnostics(name, fixture, command, good, "", False,
+                                              compiler_family="unknown")
 
     def test_current_positive_gate_context_and_artifact_identity_are_mandatory(self):
         for mutate in (lambda g: g.update(record_sha256="bad"), lambda g: g["inputs"].pop(),

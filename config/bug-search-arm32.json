@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "campaign_id": "arm32-string-first-20260907",
+  "status": "candidates-frozen-analyzer-not-run",
+  "frozen_at": "2026-09-07",
+  "selection_review": "Candidate names and object metadata only; no detailed function-body review before freeze",
+  "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+  "architecture": "arm",
+  "profile": "arm-gcc",
+  "configuration": {
+    "recipe": "multi_v7_defconfig",
+    "bits": 32,
+    "byte_order": "little",
+    "abi": "AAPCS Linux",
+    "compiler": "/usr/bin/arm-linux-gnueabi-gcc",
+    "compiler_sha256": "b417460992a88c2df65d82f82c6af452210d25e8def84d35701393063afd30bd"
+  },
+  "source": {
+    "kernel_path": "lib/string.c",
+    "git_blob": "a4e8ad23577d882721dacba9e9960c73a813e347",
+    "exported_path": "build/sources/linux-b9b3e33b70b71/lib/string.c",
+    "sha256": "954031a542ba7a8bd82af019d7d6e2f0e15666014b5827afcd0b131c260dd5be"
+  },
+  "selection": {
+    "kind": "compiled-object-global-text-size",
+    "object": "build/kernel/arm-gcc/lib/string.o",
+    "object_format": "ELF32 little-endian ARM EABI5 relocatable",
+    "symbol_filter": "arm-linux-gnueabi-nm --size-sort --defined-only; global T symbols only",
+    "excluded_existing_targets": [
+      "strnchr",
+      "strlcat"
+    ],
+    "ranking": "descending compiled symbol size",
+    "limit": 8,
+    "command": "arm-linux-gnueabi-nm -S --size-sort --defined-only build/kernel/arm-gcc/lib/string.o | rg ' T ' | rg -v ' (strnchr|strlcat)$' | tail -8 | tac"
+  },
+  "candidates": [
+    {"name": "sized_strscpy", "object_address": "0x00000534", "object_size": 336},
+    {"name": "memchr_inv", "object_address": "0x00000420", "object_size": 276},
+    {"name": "strstr", "object_address": "0x000002e0", "object_size": 176},
+    {"name": "strncasecmp", "object_address": "0x00000804", "object_size": 164},
+    {"name": "strnstr", "object_address": "0x00000390", "object_size": 144},
+    {"name": "strsep", "object_address": "0x000008fc", "object_size": 108},
+    {"name": "memcmp", "object_address": "0x00000240", "object_size": 100},
+    {"name": "strncmp", "object_address": "0x000000f8", "object_size": 88}
+  ],
+  "input_hashes": {
+    "build/kernel/arm-gcc/.config": "9001027fc1668165f240e4012d7a0505953839ac85c128d15ab8e39daaf0b412",
+    "build/kernel/arm-gcc/compile_commands.json": "a6bc2dc03c7f5d9fdb98fe6f3006e42e259f67716979821cc52adabc1d524785",
+    "build/kernel/arm-gcc/lib/string.o": "741e8374543d53cbd082946cc3ebd5c9c97eacea2adc5981678be4ed2b1c84cc",
+    "build/kernel/arm-gcc/fragma-build.json": "c2a0255c6f8da6304ea76df045fb2816d61f406f5803368b406af5731605c46a",
+    "config/profiles.json": "e4c333dd6b946575f8f101c53414730e0e3159ddf944313e56cfc21b6515a305",
+    "config/architectures.json": "584ef75b21e2f173f4fc3f6fe31070dd7ef55a1b96cdc556f94fcce8a7db84e3"
+  },
+  "discovery_policy": {
+    "protocol": "docs/BUG-SEARCH-PLAN.md",
+    "analyzer_first": true,
+    "unchanged_source_required": true,
+    "failed_proof_is_only_a_lead": true,
+    "concrete_original_source_witness_required": true,
+    "same_input_fix_ab_required": true,
+    "rv32_zeropad_classification": "review-found-confirmed"
+  },
+  "scope": "First ARM32 semantic-profile campaign on generic kernel string code; not yet an arch/arm-specific source campaign"
+}
