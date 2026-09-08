@@ -68,15 +68,20 @@ before architecture hooks. It is based on current upstream commit
 the ARM function is unchanged from the analyzed revision.
 
 - Patch: `arm/arm32-module-sh-info/patches/0001-module-reject-invalid-relocation-section-target-indi.patch`
-- Patch SHA-256: `ad3d77f3f0278f6525eba16982a6ee5f7efdfa28a460d8b8d94497c516bdd859`
+- Patch SHA-256: `792d4fc79c7bc99ab53d8aceae9dde3b45d6171620e1261399e8d1c5b8d22e8b`
 - Current-base configuration SHA-256: `76600c466a378e172779e7832b32114c5281c1d997677a226d07134b652919d9`
 - Current-base full patched zImage SHA-256: `1385712a3b07b0c388e57aa0cfe628c3772c4b9fa0f77395baee270926bc27a3`
-- `git apply --check`: passed against current upstream
-- `checkpatch.pl --strict --ignore MISSING_SIGN_OFF`: zero errors, warnings,
-  and checks. The omission is intentional: the human submitter must review and
-  add their own DCO sign-off.
+- `git apply --check`: passed against the declared base
+- `git am`: passed in a fresh worktree and retained the exact code change
+- `checkpatch.pl --strict`: zero errors, warnings, and checks
+- `git send-email --dry-run --confirm=never`: passed; no email was sent
 - Sparse: not claimed; installed sparse 0.6.4 is rejected as outdated by the
   current kernel build.
+
+The same generic fix also passed a same-input PA-RISC QEMU A/B. ARM64,
+RISC-V and LoongArch received source audits and full patched builds. These
+supporting results and their exact hashes are in the
+[PA-RISC and affected-hook summary](../parisc-module-sh-info-20260908/SUMMARY.md).
 
 Threat classification: regular kernel robustness bug. The demonstrated input
 requires module-loading privilege and permissive module-signature policy; it

@@ -5,10 +5,11 @@ Frama-C/ACSL checks conditional correctness claims; deliberately wrong contracts
 and altered control examples test whether the verification setup detects them.
 This is not a whole-kernel proof. The project has two confirmed Linux findings:
 Frama-C Eva first exposed an unchecked ARM32 module-relocation section index,
-which an exact QEMU original/fixed A/B confirms, while an RV32 page-boundary
-wrong-result defect was found separately by LLM-assisted source review and then
-dynamically reproduced. The user sent the RV32 fix manually; this project does
-not send email. The [Fragma-first bug-search protocol](docs/BUG-SEARCH-PLAN.md)
+which exact ARM32 and PA-RISC QEMU original/fixed A/B tests confirm, while an
+RV32 page-boundary wrong-result defect was found separately by LLM-assisted
+source review and then dynamically reproduced. The user sent the RV32 fix
+manually; this project does not send email. The
+[Fragma-first bug-search protocol](docs/BUG-SEARCH-PLAN.md)
 preserves those discovery labels and makes configured ARM32 the primary search
 campaign. Its recent BPF JIT target currently has a partial no-finding backed by
 a source-identical Eva pass and 88/88 `BPF_JIT_ALWAYS_ON` QEMU semantic checks.
@@ -19,7 +20,10 @@ bounded no-finding: all in-tree copy shapes pass an explicit byte-access model,
 while a 65-byte cross-page control raises the intended alarm. The primary queue
 now moves to ARM32 DMA. Exact scopes are in the
 [cache checkpoint](results/arm32-cache-mthread-20260908/SUMMARY.md) and
-[uprobes checkpoint](results/arm32-uprobe-copy-20260908/SUMMARY.md).
+[uprobes checkpoint](results/arm32-uprobe-copy-20260908/SUMMARY.md). The
+[module affected-hook record](results/parisc-module-sh-info-20260908/SUMMARY.md)
+also distinguishes runtime A/B evidence from ARM64, RISC-V and LoongArch
+source-audit and build-only checks.
 
 The public repository contains the authored runner, specifications, tests,
 plans, compact result summaries, and experimental provider patches. Downloaded

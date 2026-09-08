@@ -1,0 +1,5 @@
+dir /dev 0755 0 0
+nod /dev/console 0600 0 0 c 5 1
+file /init init 0755 0 0
+file /control.ko control.ko 0644 0 0
+file /evil.ko evil.ko 0644 0 0

@@ -153,6 +153,32 @@ class ReportTests(unittest.TestCase):
         self.assertFalse(result["accepted"])
         self.assertEqual(result["confirmed_invalid_properties"], [])
 
+    def test_eva_reached_invalid_check_uses_exact_located_diagnostic(self):
+        target = {**self.target, "role": "calibration", "analysis": "eva",
+                  "entry": "f", "required_properties": ["bad"],
+                  "expected_invalid": ["bad"], "claims": []}
+        prop = {**self.prop(status="Invalid or unreachable", names=["bad", "f_check_bad"]),
+                "kind": "user check"}
+        warning = {"plugin": "eva:alarm", "severity": "warning",
+                   "message": "check 'bad' got status invalid.",
+                   "path": str(self.source), "line": 2}
+        result = self.evaluate(goals=[], props=[prop], target=target,
+                               warnings=[warning])
+        self.assertTrue(result["accepted"], result["issues"])
+        self.assertEqual(result["confirmed_invalid_properties"], ["bad"])
+        self.assertEqual(result["eva_invalid_checks"][0]["classification"],
+                         "eva-reached-invalid-nonreducing-check")
+
+        for change in ({"plugin": "eva"}, {"message": "check 'other' got status invalid."},
+                       {"path": str(self.root / "other.c")}, {"line": 3}):
+            with self.subTest(change=change):
+                altered = {**warning, **change}
+                self.assertFalse(self.evaluate(goals=[], props=[prop], target=target,
+                                               warnings=[altered])["accepted"])
+        assertion = {**prop, "kind": "user assertion"}
+        self.assertFalse(self.evaluate(goals=[], props=[assertion], target=target,
+                                       warnings=[warning])["accepted"])
+
     def test_expected_invalid_became_valid_requires_review(self):
         target = copy.deepcopy(self.target)
         target.update(role="calibration", analysis="eva", entry="f", expected_invalid=["ok"], required_properties=["ok"])
@@ -467,6 +493,13 @@ class ReportTests(unittest.TestCase):
                            f"{self.root}\tfixture.c\t2\tf\tuser assertion\tValid\tx > 0\n", "csv")
         row = parse_properties(path, source_files=[self.source])[0]
         self.assertEqual(row["names"], ["ok", "f_assert_ok"])
+
+    def test_tsv_check_names_are_mapped_from_exact_source_location(self):
+        self.source.write_text("int f(int x) {\n  /*@ check bad: x > 0; */\n  return x;\n}\n")
+        path = self.report("directory\tfile\tline\tfunction\tproperty kind\tstatus\tproperty\n" +
+                           f"{self.root}\tfixture.c\t2\tf\tuser check\tInvalid or unreachable\tx > 0\n", "csv")
+        row = parse_properties(path, source_files=[self.source])[0]
+        self.assertEqual(row["names"], ["bad", "f_check_bad"])
 
     def test_tsv_unknown_status_is_rejected(self):
         path = self.report("directory\tfile\tline\tfunction\tproperty kind\tstatus\tproperty\n" +

@@ -88,11 +88,15 @@ the caller then established that the generic module loader had not yet checked
 the SHT_REL/SHT_RELA target index. A concrete malformed module faults the
 original kernel at `module_frob_arch_sections()` under QEMU ARM32; the same
 input is rejected with `ENOEXEC` after early generic validation. Current
-upstream remains affected. The complete
-[evidence record](../results/arm32-module-sh-info-20260908/SUMMARY.md) retains
-analysis identities, output hashes, the QEMU A/B and the send-ready-but-unsigned
-patch. The reproducer source remains local and ignored under current kernel
-AI-reporting guidance.
+upstream remains affected. A supporting PA-RISC same-input A/B faults on the
+out-of-bounds heap read in its early hook before the fix and rejects the module
+afterward. ARM64, RISC-V and LoongArch have source audits and full patched
+builds, not runtime A/B. The
+[ARM32 evidence record](../results/arm32-module-sh-info-20260908/SUMMARY.md) and
+[affected-hook record](../results/parisc-module-sh-info-20260908/SUMMARY.md)
+retain the exact identities and scope. The send-ready patch contains the human
+submitter's explicitly requested sign-off. The ARM32 reproducer source remains
+local and ignored under current kernel AI-reporting guidance.
 
 The third target, the April 2026 ARM32 BPF JIT `build_insn()`, now has an
 analyzer-first partial pass. Eleven exact-TU attempts documented unrelated
@@ -128,8 +132,9 @@ remains fail-closed because the consolidated loop property is `Unknown`. The
 the exact domain, warnings, hashes and exclusions.
 
 Four candidates have completed an initial stage and the BPF JIT has a retained
-partial stage. The remaining untouched strict targets are
-`dma_cache_maint_page()` and `__map_sg_chunk()`. `get_module_plt()` remains
+partial stage. The `dma_cache_maint_page()` harness and boundary calibration
+are staged but have not yet confirmed a bug. `__map_sg_chunk()` remains the
+untouched strict target. `get_module_plt()` remains
 useful calibration, but its body was exposed during dependency inspection and
 is conservatively ineligible for the strict discovery label. The mature generic
 strings remain calibration only.
@@ -142,8 +147,9 @@ strings remain calibration only.
 - [ ] Run unchanged-source Eva/RTE triage under at least one current configured
   profile—only `arm-gcc` in this campaign—with bounded per-function time and
   complete outcome retention. Four of eight candidates have completed an
-  initial stage, one has a retained partial pass, two strict candidates remain
-  untouched, and one review-exposed sibling remains calibration-only.
+  initial stage, one has a retained partial pass, one strict candidate has a
+  staged harness, one remains untouched, and one review-exposed sibling remains
+  calibration-only.
 - [ ] Add independently sourced functional properties for the candidates that
   survive frontend/model triage and run WP without hiding unresolved goals.
 - [ ] Classify every lead using the table above and publish false-positive and

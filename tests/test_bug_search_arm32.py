@@ -518,17 +518,21 @@ class ARM32RecentModuleFrobFindingTests(unittest.TestCase):
         self.assertIn("FRAGMA: malformed result=-1 errno=8", after_text)
         self.assertIn("FRAGMA: witness completed without kernel panic", after_text)
 
-    def test_patch_handoff_is_unsigned_attributed_and_repro_is_ignored(self):
+    def test_patch_handoff_is_signed_attributed_and_repro_is_ignored(self):
         current = self.execution["current_upstream"]
         patch = ROOT / current["patch"]
         self.assertEqual(sha256(patch), current["patch_sha256"])
         text = patch.read_text()
         self.assertIn("To: Luis Chamberlain", text)
         self.assertIn("Cc: Aaron Tomlin", text)
+        self.assertIn("Russell King <linux@armlinux.org.uk>", text)
+        self.assertIn("Fixes: c298be74492b", text)
         self.assertIn("Fixes: 7d485f647c1f", text)
         self.assertIn("Cc: stable@vger.kernel.org", text)
-        self.assertIn("Assisted-by: LLM Frama-C", text)
-        self.assertNotIn("Signed-off-by:", text)
+        self.assertIn("Assisted-by: LLM\n", text)
+        self.assertIn("Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>",
+                      text)
+        self.assertIn("PA-RISC A/B testing used QEMU 10.2.1", text)
         self.assertIn("base-commit: " + current["base_commit"], text)
         self.assertTrue((ROOT / "arm/arm32-module-sh-info/REPORT.txt").is_file())
         self.assertTrue((ROOT / "results/arm32-module-sh-info-20260908/SUMMARY.md").is_file())
@@ -869,6 +873,101 @@ class ARM32RecentUprobeCopyTests(unittest.TestCase):
             "assertion 'arm32_uprobe_copy_destination_valid' got status invalid",
             log,
         )
+
+
+class ARM32RecentDmaCacheTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.campaign = json.loads(RECENT.read_text())
+        cls.targets = {
+            target["id"]: target
+            for target in json.loads(RECENT_TARGETS.read_text())["targets"]
+        }
+        cls.target = cls.targets[
+            "search.arm32.recent.dma_cache_maint_page"]
+        cls.witness = cls.targets[
+            "search.arm32.recent.dma_cache_maint_page.low_to_high_witness"]
+        cls.execution = cls.campaign["execution"]["dma_cache_maint_page"]
+        cls.kernel = ROOT.parent / "linux"
+
+    def test_targets_are_source_gated_and_keep_the_lead_unconfirmed(self):
+        self.assertEqual(self.target["analysis_pipeline"], {"kind": "rte-eva"})
+        self.assertEqual(self.target["search_classification"],
+                         "analyzer-first-source-gated-pending")
+        self.assertEqual(self.witness["expected_invalid"],
+                         ["arm32_dma_cache_direct_mapping_stays_lowmem"])
+        self.assertEqual(self.witness["search_classification"],
+                         "functional-boundary-witness-pending")
+        self.assertEqual(self.execution["new_bug_count"], 0)
+        self.assertEqual(self.execution["classification"],
+                         "analyzer-lead-unconfirmed")
+
+        if not (self.kernel / ".git").exists():
+            self.skipTest("local pinned kernel tree unavailable")
+        for target in (self.target, self.witness):
+            with self.subTest(target=target["id"]):
+                result = check_target(target, self.kernel,
+                                      self.campaign["kernel_revision"], ROOT)
+                self.assertTrue(result["passed"], result["errors"])
+                function = result["functions"][0]
+                self.assertEqual(
+                    function["source_token_sha256"],
+                    "a9acf3c17369800887680a1aac5a8cd7c8ea9bb6293ac72bfd7fba804d7dfda1",
+                )
+
+    def test_boundary_driver_uses_a_nonreducing_check_and_branch_controls(self):
+        source = (ROOT / "harness/arm32_recent_dma_cache_boundary_driver.c").read_text()
+        self.assertIn("/*@ check arm32_dma_cache_direct_mapping_stays_lowmem:",
+                      source)
+        self.assertIn("FRAGMA_DMA_HIGHMEM_START - 64", source)
+        self.assertIn("size_t size = 128", source)
+        for name in (
+            "arm32_dma_cache_boundary_witness_reached",
+            "arm32_dma_cache_high_nonaliasing_control",
+            "arm32_dma_cache_high_aliasing_mapped_control",
+            "arm32_dma_cache_high_aliasing_unmapped_control",
+        ):
+            self.assertIn(name, source)
+
+    def test_retained_runs_bind_the_exact_reached_invalid_check(self):
+        broad = self.execution["source_identical_bounded_pass"]
+        broad_output = ROOT / broad["output"]
+        witness = self.execution["low_to_high_boundary_lead"]
+        witness_output = ROOT / witness["output"]
+        if not broad_output.is_dir() or not witness_output.is_dir():
+            self.skipTest("retained DMA cache results unavailable")
+
+        broad_dir = broad_output / self.target["id"]
+        self.assertEqual(sha256(broad_output / "summary.json"),
+                         broad["summary_sha256"])
+        self.assertEqual(sha256(broad_dir / "result.json"),
+                         broad["result_sha256"])
+        self.assertEqual(sha256(broad_dir / "analysis.log"),
+                         broad["analysis_log_sha256"])
+        self.assertEqual(sha256(broad_dir / "properties.tsv"),
+                         broad["properties_tsv_sha256"])
+        broad_result = json.loads((broad_dir / "result.json").read_text())
+        self.assertEqual(broad_result["evaluation"]["counts"]["properties"],
+                         {"valid": 13})
+
+        witness_dir = witness_output / self.witness["id"]
+        self.assertEqual(sha256(witness_output / "summary.json"),
+                         witness["summary_sha256"])
+        self.assertEqual(sha256(witness_dir / "result.json"),
+                         witness["result_sha256"])
+        self.assertEqual(sha256(witness_dir / "analysis.log"),
+                         witness["analysis_log_sha256"])
+        self.assertEqual(sha256(witness_dir / "properties.tsv"),
+                         witness["properties_tsv_sha256"])
+        result = json.loads((witness_dir / "result.json").read_text())
+        self.assertEqual(result["status"], "calibration-passed")
+        self.assertEqual(result["evaluation"]["confirmed_invalid_properties"],
+                         ["arm32_dma_cache_direct_mapping_stays_lowmem"])
+        checks = result["evaluation"]["eva_invalid_checks"]
+        self.assertEqual(len(checks), 1)
+        self.assertEqual(checks[0]["classification"],
+                         "eva-reached-invalid-nonreducing-check")
+        self.assertFalse(checks[0]["kernel_defect_evidence"])
 
 
 if __name__ == "__main__":

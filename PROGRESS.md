@@ -1,6 +1,6 @@
 # Implementation progress
 
-Updated 2026-09-07. [PLAN.md](PLAN.md) remains in progress. Model calibration,
+Updated 2026-09-08. [PLAN.md](PLAN.md) remains in progress. Model calibration,
 individual proofs and named architecture baselines are not whole-suite or
 all-architecture completion.
 
@@ -15,6 +15,18 @@ RV32/RV64 build controls, strict checkpatch, maintainers and mail dry-run. It ha
 been sent manually by the user; upstream review or acknowledgement is not yet
 recorded. The project will not invoke email commands on this host. No `sudo` or
 package installation was used.
+
+The first `fragma-found-confirmed` bug now has same-input original/fixed QEMU
+A/B evidence on both ARM32 and 32-bit PA-RISC. The PA-RISC witness reaches the
+unchecked relocation target index and faults on the out-of-bounds heap read in
+`module_frob_arch_sections()`; the fixed kernel rejects the identical module
+with `ENOEXEC`. A full affected-hook audit found the same early indexing class
+in ARM64, RISC-V and LoongArch, and full patched `vmlinux` builds pass for all
+three. They remain source-exposed and build-tested, not runtime-confirmed. The
+[combined evidence](results/parisc-module-sh-info-20260908/SUMMARY.md) and
+[send-ready patch](patches/confirmed/0001-module-reject-invalid-relocation-section-target-indices.patch)
+record the exact boundary. No five-architecture QEMU claim is made.
+The checkpoint regression passes 1,108 tests with 20 conditional skips.
 
 The preserved [MIPS32el machine-model checkpoint](profiles/MIPS32EL-MACHDEP-20260907.md)
 has advanced to a registered
@@ -432,7 +444,7 @@ a proof of the whole kernel or automatic verification of every caller.
 | Common byte helpers | Dated nine-GCC-profile scoped L2 plus one current MIPS32el target. MIPS passes 19 model checks, 94 ordinary goals, 82 properties and all 27 compiler/control commands. | Replay the nine GCC targets at the post-registration identity; remaining architectures, kernel callers and runtime corroboration. |
 | RISC-V encoders | Dated source/model/proof gates for seven helpers and five project witnesses: 119 ordinary goals, 119 dependencies and 47 postconditions. | Replay at the post-registration identity; helper-specific calibration, kernel callers and a documented encoder L2 scope. |
 | ARM64 scalar extraction | Dated runtime-safety gates for two cpuid helpers: six ordinary goals and ten selected dependencies with genuine-header checks. | Replay at the post-registration identity; add functional contracts/calibration and verify kernel callers. |
-| Kernel bug search | RV32 `load_unaligned_zeropad()` remains a review-found defect that the user sent manually. In the recent-risk ARM32 batch, `pcibios_align_resource()` is a bounded no-finding and Frama-C first exposed the confirmed module-relocation `sh_info` bug. Recent BPF JIT `build_insn()` has a 2,797-token source-identical partial scan with no reachable direct RTE alarm and an 88/88 `BPF_JIT_ALWAYS_ON` QEMU semantic pass. Current `__sync_icache_dcache()` passes a sequential scan and a two-caller Mthread property, while an early-publication control fails it: one known-fix detection calibration, zero new bugs. `arch_uprobe_copy_ixol()` is now a caller-validated bounded no-finding with 13 valid properties; its 65-byte cross-page control raises the intended destination alarm. | Move the primary slot to the two DMA/scatter-gather candidates. Two strict candidates are untouched; BPF helper/functional follow-up, review-exposed `get_module_plt()` calibration and campaign-wide WP/classification remain. Track RV32 upstream review separately. |
+| Kernel bug search | RV32 `load_unaligned_zeropad()` remains a review-found defect that the user sent manually. In the recent-risk ARM32 batch, `pcibios_align_resource()` is a bounded no-finding and Frama-C first exposed the confirmed module-relocation `sh_info` bug. The latter now has same-input ARM32 and PA-RISC QEMU A/B evidence, plus source audits and full patched builds for ARM64, RISC-V and LoongArch. Recent BPF JIT `build_insn()` has a 2,797-token source-identical partial scan with no reachable direct RTE alarm and an 88/88 `BPF_JIT_ALWAYS_ON` QEMU semantic pass. Current `__sync_icache_dcache()` passes a sequential scan and a two-caller Mthread property, while an early-publication control fails it: one known-fix detection calibration, zero new bugs. `arch_uprobe_copy_ixol()` is now a caller-validated bounded no-finding with 13 valid properties; its 65-byte cross-page control raises the intended destination alarm. | Continue the DMA/scatter-gather candidates. The first DMA cache harness and boundary calibration are staged but not yet a confirmed bug; the other strict candidate is untouched. BPF helper/functional follow-up, review-exposed `get_module_plt()` calibration and campaign-wide WP/classification remain. Track RV32 upstream review separately. |
 | Concurrency | C0/C1 infrastructure, limited C2 mutex/IRQ pilots, a 92-check LKMM baseline, a 135-check release/acquire pilot, a 162-check atomic/RMW pilot and a 1036-check IPC refcount lifetime/progress pilot are accepted. Six narrow kernel concurrency properties now exist: two access-protection claims, trace tgid-map publication ordering, module-statistics no-lost-update atomicity, IPC final-put/get-unless-zero exclusion with eleven checked SMP mappings, and bounded-quiescent strong-CAS retry progress with native/UML x86-64 and s390x mappings. A separate 609-check audit evaluates all eight existing LL/SC-bearing profiles and promotes none. | C3 architecture-backed unbounded/LL/SC progress, broader lockless lifetime behavior and remaining architecture mappings; then C4 RCU. Broader IRQ classes, functional protocols and the preserved unlocked HDQ accesses remain open. |
 
 The registry's 24 distinct kernel functions reach the plan's initial numerical
@@ -698,9 +710,10 @@ no-findings, one analyzer-first bug confirmed by an exact QEMU original/fixed
 A/B, and one Mthread/Eva detection calibration for an already fixed
 cache-publication race. The recent BPF JIT has a retained partial no-finding
 plus an 88/88 generated-code semantic pass; its helper closure remains open.
-Two strict candidates are untouched and one review-exposed sibling remains
-calibration-only. Immediate work is the DMA portion of that configured ARM32
-campaign, followed by
+The first DMA cache harness and boundary calibration are staged but not yet a
+confirmed bug. The other strict candidate is untouched and one review-exposed
+sibling remains calibration-only. Immediate work is the DMA portion of that
+configured ARM32 campaign, followed by
 post-registration proof replay, tracking the manually sent RV32 patch, and
 further C3 protocol or architecture-backed progress work.
 Mappings for architectures outside the refcount pilot's eleven-profile set,

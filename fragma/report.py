@@ -109,7 +109,7 @@ def parse_wp_report(path):
 
 
 def named_assertions(source_files, *, predicate_starts=True):
-    """Locate uniquely named ACSL assertions without scanning C string contents.
+    """Locate uniquely named ACSL assertions/checks outside C string contents.
 
     The TSV exporter omits assertion labels. Exact file+line mapping ties a
     concrete calibration result back to its named declaration. Frama-C can
@@ -130,7 +130,7 @@ def named_assertions(source_files, *, predicate_starts=True):
         for token in lexical.finditer(text):
             if not token[0].startswith(("/*@", "//@")):
                 continue
-            for assertion in re.finditer(r"\bassert\s+([A-Za-z_]\w*)\s*:\s*", token[0]):
+            for assertion in re.finditer(r"\b(?:assert|check)\s+([A-Za-z_]\w*)\s*:\s*", token[0]):
                 owner = (str(path), token.start() + assertion.start())
                 offsets = (assertion.start(), assertion.end()) if predicate_starts else (assertion.start(),)
                 for offset in offsets:
@@ -221,12 +221,14 @@ def parse_properties(path, *, source_files=(), names_by_location=None, source_ro
                 prior["exported_identity_ambiguous"] = True
         seen.setdefault(identity, []).append(row)
         mapped = names.get((full_path, line, raw["function"]), names.get((full_path, line)))
-        if mapped and row["kind"] == "user assertion":
-            row["names"].extend([mapped, row["function"] + "_assert_" + mapped])
+        if mapped and row["kind"] in ("user assertion", "user check"):
+            suffix = "assert" if row["kind"] == "user assertion" else "check"
+            row["names"].extend([mapped, row["function"] + "_" + suffix + "_" + mapped])
         label = re.match(r"^([A-Za-z_]\w*):\s", raw["property"])
         if label:
             row["names"].append(label[1])
-            suffix = {"postcondition": "ensures", "user assertion": "assert", "loop invariant": "loop_invariant"}.get(row["kind"])
+            suffix = {"postcondition": "ensures", "user assertion": "assert",
+                      "user check": "check", "loop invariant": "loop_invariant"}.get(row["kind"])
             if suffix:
                 row["names"].append(f'{row["function"]}_{suffix}_{label[1]}')
         result.append(row)
@@ -248,10 +250,48 @@ def _property_aliases(row, goals):
                       (kind == "loop variant" and "_loop_variant" in prop) or
                       (kind.startswith("precondition") and "_requires" in prop) or
                       (kind == "user assertion" and "_assert_" in prop) or
-                      (kind not in ("postcondition", "termination clause", "assigns clause", "loop invariant", "user assertion") and "_assert_rte_" in prop))
+                      (kind == "user check" and "_check_" in prop) or
+                      (kind not in ("postcondition", "termination clause", "assigns clause", "loop invariant", "user assertion", "user check") and "_assert_rte_" in prop))
         if compatible:
             aliases.add(prop)
     return aliases
+
+
+def _eva_reached_invalid_checks(properties, warnings, expected_invalid):
+    """Recover Eva's precise reached-invalid status for non-reducing checks.
+
+    Frama-C 33's TSV exporter writes ``Invalid or unreachable`` for an Eva
+    alarm even when Eva's located diagnostic says that a ``check`` evaluated
+    invalid. Unlike an assertion, an ACSL check does not reduce or stop the
+    state. Accept only one exact named/location-bound diagnostic for one
+    exported user-check row; ordinary assertions retain the stricter native
+    corroboration requirement.
+    """
+    result = {}
+    for name in expected_invalid:
+        rows = [row for row in properties
+                if row["kind"] == "user check" and
+                row["status"] == "Invalid or unreachable" and
+                name in row.get("names", [])]
+        if len(rows) != 1:
+            continue
+        row = rows[0]
+        matches = [warning for warning in warnings
+                   if isinstance(warning, dict) and
+                   warning.get("plugin") == "eva:alarm" and
+                   warning.get("severity") == "warning" and
+                   warning.get("path") == row["path"] and
+                   warning.get("line") == row["line"] and
+                   warning.get("message") ==
+                   f"check '{name}' got status invalid."]
+        if len(matches) == 1:
+            result[name] = {
+                "property_record": copy.deepcopy(row),
+                "diagnostic": copy.deepcopy(matches[0]),
+                "classification": "eva-reached-invalid-nonreducing-check",
+                "kernel_defect_evidence": False,
+            }
+    return result
 
 
 def _review_path(root, filename):
@@ -492,6 +532,7 @@ def evaluate_target(target, wp_goals, properties, *, returncode, warnings, valid
               "issues": [], "warnings": copy.deepcopy(warnings), "unresolved_dependencies": [],
               "dependency_report_omissions": [],
               "trusted_dependencies": [], "confirmed_invalid_properties": [], "native_invalid_properties": [],
+              "eva_invalid_checks": [],
               "unselected_property_ambiguities": [],
               "selected_property_ambiguities": [],
               "selected_property_duplicate_groups": [],
@@ -554,6 +595,14 @@ def evaluate_target(target, wp_goals, properties, *, returncode, warnings, valid
     if not isinstance(warnings, list):
         issue("tool-error", "Warnings must be a diagnostic array")
         warnings = []
+    eva_invalid_checks = _eva_reached_invalid_checks(
+        properties, warnings, expected_invalid)
+    result["eva_invalid_checks"] = list(eva_invalid_checks.values())
+
+    def eva_check_confirms(row, name):
+        record = eva_invalid_checks.get(name)
+        return record is not None and row == record["property_record"]
+
     goals = []
     if target.get("analysis") == "wp":
         try:
@@ -646,7 +695,8 @@ def evaluate_target(target, wp_goals, properties, *, returncode, warnings, valid
             if not matched:
                 issue("incomplete", "Missing required named EVA property; provide exact source-location mapping", property=name)
             elif name in expected_invalid:
-                if all(row["outcome"] == "invalid" for row in matched):
+                if all(row["outcome"] == "invalid" or
+                       eva_check_confirms(row, name) for row in matched):
                     result["confirmed_invalid_properties"].append(name)
                 elif name in native and len(matched) == 1 and matched[0] == native[name]["property_record"]:
                     result["confirmed_invalid_properties"].append(name)
@@ -683,7 +733,9 @@ def evaluate_target(target, wp_goals, properties, *, returncode, warnings, valid
         if outcome == "pending":
             result["unresolved_dependencies"].append({**row, "aliases": sorted(aliases),
                 "note": "Consolidated status is conditional; TSV does not identify every supporting hypothesis."})
-        if aliases & expected_invalid and outcome == "invalid":
+        if (aliases & expected_invalid and
+                (outcome == "invalid" or any(eva_check_confirms(row, name)
+                                             for name in aliases & expected_invalid))):
             continue
         if outcome == "unreachable" and any(name in native and row == native[name]["property_record"]
                                              for name in aliases & expected_invalid):

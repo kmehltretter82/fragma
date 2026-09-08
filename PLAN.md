@@ -2,7 +2,7 @@
 
 Status: implementation in progress; no full-suite or all-architecture completion claimed.
 Prepared: 2026-09-05.
-Progress updated: 2026-09-07. See [PROGRESS.md](PROGRESS.md) for current evidence,
+Progress updated: 2026-09-08. See [PROGRESS.md](PROGRESS.md) for current evidence,
 commands, and limitations. Checked boxes describe individual delivered tasks;
 each phase's acceptance criteria still apply independently.
 
@@ -13,6 +13,16 @@ the user sent the patch manually, while upstream acknowledgement remains
 unrecorded. The project must not invoke `git send-email` on this host. Further Hexagon
 implementation remains parked, and its private diagnostics did not produce this
 kernel finding or add accepted proofs/profiles.
+
+The first analyzer-led ARM32 finding now has same-input QEMU A/B evidence on
+ARM32 and 32-bit PA-RISC. The PA-RISC witness faults on the out-of-bounds heap
+read reached through the same unchecked relocation target index. Full patched
+ARM64, RISC-V and LoongArch builds plus a complete early-hook source audit
+support the generic placement of the fix. Those three architectures are not
+runtime-confirmed. The
+[supporting evidence](results/parisc-module-sh-info-20260908/SUMMARY.md) keeps
+the distinction explicit, and the project does not claim exhaustive
+five-architecture QEMU testing.
 
 The user-requested concurrency workstream has accepted C0 capability
 characterization, C1 evidence/scope infrastructure and the limited C2 pilot.
@@ -97,7 +107,11 @@ malformed module then faults the original QEMU kernel in that function, while
 the generic early-validation fix rejects the same input with `ENOEXEC`; a full
 current-upstream ARM32 build also passes. Current upstream remains affected.
 The [finding record](results/arm32-module-sh-info-20260908/SUMMARY.md) contains
-the exact analyzer identities and QEMU A/B evidence.
+the exact analyzer identities and QEMU A/B evidence. A second same-input QEMU
+A/B confirms the PA-RISC path at the same patch base, while full patched builds
+cover the source-exposed ARM64, RISC-V and LoongArch hooks. The
+[affected-hook record](results/parisc-module-sh-info-20260908/SUMMARY.md)
+separates runtime and build-only evidence.
 
 The recent ARM32 BPF JIT `build_insn()` target has now completed its initial
 analyzer-first stage. A 2,797-token source-identical direct-operation scan has
@@ -124,8 +138,9 @@ properties across a domain broader than both in-tree callers. A deliberate
 65-byte copy into the final 64-byte XOL slot raises the expected destination
 alarm. The [checkpoint](results/arm32-uprobe-copy-20260908/SUMMARY.md) keeps the
 two GNU `void *` arithmetic warnings and the model exclusions visible. Four
-candidates have completed an initial stage, BPF remains partial, and the two
-DMA/scatter-gather functions are the remaining untouched strict targets.
+candidates have completed an initial stage and BPF remains partial. The first
+DMA cache harness and its boundary calibration are staged but have not yet
+confirmed a kernel bug. The scatter/gather sibling remains untouched.
 
 The [nine-calibration renewal](docs/CALIBRATION-RENEWAL-20260907.md) now passes
 both normal Eva batches: 38 model checks, 55 positive selected properties and
@@ -601,8 +616,9 @@ an alarm, timeout or failed proof alone is not a kernel defect.
   analyzer-first, QEMU-confirmed bug; `__sync_icache_dcache()` re-detects one
   already-fixed ordering bug under the narrow Mthread model; and
   `arch_uprobe_copy_ixol()` is a caller-validated bounded no-finding. BPF JIT
-  has a partial stage; two untouched strict candidates, one review-exposed
-  calibration and functional/helper follow-up remain.
+  has a partial stage; the first DMA cache harness and boundary calibration are
+  staged but not confirmed, the scatter/gather sibling is untouched, and one
+  review-exposed calibration plus functional/helper follow-up remain.
 
 - [ ] Execute the first ARM32 Fragma-first campaign: freeze 5–10 unchanged
   functions, run bounded Eva/RTE before manual source diagnosis, add
