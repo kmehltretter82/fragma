@@ -1,4 +1,4 @@
-From cffc88fec53199960d774449a85eb554721c3dc2 Mon Sep 17 00:00:00 2001
+From 469fb638e5f4662404e39e18d8d6efec9abc5a73 Mon Sep 17 00:00:00 2001
 From: Karl Mehltretter <kmehltretter@gmail.com>
 Date: Tue, 8 Sep 2026 19:08:40 +0000
 Subject: [PATCH] module: reject out-of-range relocation target indices
@@ -21,6 +21,7 @@ Cc: Aaron Tomlin <atomlin@atomlin.com>,
     Alexandre Ghiti <alex@ghiti.fr>,
     Huacai Chen <chenhuacai@kernel.org>,
     WANG Xuerui <kernel@xen0n.name>,
+    Jiaxun Yang <jiaxun.yang@flygoat.com>,
     linux-modules@vger.kernel.org,
     linux-arm-kernel@lists.infradead.org,
     linux-parisc@vger.kernel.org,
@@ -62,6 +63,11 @@ git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace"), a
 custom Fragma harness used upstream Frama-C 33.0 (Arsenic) Eva to
 analyze a source-identical ARM module_frob_arch_sections() slice. Eva
 reported the out-of-range section-table pointer and sh_flags access.
+
+The ARM32 A/B also ran at that commit. The PA-RISC, ARM64, RISC-V,
+LoongArch and x86_64 A/B tests ran at the declared base commit,
+28924df2a08f. arch/arm/kernel/module-plts.c and the touched loop in
+kernel/module/main.c are identical between the two commits.
 
 The A/B tests used identical configuration files and test modules
 between the original and fixed kernel for each architecture. Each

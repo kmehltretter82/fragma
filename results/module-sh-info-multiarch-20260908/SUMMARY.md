@@ -101,9 +101,9 @@ serial logs.
 
 - Canonical patch:
   `patches/confirmed/0001-module-reject-invalid-relocation-section-target-indices.patch`
-- Generated commit: `cffc88fec53199960d774449a85eb554721c3dc2`
+- Generated commit: `469fb638e5f4662404e39e18d8d6efec9abc5a73`
 - Patch SHA-256:
-  `6d9145eb0adb7ea5e0b9b72bfc6a128cbf9655497632c49b6bb949a5ffc434b4`
+  `4a5691d975f1e15785d61fb868d5c8b6603174d716701341a7604c6817f3372f`
 - Stable code patch-id:
   `736cba8706b2675d2a63878ddb54645307f4e532`
 - `git am` on the declared base: passed in a fresh worktree
@@ -111,7 +111,7 @@ serial logs.
 - `git send-email --dry-run --confirm=never`: passed; no email was sent
 - Project regression: 1,110 tests passed with 20 conditional skips
 - Regression log SHA-256:
-  `74a95322a17b2f667714c2ea1fb5750c7074240be0cc3f8de56704e02ea5a9df`
+  `322d2088885bc13fe45858d0339d35d39cfa3965a6761bdaec0663dc70f5a126`
 
 The patch notes name the five affected runtime tests and the x86_64 negative
 control. The `To` and `Cc` headers cover the module maintainers and all five

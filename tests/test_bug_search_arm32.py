@@ -526,6 +526,7 @@ class ARM32RecentModuleFrobFindingTests(unittest.TestCase):
         self.assertIn("To: Luis Chamberlain", text)
         self.assertIn("Cc: Aaron Tomlin", text)
         self.assertIn("Russell King <linux@armlinux.org.uk>", text)
+        self.assertIn("Jiaxun Yang <jiaxun.yang@flygoat.com>", text)
         self.assertIn("Fixes: c298be74492b", text)
         self.assertIn("Fixes: 7d485f647c1f", text)
         self.assertIn("Fixes: fd045f6cd98e", text)
@@ -536,6 +537,7 @@ class ARM32RecentModuleFrobFindingTests(unittest.TestCase):
         self.assertIn("Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>",
                       text)
         self.assertIn("Original-kernel results with QEMU 10.2.1 TCG", text)
+        self.assertIn("The ARM32 A/B also ran at that commit.", text)
         self.assertIn("The x86_64 pc/qemu64 negative control", text)
         self.assertIn("base-commit: " + current["base_commit"], text)
         self.assertTrue((ROOT / "arm/arm32-module-sh-info/REPORT.txt").is_file())
