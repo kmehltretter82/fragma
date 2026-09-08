@@ -101,9 +101,9 @@ serial logs.
 
 - Canonical patch:
   `patches/confirmed/0001-module-reject-invalid-relocation-section-target-indices.patch`
-- Generated commit: `a29f6d234b22d531c48de3790bec7805c39def88`
+- Generated commit: `49868e85e838ef7c6e06488f70982fadf7884c48`
 - Patch SHA-256:
-  `838aa33851a0157930e71b85818ddd1bb2dae008abaab2fb1991c62ed01b1d58`
+  `205e8f6fba7c3ad452d0a47860c2fded8a16280ecf886b124308642bd89daede`
 - Stable code patch-id:
   `736cba8706b2675d2a63878ddb54645307f4e532`
 - `git apply --check`: passed on the declared base, v6.18.48 and v7.2.2

@@ -1,4 +1,4 @@
-From a29f6d234b22d531c48de3790bec7805c39def88 Mon Sep 17 00:00:00 2001
+From 49868e85e838ef7c6e06488f70982fadf7884c48 Mon Sep 17 00:00:00 2001
 From: Karl Mehltretter <kmehltretter@gmail.com>
 Date: Tue, 8 Sep 2026 19:08:40 +0000
 Subject: [PATCH] module: reject out-of-range relocation target indices
@@ -67,11 +67,10 @@ declared base commit, 28924df2a08f. arch/arm/kernel/module-plts.c and
 the touched loop in kernel/module/main.c are identical between the two
 commits.
 
-Each A/B pair used the same configuration and test modules. The
-malformed module differed from its control only in the four-byte sh_info
-field, changed to 0x10000000. Every control loaded and unloaded. Every
-fixed kernel rejected the malformed module with ENOEXEC and printed
-target index 268435456.
+Each A/B test changed only a relocation section's sh_info to
+0x10000000. The same configurations and modules were used before and
+after the change. All controls loaded before and after the change. The
+fixed kernels rejected the malformed modules with ENOEXEC.
 
 Original-kernel results with QEMU 10.2.1 TCG:
 
