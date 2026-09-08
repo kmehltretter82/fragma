@@ -147,10 +147,13 @@ def parse_properties(path, *, source_files=(), names_by_location=None, source_ro
     """Read every exported row, retaining unselected location ambiguities.
 
     Frama-C 33 sorts distinct callsites using their source column, but drops
-    that column from TSV output. The default remains strict. A caller may
-    provide its complete selected-function scope to retain (never deduplicate)
-    identical-status rows outside that scope. These rows cannot support a
-    selected proof, calibration, or dependency claim.
+    that column from TSV output. The default remains strict. With a complete
+    selected-function scope, identical selected rows are represented by one
+    logical property carrying every exporter row number. Contradictory selected
+    rows are retained as ambiguous and force an incomplete result instead of
+    turning a useful analyzer run into a parser error. Identical rows outside
+    the selected scope remain separate; contradictory unselected rows still
+    fail because they cannot be soundly interpreted.
     """
     if selected_functions is not None:
         if (not isinstance(selected_functions, (list, tuple, set, frozenset)) or
@@ -195,9 +198,19 @@ def parse_properties(path, *, source_files=(), names_by_location=None, source_ro
         full_path = str(full_path.resolve())
         identity = (full_path, line, raw["function"], raw["property kind"], raw["property"])
         previous = seen.get(identity, [])
-        if previous and (selected_functions is None or raw["function"] in selected_functions or
-                         any(row["status"] != raw["status"] for row in previous)):
-            raise ReportError(f"Duplicate property TSV row: {identity}")
+        if previous:
+            if selected_functions is None:
+                raise ReportError(f"Duplicate property TSV row: {identity}")
+            if raw["function"] in selected_functions:
+                if all(row["status"] == raw["status"] for row in previous):
+                    logical = previous[0]
+                    occurrences = logical.setdefault("exported_occurrences",
+                                                     [logical["report_row"]])
+                    occurrences.append(number)
+                    logical["exported_duplicate_count"] = len(occurrences)
+                    continue
+            elif any(row["status"] != raw["status"] for row in previous):
+                raise ReportError(f"Duplicate property TSV row: {identity}")
         row = {"path": full_path, "file": raw["file"], "directory": raw["directory"],
                "line": line, "function": raw["function"], "kind": raw["property kind"],
                "status": raw["status"], "outcome": CSV_STATUSES[raw["status"]],
@@ -480,6 +493,8 @@ def evaluate_target(target, wp_goals, properties, *, returncode, warnings, valid
               "dependency_report_omissions": [],
               "trusted_dependencies": [], "confirmed_invalid_properties": [], "native_invalid_properties": [],
               "unselected_property_ambiguities": [],
+              "selected_property_ambiguities": [],
+              "selected_property_duplicate_groups": [],
               "review_context": None, "reviewed_smoke": [], "reviewed_warnings": [],
               "reviewed_unreachable_properties": [],
               "required_companion": target.get("required_companion"),
@@ -643,6 +658,10 @@ def evaluate_target(target, wp_goals, properties, *, returncode, warnings, valid
     else:
         issue("unsupported", "Unsupported analysis kind", analysis=target.get("analysis"))
     selected_rows = [row for row in properties if row["function"] in analysis_funcs]
+    result["selected_property_ambiguities"] = [copy.deepcopy(row) for row in selected_rows
+        if row.get("exported_identity_ambiguous")]
+    result["selected_property_duplicate_groups"] = [copy.deepcopy(row) for row in selected_rows
+        if row.get("exported_duplicate_count", 1) > 1]
     result["unselected_property_ambiguities"] = [copy.deepcopy(row) for row in properties
         if row.get("exported_identity_ambiguous") and row["function"] not in analysis_funcs]
     if not selected_rows:

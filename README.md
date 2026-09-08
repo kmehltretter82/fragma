@@ -3,12 +3,15 @@
 Verification and calibration rig for selected Linux kernel C functions.
 Frama-C/ACSL checks conditional correctness claims; deliberately wrong contracts
 and altered control examples test whether the verification setup detects them.
-This is not a whole-kernel proof. One Linux RV32 wrong-result defect has now been
-dynamically reproduced; it was found by LLM-assisted source review, not by
-Frama-C. The user sent the prepared fix manually. Upstream review or
-acknowledgement is not yet recorded, and this project does not send email. The
-[Fragma-first bug-search protocol](docs/BUG-SEARCH-PLAN.md) preserves that
-distinction and makes configured ARM32 the first analyzer-led campaign.
+This is not a whole-kernel proof. The project has two confirmed Linux findings:
+Frama-C Eva first exposed an unchecked ARM32 module-relocation section index,
+which an exact QEMU original/fixed A/B confirms, while an RV32 page-boundary
+wrong-result defect was found separately by LLM-assisted source review and then
+dynamically reproduced. The user sent the RV32 fix manually; this project does
+not send email. The [Fragma-first bug-search protocol](docs/BUG-SEARCH-PLAN.md)
+preserves those discovery labels and makes configured ARM32 the primary search
+campaign. Its recent BPF JIT target currently has a partial no-finding backed by
+a source-identical Eva pass and 88/88 `BPF_JIT_ALWAYS_ON` QEMU semantic checks.
 
 The public repository contains the authored runner, specifications, tests,
 plans, compact result summaries, and experimental provider patches. Downloaded

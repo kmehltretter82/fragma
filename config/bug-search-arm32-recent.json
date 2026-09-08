@@ -313,8 +313,64 @@
         "checkpatch": "zero errors, warnings and checks with only the intentionally absent human sign-off ignored"
       },
       "threat_classification": "regular-kernel-robustness-bug-cap-sys-module-required"
+    },
+    "build_insn": {
+      "full_translation_unit": {
+        "status": "model-or-contract-gap",
+        "attempts": 11,
+        "last_output": "build/arm32-recent-search-20260908/build-insn-raw-tu-11",
+        "result": "Frama-C did not complete candidate analysis. The attempts progressed through unrelated transitive-header failures, ending with invalid return constructs in dma-mapping.h; temporary parser adapters were not retained in the project interface."
+      },
+      "source_identical_direct_pass": {
+        "status": "incomplete-no-reachable-direct-alarm",
+        "output": "build/arm32-recent-search-20260908/build-insn-slice-final-2",
+        "summary_sha256": "64e255c24a83555e0e9973b50a27584164de29a1e22a72919eb6659b098b8604",
+        "result_sha256": "e760a6278a0ba4192af2f28e5fa241f61135ca31455e896767be4d8181d0ff0b",
+        "analysis_log_sha256": "144dfcab7842262f80a30a0fa91fb14d6baf6a1f7a00f7010bfe72dce213c1c0",
+        "source_function_tokens": 2797,
+        "source_function_token_sha256": "49454fa5f56c2c4d80dcb579384cbaa438f8fcda8f72b9c95a95fd446d5f9aa1",
+        "properties": {"valid": 197, "unreachable": 3},
+        "warnings": 0,
+        "selected_export_duplicate_groups": 12,
+        "selected_export_ambiguous_groups": 0,
+        "classification": "partial-no-reachable-direct-rte-lead",
+        "scope": "Direct C operations in source-identical build_insn() under a three-instruction fake-pass driver. Emitters, register transfer, branch offsets and live output are deliberately modeled out, so this is neither generated-code correctness nor full helper-closure safety."
+      },
+      "qemu_semantic_matrix": {
+        "status": "passed",
+        "machine": "QEMU 10.2.1 virt/Cortex-A15/TCG",
+        "compiler": "arm-linux-gnueabi-gcc 15.2.0",
+        "configuration_sha256": "7b328f1239b1b04e4e95af25b6cb70a9e15aba9f23fb5c0b64d158cd1484f39f",
+        "configuration_required": ["BPF=y", "BPF_SYSCALL=y", "BPF_JIT=y", "BPF_JIT_ALWAYS_ON=y"],
+        "source": "harness/arm32_bpf_jit_semantics.c",
+        "source_sha256": "33512d0ac368264230f221faa0c52aa566b011934d5f935e7d7333ec423a53a7",
+        "binary": "build/arm32-bpf-jit-qemu-20260908-v3/root/init",
+        "binary_sha256": "e9d4c07f3232af21b916d03fffa00d5dbbd23cd0d81a9f616cdd15ac412b697e",
+        "initramfs": "build/arm32-bpf-jit-qemu-20260908-v3/initramfs.cpio",
+        "initramfs_sha256": "ebbbd4e1d0f84953d0c5e35509842c0c1947106250f7ab230af5902059b460fc",
+        "configuration": "build/kernel/arm-gcc-recent-2g-v1/.config",
+        "zimage": "build/kernel/arm-gcc-recent-2g-v1/arch/arm/boot/zImage",
+        "zimage_sha256": "b453107d90006b6b12ca662e8287258020d7a719cc6c690e2171705af375ce08",
+        "full_log": "build/arm32-bpf-jit-qemu-20260908-v3/qemu.log",
+        "full_log_sha256": "f479e4ea5e865c180e0eaaeeaa55d388823b96097dada7e60dbd7ad8561d6837",
+        "tracked_result_log": "results/arm32-bpf-qemu-20260908.log",
+        "tracked_result_log_sha256": "4a8c8265c69e6e50cc19408ea97e17251f19174da1a41f8a50d09cf65d431e34",
+        "checks": {"passed": 88, "failed": 0},
+        "coverage": "LDIMM64 halves; 64-bit register arithmetic; 32/64-bit immediate shift boundaries; MOVSX 8/16/32; signed DIV/MOD including zero and INT64_MIN/-1; all supported signed/unsigned 32/64-bit comparisons; one 64-bit stack store/load.",
+        "result": "Every checked JIT result matched its independent C oracle. High halves are observed through a stack store/reload rather than another arithmetic operation. The expected PID-1 exit panic occurs only after the summary."
+      },
+      "classification": "partial-no-finding",
+      "remaining": "Source-gated emitter/register-helper closure, live target-buffer bounds and broader randomized or upstream BPF conformance coverage remain open.",
+      "regression": {
+        "command": "python3 -m unittest discover -s tests",
+        "tests": 1085,
+        "skipped": 20,
+        "status": "passed",
+        "log": "build/tests-arm32-bpf-checkpoint-20260908-v3.log",
+        "log_sha256": "c4ace7b407f2cdcfb9fac7b48b88a2ea91028c0520045e9ddc4c09d1917e20db"
+      }
     }
   },
   "confirmed_bugs": 1,
-  "next_step": "Run the recent ARM32 BPF JIT build_insn() as the next strict analyzer-first target, then analyze __sync_icache_dcache() with Mthread plus Eva before continuing through uprobes and DMA."
+  "next_step": "Analyze __sync_icache_dcache() with Mthread plus Eva as the next primary ARM32 target, then continue through uprobes and DMA; return to build_insn() for source-gated emitter/helper closure if the cache target does not yield a lead."
 }

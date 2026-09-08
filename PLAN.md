@@ -97,9 +97,18 @@ malformed module then faults the original QEMU kernel in that function, while
 the generic early-validation fix rejects the same input with `ENOEXEC`; a full
 current-upstream ARM32 build also passes. Current upstream remains affected.
 The [finding record](results/arm32-module-sh-info-20260908/SUMMARY.md) contains
-the exact analyzer identities and QEMU A/B evidence. The batch is now 2/8; the
-next strict target is the recent ARM32 BPF JIT `build_insn()` function, followed
-by Mthread-plus-Eva cache synchronization analysis.
+the exact analyzer identities and QEMU A/B evidence.
+
+The recent ARM32 BPF JIT `build_insn()` target has now completed its initial
+analyzer-first stage. A 2,797-token source-identical direct-operation scan has
+197 valid and three structurally dead properties with zero warnings and no
+reachable alarm; it remains incomplete because emitters and register/offset
+helpers are explicitly modeled out. A `BPF_JIT_ALWAYS_ON` ARMv7 QEMU semantic
+matrix independently passed 88/88 generated-code checks. The
+[checkpoint](results/arm32-recent-build-insn-20260908/SUMMARY.md) therefore says
+`partial-no-finding`, not verified. Two candidates are closed, this third one is
+partially covered, and the next primary target is the April 2026
+`__sync_icache_dcache()` race fix with Mthread plus Eva.
 
 The [nine-calibration renewal](docs/CALIBRATION-RENEWAL-20260907.md) now passes
 both normal Eva batches: 38 model checks, 55 positive selected properties and

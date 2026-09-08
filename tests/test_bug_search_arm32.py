@@ -8,6 +8,7 @@ from pathlib import Path
 import re
 import shutil
 import subprocess
+import tempfile
 import unittest
 
 from fragma.analysis_policy import pipeline_identity
@@ -538,6 +539,131 @@ class ARM32RecentModuleFrobFindingTests(unittest.TestCase):
             text=True, capture_output=True,
         )
         self.assertEqual(process.returncode, 0, process.stderr)
+
+
+class ARM32RecentBPFBuildInsnTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.campaign = json.loads(RECENT.read_text())
+        cls.targets = {
+            target["id"]: target
+            for target in json.loads(RECENT_TARGETS.read_text())["targets"]
+        }
+        cls.target = cls.targets["search.arm32.recent.build_insn"]
+        cls.execution = cls.campaign["execution"]["build_insn"]
+        cls.kernel = ROOT.parent / "linux"
+
+    def test_target_is_source_identical_and_keeps_partial_classification(self):
+        self.assertEqual(self.target["source"], "arch/arm/net/bpf_jit_32.c")
+        self.assertEqual(self.target["analysis_pipeline"], {"kind": "rte-eva"})
+        self.assertEqual(self.target["provenance"], {"mode": "functions"})
+        self.assertEqual(self.target["search_classification"],
+                         "partial-no-reachable-direct-rte-lead")
+        self.assertEqual(self.execution["classification"], "partial-no-finding")
+        if not (self.kernel / ".git").exists():
+            self.skipTest("local pinned kernel tree unavailable")
+        result = check_target(self.target, self.kernel,
+                              self.campaign["kernel_revision"], ROOT)
+        self.assertTrue(result["passed"], result["errors"])
+        function = result["functions"][0]
+        self.assertEqual(function["source_token_sha256"],
+                         "49454fa5f56c2c4d80dcb579384cbaa438f8fcda8f72b9c95a95fd446d5f9aa1")
+        self.assertEqual(function["source_declaration_prefix"], ["static", "int"])
+        self.assertEqual(function["harness_declaration_prefix"], ["int"])
+
+    def test_analysis_assumptions_are_reviewed_narrow_and_non_recursive(self):
+        ledger = {
+            item["id"]: item
+            for item in json.loads((ROOT / "config/assumptions.json").read_text())[
+                "assumptions"]
+        }
+        driver = ledger["arm32-recent-bpf-build-insn-driver"]
+        frontend = ledger["arm32-recent-bpf-build-insn-frontend"]
+        dependencies = ledger["arm32-recent-bpf-build-insn-dependencies"]
+        self.assertEqual(driver["files"],
+                         ["harness/arm32_recent_bpf_build_insn_driver.c"])
+        self.assertNotIn("config/bug-search-arm32-recent.json", driver["files"])
+        self.assertEqual(driver["review_status"], "reviewed")
+        self.assertEqual(frontend["review_status"], "reviewed")
+        self.assertEqual(dependencies["review_status"], "reviewed-assumption")
+        self.assertIn("no generated-A32 value", dependencies["scope"])
+
+    def test_compact_slice_and_runtime_harness_compile_for_arm32(self):
+        compiler = shutil.which("arm-linux-gnueabi-gcc")
+        if not compiler:
+            self.skipTest("ARM32 cross-compiler unavailable")
+        syntax = subprocess.run([
+            compiler, "-std=gnu11", "-march=armv7-a", "-mabi=aapcs-linux",
+            "-msoft-float", "-mfpu=vfp", "-mlittle-endian",
+            "-funsigned-char", "-fshort-wchar", "-fno-strict-overflow",
+            "-fno-strict-aliasing", "-ffreestanding", "-Werror",
+            "-Wno-attributes", "-fsyntax-only",
+            str(ROOT / "harness/arm32_recent_bpf_build_insn_slice.c"),
+            str(ROOT / "harness/arm32_recent_bpf_build_insn_driver.c"),
+        ], text=True, capture_output=True)
+        self.assertEqual(syntax.returncode, 0, syntax.stderr)
+        with tempfile.TemporaryDirectory() as directory:
+            runtime = subprocess.run([
+                compiler, "-static", "-O2", "-Wall", "-Wextra", "-Werror",
+                "-o", str(Path(directory) / "init"),
+                str(ROOT / "harness/arm32_bpf_jit_semantics.c"),
+            ], text=True, capture_output=True)
+            self.assertEqual(runtime.returncode, 0, runtime.stderr)
+
+    def test_final_analyzer_result_is_exact_and_fail_closed_when_available(self):
+        run = self.execution["source_identical_direct_pass"]
+        output = ROOT / run["output"]
+        if not output.is_dir():
+            self.skipTest("retained BPF analyzer result unavailable")
+        target_dir = output / self.target["id"]
+        result_path = target_dir / "result.json"
+        self.assertEqual(sha256(output / "summary.json"), run["summary_sha256"])
+        self.assertEqual(sha256(result_path), run["result_sha256"])
+        self.assertEqual(sha256(target_dir / "analysis.log"),
+                         run["analysis_log_sha256"])
+        result = json.loads(result_path.read_text())
+        self.assertEqual(result["status"], "incomplete")
+        self.assertFalse(result["accepted"])
+        self.assertEqual(result["warnings"], [])
+        self.assertEqual(result["evaluation"]["counts"]["properties"],
+                         {"valid": 197, "unreachable": 3})
+        self.assertEqual(len(result["evaluation"][
+            "selected_property_duplicate_groups"]), 12)
+        self.assertEqual(result["evaluation"]["selected_property_ambiguities"], [])
+        issues = result["evaluation"]["issues"]
+        self.assertEqual(len(issues), 3)
+        self.assertTrue(all(item["line"] == 122 and
+                            item["property_status"] == "Dead"
+                            for item in issues))
+
+    def test_qemu_semantic_result_is_tracked_and_artifacts_match_when_available(self):
+        run = self.execution["qemu_semantic_matrix"]
+        result_log = ROOT / run["tracked_result_log"]
+        self.assertEqual(sha256(result_log), run["tracked_result_log_sha256"])
+        text = result_log.read_text()
+        self.assertEqual(text.count("FRAGMA_BPF: PASS"), 88)
+        self.assertIn("FRAGMA_BPF: SUMMARY pass=88 fail=0", text)
+        self.assertNotRegex(text, r"FRAGMA_BPF: (?:MISMATCH|LOAD_FAIL|RUN_FAIL)")
+        for path_field, hash_field in (
+                ("source", "source_sha256"),
+                ("binary", "binary_sha256"),
+                ("initramfs", "initramfs_sha256"),
+                ("configuration", "configuration_sha256"),
+                ("zimage", "zimage_sha256"),
+                ("full_log", "full_log_sha256")):
+            path = ROOT / run[path_field]
+            if path.is_file():
+                with self.subTest(path=path_field):
+                    self.assertEqual(sha256(path), run[hash_field])
+
+    def test_qemu_configuration_forces_jit_when_available(self):
+        config = ROOT / self.execution["qemu_semantic_matrix"]["configuration"]
+        if not config.is_file():
+            self.skipTest("retained QEMU kernel configuration unavailable")
+        text = config.read_text()
+        for symbol in ("CONFIG_BPF=y", "CONFIG_BPF_SYSCALL=y",
+                       "CONFIG_BPF_JIT=y", "CONFIG_BPF_JIT_ALWAYS_ON=y"):
+            self.assertRegex(text, rf"(?m)^{re.escape(symbol)}$")
 
 
 if __name__ == "__main__":

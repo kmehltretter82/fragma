@@ -489,13 +489,24 @@ class ReportTests(unittest.TestCase):
         self.assertTrue(result["accepted"])
         self.assertEqual(len(result["unselected_property_ambiguities"]), 2)
 
-    def test_selected_or_contradictory_exporter_collisions_fail(self):
+    def test_selected_identical_exporter_rows_are_aggregated_but_contradictions_fail(self):
         header = "directory\tfile\tline\tfunction\tproperty kind\tstatus\tproperty\n"
         row = f"{self.root}\tfixture.c\t2\tf\tuser assertion\tValid\tx > 0\n"
         path = self.report(header + row + row, "tsv")
-        with self.assertRaisesRegex(ReportError, "Duplicate"):
-            parse_properties(path, selected_functions=["f"])
+        rows = parse_properties(path, source_files=[self.source], selected_functions=["f"])
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["exported_occurrences"], [2, 3])
+        self.assertEqual(rows[0]["exported_duplicate_count"], 2)
+        result = self.evaluate(props=rows)
+        self.assertTrue(result["accepted"], result)
+        self.assertEqual(len(result["selected_property_duplicate_groups"]), 1)
         path.write_text(header + row + row.replace("Valid", "Unknown"))
+        rows = parse_properties(path, source_files=[self.source], selected_functions=["f"])
+        self.assertEqual(len(rows), 2)
+        self.assertTrue(all(item["exported_identity_ambiguous"] for item in rows))
+        result = self.evaluate(props=rows)
+        self.assertFalse(result["accepted"])
+        self.assertEqual(len(result["selected_property_ambiguities"]), 2)
         with self.assertRaisesRegex(ReportError, "Duplicate"):
             parse_properties(path, selected_functions=["unrelated"])
         for scope in ([], "f", [None]):

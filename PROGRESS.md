@@ -432,7 +432,7 @@ a proof of the whole kernel or automatic verification of every caller.
 | Common byte helpers | Dated nine-GCC-profile scoped L2 plus one current MIPS32el target. MIPS passes 19 model checks, 94 ordinary goals, 82 properties and all 27 compiler/control commands. | Replay the nine GCC targets at the post-registration identity; remaining architectures, kernel callers and runtime corroboration. |
 | RISC-V encoders | Dated source/model/proof gates for seven helpers and five project witnesses: 119 ordinary goals, 119 dependencies and 47 postconditions. | Replay at the post-registration identity; helper-specific calibration, kernel callers and a documented encoder L2 scope. |
 | ARM64 scalar extraction | Dated runtime-safety gates for two cpuid helpers: six ordinary goals and ten selected dependencies with genuine-header checks. | Replay at the post-registration identity; add functional contracts/calibration and verify kernel callers. |
-| Kernel bug search | RV32 `load_unaligned_zeropad()` remains a review-found defect that the user sent manually. The recent-risk ARM32 batch has completed 2/8 targets: `pcibios_align_resource()` is a bounded no-finding, while Frama-C first exposed an unchecked relocation `sh_info` index in unchanged `module_frob_arch_sections()`. An exact QEMU ARM32 A/B turns the original paging fault into `ENOEXEC`, and current upstream remains affected. | Continue with strict analyzer-first ARM32 BPF JIT `build_insn()`, then Mthread-plus-Eva cache synchronization, uprobes and DMA. Six frozen candidates plus functional/WP follow-up remain. Track RV32 upstream review separately. |
+| Kernel bug search | RV32 `load_unaligned_zeropad()` remains a review-found defect that the user sent manually. In the recent-risk ARM32 batch, `pcibios_align_resource()` is a bounded no-finding and Frama-C first exposed the confirmed module-relocation `sh_info` bug. The third candidate, recent BPF JIT `build_insn()`, now has a 2,797-token source-identical partial scan with no reachable direct RTE alarm and an 88/88 `BPF_JIT_ALWAYS_ON` QEMU semantic pass; helper closure remains open. | Move the primary slot to Mthread-plus-Eva analysis of the April 2026 `__sync_icache_dcache()` race fix, then uprobes and DMA. Five untouched candidates, BPF helper/functional follow-up and campaign-wide WP/classification remain. Track RV32 upstream review separately. |
 | Concurrency | C0/C1 infrastructure, limited C2 mutex/IRQ pilots, a 92-check LKMM baseline, a 135-check release/acquire pilot, a 162-check atomic/RMW pilot and a 1036-check IPC refcount lifetime/progress pilot are accepted. Six narrow kernel concurrency properties now exist: two access-protection claims, trace tgid-map publication ordering, module-statistics no-lost-update atomicity, IPC final-put/get-unless-zero exclusion with eleven checked SMP mappings, and bounded-quiescent strong-CAS retry progress with native/UML x86-64 and s390x mappings. A separate 609-check audit evaluates all eight existing LL/SC-bearing profiles and promotes none. | C3 architecture-backed unbounded/LL/SC progress, broader lockless lifetime behavior and remaining architecture mappings; then C4 RCU. Broader IRQ classes, functional protocols and the preserved unlocked HDQ accesses remain open. |
 
 The registry's 24 distinct kernel functions reach the plan's initial numerical
@@ -695,10 +695,12 @@ eight-profile LL/SC admission evaluation is also complete, with zero promotion.
 The scoped MIPS32el L2 proof is now complete. The ARM32 Fragma-first campaign
 has frozen its recent-risk batch and completed two targets: one bounded
 no-finding and one analyzer-first bug confirmed by an exact QEMU original/fixed
-A/B. Six candidates plus functional follow-up remain. Immediate work is the
-recent ARM32 BPF JIT `build_insn()` target, then Mthread-plus-Eva cache
-synchronization and the rest of that configured ARM32 campaign, followed by
-post-registration proof replay, tracking the manually sent RV32 patch, and
+A/B. A third, the recent BPF JIT, has a retained partial no-finding plus an
+88/88 generated-code semantic pass; its helper closure remains open. Five
+untouched candidates plus functional follow-up remain. Immediate work is
+Mthread-plus-Eva cache synchronization and the rest of that configured ARM32
+campaign, followed by post-registration proof replay, tracking the manually
+sent RV32 patch, and
 further C3 protocol or architecture-backed progress work.
 Mappings for architectures outside the refcount pilot's eleven-profile set,
 interrupt classes and functional protocols remain explicit extensions

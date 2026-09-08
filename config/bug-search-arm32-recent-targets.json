@@ -75,6 +75,30 @@
       "claims": [],
       "caller_coverage": "one-loader-permitted-malformed-sht-rel-destination-index",
       "search_classification": "concrete-invalid-pointer-confirmed-by-qemu"
+    },
+    {
+      "id": "search.arm32.recent.build_insn",
+      "suite": "bug-search-arm32-recent",
+      "role": "calibration",
+      "profile": "arm-gcc",
+      "build_id": "arm-gcc-recent-v2",
+      "source": "arch/arm/net/bpf_jit_32.c",
+      "harness": "harness/arm32_recent_bpf_build_insn_slice.c",
+      "specs": "harness/arm32_recent_specs.h",
+      "driver": "harness/arm32_recent_bpf_build_insn_driver.c",
+      "entry": "fragma_arm32_bpf_build_insn",
+      "functions": ["build_insn"],
+      "analysis_functions": ["build_insn"],
+      "analysis": "eva",
+      "analysis_pipeline": {"kind": "rte-eva"},
+      "input_mode": "standalone",
+      "provenance": {"mode": "functions"},
+      "required_properties": ["arm32_bpf_build_insn_driver_domain"],
+      "assumptions": ["arm32-recent-bpf-build-insn-driver", "arm32-recent-bpf-build-insn-frontend", "arm32-recent-bpf-build-insn-dependencies"],
+      "eva_auto_builtins": false,
+      "claims": [],
+      "caller_coverage": "broad-three-insn-fake-pass-verifier-shaped-domain",
+      "search_classification": "partial-no-reachable-direct-rte-lead"
     }
   ]
 }

@@ -94,12 +94,24 @@ analysis identities, output hashes, the QEMU A/B and the send-ready-but-unsigned
 patch. The reproducer source remains local and ignored under current kernel
 AI-reporting guidance.
 
-Two of eight frozen candidates have now run: one bounded no-finding and one
-confirmed defect. The next strict analyzer-first target is the recently changed
-ARM32 BPF JIT `build_insn()` function. Cache synchronization follows with
-Mthread plus Eva, then uprobes and DMA. `get_module_plt()` remains a useful
-calibration target, but its body was exposed during dependency inspection and
-is conservatively ineligible for the strict discovery label.
+The third target, the April 2026 ARM32 BPF JIT `build_insn()`, now has an
+analyzer-first partial pass. Eleven exact-TU attempts documented unrelated
+header frontend gaps; a 2,797-token source-identical slice then produced 197
+valid properties, three structurally dead properties and no warning. It found
+no reachable direct-operation alarm under its deliberately inert emitter/helper
+model. A separate `BPF_JIT_ALWAYS_ON` QEMU ARMv7 run matched 88 generated-code
+results against C oracles across arithmetic, shift boundaries, MOVSX, signed
+division, comparisons and a stack access. The
+[checkpoint record](../results/arm32-recent-build-insn-20260908/SUMMARY.md)
+classifies this `partial-no-finding`: live output-buffer and source-gated
+helper-closure analysis still remain.
+
+Two of eight frozen candidates are closed and the third has completed this
+initial stage. The next primary target is the recently race-fixed
+`__sync_icache_dcache()` with Mthread plus Eva, then uprobes and DMA.
+`get_module_plt()` remains useful calibration, but its body was exposed during
+dependency inspection and is conservatively ineligible for the strict
+discovery label.
 
 ## First campaign acceptance
 
@@ -108,7 +120,8 @@ is conservatively ineligible for the strict discovery label.
   sign/zero extension, pointer-range calculations and page-boundary helpers.
 - [ ] Run unchanged-source Eva/RTE triage under at least one current configured
   profile—only `arm-gcc` in this campaign—with bounded per-function time and
-  complete outcome retention. Two of eight candidates are complete.
+  complete outcome retention. Two of eight candidates are complete and one has
+  a retained partial pass.
 - [ ] Add independently sourced functional properties for the candidates that
   survive frontend/model triage and run WP without hiding unresolved goals.
 - [ ] Classify every lead using the table above and publish false-positive and
