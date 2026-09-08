@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "campaign_id": "arm32-recent-risk-20260907",
-  "status": "active-first-candidate-bounded-rte-no-finding",
+  "status": "active-first-fragma-found-bug-confirmed",
   "frozen_at": "2026-09-07",
   "kernel_revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
   "kernel_revision_date": "2026-08-09",
@@ -50,6 +50,14 @@
         "BPF_JIT_ALWAYS_ON=y"
       ],
       "sha256": "ba10a6976ece869d9284011ea09f809092565ffcbbcfba8dfa67ff6c373bbc35"
+    },
+    "multi_v7_2g": {
+      "base_recipe": "multi_v7_defconfig",
+      "delta": [
+        "VMSPLIT_2G=y"
+      ],
+      "sha256": "7b328f1239b1b04e4e95af25b6cb70a9e15aba9f23fb5c0b64d158cd1484f39f",
+      "purpose": "Pinned source-identical module analysis and exact QEMU A/B configuration"
     }
   },
   "compiler": {
@@ -225,6 +233,17 @@
       "arch/arm/mm/dma-mapping.o": "50a68c4f68cd0396bb6d9b24eb12c0e3ac5878a6c187f2eb4c61c77eeee2a2d2"
     }
   },
+  "retained_analysis_build": {
+    "id": "arm-gcc-recent-2g-analysis-v2",
+    "receipt": "build/kernel/arm-gcc-recent-2g-analysis-v2/fragma-build.json",
+    "receipt_sha256": "c370d80272d119d3643bb0394e567babba0c1f191ca5328f019c96e444b07baf",
+    "configuration_sha256": "7b328f1239b1b04e4e95af25b6cb70a9e15aba9f23fb5c0b64d158cd1484f39f",
+    "status": "prepared-module-source-identical-analysis",
+    "object_sha256": {
+      "lib/string.o": "aaa6c4f3bc7c336713f3acc41401098459896f7d03f86494caf0cd9908599ebf",
+      "arch/arm/kernel/module-plts.o": "1d8cf9e8aff2d58cc55ea7f7ac853392ea91c285c456e4501252f1d2e6048ab9"
+    }
+  },
   "execution": {
     "pcibios_align_resource": {
       "full_translation_unit": {
@@ -247,8 +266,55 @@
         "scope": "Bounded below-2-GiB scalar inputs, valid local objects, and modeled PCI host/default/optional alignment dependencies; runtime safety only, not a functional or whole-TU proof."
       },
       "raw_model_gap": "The first slice run used an incorrect callback third-parameter type and Frama-C reported the resulting integer-to-pointer call. The corrected source-derived signature removed every candidate alarm."
+    },
+    "module_frob_arch_sections": {
+      "source_identical_general": {
+        "status": "analyzer-lead-confirmed",
+        "output": "build/arm32-recent-search-20260908/module-frob-general-final-1",
+        "summary_sha256": "a4ef5c530402ec75284fbbdb6738a4838e0573794069492e87826710ff00d6fe",
+        "result_sha256": "0713ce25b1383b79c6c74e2f28ddb032507a39978987c5c73315598042c6e2e2",
+        "analysis_log_sha256": "01c6e89ab3f57ec96c42929d3cf4a5ef838d91977108c3f0ad1db2967427cb07",
+        "properties": {"valid": 81, "unknown": 2, "invalid": 0},
+        "lead": "Eva could not establish that sechdrs + s->sh_info is an object pointer or that the following dstsec->sh_flags access is valid.",
+        "classification": "fragma-found-confirmed"
+      },
+      "concrete_analyzer_witness": {
+        "status": "incomplete-expected-invalid-pointer",
+        "output": "build/arm32-recent-search-20260908/module-frob-witness-final-1",
+        "summary_sha256": "eab91084d8594f02cbfcca5a344036c4ffe33c826861838388803ef3ef5616a2",
+        "result_sha256": "9f2a877919d9210a8d7f21ee6625918db1844cd556b249789bb9ad55ac10a8bd",
+        "analysis_log_sha256": "0cf04a9ffc9459d51864a5d5141a9a67364cb3eabbd8f1d505c47b25cd0d8c4f",
+        "properties": {"valid": 34, "unreachable": 47},
+        "result": "A loader-permitted SHT_REL sh_info of 0x10000000 makes the pointer-value assertion invalid; propagation stops at the faulty operation."
+      },
+      "qemu_ab": {
+        "machine": "QEMU 10.2.1 virt/Cortex-A15/TCG",
+        "compiler": "arm-linux-gnueabi-gcc 15.2.0",
+        "configuration": "multi_v7_2g",
+        "control_module_sha256": "824a243c3c6c676df343e5d398183ba241765ee93fefe1f7a3c8a5012c995643",
+        "malformed_module_sha256": "334f7daf9f942071bc70dd5b8927c47337d419c1a8242f1b4178572ccd024492",
+        "before_log": "build/arm32-module-sh-info-qemu/qemu-before.log",
+        "before_log_sha256": "40d8c8f1b9382fe727b49e113bbabf16b66a98f2e07441462e500c05d6cac59a",
+        "before_zimage_sha256": "e2916f43eef00a9e367e259584b317ab6d89db0b279490601692c46e75a07e49",
+        "before": "Control loads and unloads; the malformed module faults at module_frob_arch_sections+0x160/0x2b8 and panics the kernel.",
+        "after_log": "build/arm32-module-sh-info-qemu/qemu-after.log",
+        "after_log_sha256": "efd9ddf2511c315502a1e8e470431b554eb25f1bc657a2dc2329b07fd5c63fdd",
+        "after_zimage_sha256": "b453107d90006b6b12ca662e8287258020d7a719cc6c690e2171705af375ce08",
+        "after": "Control still loads and unloads; the malformed module is rejected with ENOEXEC and the witness completes."
+      },
+      "current_upstream": {
+        "base_commit": "28924df2a08f440c73991b83028032c901de2ae4",
+        "base_date": "2026-09-07",
+        "status": "affected-and-fix-applies",
+        "patched_full_zimage_configuration_sha256": "76600c466a378e172779e7832b32114c5281c1d997677a226d07134b652919d9",
+        "patched_full_zimage_sha256": "1385712a3b07b0c388e57aa0cfe628c3772c4b9fa0f77395baee270926bc27a3",
+        "patch": "arm/arm32-module-sh-info/patches/0001-module-reject-invalid-relocation-section-target-indi.patch",
+        "patch_sha256": "ad3d77f3f0278f6525eba16982a6ee5f7efdfa28a460d8b8d94497c516bdd859",
+        "checkpatch": "zero errors, warnings and checks with only the intentionally absent human sign-off ignored"
+      },
+      "threat_classification": "regular-kernel-robustness-bug-cap-sys-module-required"
     }
   },
-  "confirmed_bugs": 0,
-  "next_step": "Mechanically extract and run module_frob_arch_sections() as the next strict analyzer-first recent ARM32 target without exposing its body before the raw result; retain get_module_plt() only as a non-strict calibration candidate because its body was already viewed."
+  "confirmed_bugs": 1,
+  "next_step": "Run the recent ARM32 BPF JIT build_insn() as the next strict analyzer-first target, then analyze __sync_icache_dcache() with Mthread plus Eva before continuing through uprobes and DMA."
 }

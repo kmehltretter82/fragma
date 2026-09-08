@@ -79,11 +79,27 @@ models—not as whole-TU or functional verification.
 The compact [checkpoint record](../results/arm32-recent-pci-20260907/SUMMARY.md)
 contains the exact scope, identities and retained-output hashes.
 
-No Fragma-found Linux bug has been confirmed in this campaign yet. The next
-strict analyzer-first target is the recently changed ARM module relocation
-function `module_frob_arch_sections()`. `get_module_plt()` remains useful for
-calibration, but its body was exposed during dependency inspection before an
-analyzer run and is conservatively ineligible for the strict discovery label.
+The second target, the April 2026 ARM module-relocation function
+`module_frob_arch_sections()`, produced the campaign's first
+`fragma-found-confirmed` bug. In the unchanged source-gated body, Eva retained
+exactly two alarms: forming `sechdrs + s->sh_info` may create a non-object
+pointer, and the following `dstsec->sh_flags` access may be invalid. Review of
+the caller then established that the generic module loader had not yet checked
+the SHT_REL/SHT_RELA target index. A concrete malformed module faults the
+original kernel at `module_frob_arch_sections()` under QEMU ARM32; the same
+input is rejected with `ENOEXEC` after early generic validation. Current
+upstream remains affected. The complete
+[evidence record](../results/arm32-module-sh-info-20260908/SUMMARY.md) retains
+analysis identities, output hashes, the QEMU A/B and the send-ready-but-unsigned
+patch. The reproducer source remains local and ignored under current kernel
+AI-reporting guidance.
+
+Two of eight frozen candidates have now run: one bounded no-finding and one
+confirmed defect. The next strict analyzer-first target is the recently changed
+ARM32 BPF JIT `build_insn()` function. Cache synchronization follows with
+Mthread plus Eva, then uprobes and DMA. `get_module_plt()` remains a useful
+calibration target, but its body was exposed during dependency inspection and
+is conservatively ineligible for the strict discovery label.
 
 ## First campaign acceptance
 
@@ -92,12 +108,12 @@ analyzer run and is conservatively ineligible for the strict discovery label.
   sign/zero extension, pointer-range calculations and page-boundary helpers.
 - [ ] Run unchanged-source Eva/RTE triage under at least one current configured
   profile—only `arm-gcc` in this campaign—with bounded per-function time and
-  complete outcome retention.
+  complete outcome retention. Two of eight candidates are complete.
 - [ ] Add independently sourced functional properties for the candidates that
   survive frontend/model triage and run WP without hiding unresolved goals.
 - [ ] Classify every lead using the table above and publish false-positive and
   model-gap rates as well as confirmed defects.
-- [ ] For each confirmed lead, retain a concrete original-source witness and
+- [x] For each confirmed lead, retain a concrete original-source witness and
   same-input fixed-source A/B; for zero confirmed leads, report zero plainly and
   choose the next batch from recorded coverage gaps.
 

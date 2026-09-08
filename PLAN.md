@@ -88,9 +88,18 @@ change, passes bounded RTE/Eva with 20 valid properties, zero unresolved
 properties and zero warnings after one callback-model defect was corrected.
 This is a scoped `verified-no-finding`, not whole-TU or functional verification.
 Six preserved whole-TU attempts instead document Frama-C frontend gaps in
-unrelated transitive headers. No Fragma-found kernel bug is confirmed yet; the
-next strict target is `module_frob_arch_sections()`. See the compact
-[ARM32 checkpoint](results/arm32-recent-pci-20260907/SUMMARY.md).
+unrelated transitive headers.
+
+The second target produced the first genuine Fragma-led kernel finding. Eva
+flagged the unchecked relocation target index in the unchanged April 2026
+ARM32 `module_frob_arch_sections()` body before manual diagnosis. A concrete
+malformed module then faults the original QEMU kernel in that function, while
+the generic early-validation fix rejects the same input with `ENOEXEC`; a full
+current-upstream ARM32 build also passes. Current upstream remains affected.
+The [finding record](results/arm32-module-sh-info-20260908/SUMMARY.md) contains
+the exact analyzer identities and QEMU A/B evidence. The batch is now 2/8; the
+next strict target is the recent ARM32 BPF JIT `build_insn()` function, followed
+by Mthread-plus-Eva cache synchronization analysis.
 
 The [nine-calibration renewal](docs/CALIBRATION-RENEWAL-20260907.md) now passes
 both normal Eva batches: 38 model checks, 55 positive selected properties and
@@ -560,10 +569,11 @@ The first new bug-search batch uses only the configured 32-bit ARMv7
 inspection. Follow the [Fragma-first classification and A/B protocol](docs/BUG-SEARCH-PLAN.md);
 an alarm, timeout or failed proof alone is not a kernel defect.
 
-- [x] Freeze the eight-function recent-risk ARM32 batch and complete one
-  source-identical bounded RTE/Eva canary. `pcibios_align_resource()` has no
-  surviving safety lead in that scope; seven recent candidates and functional
-  follow-up remain.
+- [x] Freeze the eight-function recent-risk ARM32 batch and complete two
+  source-identical RTE/Eva targets. `pcibios_align_resource()` has no surviving
+  safety lead in its bounded scope; `module_frob_arch_sections()` yielded one
+  analyzer-first, QEMU-confirmed bug. Six candidates and functional follow-up
+  remain.
 
 - [ ] Execute the first ARM32 Fragma-first campaign: freeze 5–10 unchanged
   functions, run bounded Eva/RTE before manual source diagnosis, add

@@ -1,0 +1,69 @@
+TEMPORARY PRE-SEND NOTES -- REMOVE THIS SECTION BEFORE SENDING
+
+Check that the email client is configured for plain-text kernel mail as
+described in Documentation/process/email-clients.rst. This host has no email
+configured, and the AI assistant did not send anything.
+
+Patch recipients:
+To: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, Daniel Gomez <da.gomez@kernel.org>, Sami Tolvanen <samitolvanen@google.com>
+Cc: Aaron Tomlin <atomlin@atomlin.com>, Nicolas Pitre <nico@fluxnic.net>, Russell King <rmk+kernel@arm.linux.org.uk>, Ard Biesheuvel <ardb@kernel.org>, linux-modules@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+
+Report/reproducer recipients if maintainers request the reproducer:
+Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, Daniel Gomez <da.gomez@kernel.org>, Sami Tolvanen <samitolvanen@google.com>
+
+END TEMPORARY PRE-SEND NOTES
+
+Subject: ARM32 module_frob_arch_sections() faults on out-of-range relocation sh_info
+
+Affected versions
+
+The observed ARM32 path was introduced by commit 7d485f647c1f ("ARM:
+8220/1: allow modules outside of bl range"). The bug remains present at
+upstream commit 28924df2a08f440c73991b83028032c901de2ae4 dated 2026-09-07.
+
+Problem
+
+The generic module loader validates ELF section contents and names before it
+calls module_frob_arch_sections(), but does not validate the sh_info target
+index of SHT_REL or SHT_RELA sections. ARM32's ARM_MODULE_PLTS hook forms
+sechdrs + sh_info and reads the resulting section header. An out-of-range
+index therefore forms an invalid pointer and can cause a kernel paging fault.
+The later apply_relocations() code skips invalid indices, but runs too late to
+protect the architecture hook.
+
+Reproducer status
+
+A source reproducer is available but is not included in the public project.
+It builds a normal ARM32 module and changes only the first SHT_REL section's
+sh_info from 10 to 0x10000000. On QEMU virt/TCG, the control module loads and
+unloads. The malformed module faults in
+module_frob_arch_sections()+0x160/0x2b8 on the original kernel. With the
+proposed fix, the same module is rejected with ENOEXEC and init continues.
+
+Triggering conditions
+
+The demonstrated path uses a 32-bit ARM kernel with MODULES and
+ARM_MODULE_PLTS enabled, CAP_SYS_MODULE, and a module-signature policy that
+permits the test module. VMSPLIT_2G was enabled in the tested multi_v7
+configuration; it is a test detail, not claimed as a necessary condition.
+Because loading a malformed module already requires module-loading privilege,
+this is classified as a regular kernel robustness bug, not a security
+vulnerability.
+
+Proposed fix and verification
+
+Validate relocation section target indices in elf_validity_cache_sechdrs()
+before any architecture hook can consume them. The QEMU test was run A/B at
+commit b9b3e33b70b71e516930117e21de3ad2a7723747 with GCC 15.2.0 and QEMU
+10.2.1. The full patched ARM32 zImage also builds without warnings at current
+base commit 28924df2a08f440c73991b83028032c901de2ae4. The patch applies cleanly
+there and checkpatch reports no issue other than the intentionally absent
+human Signed-off-by trailer.
+
+Testing gaps
+
+The exact QEMU A/B was not repeated at the newer base because the relevant
+architecture function and loader ordering are unchanged; a full current-base
+ARM32 build was completed instead. The installed sparse 0.6.4 is too old for
+the current kernel build's sparse gate, so no sparse result is claimed. No
+hardware run or cross-architecture runtime test was performed.

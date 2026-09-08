@@ -1,0 +1,78 @@
+From 8ee4419261a00b73e0ceeb58d3fbd024717f6a86 Mon Sep 17 00:00:00 2001
+From: Karl Mehltretter <kmehltretter@gmail.com>
+Date: Tue, 8 Sep 2026 01:08:57 +0000
+Subject: [PATCH] module: reject invalid relocation section target indices
+To: Luis Chamberlain <mcgrof@kernel.org>,
+    Petr Pavlu <petr.pavlu@suse.com>,
+    Daniel Gomez <da.gomez@kernel.org>,
+    Sami Tolvanen <samitolvanen@google.com>
+Cc: Aaron Tomlin <atomlin@atomlin.com>,
+    Nicolas Pitre <nico@fluxnic.net>,
+    Russell King <rmk+kernel@arm.linux.org.uk>,
+    Ard Biesheuvel <ardb@kernel.org>,
+    linux-modules@vger.kernel.org,
+    linux-arm-kernel@lists.infradead.org,
+    linux-kernel@vger.kernel.org
+
+The module loader validates section contents and names before calling
+module_frob_arch_sections(), but does not validate the sh_info target index
+of relocation sections. Several architecture hooks use that value as a
+section-table index before apply_relocations() later skips invalid indices.
+
+On ARM32 with ARM_MODULE_PLTS, an out-of-range SHT_REL sh_info makes
+module_frob_arch_sections() form a pointer outside the section table and
+read its sh_flags. A malformed module therefore causes a kernel paging
+request instead of being rejected.
+
+Reject relocation sections whose target index is outside the section
+table during the early ELF validity pass.
+
+Fixes: 7d485f647c1f ("ARM: 8220/1: allow modules outside of bl range")
+Cc: stable@vger.kernel.org
+Assisted-by: LLM Frama-C
+---
+Found with Frama-C Eva at b9b3e33b70b7 using a source-identical ARM32
+module_frob_arch_sections() slice. An unconstrained loader-permitted sh_info
+produced an invalid section-table pointer alarm. A reproducer is available.
+
+A/B tested at b9b3e33b70b7 with GCC 15.2.0 on ARM32 QEMU virt/TCG using
+multi_v7_defconfig plus VMSPLIT_2G. The control module loaded and unloaded.
+Before this change, a module differing only in one SHT_REL sh_info (10 to
+0x10000000) oopsed at module_frob_arch_sections()+0x160. After this change,
+the same module was rejected with ENOEXEC and the control still loaded.
+
+The full patched ARM32 zImage also builds without warnings at the stated base
+commit with the same compiler and configuration.
+
+ kernel/module/main.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/kernel/module/main.c b/kernel/module/main.c
+index d0e1e0bd2ad0..30c7a05488bc 100644
+--- a/kernel/module/main.c
++++ b/kernel/module/main.c
+@@ -1933,6 +1933,7 @@ static int elf_validity_ehdr(const struct load_info *info)
+  * * Section array fits in the user provided data
+  * * Section index 0 is NULL
+  * * Section contents are inbounds
++ * * Relocation section target indices are inbounds
+  *
+  * Then updates @info with a &load_info->sechdrs pointer if valid.
+  *
+@@ -1983,6 +1984,12 @@ static int elf_validity_cache_sechdrs(struct load_info *info)
+ 	/* Validate contents are inbounds */
+ 	for (i = 1; i < info->hdr->e_shnum; i++) {
+ 		shdr = &sechdrs[i];
++		if ((shdr->sh_type == SHT_REL || shdr->sh_type == SHT_RELA) &&
++		    shdr->sh_info >= info->hdr->e_shnum) {
++			pr_err("Invalid ELF relocation section target index %u\n",
++			       shdr->sh_info);
++			return -ENOEXEC;
++		}
+ 		switch (shdr->sh_type) {
+ 		case SHT_NULL:
+ 		case SHT_NOBITS:
+
+base-commit: 28924df2a08f440c73991b83028032c901de2ae4
+-- 
+2.53.0

@@ -65,6 +65,10 @@ __pycache__/
 /riscv/repro/init_glibc
 /riscv/repro/*.cpio
 
+# Current kernel AI-reporting guidance says an AI-assisted bug reproducer
+# should be provided to maintainers on request, not published automatically.
+/repro/arm32-module-sh-info/
+
 # Full retained evidence is intentionally local. Publish only compact summaries,
 # coverage tables, and the small top-level/test audit records linked by docs.
 /results/*

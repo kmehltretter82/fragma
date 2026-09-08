@@ -209,7 +209,7 @@ class ARM32RecentRiskFreezeTests(unittest.TestCase):
     def test_recent_risk_campaign_replaces_strings_as_primary_search(self):
         self.assertEqual(self.data["campaign_id"], "arm32-recent-risk-20260907")
         self.assertEqual(self.data["status"],
-                         "active-first-candidate-bounded-rte-no-finding")
+                         "active-first-fragma-found-bug-confirmed")
         self.assertIn("Primary ARM32 bug-search", self.data["purpose"])
         self.assertIs(self.data["selection"]["body_review_before_freeze"], False)
         self.assertEqual(self.data["selection"]["limit"], 8)
@@ -266,7 +266,7 @@ class ARM32RecentRiskFreezeTests(unittest.TestCase):
                 })
                 self.assertGreater(item["function_tokens"], 0)
 
-    def test_first_result_is_narrow_and_reports_zero_bugs(self):
+    def test_first_result_remains_a_narrow_no_finding(self):
         result = self.data["execution"]["pcibios_align_resource"]
         self.assertEqual(result["full_translation_unit"]["status"],
                          "model-or-contract-gap")
@@ -276,7 +276,13 @@ class ARM32RecentRiskFreezeTests(unittest.TestCase):
         self.assertEqual(sliced["properties"],
                          {"valid": 20, "unknown": 0, "invalid": 0})
         self.assertIn("not a functional or whole-TU proof", sliced["scope"])
-        self.assertEqual(self.data["confirmed_bugs"], 0)
+
+    def test_campaign_reports_one_confirmed_analyzer_first_bug(self):
+        self.assertEqual(self.data["confirmed_bugs"], 1)
+        module = self.data["execution"]["module_frob_arch_sections"]
+        self.assertEqual(module["source_identical_general"]["classification"],
+                         "fragma-found-confirmed")
+        self.assertIn("build_insn()", self.data["next_step"])
 
     def test_exposed_sibling_is_not_eligible_for_strict_discovery_label(self):
         by_name = {item["name"]: item for item in self.data["candidates"]}
@@ -288,6 +294,19 @@ class ARM32RecentRiskFreezeTests(unittest.TestCase):
         receipt = ROOT / retained["receipt"]
         if not receipt.is_file():
             self.skipTest("retained ARM32 recent-risk build unavailable")
+        self.assertEqual(sha256(receipt), retained["receipt_sha256"])
+        build = json.loads(receipt.read_text())
+        self.assertEqual(build["build_id"], retained["id"])
+        self.assertEqual(build["files"][".config"],
+                         retained["configuration_sha256"])
+        for relative, expected in retained["object_sha256"].items():
+            self.assertEqual(build["files"][relative], expected, relative)
+
+    def test_module_analysis_build_receipt_matches_when_available(self):
+        retained = self.data["retained_analysis_build"]
+        receipt = ROOT / retained["receipt"]
+        if not receipt.is_file():
+            self.skipTest("retained ARM32 module-analysis build unavailable")
         self.assertEqual(sha256(receipt), retained["receipt_sha256"])
         build = json.loads(receipt.read_text())
         self.assertEqual(build["build_id"], retained["id"])
@@ -396,6 +415,129 @@ class ARM32RecentRiskSliceTests(unittest.TestCase):
         self.assertEqual(parsed["warnings"], [])
         self.assertEqual(parsed["evaluation"]["counts"]["properties"],
                          {"valid": 20})
+
+
+class ARM32RecentModuleFrobFindingTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.campaign = json.loads(RECENT.read_text())
+        cls.targets = {
+            target["id"]: target
+            for target in json.loads(RECENT_TARGETS.read_text())["targets"]
+        }
+        cls.general = cls.targets[
+            "search.arm32.recent.module_frob_arch_sections"]
+        cls.witness = cls.targets[
+            "search.arm32.recent.module_frob_arch_sections.oob_witness"]
+        cls.execution = cls.campaign["execution"]["module_frob_arch_sections"]
+        cls.kernel = ROOT.parent / "linux"
+
+    def test_targets_retain_source_identity_and_honest_classification(self):
+        self.assertEqual(self.general["build_id"],
+                         "arm-gcc-recent-2g-analysis-v2")
+        self.assertEqual(self.general["search_classification"],
+                         "fragma-found-confirmed")
+        self.assertEqual(self.witness["search_classification"],
+                         "concrete-invalid-pointer-confirmed-by-qemu")
+        self.assertEqual(self.general["analysis_pipeline"], {"kind": "rte-eva"})
+        self.assertEqual(self.general["provenance"], {"mode": "functions"})
+        if not (self.kernel / ".git").exists():
+            self.skipTest("local pinned kernel tree unavailable")
+        for target in (self.general, self.witness):
+            with self.subTest(target=target["id"]):
+                result = check_target(target, self.kernel,
+                                      self.campaign["kernel_revision"], ROOT)
+                self.assertTrue(result["passed"], result["errors"])
+                self.assertEqual(
+                    result["functions"][0]["source_token_sha256"],
+                    "de47a9730cb8f64c06774efa24e7d5b4efcd69ad067f0cefcac50814033a6f1c",
+                )
+
+    def test_general_analyzer_lead_matches_retained_result_when_available(self):
+        run = self.execution["source_identical_general"]
+        output = ROOT / run["output"]
+        if not output.is_dir():
+            self.skipTest("retained module-frob analyzer result unavailable")
+        target_dir = output / self.general["id"]
+        result_path = target_dir / "result.json"
+        log_path = target_dir / "analysis.log"
+        self.assertEqual(sha256(output / "summary.json"), run["summary_sha256"])
+        self.assertEqual(sha256(result_path), run["result_sha256"])
+        self.assertEqual(sha256(log_path), run["analysis_log_sha256"])
+        result = json.loads(result_path.read_text())
+        self.assertEqual(result["status"], "unknown")
+        self.assertEqual(result["evaluation"]["counts"]["properties"],
+                         {"valid": 81, "unknown": 2})
+        issues = [item for item in result["evaluation"]["issues"]
+                  if item["kind"] == "unknown"]
+        self.assertEqual([(item["line"], item["kind"]) for item in issues],
+                         [(51, "unknown"), (57, "unknown")])
+        self.assertIn("object_pointer", issues[0]["property"])
+        self.assertIn("dstsec->sh_flags", issues[1]["property"])
+        self.assertEqual(result["kernel_model_check"]["returncode"], 0)
+        self.assertEqual(result["kernel_model_check"]["log_sha256"],
+                         hashlib.sha256(b"").hexdigest())
+
+    def test_concrete_witness_stops_at_invalid_pointer_when_available(self):
+        run = self.execution["concrete_analyzer_witness"]
+        output = ROOT / run["output"]
+        if not output.is_dir():
+            self.skipTest("retained module-frob witness result unavailable")
+        target_dir = output / self.witness["id"]
+        result_path = target_dir / "result.json"
+        log_path = target_dir / "analysis.log"
+        self.assertEqual(sha256(output / "summary.json"), run["summary_sha256"])
+        self.assertEqual(sha256(result_path), run["result_sha256"])
+        self.assertEqual(sha256(log_path), run["analysis_log_sha256"])
+        result = json.loads(result_path.read_text())
+        self.assertEqual(result["status"], "incomplete")
+        self.assertEqual(result["evaluation"]["counts"]["properties"],
+                         {"valid": 34, "unreachable": 47})
+        log = log_path.read_text()
+        self.assertIn("got status invalid (stopping propagation)", log)
+        self.assertIn("line 51", log)
+
+    def test_qemu_original_fixed_ab_matches_retained_logs_when_available(self):
+        run = self.execution["qemu_ab"]
+        before = ROOT / run["before_log"]
+        after = ROOT / run["after_log"]
+        if not before.is_file() or not after.is_file():
+            self.skipTest("retained ARM32 QEMU A/B logs unavailable")
+        self.assertEqual(sha256(before), run["before_log_sha256"])
+        self.assertEqual(sha256(after), run["after_log_sha256"])
+        before_text = before.read_text(errors="replace")
+        after_text = after.read_text(errors="replace")
+        self.assertIn("Unable to handle kernel paging request", before_text)
+        self.assertIn("module_frob_arch_sections+0x160/0x2b8", before_text)
+        self.assertIn("FRAGMA: malformed result=-1 errno=8", after_text)
+        self.assertIn("FRAGMA: witness completed without kernel panic", after_text)
+
+    def test_patch_handoff_is_unsigned_attributed_and_repro_is_ignored(self):
+        current = self.execution["current_upstream"]
+        patch = ROOT / current["patch"]
+        self.assertEqual(sha256(patch), current["patch_sha256"])
+        text = patch.read_text()
+        self.assertIn("To: Luis Chamberlain", text)
+        self.assertIn("Cc: Aaron Tomlin", text)
+        self.assertIn("Fixes: 7d485f647c1f", text)
+        self.assertIn("Cc: stable@vger.kernel.org", text)
+        self.assertIn("Assisted-by: LLM Frama-C", text)
+        self.assertNotIn("Signed-off-by:", text)
+        self.assertIn("base-commit: " + current["base_commit"], text)
+        self.assertTrue((ROOT / "arm/arm32-module-sh-info/REPORT.txt").is_file())
+        self.assertTrue((ROOT / "results/arm32-module-sh-info-20260908/SUMMARY.md").is_file())
+        ignore = (ROOT / ".gitignore").read_text()
+        self.assertIn("/repro/arm32-module-sh-info/", ignore)
+
+    def test_patch_applies_to_local_kernel_when_available(self):
+        if not (self.kernel / ".git").exists():
+            self.skipTest("local kernel tree unavailable")
+        patch = ROOT / self.execution["current_upstream"]["patch"]
+        process = subprocess.run(
+            ["git", "-C", str(self.kernel), "apply", "--check", str(patch)],
+            text=True, capture_output=True,
+        )
+        self.assertEqual(process.returncode, 0, process.stderr)
 
 
 if __name__ == "__main__":
