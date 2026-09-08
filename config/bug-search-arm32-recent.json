@@ -417,8 +417,61 @@
           "log_sha256": "65ed45790e38e232b9eb1b40d8e7cf6ed1aa81e311bd33f7bb1aa2881954a781"
         }
       }
+    },
+    "arch_uprobe_copy_ixol": {
+      "full_translation_unit": {
+        "status": "frontend-gap-before-candidate",
+        "attempts": 1,
+        "last_output": "build/arm32-recent-search-20260908/uprobe-raw-tu-1",
+        "summary_sha256": "3044d245ee584ef431a6c83988bd0f519c899b814c5a023c626a74d6e8c09d14",
+        "result_sha256": "82e50a4d2bd6d28943c8f2b1ad1ec1d21a62c3c81f3821757558a329c2254ef3",
+        "analysis_log_sha256": "e0db7721d9b450129eb500d80b162621e1882acfcefdb5f8d8b0128d433af272",
+        "result": "The exact configured translation unit passed pinned source identity, then Frama-C stopped before candidate analysis on __auto_type emitted by min() in an unrelated nodemask inline function."
+      },
+      "source_identical_bounded_pass": {
+        "status": "calibration-passed",
+        "output": "build/arm32-recent-search-20260908/uprobe-slice-final-1",
+        "summary_sha256": "ddedf9d8fa1a601c2dc264814c20342d57f48a144d5440f395482bfb23cc6710",
+        "result_sha256": "6741815d8b77c35cdb03f2b6c51a133e0a297c1d3199ff1ee7865b3a53216a1a",
+        "analysis_log_sha256": "d0ab40194fa0236ca9b648f740ef92d0c73878fadade172a83f2bfde71858744",
+        "properties_tsv_sha256": "84e9ec681e31dd7ca9ba7e53fc6bb3626ba47756ce3c7b047976483a27ffd5bc",
+        "source_function_tokens": 76,
+        "source_function_token_sha256": "e3c5f3ace201c05fa6fe4f4e18426746805b77000f563297faae5193b1cb8ea7",
+        "properties": {"valid": 13, "unknown": 0, "invalid": 0},
+        "warnings": {"count": 2, "exact": "Frama-C kernel: using size of 'void'"},
+        "classification": "verified-no-finding-bounded-rte",
+        "caller_domain": {
+          "slot_bytes": 64,
+          "slots_per_4k_page": 64,
+          "trampoline_copy_bytes": 4,
+          "instruction_copy_bytes": 8,
+          "result": "Both in-tree callers fit within every allocated XOL slot; the analyzed domain is broader and permits any length from zero through 64 bytes in any of the 64 slots."
+        },
+        "scope": "Direct pointer formation and explicit byte-copy source/destination safety for one live 4 KiB mapping. kmap lifetime, preemption, cache visibility, concurrency and instruction semantics remain modeled out; this is neither a whole-translation-unit nor arbitrary-caller proof."
+      },
+      "cross_page_sensitivity": {
+        "status": "incomplete-expected-boundary-alarm",
+        "output": "build/arm32-recent-search-20260908/uprobe-cross-page-control-final-1",
+        "summary_sha256": "8af7de79435fb520a809fedaa51d6b8071820f3f69e0e76bb383dc4091df9117",
+        "result_sha256": "2f7a97237fb24e790e3f7c6d990f8b88f7596b91a2dd0cbeb20ac7d926208db6",
+        "analysis_log_sha256": "f45c58b0de8addacb9f43402f3cabcd89fe6627c5818040bae1283c0d3b5b62b",
+        "properties_tsv_sha256": "8e4b9abb92a7dcc46226c3ce4331ec03a4f491ba0dec11b4820f4face73330b1",
+        "properties": {"valid": 10, "unknown": 1},
+        "result": "A deliberate 65-byte copy into the final 64-byte slot makes arm32_uprobe_copy_destination_valid invalid in the live Eva log. The consolidated loop-wide export is Unknown because earlier iterations are valid, so the control remains fail-closed and is not accepted as a clean calibration pass.",
+        "classification": "model-sensitivity-not-kernel-defect"
+      },
+      "new_bug_count": 0,
+      "classification": "bounded-no-finding",
+      "regression": {
+        "command": "python3 -m unittest discover -s tests -v",
+        "tests": 1100,
+        "skipped": 20,
+        "status": "passed",
+        "log": "build/tests-arm32-uprobe-checkpoint-20260908-v1.log",
+        "log_sha256": "3e5fecc02c2306bcaecddc7656c75548e5acfeb409c99d4033f554f623e902e3"
+      }
     }
   },
   "confirmed_bugs": 1,
-  "next_step": "Analyze arch_uprobe_copy_ixol() as the next untouched ARM32 target, then dma_cache_maint_page() and __map_sg_chunk(); retain get_module_plt() as review-exposed calibration and return to build_insn() emitter/helper closure after the untouched queue."
+  "next_step": "Analyze dma_cache_maint_page() and __map_sg_chunk() as the two remaining untouched strict ARM32 candidates; retain get_module_plt() as review-exposed calibration and return to build_insn() emitter/helper closure after the untouched queue."
 }

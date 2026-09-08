@@ -283,7 +283,12 @@ class ARM32RecentRiskFreezeTests(unittest.TestCase):
         module = self.data["execution"]["module_frob_arch_sections"]
         self.assertEqual(module["source_identical_general"]["classification"],
                          "fragma-found-confirmed")
-        self.assertIn("arch_uprobe_copy_ixol()", self.data["next_step"])
+        self.assertEqual(
+            self.data["execution"]["arch_uprobe_copy_ixol"]["new_bug_count"],
+            0,
+        )
+        self.assertIn("dma_cache_maint_page()", self.data["next_step"])
+        self.assertIn("__map_sg_chunk()", self.data["next_step"])
 
     def test_exposed_sibling_is_not_eligible_for_strict_discovery_label(self):
         by_name = {item["name"]: item for item in self.data["candidates"]}
@@ -664,6 +669,206 @@ class ARM32RecentBPFBuildInsnTests(unittest.TestCase):
         for symbol in ("CONFIG_BPF=y", "CONFIG_BPF_SYSCALL=y",
                        "CONFIG_BPF_JIT=y", "CONFIG_BPF_JIT_ALWAYS_ON=y"):
             self.assertRegex(text, rf"(?m)^{re.escape(symbol)}$")
+
+
+class ARM32RecentUprobeCopyTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.campaign = json.loads(RECENT.read_text())
+        cls.targets = {
+            target["id"]: target
+            for target in json.loads(RECENT_TARGETS.read_text())["targets"]
+        }
+        cls.target = cls.targets[
+            "search.arm32.recent.arch_uprobe_copy_ixol"]
+        cls.control = cls.targets[
+            "search.arm32.recent.arch_uprobe_copy_ixol.cross_page_control"]
+        cls.execution = cls.campaign["execution"]["arch_uprobe_copy_ixol"]
+        cls.kernel = ROOT.parent / "linux"
+
+    def git_source(self, relative: str) -> str:
+        process = subprocess.run(
+            ["git", "--no-optional-locks", "-C", str(self.kernel), "show",
+             self.campaign["kernel_revision"] + ":" + relative],
+            check=True, text=True, capture_output=True,
+        )
+        return process.stdout
+
+    def test_targets_are_source_gated_and_classified_fail_closed(self):
+        self.assertEqual(self.target["analysis_pipeline"], {"kind": "rte-eva"})
+        self.assertEqual(self.target["analysis_functions"],
+                         ["arch_uprobe_copy_ixol", "memcpy"])
+        self.assertEqual(self.target["provenance"], {"mode": "functions"})
+        self.assertEqual(self.target["search_classification"],
+                         "verified-no-finding-bounded-rte")
+        self.assertNotIn("eva_builtins", self.target)
+        self.assertEqual(self.control["expected_invalid"],
+                         ["arm32_uprobe_copy_destination_valid"])
+        self.assertEqual(self.control["search_classification"],
+                         "model-sensitivity-not-kernel-defect")
+        self.assertIn("not a kernel-defect claim",
+                      self.control["calibration_scope"])
+
+        if not (self.kernel / ".git").exists():
+            self.skipTest("local pinned kernel tree unavailable")
+        for target in (self.target, self.control):
+            with self.subTest(target=target["id"]):
+                result = check_target(target, self.kernel,
+                                      self.campaign["kernel_revision"], ROOT)
+                self.assertTrue(result["passed"], result["errors"])
+                function = result["functions"][0]
+                self.assertEqual(function["source_token_sha256"],
+                                 "e3c5f3ace201c05fa6fe4f4e18426746805b77000f563297faae5193b1cb8ea7")
+                self.assertTrue(function["declaration_prefix_equal"])
+
+    def test_dependency_model_analyzes_each_byte_and_is_explicitly_narrow(self):
+        ledger = {
+            item["id"]: item
+            for item in json.loads((ROOT / "config/assumptions.json").read_text())[
+                "assumptions"]
+        }
+        self.assertEqual(ledger["arm32-recent-uprobe-driver"]["review_status"],
+                         "reviewed")
+        self.assertEqual(
+            ledger["arm32-recent-uprobe-sensitivity-driver"]["review_status"],
+            "reviewed",
+        )
+        dependencies = ledger["arm32-recent-uprobe-dependencies"]
+        self.assertEqual(dependencies["review_status"], "reviewed-assumption")
+        self.assertIn("bounded C byte loop", dependencies["scope"])
+        self.assertIn("No highmem implementation", dependencies["scope"])
+        driver = (ROOT / "harness/arm32_recent_uprobe_slice_driver.c").read_text()
+        self.assertRegex(driver, r"for \(index = 0; index < len; index\+\+\)")
+        self.assertIn("arm32_uprobe_copy_destination_valid", driver)
+
+    def test_in_tree_callers_fit_the_analyzed_slot_domain(self):
+        if not (self.kernel / ".git").exists():
+            self.skipTest("local pinned kernel tree unavailable")
+        arch = self.git_source("arch/arm/include/asm/uprobes.h")
+        generic = self.git_source("kernel/events/uprobes.c")
+        self.assertRegex(arch, r"#define\s+UPROBE_XOL_SLOT_BYTES\s+64\b")
+        self.assertRegex(arch, r"#define\s+UPROBE_SWBP_INSN_SIZE\s+4\b")
+        self.assertRegex(arch, r"unsigned long\s+ixol\[2\]")
+        self.assertIn("#define UINSNS_PER_PAGE", generic)
+        self.assertIn("(PAGE_SIZE/UPROBE_XOL_SLOT_BYTES)", generic)
+        self.assertIn("slot_nr < UINSNS_PER_PAGE", generic)
+        self.assertIn("slot_nr * UPROBE_XOL_SLOT_BYTES", generic)
+        self.assertRegex(
+            generic,
+            r"arch_uprobe_copy_ixol\(area->page, 0, insns, insns_size\);",
+        )
+        self.assertRegex(
+            generic,
+            r"arch_uprobe_copy_ixol\(area->page, utask->xol_vaddr,\s*"
+            r"&uprobe->arch\.ixol, sizeof\(uprobe->arch\.ixol\)\);",
+        )
+        receipt = ROOT / self.campaign["retained_build"]["receipt"]
+        if receipt.is_file():
+            build = json.loads(receipt.read_text())
+            config = Path(build["output"]) / ".config"
+            self.assertRegex(config.read_text(),
+                             r"(?m)^CONFIG_PAGE_SIZE_4KB=y$")
+        domain = self.execution["source_identical_bounded_pass"]["caller_domain"]
+        self.assertEqual(domain, {
+            "slot_bytes": 64,
+            "slots_per_4k_page": 64,
+            "trampoline_copy_bytes": 4,
+            "instruction_copy_bytes": 8,
+            "result": ("Both in-tree callers fit within every allocated XOL "
+                       "slot; the analyzed domain is broader and permits any "
+                       "length from zero through 64 bytes in any of the 64 "
+                       "slots."),
+        })
+
+    def test_slice_compiles_as_arm32_gnu_c(self):
+        compiler = shutil.which("arm-linux-gnueabi-gcc")
+        if not compiler:
+            self.skipTest("ARM32 cross-compiler unavailable")
+        process = subprocess.run([
+            compiler, "-std=gnu11", "-march=armv7-a", "-mabi=aapcs-linux",
+            "-msoft-float", "-mfpu=vfp", "-mlittle-endian",
+            "-funsigned-char", "-fshort-wchar", "-fno-strict-overflow",
+            "-fno-strict-aliasing", "-ffreestanding", "-Wall", "-Wextra",
+            "-Werror", "-Wno-attributes", "-fsyntax-only",
+            str(ROOT / "harness/arm32_recent_uprobe_slice.c"),
+            str(ROOT / "harness/arm32_recent_uprobe_slice_driver.c"),
+        ], text=True, capture_output=True)
+        self.assertEqual(process.returncode, 0, process.stderr)
+
+    def test_retained_raw_and_bounded_results_match(self):
+        raw = self.execution["full_translation_unit"]
+        raw_output = ROOT / raw["last_output"]
+        if raw_output.is_dir():
+            raw_target = raw_output / self.target["id"]
+            self.assertEqual(sha256(raw_output / "summary.json"),
+                             raw["summary_sha256"])
+            self.assertEqual(sha256(raw_target / "result.json"),
+                             raw["result_sha256"])
+            self.assertEqual(sha256(raw_target / "analysis.log"),
+                             raw["analysis_log_sha256"])
+            parsed = json.loads((raw_target / "result.json").read_text())
+            self.assertEqual(parsed["status"], "tool-error")
+            self.assertTrue(parsed["provenance"]["passed"])
+            log = (raw_target / "analysis.log").read_text()
+            self.assertIn("include/linux/nodemask.h", log)
+            self.assertIn("__auto_type", log)
+
+        bounded = self.execution["source_identical_bounded_pass"]
+        output = ROOT / bounded["output"]
+        if not output.is_dir():
+            self.skipTest("retained uprobe bounded result unavailable")
+        target_dir = output / self.target["id"]
+        self.assertEqual(sha256(output / "summary.json"),
+                         bounded["summary_sha256"])
+        self.assertEqual(sha256(target_dir / "result.json"),
+                         bounded["result_sha256"])
+        self.assertEqual(sha256(target_dir / "analysis.log"),
+                         bounded["analysis_log_sha256"])
+        self.assertEqual(sha256(target_dir / "properties.tsv"),
+                         bounded["properties_tsv_sha256"])
+        result = json.loads((target_dir / "result.json").read_text())
+        self.assertEqual(result["status"], "calibration-passed")
+        self.assertTrue(result["accepted"])
+        self.assertEqual(result["evaluation"]["counts"]["properties"],
+                         {"valid": 13})
+        self.assertEqual(
+            [(warning["plugin"], warning["message"])
+             for warning in result["warnings"]],
+            [("kernel", "using size of 'void'"),
+             ("kernel", "using size of 'void'")],
+        )
+        regression = self.execution["regression"]
+        log = ROOT / regression["log"]
+        if log.is_file():
+            self.assertEqual(sha256(log), regression["log_sha256"])
+            text = log.read_text()
+            self.assertIn("Ran 1100 tests", text)
+            self.assertIn("OK (skipped=20)", text)
+
+    def test_cross_page_control_retains_the_exact_alarm(self):
+        run = self.execution["cross_page_sensitivity"]
+        output = ROOT / run["output"]
+        if not output.is_dir():
+            self.skipTest("retained uprobe sensitivity result unavailable")
+        target_dir = output / self.control["id"]
+        self.assertEqual(sha256(output / "summary.json"),
+                         run["summary_sha256"])
+        self.assertEqual(sha256(target_dir / "result.json"),
+                         run["result_sha256"])
+        self.assertEqual(sha256(target_dir / "analysis.log"),
+                         run["analysis_log_sha256"])
+        self.assertEqual(sha256(target_dir / "properties.tsv"),
+                         run["properties_tsv_sha256"])
+        result = json.loads((target_dir / "result.json").read_text())
+        self.assertEqual(result["status"], "incomplete")
+        self.assertFalse(result["accepted"])
+        self.assertEqual(result["evaluation"]["counts"]["properties"],
+                         {"valid": 10, "unknown": 1})
+        log = (target_dir / "analysis.log").read_text()
+        self.assertIn(
+            "assertion 'arm32_uprobe_copy_destination_valid' got status invalid",
+            log,
+        )
 
 
 if __name__ == "__main__":

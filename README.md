@@ -14,9 +14,12 @@ campaign. Its recent BPF JIT target currently has a partial no-finding backed by
 a source-identical Eva pass and 88/88 `BPF_JIT_ALWAYS_ON` QEMU semantic checks.
 The subsequent cache-synchronization pilot makes the known broken
 early-publication ordering fail while current source passes under a narrow
-two-caller Mthread + Eva model; it records zero new bugs and moves the primary
-search queue to ARM32 uprobes and DMA. Its exact scope and A/B hashes are in the
-[cache checkpoint](results/arm32-cache-mthread-20260908/SUMMARY.md).
+two-caller Mthread + Eva model. The following January 2026 uprobes target is a
+bounded no-finding: all in-tree copy shapes pass an explicit byte-access model,
+while a 65-byte cross-page control raises the intended alarm. The primary queue
+now moves to ARM32 DMA. Exact scopes are in the
+[cache checkpoint](results/arm32-cache-mthread-20260908/SUMMARY.md) and
+[uprobes checkpoint](results/arm32-uprobe-copy-20260908/SUMMARY.md).
 
 The public repository contains the authored runner, specifications, tests,
 plans, compact result summaries, and experimental provider patches. Downloaded

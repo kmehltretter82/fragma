@@ -117,12 +117,22 @@ rediscovery claim or a hardware/LKMM proof. The
 [cache checkpoint](../results/arm32-cache-mthread-20260908/SUMMARY.md) records
 the exact source, configured object, provider, A/B results and exclusions.
 
-Three candidates have completed an initial stage and the BPF JIT has a retained
-partial stage. The next untouched target is the January 2026 uprobes
-`arch_uprobe_copy_ixol()` change, followed by `dma_cache_maint_page()` and
-`__map_sg_chunk()`. `get_module_plt()` remains useful calibration, but its body
-was exposed during dependency inspection and is conservatively ineligible for
-the strict discovery label. The mature generic strings remain calibration only.
+The fifth target, January 2026 ARM uprobes function
+`arch_uprobe_copy_ixol()`, is a `verified-no-finding-bounded-rte`. One exact-TU
+attempt stopped before the candidate on unrelated `__auto_type` syntax. A
+76-token source-identical slice then proved 13 selected properties for any
+0–64-byte copy in any 64-byte XOL slot. The in-tree callers copy only 4 or 8
+bytes. A deliberate 65-byte final-slot control raises the destination alarm and
+remains fail-closed because the consolidated loop property is `Unknown`. The
+[uprobes checkpoint](../results/arm32-uprobe-copy-20260908/SUMMARY.md) records
+the exact domain, warnings, hashes and exclusions.
+
+Four candidates have completed an initial stage and the BPF JIT has a retained
+partial stage. The remaining untouched strict targets are
+`dma_cache_maint_page()` and `__map_sg_chunk()`. `get_module_plt()` remains
+useful calibration, but its body was exposed during dependency inspection and
+is conservatively ineligible for the strict discovery label. The mature generic
+strings remain calibration only.
 
 ## First campaign acceptance
 
@@ -131,8 +141,9 @@ the strict discovery label. The mature generic strings remain calibration only.
   sign/zero extension, pointer-range calculations and page-boundary helpers.
 - [ ] Run unchanged-source Eva/RTE triage under at least one current configured
   profile—only `arm-gcc` in this campaign—with bounded per-function time and
-  complete outcome retention. Three of eight candidates have completed an
-  initial stage and one has a retained partial pass; four remain untouched.
+  complete outcome retention. Four of eight candidates have completed an
+  initial stage, one has a retained partial pass, two strict candidates remain
+  untouched, and one review-exposed sibling remains calibration-only.
 - [ ] Add independently sourced functional properties for the candidates that
   survive frontend/model triage and run WP without hiding unresolved goals.
 - [ ] Classify every lead using the table above and publish false-positive and

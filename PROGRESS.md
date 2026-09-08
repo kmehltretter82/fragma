@@ -432,7 +432,7 @@ a proof of the whole kernel or automatic verification of every caller.
 | Common byte helpers | Dated nine-GCC-profile scoped L2 plus one current MIPS32el target. MIPS passes 19 model checks, 94 ordinary goals, 82 properties and all 27 compiler/control commands. | Replay the nine GCC targets at the post-registration identity; remaining architectures, kernel callers and runtime corroboration. |
 | RISC-V encoders | Dated source/model/proof gates for seven helpers and five project witnesses: 119 ordinary goals, 119 dependencies and 47 postconditions. | Replay at the post-registration identity; helper-specific calibration, kernel callers and a documented encoder L2 scope. |
 | ARM64 scalar extraction | Dated runtime-safety gates for two cpuid helpers: six ordinary goals and ten selected dependencies with genuine-header checks. | Replay at the post-registration identity; add functional contracts/calibration and verify kernel callers. |
-| Kernel bug search | RV32 `load_unaligned_zeropad()` remains a review-found defect that the user sent manually. In the recent-risk ARM32 batch, `pcibios_align_resource()` is a bounded no-finding and Frama-C first exposed the confirmed module-relocation `sh_info` bug. Recent BPF JIT `build_insn()` has a 2,797-token source-identical partial scan with no reachable direct RTE alarm and an 88/88 `BPF_JIT_ALWAYS_ON` QEMU semantic pass. Current `__sync_icache_dcache()` passes a sequential scan and a two-caller Mthread property, while an early-publication control fails it: one known-fix detection calibration, zero new bugs. | Move the primary slot to January 2026 `arch_uprobe_copy_ixol()`, then the two DMA/scatter-gather candidates. Four candidates are untouched; BPF helper/functional follow-up, review-exposed `get_module_plt()` calibration and campaign-wide WP/classification remain. Track RV32 upstream review separately. |
+| Kernel bug search | RV32 `load_unaligned_zeropad()` remains a review-found defect that the user sent manually. In the recent-risk ARM32 batch, `pcibios_align_resource()` is a bounded no-finding and Frama-C first exposed the confirmed module-relocation `sh_info` bug. Recent BPF JIT `build_insn()` has a 2,797-token source-identical partial scan with no reachable direct RTE alarm and an 88/88 `BPF_JIT_ALWAYS_ON` QEMU semantic pass. Current `__sync_icache_dcache()` passes a sequential scan and a two-caller Mthread property, while an early-publication control fails it: one known-fix detection calibration, zero new bugs. `arch_uprobe_copy_ixol()` is now a caller-validated bounded no-finding with 13 valid properties; its 65-byte cross-page control raises the intended destination alarm. | Move the primary slot to the two DMA/scatter-gather candidates. Two strict candidates are untouched; BPF helper/functional follow-up, review-exposed `get_module_plt()` calibration and campaign-wide WP/classification remain. Track RV32 upstream review separately. |
 | Concurrency | C0/C1 infrastructure, limited C2 mutex/IRQ pilots, a 92-check LKMM baseline, a 135-check release/acquire pilot, a 162-check atomic/RMW pilot and a 1036-check IPC refcount lifetime/progress pilot are accepted. Six narrow kernel concurrency properties now exist: two access-protection claims, trace tgid-map publication ordering, module-statistics no-lost-update atomicity, IPC final-put/get-unless-zero exclusion with eleven checked SMP mappings, and bounded-quiescent strong-CAS retry progress with native/UML x86-64 and s390x mappings. A separate 609-check audit evaluates all eight existing LL/SC-bearing profiles and promotes none. | C3 architecture-backed unbounded/LL/SC progress, broader lockless lifetime behavior and remaining architecture mappings; then C4 RCU. Broader IRQ classes, functional protocols and the preserved unlocked HDQ accesses remain open. |
 
 The registry's 24 distinct kernel functions reach the plan's initial numerical
@@ -693,13 +693,14 @@ source-linked release/acquire pilot, atomic/RMW pilot and IPC refcount
 lifetime/bounded-progress pilot are complete at their narrow boundaries. The
 eight-profile LL/SC admission evaluation is also complete, with zero promotion.
 The scoped MIPS32el L2 proof is now complete. The ARM32 Fragma-first campaign
-has frozen its recent-risk batch and completed three initial stages: one
-bounded no-finding, one analyzer-first bug confirmed by an exact QEMU
-original/fixed A/B, and one Mthread/Eva detection calibration for an already
-fixed cache-publication race. A fourth candidate, the recent BPF JIT, has a
-retained partial no-finding plus an 88/88 generated-code semantic pass; its
-helper closure remains open. Four candidates are untouched. Immediate work is
-the uprobes and DMA portion of that configured ARM32 campaign, followed by
+has frozen its recent-risk batch and completed four initial stages: two bounded
+no-findings, one analyzer-first bug confirmed by an exact QEMU original/fixed
+A/B, and one Mthread/Eva detection calibration for an already fixed
+cache-publication race. The recent BPF JIT has a retained partial no-finding
+plus an 88/88 generated-code semantic pass; its helper closure remains open.
+Two strict candidates are untouched and one review-exposed sibling remains
+calibration-only. Immediate work is the DMA portion of that configured ARM32
+campaign, followed by
 post-registration proof replay, tracking the manually sent RV32 patch, and
 further C3 protocol or architecture-backed progress work.
 Mappings for architectures outside the refcount pilot's eleven-profile set,

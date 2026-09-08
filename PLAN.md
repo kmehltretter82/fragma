@@ -115,8 +115,17 @@ early-publication mutation makes that property invalid. This is one successful
 known-fix detection calibration and zero new bugs; its abstract atomic-bit
 mutex is not an ARM bitop, LKMM or hardware-cache proof. The
 [checkpoint](results/arm32-cache-mthread-20260908/SUMMARY.md) records the narrow
-claim. Three candidates have completed an initial stage, BPF remains partial,
-and the next untouched target is `arch_uprobe_copy_ixol()`, followed by DMA.
+claim.
+
+The January 2026 `arch_uprobe_copy_ixol()` target is now a bounded no-finding.
+Its exact configured translation unit exposed an unrelated `__auto_type`
+frontend gap; the 76-token source-identical slice then produced 13 valid
+properties across a domain broader than both in-tree callers. A deliberate
+65-byte copy into the final 64-byte XOL slot raises the expected destination
+alarm. The [checkpoint](results/arm32-uprobe-copy-20260908/SUMMARY.md) keeps the
+two GNU `void *` arithmetic warnings and the model exclusions visible. Four
+candidates have completed an initial stage, BPF remains partial, and the two
+DMA/scatter-gather functions are the remaining untouched strict targets.
 
 The [nine-calibration renewal](docs/CALIBRATION-RENEWAL-20260907.md) now passes
 both normal Eva batches: 38 model checks, 55 positive selected properties and
@@ -586,12 +595,14 @@ The first new bug-search batch uses only the configured 32-bit ARMv7
 inspection. Follow the [Fragma-first classification and A/B protocol](docs/BUG-SEARCH-PLAN.md);
 an alarm, timeout or failed proof alone is not a kernel defect.
 
-- [x] Freeze the eight-function recent-risk ARM32 batch and complete three
+- [x] Freeze the eight-function recent-risk ARM32 batch and complete four
   source-identical initial stages. `pcibios_align_resource()` has no surviving
   safety lead in its bounded scope; `module_frob_arch_sections()` yielded one
   analyzer-first, QEMU-confirmed bug; `__sync_icache_dcache()` re-detects one
-  already-fixed ordering bug under the narrow Mthread model. BPF JIT has a
-  partial stage; four candidates and functional/helper follow-up remain.
+  already-fixed ordering bug under the narrow Mthread model; and
+  `arch_uprobe_copy_ixol()` is a caller-validated bounded no-finding. BPF JIT
+  has a partial stage; two untouched strict candidates, one review-exposed
+  calibration and functional/helper follow-up remain.
 
 - [ ] Execute the first ARM32 Fragma-first campaign: freeze 5–10 unchanged
   functions, run bounded Eva/RTE before manual source diagnosis, add
