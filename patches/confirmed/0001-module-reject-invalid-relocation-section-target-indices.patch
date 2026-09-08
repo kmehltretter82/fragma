@@ -1,4 +1,4 @@
-From c1d086f186358b968cd7c7a822dcf6008deef06d Mon Sep 17 00:00:00 2001
+From 5b03c7c1271d14d9aede8e188794c597b0c7b873 Mon Sep 17 00:00:00 2001
 From: Karl Mehltretter <kmehltretter@gmail.com>
 Date: Tue, 8 Sep 2026 07:20:27 +0000
 Subject: [PATCH] module: reject out-of-range relocation target indices
@@ -10,8 +10,17 @@ Cc: Aaron Tomlin <atomlin@atomlin.com>,
     Ard Biesheuvel <ardb@kernel.org>,
     Nicolas Pitre <nico@fluxnic.net>,
     Russell King <linux@armlinux.org.uk>,
+    Catalin Marinas <catalin.marinas@arm.com>,
+    Will Deacon <will@kernel.org>,
+    Mark Rutland <mark.rutland@arm.com>,
     "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
     Helge Deller <deller@gmx.de>,
+    Paul Walmsley <pjw@kernel.org>,
+    Palmer Dabbelt <palmer@dabbelt.com>,
+    Albert Ou <aou@eecs.berkeley.edu>,
+    Alexandre Ghiti <alex@ghiti.fr>,
+    Huacai Chen <chenhuacai@kernel.org>,
+    WANG Xuerui <kernel@xen0n.name>,
     linux-modules@vger.kernel.org,
     linux-arm-kernel@lists.infradead.org,
     linux-parisc@vger.kernel.org,
@@ -20,70 +29,65 @@ Cc: Aaron Tomlin <atomlin@atomlin.com>,
     linux-kernel@vger.kernel.org
 
 The module loader validates section contents and names before calling
-module_frob_arch_sections(), but does not check the sh_info target index
-of SHT_REL and SHT_RELA sections. Several architecture hooks use sh_info
-as an array index before apply_relocations() skips out-of-range indices.
+module_frob_arch_sections(), but it does not validate the sh_info target
+index of SHT_REL and SHT_RELA sections. The ARM, ARM64, LoongArch,
+PA-RISC and RISC-V hooks use this index before apply_relocations() skips
+out-of-range indices.
 
-On ARM with ARM_MODULE_PLTS, an out-of-range index makes the hook read a
-section header outside the section table. On PA-RISC, a relocation which
-requires a stub makes the hook read and then update an e_shnum-sized
-heap array at that index. The tested malformed modules fault in these
-hooks instead of being rejected.
+On ARM with ARM_MODULE_PLTS, an out-of-range index reads sh_flags from a
+section header outside the table. The ARM32 A/B test reported "Unable to
+handle kernel paging request" in the hook. PA-RISC uses the index for an
+e_shnum-sized heap array when a relocation needs a stub. Its A/B test
+produced a Data TLB miss on the out-of-bounds stub_entries read before
+reaching the update. ARM64, LoongArch and RISC-V contain the same early
+section-header read.
 
 Reject relocation sections whose target index is outside the section
-table in the early ELF validity pass.
+table during the early ELF validity pass. This checks the shared ELF
+invariant before any architecture hook runs.
 
 Fixes: c298be74492b ("parisc: fix module loading failure of large kernel modules")
 Fixes: 7d485f647c1f ("ARM: 8220/1: allow modules outside of bl range")
+Fixes: fd045f6cd98e ("arm64: add support for module PLTs")
+Fixes: ab1ef68e5401 ("RISC-V: Add sections of PLT and GOT for kernel module")
+Fixes: fcdfe9d22bed ("LoongArch: Add ELF and module support")
 Cc: stable@vger.kernel.org
 Assisted-by: LLM
 Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
 ---
 
-Notes (review):
-    Base: Linux 28924df2a08f ("Merge tag
-    'perf-tools-fixes-for-v7.3-2026-09-07' of
-    git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools").
-    
-    At Linux b9b3e33b70b7 ("Merge tag 'trace-v7.2-rc6' of
-    git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace"), a
-    custom Fragma harness used upstream Frama-C 33.0 (Arsenic) Eva to
-    analyze a source-identical ARM module_frob_arch_sections() slice.
-    Eva reported the out-of-range section-table pointer and sh_flags
-    access.
-    
-    ARM32 A/B testing used QEMU 10.2.1 virt/TCG with a Cortex-A15 CPU,
-    GCC 15.2.0, and multi_v7_defconfig plus VMSPLIT_2G. The control
-    module loaded and unloaded before and after the change. Before the
-    change, a module whose SHT_REL sh_info was changed from 10 to
-    0x10000000 faulted at module_frob_arch_sections()+0x160. After the
-    change, the same module was rejected with ENOEXEC and the
-    invalid-index diagnostic.
-    
-    PA-RISC A/B testing used QEMU 10.2.1 B160L/TCG, hppa-linux-gcc
-    8.1.0, binutils 2.30, and generic-32bit_defconfig. The control
-    module loaded and unloaded before and after the change. The mutation
-    changed only the four-byte sh_info field of
-    .rela.text.unlikely.fragma_sh_info_init at file offset 0xae4 from
-    big-endian 00 00 00 03 to 10 00 00 00. The section contains an
-    R_PARISC_PCREL17F relocation counted by count_stubs().
-    
-    Before the change, the malformed module caused a Data TLB miss at
-    module_frob_arch_sections()+0x11c. Disassembly maps that address to
-    the stub_entries read used by WARN_ON(). The later store at +0x12c
-    was not reached. After the change, the same module returned ENOEXEC,
-    the kernel printed target index 268435456, and the guest reached its
-    completion marker. Both PA-RISC kernels used byte-identical
-    configurations.
-    
-    The patched tree also completed full vmlinux builds for ARM64
-    defconfig with GCC 15.2.0, RISC-V defconfig plus RELOCATABLE with
-    GCC 15.2.0, and LoongArch loongson64_defconfig with LLVM 21.1.8.
-    MODULE_SECTIONS was enabled in the RISC-V build. These were
-    build-only checks. A source audit found the same early sh_info
-    indexing pattern in those three hooks. ARM32 and PA-RISC are the
-    runtime-tested paths.
+Analysis and testing:
 
+At Linux b9b3e33b70b7 ("Merge tag 'trace-v7.2-rc6' of
+git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace"), a
+custom Fragma harness used upstream Frama-C 33.0 (Arsenic) Eva to
+analyze a source-identical ARM module_frob_arch_sections() slice. Eva
+reported the out-of-range section-table pointer and sh_flags access.
+
+ARM32 A/B testing at b9b3e33b70b7 used QEMU 10.2.1 virt/TCG with a
+Cortex-A15 CPU, GCC 15.2.0, and multi_v7_defconfig plus VMSPLIT_2G. The
+control module loaded and unloaded on both kernels. With only a SHT_REL
+sh_info field changed from 10 to 0x10000000, the original kernel faulted
+at module_frob_arch_sections()+0x160. The fixed kernel rejected the same
+module with ENOEXEC and the invalid-index diagnostic.
+
+PA-RISC A/B testing at the base commit used QEMU 10.2.1 B160L/TCG,
+hppa-linux-gcc 8.1.0, binutils 2.30, and generic-32bit_defconfig. The
+control module loaded and unloaded on both byte-identically configured
+kernels. With only a SHT_RELA sh_info field changed from 3 to 0x10000000
+in a section containing a counted R_PARISC_PCREL17F relocation, the
+original kernel produced a Data TLB miss at
+module_frob_arch_sections()+0x11c. Disassembly identifies the faulting
+instruction as the stub_entries read used by WARN_ON(). The later store
+was not reached. The fixed kernel rejected the same module with ENOEXEC
+and printed target index 268435456.
+
+The fixed tree also completed full vmlinux builds for ARM64 defconfig
+with GCC 15.2.0, RISC-V defconfig plus RELOCATABLE with GCC 15.2.0, and
+LoongArch loongson64_defconfig with LLVM 21.1.8. MODULE_SECTIONS was
+enabled for RISC-V. These were build-only checks. No physical hardware
+was tested.
+---
  kernel/module/main.c | 7 +++++++
  1 file changed, 7 insertions(+)
 
