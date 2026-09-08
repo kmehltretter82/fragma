@@ -5,7 +5,7 @@ import json
 import os
 from pathlib import Path
 
-from . import (build, concurrency, concurrency_c2, concurrency_c2_irq,
+from . import (arm32_cache_mthread, build, concurrency, concurrency_c2, concurrency_c2_irq,
                concurrency_c3_ipc_refcount, concurrency_c3_lkmm,
                concurrency_c3_llsc_progress, concurrency_c3_module_stats,
                concurrency_c3_trace, concurrency_evidence, profiles,
@@ -135,6 +135,24 @@ def main(argv=None):
     )
     rv32.add_argument("--output", type=Path,
                       help="new compact evidence directory; never overwritten")
+    arm32_cache = sub.add_parser(
+        "arm32-cache-mthread",
+        help="run the source-bound ARM32 cache-clean ordering A/B calibration",
+    )
+    arm32_cache.add_argument(
+        "--kernel", type=Path,
+        default=Path(os.environ.get(
+            "FRAGMA_KERNEL_TREE", str(Path.home() / "linux-work/linux"))),
+        help="git repository containing the pinned kernel revision",
+    )
+    arm32_cache.add_argument(
+        "--output", type=Path,
+        help="new evidence directory; existing paths are never overwritten",
+    )
+    arm32_cache.add_argument(
+        "--timeout", type=int, default=180,
+        help="wall-clock limit in seconds for each provider invocation",
+    )
     coverage = sub.add_parser("coverage", help="report explicit run/profile evidence and current input freshness; does not run proofs")
     coverage.add_argument("--summary", type=Path, action="append", default=[])
     coverage.add_argument("--profile-evidence", type=Path, action="append", default=[])
@@ -232,6 +250,12 @@ def main(argv=None):
         if args.command == "rv32-zeropad-audit":
             output = args.output or rv32_zeropad.default_output(root)
             result = rv32_zeropad.audit(root, output)
+            print(f"{'passed' if result['accepted'] else 'failed'}: {output}")
+            return 0 if result["accepted"] else 1
+        if args.command == "arm32-cache-mthread":
+            output = args.output or arm32_cache_mthread.default_output(root)
+            result = arm32_cache_mthread.run(
+                root, args.kernel, output, args.timeout)
             print(f"{'passed' if result['accepted'] else 'failed'}: {output}")
             return 0 if result["accepted"] else 1
         if args.command == "coverage":

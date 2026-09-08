@@ -99,6 +99,30 @@
       "claims": [],
       "caller_coverage": "broad-three-insn-fake-pass-verifier-shaped-domain",
       "search_classification": "partial-no-reachable-direct-rte-lead"
+    },
+    {
+      "id": "search.arm32.recent.__sync_icache_dcache",
+      "suite": "bug-search-arm32-recent",
+      "role": "calibration",
+      "profile": "arm-gcc",
+      "build_id": "arm-gcc-recent-v2",
+      "source": "arch/arm/mm/flush.c",
+      "harness": "harness/arm32_recent_cache_slice.c",
+      "specs": "harness/arm32_recent_specs.h",
+      "driver": "harness/arm32_recent_cache_driver.c",
+      "entry": "fragma_arm32_sync_icache_dcache",
+      "functions": ["__sync_icache_dcache"],
+      "analysis_functions": ["__sync_icache_dcache"],
+      "analysis": "eva",
+      "analysis_pipeline": {"kind": "rte-eva"},
+      "input_mode": "standalone",
+      "provenance": {"mode": "functions"},
+      "required_properties": ["arm32_sync_icache_dcache_domain"],
+      "assumptions": ["arm32-recent-cache-driver", "arm32-recent-cache-slice-frontend", "arm32-recent-cache-dependencies"],
+      "eva_auto_builtins": false,
+      "claims": [],
+      "caller_coverage": "full-pte-value-source-gated-first-pass",
+      "search_classification": "sequential-no-finding-known-fix-mthread-sensitive"
     }
   ]
 }

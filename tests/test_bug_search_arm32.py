@@ -283,7 +283,7 @@ class ARM32RecentRiskFreezeTests(unittest.TestCase):
         module = self.data["execution"]["module_frob_arch_sections"]
         self.assertEqual(module["source_identical_general"]["classification"],
                          "fragma-found-confirmed")
-        self.assertIn("build_insn()", self.data["next_step"])
+        self.assertIn("arch_uprobe_copy_ixol()", self.data["next_step"])
 
     def test_exposed_sibling_is_not_eligible_for_strict_discovery_label(self):
         by_name = {item["name"]: item for item in self.data["candidates"]}

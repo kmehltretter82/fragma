@@ -106,9 +106,17 @@ reachable alarm; it remains incomplete because emitters and register/offset
 helpers are explicitly modeled out. A `BPF_JIT_ALWAYS_ON` ARMv7 QEMU semantic
 matrix independently passed 88/88 generated-code checks. The
 [checkpoint](results/arm32-recent-build-insn-20260908/SUMMARY.md) therefore says
-`partial-no-finding`, not verified. Two candidates are closed, this third one is
-partially covered, and the next primary target is the April 2026
-`__sync_icache_dcache()` race fix with Mthread plus Eva.
+`partial-no-finding`, not verified.
+
+The April 2026 ARM32 cache target `__sync_icache_dcache()` has now completed a
+sequential source-identical RTE/Eva pass and a source-bound two-caller Mthread +
+Eva A/B. Current source validates flush-before-clean-bit publication, while an
+early-publication mutation makes that property invalid. This is one successful
+known-fix detection calibration and zero new bugs; its abstract atomic-bit
+mutex is not an ARM bitop, LKMM or hardware-cache proof. The
+[checkpoint](results/arm32-cache-mthread-20260908/SUMMARY.md) records the narrow
+claim. Three candidates have completed an initial stage, BPF remains partial,
+and the next untouched target is `arch_uprobe_copy_ixol()`, followed by DMA.
 
 The [nine-calibration renewal](docs/CALIBRATION-RENEWAL-20260907.md) now passes
 both normal Eva batches: 38 model checks, 55 positive selected properties and
@@ -578,11 +586,12 @@ The first new bug-search batch uses only the configured 32-bit ARMv7
 inspection. Follow the [Fragma-first classification and A/B protocol](docs/BUG-SEARCH-PLAN.md);
 an alarm, timeout or failed proof alone is not a kernel defect.
 
-- [x] Freeze the eight-function recent-risk ARM32 batch and complete two
-  source-identical RTE/Eva targets. `pcibios_align_resource()` has no surviving
+- [x] Freeze the eight-function recent-risk ARM32 batch and complete three
+  source-identical initial stages. `pcibios_align_resource()` has no surviving
   safety lead in its bounded scope; `module_frob_arch_sections()` yielded one
-  analyzer-first, QEMU-confirmed bug. Six candidates and functional follow-up
-  remain.
+  analyzer-first, QEMU-confirmed bug; `__sync_icache_dcache()` re-detects one
+  already-fixed ordering bug under the narrow Mthread model. BPF JIT has a
+  partial stage; four candidates and functional/helper follow-up remain.
 
 - [ ] Execute the first ARM32 Fragma-first campaign: freeze 5–10 unchanged
   functions, run bounded Eva/RTE before manual source diagnosis, add

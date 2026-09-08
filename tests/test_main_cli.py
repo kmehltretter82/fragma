@@ -29,6 +29,20 @@ class MainCliTests(unittest.TestCase):
         self.assertEqual(prepare.call_args.args[1],
                          ROOT / "build/sources/linux-b9b3e33b70b71")
 
+    def test_arm32_cache_command_dispatches_explicit_evidence_inputs(self):
+        kernel = ROOT.parent / "linux"
+        output = ROOT / "build/test-arm32-cache-cli"
+        with patch("fragma.__main__.arm32_cache_mthread.run",
+                   return_value={"accepted": True}) as run, \
+                redirect_stdout(io.StringIO()):
+            self.assertEqual(main([
+                "arm32-cache-mthread",
+                "--kernel", str(kernel),
+                "--output", str(output),
+                "--timeout", "37",
+            ]), 0)
+        run.assert_called_once_with(ROOT, kernel, output, 37)
+
 
 if __name__ == "__main__":
     unittest.main()

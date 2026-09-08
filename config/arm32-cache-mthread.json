@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "id": "arm32-sync-icache-dcache-known-race-c2",
+  "classification": "known-fix-detection-calibration-no-new-bug",
+  "kernel": {
+    "revision": "b9b3e33b70b71e516930117e21de3ad2a7723747",
+    "source_root": "build/sources/linux-b9b3e33b70b71",
+    "source": "arch/arm/mm/flush.c",
+    "source_sha256": "8642de64dfcadfc0cd911192a12fde073972238ebda24ffd0d8b9a9bb7d87b81",
+    "function": "__sync_icache_dcache",
+    "function_token_sha256": "d9fdc83818a53012672cf8cbc372fc74db4d1956a4dd42143c49293d7dc49438",
+    "trigger_commit": "75f9a484e817adea211c73f89ed938a2b2f90953",
+    "trigger_subject": "ARM: 9472/1: fix race condition on PG_dcache_clean in __sync_icache_dcache()",
+    "profile": "arm-gcc",
+    "build_id": "arm-gcc-recent-v2",
+    "build_receipt": "build/kernel/arm-gcc-recent-v2/fragma-build.json",
+    "build_receipt_sha256": "ce0b54138f74ec8fe76a4846ac4b52bc1e2536a777979e2e971daef83af356e9",
+    "config": "build/kernel/arm-gcc-recent-v2/.config",
+    "config_sha256": "ba10a6976ece869d9284011ea09f809092565ffcbbcfba8dfa67ff6c373bbc35",
+    "object": "build/kernel/arm-gcc-recent-v2/arch/arm/mm/flush.o",
+    "object_sha256": "b5bb4ea5b7b1965b70e058efd5176c4626acbb1d9f4d326ad6550006a53b8306",
+    "required_config": {
+      "CONFIG_ARM": "y",
+      "CONFIG_CPU_V7": "y",
+      "CONFIG_CPU_CACHE_VIPT": "y",
+      "CONFIG_SMP": "y",
+      "CONFIG_ARM_LPAE": "n",
+      "CONFIG_HIGHMEM": "y"
+    }
+  },
+  "model": {
+    "c1_model_id": "framac-33-mthread-eva-c0",
+    "fixture": "concurrency/arm32_cache_sync.c",
+    "fixture_sha256": "e35cf9a984b40ac29ca420ebbeed6c5a88bf6d012bf0aeef06fc4dc7fdd74a24",
+    "thread_library": "pthreads",
+    "common_options": [
+      "-eva",
+      "-mthread",
+      "-eva-slevel", "30",
+      "-eva-split-return", "full",
+      "-eva-interprocedural-splits",
+      "-mt-shared-values", "2",
+      "-mt-shared-accesses-synchronization",
+      "-mt-write-races",
+      "-no-warn-unaligned-pointer",
+      "-mt-verbose", "3",
+      "-eva-verbose", "3",
+      "-eva-msg-key", "interferences,-summary",
+      "-eva-warn-key", "experimental=inactive",
+      "-mt-stop-after", "30"
+    ],
+    "atomic_bit_model": {
+      "semantics": "One Mthread mutex serializes each modeled test/set operation on the selected PG_dcache_clean word; it does not serialize the cache flush between those operations.",
+      "scope": "Atomic indivisibility and shared-access protection for one modeled folio flag word only.",
+      "limitations": [
+        "The ARM bitop implementation, ordering strength and Linux memory model are not proved.",
+        "The mutex is an analyzer adapter, not a claim that Linux implements set_bit() with a mutex."
+      ]
+    }
+  },
+  "property": {
+    "assertion": "arm32_cache_publish_after_local_flush",
+    "claim": "For each of two modeled callers of the token-identical current function, publishing PG_dcache_clean through set_bit() occurs only after that same caller completed its modeled data-cache flush.",
+    "required_mutex": "arm32-cache-bit",
+    "shared_objects": ["modeled_folio"],
+    "per_entry_state": "modeled_thread_flush_completed[Frama_C_thread_id()]",
+    "exclusions": [
+      "This re-detects the ordering defect already fixed by commit 75f9a484e817; it is not a new bug finding.",
+      "The cache flush is an event model, not a proof of ARM cache-maintenance assembly or hardware effects.",
+      "Concurrent dirtying/clearing, folio lifetime, mappings, page locks, RCU, interrupts, weak memory, progress and arbitrary callers are outside this property."
+    ]
+  },
+  "cases": [
+    {
+      "id": "current_source",
+      "cpp_defines": [],
+      "expected_assertions": {"arm32_cache_publish_after_local_flush": "valid"},
+      "expected_protection": "protected",
+      "current_source_candidate": true
+    },
+    {
+      "id": "early_publication_negative",
+      "cpp_defines": ["FRAGMA_ARM32_CACHE_EARLY_SET_NEGATIVE"],
+      "expected_assertions": {"arm32_cache_publish_after_local_flush": "invalid"},
+      "expected_protection": "missing",
+      "current_source_candidate": false
+    }
+  ]
+}

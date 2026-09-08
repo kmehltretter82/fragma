@@ -369,8 +369,56 @@
         "log": "build/tests-arm32-bpf-checkpoint-20260908-v3.log",
         "log_sha256": "c4ace7b407f2cdcfb9fac7b48b88a2ea91028c0520045e9ddc4c09d1917e20db"
       }
+    },
+    "__sync_icache_dcache": {
+      "full_translation_unit": {
+        "status": "model-or-contract-gap",
+        "attempts": 4,
+        "last_output": "build/arm32-recent-search-20260908/cache-raw-tu-4",
+        "result": "Frama-C did not reach the candidate. The exact configured translation unit stopped in unrelated nodemask, builtin-attribute, context-tracking, sysfs, rbtree-latch and ratelimit headers; temporary diagnostic adapters were removed."
+      },
+      "source_identical_sequential_pass": {
+        "status": "calibration-passed",
+        "output": "build/arm32-recent-search-20260908/cache-slice-final-2",
+        "summary_sha256": "63c43811a515bea398126c2eb51dd872b5b406ee2a9512fc1dc5125ada177e23",
+        "result_sha256": "aa348fd02a8e9f5d110d577959b704ba24c01b1e13dd9b33181d7f838f4024c6",
+        "analysis_log_sha256": "1c03285e8a4154e24985e6c5cbca24bfed90bc388a7332590c5e98b2f1059d73",
+        "properties_tsv_sha256": "a670db0b36a40988e30d0799264c63e773ed218f66ff1b3dfb2a246e99fae7bd",
+        "source_function_tokens": 136,
+        "source_function_token_sha256": "d9fdc83818a53012672cf8cbc372fc74db4d1956a4dd42143c49293d7dc49438",
+        "properties": {"valid": 9, "unknown": 0, "invalid": 0},
+        "warnings": 0,
+        "classification": "sequential-no-finding",
+        "scope": "Every 32-bit PTE value and one live modeled folio; direct sequential C runtime safety only. Cache effects, atomics, interleavings, folio lifetime and a functional cache-coherency postcondition are excluded."
+      },
+      "mthread_eva_ab": {
+        "status": "passed",
+        "output": "build/arm32-recent-search-20260908/cache-mthread-runner-9",
+        "summary_sha256": "eb16ce295a46d09ad1ab265ed83a78d110625dd0fdd499274b37e612ba2588ec",
+        "summary_markdown_sha256": "5aec22be99e30d2d5a3189149cdead7a30f939ebf25010fc5e35c4c8affc3f8f",
+        "current_report_sha256": "78628172cad10e791118084031aaf4a8002290738b298c562a51e7b4d6f17978",
+        "negative_report_sha256": "559c7749601ca25a50ced61f3b68562f4003ec0c7c89f5caa3895ffeb9b5b9e5",
+        "provider_binary_sha256": "815c916df2361e7af5a18125c97b37665e4eed91e76daa185d571706563e7ef2",
+        "fixture_sha256": "e35cf9a984b40ac29ca420ebbeed6c5a88bf6d012bf0aeef06fc4dc7fdd74a24",
+        "known_fix_commit": "75f9a484e817adea211c73f89ed938a2b2f90953",
+        "property": "arm32_cache_publish_after_local_flush",
+        "current_source": {"assertion": "valid", "flag_word_protection": "protected"},
+        "early_publication_negative": {"assertion": "invalid", "flag_word_protection": "missing-after-invalid-path-stop"},
+        "known_fix_detection_count": 1,
+        "new_bug_count": 0,
+        "classification": "known-fix-detection-calibration-no-new-bug",
+        "scope": "Two modeled callers of the token-identical current function. One abstract Mthread mutex gives atomic indivisibility to the page-flag test/set operations but is not an ARM bitop, weak-memory or hardware cache model. Per-thread ghost state observes only whether the same caller flushed before publishing.",
+        "regression": {
+          "command": "python3 -m unittest discover -s tests -v",
+          "tests": 1094,
+          "skipped": 20,
+          "status": "passed",
+          "log": "build/tests-arm32-cache-checkpoint-20260908-v3.log",
+          "log_sha256": "65ed45790e38e232b9eb1b40d8e7cf6ed1aa81e311bd33f7bb1aa2881954a781"
+        }
+      }
     }
   },
   "confirmed_bugs": 1,
-  "next_step": "Analyze __sync_icache_dcache() with Mthread plus Eva as the next primary ARM32 target, then continue through uprobes and DMA; return to build_insn() for source-gated emitter/helper closure if the cache target does not yield a lead."
+  "next_step": "Analyze arch_uprobe_copy_ixol() as the next untouched ARM32 target, then dma_cache_maint_page() and __map_sg_chunk(); retain get_module_plt() as review-exposed calibration and return to build_insn() emitter/helper closure after the untouched queue."
 }

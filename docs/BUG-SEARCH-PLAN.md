@@ -106,12 +106,23 @@ division, comparisons and a stack access. The
 classifies this `partial-no-finding`: live output-buffer and source-gated
 helper-closure analysis still remain.
 
-Two of eight frozen candidates are closed and the third has completed this
-initial stage. The next primary target is the recently race-fixed
-`__sync_icache_dcache()` with Mthread plus Eva, then uprobes and DMA.
-`get_module_plt()` remains useful calibration, but its body was exposed during
-dependency inspection and is conservatively ineligible for the strict
-discovery label.
+The fourth target, April 2026 ARM cache synchronization function
+`__sync_icache_dcache()`, now has both a sequential RTE/Eva pass and a
+source-bound two-caller Mthread + Eva pilot. Current source validates the
+property that a caller publishes `PG_dcache_clean` only after its own modeled
+flush; a mutation-equivalent early-publication control makes the same property
+invalid. This re-detects the ordering defect already fixed by its trigger
+commit, so it is a known-fix detection calibration with zero new bugs—not a
+rediscovery claim or a hardware/LKMM proof. The
+[cache checkpoint](../results/arm32-cache-mthread-20260908/SUMMARY.md) records
+the exact source, configured object, provider, A/B results and exclusions.
+
+Three candidates have completed an initial stage and the BPF JIT has a retained
+partial stage. The next untouched target is the January 2026 uprobes
+`arch_uprobe_copy_ixol()` change, followed by `dma_cache_maint_page()` and
+`__map_sg_chunk()`. `get_module_plt()` remains useful calibration, but its body
+was exposed during dependency inspection and is conservatively ineligible for
+the strict discovery label. The mature generic strings remain calibration only.
 
 ## First campaign acceptance
 
@@ -120,8 +131,8 @@ discovery label.
   sign/zero extension, pointer-range calculations and page-boundary helpers.
 - [ ] Run unchanged-source Eva/RTE triage under at least one current configured
   profile—only `arm-gcc` in this campaign—with bounded per-function time and
-  complete outcome retention. Two of eight candidates are complete and one has
-  a retained partial pass.
+  complete outcome retention. Three of eight candidates have completed an
+  initial stage and one has a retained partial pass; four remain untouched.
 - [ ] Add independently sourced functional properties for the candidates that
   survive frontend/model triage and run WP without hiding unresolved goals.
 - [ ] Classify every lead using the table above and publish false-positive and

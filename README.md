@@ -12,6 +12,11 @@ not send email. The [Fragma-first bug-search protocol](docs/BUG-SEARCH-PLAN.md)
 preserves those discovery labels and makes configured ARM32 the primary search
 campaign. Its recent BPF JIT target currently has a partial no-finding backed by
 a source-identical Eva pass and 88/88 `BPF_JIT_ALWAYS_ON` QEMU semantic checks.
+The subsequent cache-synchronization pilot makes the known broken
+early-publication ordering fail while current source passes under a narrow
+two-caller Mthread + Eva model; it records zero new bugs and moves the primary
+search queue to ARM32 uprobes and DMA. Its exact scope and A/B hashes are in the
+[cache checkpoint](results/arm32-cache-mthread-20260908/SUMMARY.md).
 
 The public repository contains the authored runner, specifications, tests,
 plans, compact result summaries, and experimental provider patches. Downloaded
@@ -132,7 +137,7 @@ The new entry point is `python3 -m fragma` (`list`, `preflight`, `snapshot`,
 `concurrency-c2`, `concurrency-c2-irq`, `concurrency-c3-lkmm`,
 `concurrency-c3-trace`, `concurrency-c3-module-stats`,
 `concurrency-c3-ipc-refcount`, `concurrency-c3-llsc-progress`,
-`rv32-zeropad-audit`). See
+`rv32-zeropad-audit`, `arm32-cache-mthread`). See
 [toolchain setup](docs/toolchain.md) and
 [architecture profiles](profiles/README.md). Verification never installs
 packages. No `sudo` installation is needed on the current machine for the eleven
