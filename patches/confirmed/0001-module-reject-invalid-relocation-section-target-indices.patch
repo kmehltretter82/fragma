@@ -1,4 +1,4 @@
-From 469fb638e5f4662404e39e18d8d6efec9abc5a73 Mon Sep 17 00:00:00 2001
+From 9de379bc5cfb2ef4a1b1c7142d2bf49e7fb7fb7b Mon Sep 17 00:00:00 2001
 From: Karl Mehltretter <kmehltretter@gmail.com>
 Date: Tue, 8 Sep 2026 19:08:40 +0000
 Subject: [PATCH] module: reject out-of-range relocation target indices
@@ -29,22 +29,18 @@ Cc: Aaron Tomlin <atomlin@atomlin.com>,
     loongarch@lists.linux.dev,
     linux-kernel@vger.kernel.org
 
-The module loader validates section contents and names before calling
-module_frob_arch_sections(), but it does not validate the sh_info target
-index of SHT_REL and SHT_RELA sections. The ARM, ARM64, LoongArch,
-PA-RISC and RISC-V hooks use this index before apply_relocations() skips
-out-of-range indices.
+apply_relocations() skips relocation sections whose sh_info target index
+is outside the section table. ARM, ARM64, LoongArch, PA-RISC and RISC-V
+use sh_info earlier in module_frob_arch_sections(), before this check.
 
-ARM, ARM64, LoongArch and RISC-V use sh_info to read sh_flags from a
-section header outside the table. PA-RISC uses it to index an
-e_shnum-sized heap array for both a read and an update. QEMU tests
-produced page-fault Oopses in module_frob_arch_sections() on ARM, ARM64,
-LoongArch and RISC-V. PA-RISC produced a Data TLB miss on the array read.
-A malformed module can therefore crash the kernel while it is loaded.
+ARM, ARM64, LoongArch and RISC-V use the unchecked index to read
+sh_flags outside the section header table. PA-RISC uses it to index an
+e_shnum-sized heap array for a read and an update. QEMU reproduced
+page-fault Oopses on ARM, ARM64, LoongArch and RISC-V, and a Data TLB
+miss on the PA-RISC array read.
 
-Reject relocation sections whose target index is outside the section
-table during the early ELF validity pass. This checks the shared ELF
-invariant before any architecture hook runs.
+Validate sh_info for SHT_REL and SHT_RELA sections in
+elf_validity_cache_sechdrs(), before architecture code uses it.
 
 Fixes: c298be74492b ("parisc: fix module loading failure of large kernel modules")
 Fixes: 7d485f647c1f ("ARM: 8220/1: allow modules outside of bl range")
@@ -56,25 +52,23 @@ Assisted-by: LLM
 Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
 ---
 
-Analysis and testing:
-
 At Linux b9b3e33b70b7 ("Merge tag 'trace-v7.2-rc6' of
 git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace"), a
-custom Fragma harness used upstream Frama-C 33.0 (Arsenic) Eva to
-analyze a source-identical ARM module_frob_arch_sections() slice. Eva
-reported the out-of-range section-table pointer and sh_flags access.
+custom harness for upstream Frama-C 33.0 (Arsenic) Eva found the ARM32
+instance. It analyzed a source-identical ARM
+module_frob_arch_sections() slice and reported the out-of-range
+section-table pointer and sh_flags access.
 
 The ARM32 A/B also ran at that commit. The PA-RISC, ARM64, RISC-V,
 LoongArch and x86_64 A/B tests ran at the declared base commit,
 28924df2a08f. arch/arm/kernel/module-plts.c and the touched loop in
 kernel/module/main.c are identical between the two commits.
 
-The A/B tests used identical configuration files and test modules
-between the original and fixed kernel for each architecture. Each
-module mutation changed only the four-byte sh_info field of an
-executable section's relocation header to 0x10000000. The control module
-loaded and unloaded on every kernel. Each fixed kernel rejected the
-malformed module with ENOEXEC and printed target index 268435456.
+Each A/B pair used the same configuration and test modules. The
+malformed module differed from its control only in the four-byte sh_info
+field, changed to 0x10000000. Every control loaded and unloaded. Every
+fixed kernel rejected the malformed module with ENOEXEC and printed
+target index 268435456.
 
 Original-kernel results with QEMU 10.2.1 TCG:
 
@@ -131,4 +125,3 @@ index d0e1e0bd2ad0..30c7a05488bc 100644
 base-commit: 28924df2a08f440c73991b83028032c901de2ae4
 -- 
 2.53.0
-
