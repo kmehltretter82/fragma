@@ -1,4 +1,4 @@
-From 9de379bc5cfb2ef4a1b1c7142d2bf49e7fb7fb7b Mon Sep 17 00:00:00 2001
+From 0b5efac817307d928511c0ccecc708a2d12d16fe Mon Sep 17 00:00:00 2001
 From: Karl Mehltretter <kmehltretter@gmail.com>
 Date: Tue, 8 Sep 2026 19:08:40 +0000
 Subject: [PATCH] module: reject out-of-range relocation target indices
@@ -52,17 +52,18 @@ Assisted-by: LLM
 Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
 ---
 
-At Linux b9b3e33b70b7 ("Merge tag 'trace-v7.2-rc6' of
-git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace"), a
-custom harness for upstream Frama-C 33.0 (Arsenic) Eva found the ARM32
-instance. It analyzed a source-identical ARM
-module_frob_arch_sections() slice and reported the out-of-range
-section-table pointer and sh_flags access.
+A custom harness for upstream Frama-C 33.0 (Arsenic) Eva found the
+ARM32 instance in a source-identical ARM module_frob_arch_sections()
+slice. Eva reported the out-of-range section-table pointer and sh_flags
+access.
 
-The ARM32 A/B also ran at that commit. The PA-RISC, ARM64, RISC-V,
-LoongArch and x86_64 A/B tests ran at the declared base commit,
-28924df2a08f. arch/arm/kernel/module-plts.c and the touched loop in
-kernel/module/main.c are identical between the two commits.
+The analysis and ARM32 A/B test ran at Linux b9b3e33b70b7 ("Merge tag
+'trace-v7.2-rc6' of
+git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace"). The
+PA-RISC, ARM64, RISC-V, LoongArch and x86_64 A/B tests ran at the
+declared base commit, 28924df2a08f. arch/arm/kernel/module-plts.c and
+the touched loop in kernel/module/main.c are identical between the two
+commits.
 
 Each A/B pair used the same configuration and test modules. The
 malformed module differed from its control only in the four-byte sh_info
@@ -86,10 +87,10 @@ Original-kernel results with QEMU 10.2.1 TCG:
 - LoongArch, virt/LA464, LLVM 21.1.8, loongson64_defconfig: page fault
   at module_frob_arch_sections()+0x1b8.
 
-The x86_64 pc/qemu64 negative control used x86_64_defconfig and GCC
-15.2.0. The original kernel loaded and unloaded both modules. The fixed
-kernel loaded and unloaded the control and rejected the malformed module
-with ENOEXEC.
+On x86_64, which has no vulnerable early sh_info access, the original
+kernel loaded both modules. The fixed kernel loaded the control and
+rejected the malformed module with ENOEXEC. The test used pc/qemu64,
+x86_64_defconfig and GCC 15.2.0.
 
 No physical hardware or KASAN was tested.
 ---

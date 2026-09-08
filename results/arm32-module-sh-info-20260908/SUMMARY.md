@@ -68,7 +68,7 @@ before architecture hooks. It is based on current upstream commit
 the ARM function is unchanged from the analyzed revision.
 
 - Patch: `arm/arm32-module-sh-info/patches/0001-module-reject-invalid-relocation-section-target-indi.patch`
-- Patch SHA-256: `0896eb5c6caf53970284d4492a8801bab79e4ede52c4b2dc385c2b7db9b1f8a6`
+- Patch SHA-256: `eba2dc786f987d722a49903b9c96d3268947c12a88054527a65f3b6bf98bac83`
 - Current-base configuration SHA-256: `76600c466a378e172779e7832b32114c5281c1d997677a226d07134b652919d9`
 - Current-base full patched zImage SHA-256: `1385712a3b07b0c388e57aa0cfe628c3772c4b9fa0f77395baee270926bc27a3`
 - `git apply --check`: passed against the declared base

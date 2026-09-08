@@ -309,7 +309,7 @@
         "patched_full_zimage_configuration_sha256": "76600c466a378e172779e7832b32114c5281c1d997677a226d07134b652919d9",
         "patched_full_zimage_sha256": "1385712a3b07b0c388e57aa0cfe628c3772c4b9fa0f77395baee270926bc27a3",
         "patch": "arm/arm32-module-sh-info/patches/0001-module-reject-invalid-relocation-section-target-indi.patch",
-        "patch_sha256": "0896eb5c6caf53970284d4492a8801bab79e4ede52c4b2dc385c2b7db9b1f8a6",
+        "patch_sha256": "eba2dc786f987d722a49903b9c96d3268947c12a88054527a65f3b6bf98bac83",
         "checkpatch": "zero errors, warnings and checks"
       },
       "threat_classification": "regular-kernel-robustness-bug-cap-sys-module-required"

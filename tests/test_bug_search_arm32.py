@@ -537,8 +537,10 @@ class ARM32RecentModuleFrobFindingTests(unittest.TestCase):
         self.assertIn("Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>",
                       text)
         self.assertIn("Original-kernel results with QEMU 10.2.1 TCG", text)
-        self.assertIn("The ARM32 A/B also ran at that commit.", text)
-        self.assertIn("The x86_64 pc/qemu64 negative control", text)
+        self.assertIn("The analysis and ARM32 A/B test ran at Linux", text)
+        self.assertIn(
+            "On x86_64, which has no vulnerable early sh_info access", text
+        )
         self.assertIn("base-commit: " + current["base_commit"], text)
         self.assertTrue((ROOT / "arm/arm32-module-sh-info/REPORT.txt").is_file())
         self.assertTrue((ROOT / "results/arm32-module-sh-info-20260908/SUMMARY.md").is_file())
