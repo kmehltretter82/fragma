@@ -1,4 +1,4 @@
-From 0b5efac817307d928511c0ccecc708a2d12d16fe Mon Sep 17 00:00:00 2001
+From a29f6d234b22d531c48de3790bec7805c39def88 Mon Sep 17 00:00:00 2001
 From: Karl Mehltretter <kmehltretter@gmail.com>
 Date: Tue, 8 Sep 2026 19:08:40 +0000
 Subject: [PATCH] module: reject out-of-range relocation target indices
@@ -40,7 +40,9 @@ page-fault Oopses on ARM, ARM64, LoongArch and RISC-V, and a Data TLB
 miss on the PA-RISC array read.
 
 Validate sh_info for SHT_REL and SHT_RELA sections in
-elf_validity_cache_sechdrs(), before architecture code uses it.
+elf_validity_cache_sechdrs(). Reject the module with ENOEXEC before
+architecture code can use the index or apply_relocations() can skip the
+invalid section.
 
 Fixes: c298be74492b ("parisc: fix module loading failure of large kernel modules")
 Fixes: 7d485f647c1f ("ARM: 8220/1: allow modules outside of bl range")
