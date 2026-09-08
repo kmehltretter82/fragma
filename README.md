@@ -4,8 +4,10 @@ Verification and calibration rig for selected Linux kernel C functions.
 Frama-C/ACSL checks conditional correctness claims; deliberately wrong contracts
 and altered control examples test whether the verification setup detects them.
 This is not a whole-kernel proof. The project has two confirmed Linux findings:
-Frama-C Eva first exposed an unchecked ARM32 module-relocation section index,
-which exact ARM32 and PA-RISC QEMU original/fixed A/B tests confirm, while an
+Frama-C Eva first exposed an unchecked ARM32 module-relocation section index.
+Original/fixed QEMU A/B tests now reproduce the same bug class on all five
+affected architecture hooks: ARM32, ARM64, LoongArch, PA-RISC and RISC-V. An
+x86_64 boot provides a negative control for the unsafe early-hook access. An
 RV32 page-boundary wrong-result defect was found separately by LLM-assisted
 source review and then dynamically reproduced. The user sent the RV32 fix
 manually; this project does not send email. The
@@ -21,9 +23,9 @@ while a 65-byte cross-page control raises the intended alarm. The primary queue
 now moves to ARM32 DMA. Exact scopes are in the
 [cache checkpoint](results/arm32-cache-mthread-20260908/SUMMARY.md) and
 [uprobes checkpoint](results/arm32-uprobe-copy-20260908/SUMMARY.md). The
-[module affected-hook record](results/parisc-module-sh-info-20260908/SUMMARY.md)
-also distinguishes runtime A/B evidence from ARM64, RISC-V and LoongArch
-source-audit and build-only checks.
+[module multi-architecture record](results/module-sh-info-multiarch-20260908/SUMMARY.md)
+binds the five affected A/B tests and the x86_64 negative control to exact
+configurations, modules, kernels and serial logs.
 
 The public repository contains the authored runner, specifications, tests,
 plans, compact result summaries, and experimental provider patches. Downloaded

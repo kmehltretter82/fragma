@@ -88,12 +88,12 @@ the caller then established that the generic module loader had not yet checked
 the SHT_REL/SHT_RELA target index. A concrete malformed module faults the
 original kernel at `module_frob_arch_sections()` under QEMU ARM32; the same
 input is rejected with `ENOEXEC` after early generic validation. Current
-upstream remains affected. A supporting PA-RISC same-input A/B faults on the
-out-of-bounds heap read in its early hook before the fix and rejects the module
-afterward. ARM64, RISC-V and LoongArch have source audits and full patched
-builds, not runtime A/B. The
+upstream remains affected. Supporting original/fixed QEMU A/B tests now fault
+in every affected early hook: ARM32, ARM64, LoongArch, PA-RISC and RISC-V.
+Each fixed kernel rejects its malformed module with `ENOEXEC`. An x86_64 boot
+provides an unaffected early-hook control. The
 [ARM32 evidence record](../results/arm32-module-sh-info-20260908/SUMMARY.md) and
-[affected-hook record](../results/parisc-module-sh-info-20260908/SUMMARY.md)
+[affected-hook record](../results/module-sh-info-multiarch-20260908/SUMMARY.md)
 retain the exact identities and scope. The send-ready patch contains the human
 submitter's explicitly requested sign-off. The ARM32 reproducer source remains
 local and ignored under current kernel AI-reporting guidance.

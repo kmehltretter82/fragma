@@ -14,15 +14,15 @@ unrecorded. The project must not invoke `git send-email` on this host. Further H
 implementation remains parked, and its private diagnostics did not produce this
 kernel finding or add accepted proofs/profiles.
 
-The first analyzer-led ARM32 finding now has same-input QEMU A/B evidence on
-ARM32 and 32-bit PA-RISC. The PA-RISC witness faults on the out-of-bounds heap
-read reached through the same unchecked relocation target index. Full patched
-ARM64, RISC-V and LoongArch builds plus a complete early-hook source audit
-support the generic placement of the fix. Those three architectures are not
-runtime-confirmed. The
-[supporting evidence](results/parisc-module-sh-info-20260908/SUMMARY.md) keeps
-the distinction explicit, and the project does not claim exhaustive
-five-architecture QEMU testing.
+The first analyzer-led ARM32 finding now has original/fixed QEMU A/B evidence
+on all five affected architecture hooks: ARM32, ARM64, LoongArch, 32-bit
+PA-RISC and RISC-V. Each original kernel faults in
+`module_frob_arch_sections()`, while each fixed kernel rejects the same input
+with `ENOEXEC`. An x86_64 boot provides a negative control for the unsafe early
+hook. The
+[supporting evidence](results/module-sh-info-multiarch-20260908/SUMMARY.md)
+binds each result to the configuration, module mutation, kernel image and
+serial log.
 
 The user-requested concurrency workstream has accepted C0 capability
 characterization, C1 evidence/scope infrastructure and the limited C2 pilot.
@@ -108,10 +108,11 @@ the generic early-validation fix rejects the same input with `ENOEXEC`; a full
 current-upstream ARM32 build also passes. Current upstream remains affected.
 The [finding record](results/arm32-module-sh-info-20260908/SUMMARY.md) contains
 the exact analyzer identities and QEMU A/B evidence. A second same-input QEMU
-A/B confirms the PA-RISC path at the same patch base, while full patched builds
-cover the source-exposed ARM64, RISC-V and LoongArch hooks. The
-[affected-hook record](results/parisc-module-sh-info-20260908/SUMMARY.md)
-separates runtime and build-only evidence.
+A/B confirms the PA-RISC path at the patch base. Further A/B runs now confirm
+ARM64, RISC-V and LoongArch, and an x86_64 run provides an unaffected-hook
+control. The
+[affected-hook record](results/module-sh-info-multiarch-20260908/SUMMARY.md)
+keeps the architecture-specific outcomes and exact artifact identities.
 
 The recent ARM32 BPF JIT `build_insn()` target has now completed its initial
 analyzer-first stage. A 2,797-token source-identical direct-operation scan has

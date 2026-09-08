@@ -68,7 +68,7 @@ before architecture hooks. It is based on current upstream commit
 the ARM function is unchanged from the analyzed revision.
 
 - Patch: `arm/arm32-module-sh-info/patches/0001-module-reject-invalid-relocation-section-target-indi.patch`
-- Patch SHA-256: `5839bc83c4bb9d872e4eed310633f5091812f440347052cb2feb43cdc1190e5f`
+- Patch SHA-256: `6d9145eb0adb7ea5e0b9b72bfc6a128cbf9655497632c49b6bb949a5ffc434b4`
 - Current-base configuration SHA-256: `76600c466a378e172779e7832b32114c5281c1d997677a226d07134b652919d9`
 - Current-base full patched zImage SHA-256: `1385712a3b07b0c388e57aa0cfe628c3772c4b9fa0f77395baee270926bc27a3`
 - `git apply --check`: passed against the declared base
@@ -78,10 +78,11 @@ the ARM function is unchanged from the analyzed revision.
 - Sparse: not claimed; installed sparse 0.6.4 is rejected as outdated by the
   current kernel build.
 
-The same generic fix also passed a same-input PA-RISC QEMU A/B. ARM64,
-RISC-V and LoongArch received source audits and full patched builds. These
-supporting results and their exact hashes are in the
-[PA-RISC and affected-hook summary](../parisc-module-sh-info-20260908/SUMMARY.md).
+The same generic fix also passed original/fixed QEMU A/B tests on PA-RISC,
+ARM64, RISC-V and LoongArch. An x86_64 run supplies the negative control for
+the unsafe early architecture access. These supporting results and their exact
+hashes are in the
+[multi-architecture summary](../module-sh-info-multiarch-20260908/SUMMARY.md).
 
 Threat classification: regular kernel robustness bug. The demonstrated input
 requires module-loading privilege and permissive module-signature policy; it

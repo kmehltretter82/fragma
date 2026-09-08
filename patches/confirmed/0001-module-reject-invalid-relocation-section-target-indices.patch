@@ -1,6 +1,6 @@
-From 5b03c7c1271d14d9aede8e188794c597b0c7b873 Mon Sep 17 00:00:00 2001
+From cffc88fec53199960d774449a85eb554721c3dc2 Mon Sep 17 00:00:00 2001
 From: Karl Mehltretter <kmehltretter@gmail.com>
-Date: Tue, 8 Sep 2026 07:20:27 +0000
+Date: Tue, 8 Sep 2026 19:08:40 +0000
 Subject: [PATCH] module: reject out-of-range relocation target indices
 To: Luis Chamberlain <mcgrof@kernel.org>,
     Petr Pavlu <petr.pavlu@suse.com>,
@@ -34,13 +34,12 @@ index of SHT_REL and SHT_RELA sections. The ARM, ARM64, LoongArch,
 PA-RISC and RISC-V hooks use this index before apply_relocations() skips
 out-of-range indices.
 
-On ARM with ARM_MODULE_PLTS, an out-of-range index reads sh_flags from a
-section header outside the table. The ARM32 A/B test reported "Unable to
-handle kernel paging request" in the hook. PA-RISC uses the index for an
-e_shnum-sized heap array when a relocation needs a stub. Its A/B test
-produced a Data TLB miss on the out-of-bounds stub_entries read before
-reaching the update. ARM64, LoongArch and RISC-V contain the same early
-section-header read.
+ARM, ARM64, LoongArch and RISC-V use sh_info to read sh_flags from a
+section header outside the table. PA-RISC uses it to index an
+e_shnum-sized heap array for both a read and an update. QEMU tests
+produced page-fault Oopses in module_frob_arch_sections() on ARM, ARM64,
+LoongArch and RISC-V. PA-RISC produced a Data TLB miss on the array read.
+A malformed module can therefore crash the kernel while it is loaded.
 
 Reject relocation sections whose target index is outside the section
 table during the early ELF validity pass. This checks the shared ELF
@@ -64,29 +63,35 @@ custom Fragma harness used upstream Frama-C 33.0 (Arsenic) Eva to
 analyze a source-identical ARM module_frob_arch_sections() slice. Eva
 reported the out-of-range section-table pointer and sh_flags access.
 
-ARM32 A/B testing at b9b3e33b70b7 used QEMU 10.2.1 virt/TCG with a
-Cortex-A15 CPU, GCC 15.2.0, and multi_v7_defconfig plus VMSPLIT_2G. The
-control module loaded and unloaded on both kernels. With only a SHT_REL
-sh_info field changed from 10 to 0x10000000, the original kernel faulted
-at module_frob_arch_sections()+0x160. The fixed kernel rejected the same
-module with ENOEXEC and the invalid-index diagnostic.
+The A/B tests used identical configuration files and test modules
+between the original and fixed kernel for each architecture. Each
+module mutation changed only the four-byte sh_info field of an
+executable section's relocation header to 0x10000000. The control module
+loaded and unloaded on every kernel. Each fixed kernel rejected the
+malformed module with ENOEXEC and printed target index 268435456.
 
-PA-RISC A/B testing at the base commit used QEMU 10.2.1 B160L/TCG,
-hppa-linux-gcc 8.1.0, binutils 2.30, and generic-32bit_defconfig. The
-control module loaded and unloaded on both byte-identically configured
-kernels. With only a SHT_RELA sh_info field changed from 3 to 0x10000000
-in a section containing a counted R_PARISC_PCREL17F relocation, the
-original kernel produced a Data TLB miss at
-module_frob_arch_sections()+0x11c. Disassembly identifies the faulting
-instruction as the stub_entries read used by WARN_ON(). The later store
-was not reached. The fixed kernel rejected the same module with ENOEXEC
-and printed target index 268435456.
+Original-kernel results with QEMU 10.2.1 TCG:
 
-The fixed tree also completed full vmlinux builds for ARM64 defconfig
-with GCC 15.2.0, RISC-V defconfig plus RELOCATABLE with GCC 15.2.0, and
-LoongArch loongson64_defconfig with LLVM 21.1.8. MODULE_SECTIONS was
-enabled for RISC-V. These were build-only checks. No physical hardware
-was tested.
+- ARM32, virt/Cortex-A15, GCC 15.2.0, multi_v7_defconfig plus
+  VMSPLIT_2G: page fault at module_frob_arch_sections()+0x160.
+- ARM64, virt/Cortex-A57, GCC 15.2.0, defconfig: page fault at
+  module_frob_arch_sections()+0x110.
+- PA-RISC, B160L, hppa-linux-gcc 8.1.0, binutils 2.30,
+  generic-32bit_defconfig: Data TLB miss at
+  module_frob_arch_sections()+0x11c on the stub_entries read for a
+  counted R_PARISC_PCREL17F relocation.
+- RISC-V, virt, GCC 15.2.0, defconfig plus RELOCATABLE with
+  MODULE_SECTIONS enabled: page fault at
+  module_frob_arch_sections()+0xe4.
+- LoongArch, virt/LA464, LLVM 21.1.8, loongson64_defconfig: page fault
+  at module_frob_arch_sections()+0x1b8.
+
+The x86_64 pc/qemu64 negative control used x86_64_defconfig and GCC
+15.2.0. The original kernel loaded and unloaded both modules. The fixed
+kernel loaded and unloaded the control and rejected the malformed module
+with ENOEXEC.
+
+No physical hardware or KASAN was tested.
 ---
  kernel/module/main.c | 7 +++++++
  1 file changed, 7 insertions(+)

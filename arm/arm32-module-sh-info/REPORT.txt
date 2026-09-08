@@ -18,10 +18,12 @@ Subject: module: reject out-of-range relocation target indices
 
 Affected versions
 
-The observed ARM32 path was introduced by commit 7d485f647c1f ("ARM:
-8220/1: allow modules outside of bl range"). The observed PA-RISC path was
-introduced by commit c298be74492b ("parisc: fix module loading failure of
-large kernel modules"). The bug remains present at upstream commit
+The affected architecture paths are traced to commits 7d485f647c1f ("ARM:
+8220/1: allow modules outside of bl range"), fd045f6cd98e ("arm64: add
+support for module PLTs"), fcdfe9d22bed ("LoongArch: Add ELF and module
+support"), c298be74492b ("parisc: fix module loading failure of large kernel
+modules") and ab1ef68e5401 ("RISC-V: Add sections of PLT and GOT for kernel
+module"). The bug remains present at upstream commit
 28924df2a08f440c73991b83028032c901de2ae4 dated 2026-09-07.
 
 Problem
@@ -39,6 +41,11 @@ The source reads and later updates stub_entries at that index. A separate
 same-input QEMU A/B faults on the out-of-bounds read before the fix. The later
 store was not reached by that witness.
 
+ARM64, LoongArch and RISC-V also use the unchecked index to form a section
+header pointer and read sh_flags. Separate QEMU A/B tests now fault in each
+architecture hook before the fix and reach the generic ENOEXEC rejection after
+the fix.
+
 Reproducer status
 
 A source reproducer is available but is not included in the public project.
@@ -54,6 +61,13 @@ control module loads and unloads on both kernels. The malformed module causes
 a Data TLB miss at module_frob_arch_sections()+0x11c before the fix. After the
 fix it returns ENOEXEC, prints the invalid index and reaches the guest
 completion marker.
+
+The ARM64, RISC-V and LoongArch reproducers mutate only the four-byte sh_info
+field of .rela.fragma_probe.text. The original kernels fault at
+module_frob_arch_sections()+0x110, +0xe4 and +0x1b8 respectively. The fixed
+kernels reject the same modules with ENOEXEC. An x86_64 negative control loads
+and unloads the malformed module on the original kernel, with no Oops, then
+rejects it through the new generic check on the fixed kernel.
 
 Triggering conditions
 
@@ -78,10 +92,9 @@ trailer.
 
 Testing gaps
 
-The exact QEMU A/B was not repeated at the newer base because the relevant
-architecture function and loader ordering are unchanged; a full current-base
+The ARM32 A/B was not repeated at the newer base because the relevant
+architecture function and loader ordering are unchanged. A full current-base
 ARM32 build was completed instead. The installed sparse 0.6.4 is too old for
 the current kernel build's sparse gate, so no sparse result is claimed. No
-hardware run was performed. ARM64, RISC-V and LoongArch completed full patched
-vmlinux builds after a source audit found the same early indexing pattern in
-their hooks. They were not runtime A/B tested.
+physical hardware or KASAN run was performed. ARM64, RISC-V, LoongArch and
+x86_64 were built and booted at the current base.
